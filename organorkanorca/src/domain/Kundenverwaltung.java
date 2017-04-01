@@ -6,6 +6,13 @@ import data_objects.Kunde;
 public class Kundenverwaltung {
 
 	/**
+	 * 
+	 */
+	public Kundenverwaltung() {
+		super();
+	}
+
+	/**
 	 * @param kunden Verwaltete Kunden
 	 */
 	public Kundenverwaltung(Vector<Kunde> kunden) {

@@ -4,6 +4,13 @@ import java.util.Vector;
 import data_objects.Mitarbeiter;
 
 public class Mitarbeiterverwaltung {
+	
+	/**
+	 * 
+	 */
+	public Mitarbeiterverwaltung() {
+		super();
+	}
 
 	/**
 	 * @param mitarbeiter Verwaltete Mitarbeiter
