@@ -6,6 +6,14 @@ import data_objects.Artikel;
 public class Artikelverwaltung {
 
 	/**
+	 * 
+	 */
+	public Artikelverwaltung() {
+		super();
+	}
+	
+
+	/**
 	 * @param artikel Verwaltete Artikel
 	 */
 	public Artikelverwaltung(Vector<Artikel> artikel) {
@@ -14,7 +22,7 @@ public class Artikelverwaltung {
 	}
 
 	private Vector<Artikel> artikel;
-
+	
 	public Vector<Artikel> getArtikel() {
 		return artikel;
 	}

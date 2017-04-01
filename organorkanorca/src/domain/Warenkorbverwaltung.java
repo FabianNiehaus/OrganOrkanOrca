@@ -4,6 +4,13 @@ import java.util.Vector;
 import data_objects.Warenkorb;
 
 public class Warenkorbverwaltung {
+	
+	/**
+	 * 
+	 */
+	public Warenkorbverwaltung() {
+		super();
+	}
 
 	/**
 	 * @param warenkoerbe Verwaltete Warenkörbe
