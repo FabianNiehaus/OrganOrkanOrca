@@ -2,26 +2,45 @@ package data_objects;
 
 import java.util.Hashtable;
 
+import util.Pair;
+
 public class Warenkorb {
 	
-	private Hashtable<Integer, Artikel> artikel = new Hashtable<Integer, Artikel>();
+	private Hashtable<Integer, Pair<Artikel,Integer>> artikel = new Hashtable<Integer,  Pair<Artikel,Integer>>();
 	private int Anzahl;
 	
 	/**
 	 * @param artikel Artikel im Warenkorb
-	 * @param anzahl Anzahl der Artikel im Warenkorb
+	 * @param anzahl Jeweils Anzahl der Artikel
 	 */
-	public Warenkorb(Hashtable<Integer, Artikel> artikel, int anzahl) {
+	public Warenkorb(Hashtable<Integer,  Pair<Artikel,Integer>> artikel, int anzahl) {
 		super();
 		this.artikel = artikel;
 		Anzahl = anzahl;
 	}
+	
+	public void setArtikelAnzahl(Integer pos, Integer anz){
+		if (artikel.containsKey(pos)){
+			artikel.get(pos).setValue(anz);
+		}
+	}
 
-	public Hashtable<Integer, Artikel> getArtikel() {
+	/**
+	 * @param pos Position des Artikels im Warenkorb
+	 * @return Gibt die Anzahl des Artikels an der angegebenen Position an. Ausgabe -1 bedeutet, dass die Position nicht exisitert.
+	 */
+	public int getArtikelAnzahl(Integer pos){
+		if (artikel.containsKey(pos)){
+			return artikel.get(pos).getValue();
+		}
+		return -1;
+	}
+
+	public Hashtable<Integer,  Pair<Artikel,Integer>> getArtikel() {
 		return artikel;
 	}
 
-	public void setArtikel(Hashtable<Integer, Artikel> artikel) {
+	public void setArtikel(Hashtable<Integer,  Pair<Artikel,Integer>> artikel) {
 		this.artikel = artikel;
 	}
 
@@ -31,6 +50,5 @@ public class Warenkorb {
 
 	public void setAnzahl(int anzahl) {
 		Anzahl = anzahl;
-	}
-				
+	}			
 }
