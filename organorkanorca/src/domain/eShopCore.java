@@ -1,5 +1,7 @@
 package domain;
 
+import java.util.Vector;
+
 import data_objects.*;
 
 public class eShopCore {
@@ -26,28 +28,22 @@ public class eShopCore {
 	/**
 	 * @return Alle in der Artikelverwaltung gespeicherten Artikel
 	 */
-	public void alleArtikelAusgeben(){
-		for (Artikel a : av.getArtikel()){
-			a.toString();
-		}
+	public Vector<Artikel> alleArtikelAusgeben(){
+		return av.getArtikel();
 	}
 
 	/**
 	 * @return Alle in der Kundenverwaltung gespeicherten Kunden
 	 */
-	public void alleKundenAusgeben(){
-		for (Kunde k : kv.getKunden()){
-			k.toString();
-		}
+	public Vector<Kunde> alleKundenAusgeben(){
+		return kv.getKunden();
 	}
 	
 	/**
 	 * @return Alle in der Mitarbeiterverwaltung gespeicherten Mitarbeiter
 	 */
-	public void alleMitarbeiterAusgeben(){
-		for (Mitarbeiter m : mv.getMitarbeiter()){
-			m.toString();
-		}
+	public Vector<Mitarbeiter> alleMitarbeiterAusgeben(){
+		return mv.getMitarbeiter();
 	}
 	
 	public Artikelverwaltung getAv() {
