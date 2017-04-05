@@ -6,18 +6,10 @@ import util.Pair;
 
 public class Warenkorb {
 	
-	private Hashtable<Integer, Pair<Artikel,Integer>> artikel = new Hashtable<Integer,  Pair<Artikel,Integer>>();
-	private int Anzahl;
+	private Vektor<Pair<Artikel,Integer>> artikel = new Hashtable<Integer,  Pair<Artikel,Integer>>();
+	private int id;
 	
-	/**
-	 * @param artikel Artikel im Warenkorb
-	 * @param anzahl Jeweils Anzahl der Artikel
-	 */
-	public Warenkorb(Hashtable<Integer,  Pair<Artikel,Integer>> artikel, int anzahl) {
-		super();
-		this.artikel = artikel;
-		Anzahl = anzahl;
-	}
+	
 	
 	public void setArtikelAnzahl(Integer pos, Integer anz){
 		if (artikel.containsKey(pos)){
