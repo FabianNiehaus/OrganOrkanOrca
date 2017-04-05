@@ -1,46 +1,61 @@
 package data_objects;
 
-import java.util.Hashtable;
-
-import util.Pair;
+import java.util.LinkedHashMap;
 
 public class Warenkorb {
 	
-	private Vektor<Pair<Artikel,Integer>> artikel = new Hashtable<Integer,  Pair<Artikel,Integer>>();
+	/**
+	 * @param id Eindeutige ID des Warenkorbs
+	 */
+	public Warenkorb(int id) {
+		super();
+		this.id = id;
+	}
+
+	private LinkedHashMap<Artikel,Integer> artikel;
 	private int id;
 	
-	
-	
-	public void setArtikelAnzahl(Integer pos, Integer anz){
-		if (artikel.containsKey(pos)){
-			artikel.get(pos).setValue(anz);
-		}
-	}
-
 	/**
-	 * @param pos Position des Artikels im Warenkorb
-	 * @return Gibt die Anzahl des Artikels an der angegebenen Position an. Ausgabe -1 bedeutet, dass die Position nicht exisitert.
+	 * Prüft, ob ein bestimmter Artikel in diesem Warenkorb liegt.
+	 * @param art Zu überprüfender Artikel
+	 * @return Gibt <b>true</b> zurück, wenn zu prüfender Artikel in der HAsMap artikel gespeichert ist. Sonst <b>false</b>.
 	 */
-	public int getArtikelAnzahl(Integer pos){
-		if (artikel.containsKey(pos)){
-			return artikel.get(pos).getValue();
+	public boolean sucheArtikel(Artikel art){
+		if(artikel.containsKey(art)){
+			return true;
 		}
-		return -1;
+		else {
+			return false;
+		}
+	}
+	
+	public void aendereAnzahl(Artikel art, int anz){
+		if(sucheArtikel(art)){
+			artikel.remove(art, artikel.get(art));
+			artikel.put(art, anz);
+		}
+	}
+	
+	public void speichereArtikel(Artikel art, int anz){
+		if(!sucheArtikel(art)){
+			artikel.put(art, anz);
+		}
+	}
+	
+	public void loescheArtikel(Artikel art){
+		if(sucheArtikel(art)){
+			artikel.remove(art, artikel.get(art));
+		}
 	}
 
-	public Hashtable<Integer,  Pair<Artikel,Integer>> getArtikel() {
-		return artikel;
+	public int getId() {
+		return id;
 	}
-
-	public void setArtikel(Hashtable<Integer,  Pair<Artikel,Integer>> artikel) {
-		this.artikel = artikel;
+	
+	/* ID soll nach Erzeugung nicht verändert werden
+	 * 
+	public void setId(int id) {
+		this.id = id;
 	}
-
-	public int getAnzahl() {
-		return Anzahl;
-	}
-
-	public void setAnzahl(int anzahl) {
-		Anzahl = anzahl;
-	}			
+	*/
 }
