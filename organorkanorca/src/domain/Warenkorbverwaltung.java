@@ -1,32 +1,48 @@
 package domain;
 
 import java.util.Vector;
-import data_objects.Warenkorb;
+import data_objects.*;
 
 public class Warenkorbverwaltung {
 	
-	/**
-	 * 
-	 */
-	public Warenkorbverwaltung() {
-		super();
-	}
-
-	/**
-	 * @param warenkoerbe Verwaltete Warenkörbe
-	 */
-	public Warenkorbverwaltung(Vector<Warenkorb> warenkoerbe) {
-		super();
-		this.warenkoerbe = warenkoerbe;
-	}
-
 	private Vector<Warenkorb> warenkoerbe;
 
+	public Warenkorb getWarenkorb(int id){
+		for(Warenkorb wk : warenkoerbe){
+			if(wk.getId() == id){
+				return wk;
+			}
+		}
+		return null;
+	}
+	
+	public int erstelleWarenkorb(){
+		int hoechsteID = 0;
+		for(Warenkorb wk : warenkoerbe){
+			if(wk.getId() > hoechsteID){
+				hoechsteID = wk.getId();
+			}
+		}
+		warenkoerbe.addElement(new Warenkorb(hoechsteID+1));
+		
+		return hoechsteID+1;
+	}
+	
+	public void loescheWarenkorb(int id){
+		for(Warenkorb wk : warenkoerbe){
+			if(wk.getId() == id){
+				warenkoerbe.remove(wk);
+			}
+		}
+	}
+	
+	public void aendereWarenkorb(int id, Artikel art, int anz){
+		Warenkorb wk = getWarenkorb(id);
+		wk.aendereAnzahl(art, anz);
+	}
+	
 	public Vector<Warenkorb> getWarenkoerbe() {
 		return warenkoerbe;
 	}
 
-	public void setWarenkoerbe(Vector<Warenkorb> warenkoerbe) {
-		this.warenkoerbe = warenkoerbe;
-	}
 }
