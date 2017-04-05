@@ -45,7 +45,6 @@ public class Artikel {
 	private String kategorie;
 	private boolean angebot;
 	private int bewertung;
-	
 	public String getBezeichnung() {
 		return bezeichnung;
 	}
