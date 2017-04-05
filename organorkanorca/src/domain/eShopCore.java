@@ -23,6 +23,22 @@ public class eShopCore {
 	private Mitarbeiterverwaltung mv;
 	private Warenkorbverwaltung wv;
 	
+	public void anmelden(String firstname, String lastname){
+		if(mv.sucheMitarbeiter(firstname, lastname) != null){
+			/*
+			 * TO-DO: Anmeldelogik für Mitarbeiter
+			 */
+		} else if(kv.sucheKunde(firstname, lastname) != null){
+			/*
+			 * TO-DO: Anmeldelogik für Kunden
+			 */
+		} else {
+			/*
+			 * TO-DO: Anmeldelogik für falsche Anmeldung
+			 */
+		}
+	}
+	
 	/**
 	 * @return Alle in der Artikelverwaltung gespeicherten Artikel
 	 */
@@ -50,29 +66,14 @@ public class eShopCore {
 		}
 	}
 	
-	public Artikelverwaltung getAv() {
-		return av;
+	/**
+	 * @return Alle in der Warenkorbverwaltung gespeicherten Warenkörbe
+	 */
+	public void alleWarenkoerbeAusgeben(){
+		for (Warenkorb w : wv.getWarenkoerbe()){
+			w.toString();
+		}
 	}
-	public void setAv(Artikelverwaltung av) {
-		this.av = av;
-	}
-	public Kundenverwaltung getKv() {
-		return kv;
-	}
-	public void setKv(Kundenverwaltung kv) {
-		this.kv = kv;
-	}
-	public Mitarbeiterverwaltung getMv() {
-		return mv;
-	}
-	public void setMv(Mitarbeiterverwaltung mv) {
-		this.mv = mv;
-	}
-	public Warenkorbverwaltung getWv() {
-		return wv;
-	}
-	public void setWv(Warenkorbverwaltung wv) {
-		this.wv = wv;
-	}
+	
 	
 }
