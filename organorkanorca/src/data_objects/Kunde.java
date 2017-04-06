@@ -13,7 +13,7 @@ public class Kunde extends Person {
 	private String address_Zip;
 	private String address_Town;
 	
-	public Kunde(String firstname, String lastname, String id) {
+	public Kunde(String firstname, String lastname, int id) {
 		super(firstname, lastname, id);
 		// TODO Auto-generated constructor stub
 	}

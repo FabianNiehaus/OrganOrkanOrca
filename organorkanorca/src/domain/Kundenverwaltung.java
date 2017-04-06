@@ -2,6 +2,7 @@ package domain;
 
 import java.util.Vector;
 import data_objects.Kunde;
+import data_objects.Warenkorb;
 import domain.exceptions.VectorIsEmptyException;
 
 public class Kundenverwaltung {
@@ -26,7 +27,7 @@ public class Kundenverwaltung {
 	
 	public Kunde sucheKunde(int id){
 		for(Kunde ku : kunden){
-			if(ku.getId().equals(id)){
+			if(ku.getId() == id){
 				return ku;
 				}
 			}
@@ -50,6 +51,15 @@ public class Kundenverwaltung {
 	
 	}
 	
+	public int getNextID() {
+		int hoechsteID = 0;
+		for(Kunde ku : kunden){
+			if(ku.getId() > hoechsteID){
+				hoechsteID = ku.getId();
+			}
+		}		
+		return hoechsteID+1;
+	}
 	
 	public Vector<Kunde> getKunden() {
 		return kunden;

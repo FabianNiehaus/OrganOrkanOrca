@@ -28,7 +28,7 @@ public class Mitarbeiterverwaltung {
 	
 	public Mitarbeiter suchMitarbeiter(int id){
 		for(Mitarbeiter ma : mitarbeiter){
-			if(ma.getId().equals(id)){
+			if(ma.getId() == id){
 				return ma;
 				}
 			}
@@ -43,9 +43,16 @@ public class Mitarbeiterverwaltung {
 		mitarbeiter.remove(einMa);
 	}
 	
-	/*
-	 * 
-	 */
+	public int getNextID() {
+		int hoechsteID = 0;
+		for(Mitarbeiter ma : mitarbeiter){
+			if(ma.getId() > hoechsteID){
+				hoechsteID = ma.getId();
+			}
+		}		
+		return hoechsteID+1;
+	}
+	
 	public Vector<Mitarbeiter> getMitarbeiter() {
 		return mitarbeiter;
 	}

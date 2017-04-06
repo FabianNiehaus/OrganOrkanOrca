@@ -10,7 +10,7 @@ package data_objects;
 public abstract class Person {
 	private String firstname;
 	private String lastname;
-	private String id;
+	private int id;
 	
 	/**
 	 * Erzeugt eine Persion
@@ -19,7 +19,7 @@ public abstract class Person {
 	 * @param id Eindeutige Identifikationsnummer
 	 */
 	
-	public Person(String firstname, String lastname, String id) {
+	public Person(String firstname, String lastname, int id) {
 		super();
 		this.firstname = firstname;
 		this.lastname = lastname;
@@ -42,11 +42,11 @@ public abstract class Person {
 		this.lastname = lastname;
 	}
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	
