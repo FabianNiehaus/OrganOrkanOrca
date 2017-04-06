@@ -2,6 +2,7 @@ package domain;
 
 import java.util.Vector;
 
+import data_objects.Kunde;
 import data_objects.Mitarbeiter;
 
 public class Mitarbeiterverwaltung {
@@ -22,6 +23,26 @@ public class Mitarbeiterverwaltung {
 		return null;
 	}
 	
+	public Mitarbeiter suchMitarbeiter(int id){
+		for(Mitarbeiter ma : mitarbeiter){
+			if(ma.getId().equals(id)){
+				return ma;
+				}
+			}
+			return null;
+		}
+	
+	public void erstelleMitarbeiter(Mitarbeiter einMa) {
+		mitarbeiter.add(einMa);
+	}
+	
+	public void loescheMitarbeiter(Mitarbeiter einMa) {
+		mitarbeiter.remove(einMa);
+	}
+	
+	/*
+	 * 
+	 */
 	public Vector<Mitarbeiter> getMitarbeiter() {
 		return mitarbeiter;
 	}
