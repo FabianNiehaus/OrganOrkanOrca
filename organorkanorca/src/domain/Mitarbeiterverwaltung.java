@@ -10,6 +10,11 @@ public class Mitarbeiterverwaltung {
 
 	private Vector<Mitarbeiter> mitarbeiter = new Vector<Mitarbeiter>();
 	
+	
+	public Mitarbeiter anmelden(String login, String passwort) throws LoginFailedException {
+		throw new LoginFailedException(login);
+	}
+
 	/**
 	 * Prüft, ob ein bestimmter Mitarbeiter in diesem Warenkorb liegt.
 	 * @param art Zu überprüfender Mitarbeiter
