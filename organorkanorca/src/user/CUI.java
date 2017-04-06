@@ -1,11 +1,9 @@
 package user;
 
-import domain.Artikelverwaltung;
-import domain.Kundenverwaltung;
-import domain.Mitarbeiterverwaltung;
-import domain.Warenkorbverwaltung;
+import data_objects.Kunde;
+import data_objects.Person;
 import domain.eShopCore;
-
+import domain.exceptions.LoginFailedException;
 import util.IO;
 
 public class CUI {
@@ -15,12 +13,12 @@ public class CUI {
 	
 	public static void main(String[] args){
 		
-		eShopCore eShop = new eShopCore(
-				new Artikelverwaltung(),
-				new Kundenverwaltung(),
-				new Mitarbeiterverwaltung(),
-				new Warenkorbverwaltung()
-		);
+		eShopCore eShop = new eShopCore();
+//				new Artikelverwaltung(),
+//				new Kundenverwaltung(),
+//				new Mitarbeiterverwaltung(),
+//				new Warenkorbverwaltung()
+//		);
 		
 		IO.println("Willkommen bei OrganOrkanOrca.org.");
 		IO.println("Bitte melden Sie Sich an.");
@@ -31,7 +29,15 @@ public class CUI {
 		IO.print("ID: ");
 		int id = IO.readInt();
 		
-		IO.println(eShop.anmelden(firstname, lastname, id));
+		try {
+			Person p = eShop.anmelden(firstname, lastname, id);
+			String typ = (p instanceof Kunde) ? "Kunde" : "Mitarbeiter";
+			IO.println(p.getFirstname() + " hat sich als " + typ + " eingeloggt.");
+			IO.println(p.getFirstname() + " hat sich als " + p.getClass().getSimpleName() + " eingeloggt.");
+		} catch (LoginFailedException lfe) {
+			System.out.println(lfe.getMessage());
+			System.out.println("Bitte noch einmal versuchen!");
+		}
 		
 		while(!input.equals("quit") || !input.equals("exit")){
 			

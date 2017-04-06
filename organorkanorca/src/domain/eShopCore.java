@@ -1,38 +1,46 @@
 package domain;
 
-import java.util.HashMap;
-
-import util.AccessControl;
-
-import data_objects.*;
-import domain.exceptions.VectorIsEmptyException;
+import data_objects.Artikel;
+import data_objects.Kunde;
+import data_objects.Mitarbeiter;
+import data_objects.Person;
+import data_objects.Warenkorb;
+import domain.exceptions.LoginFailedException;
 
 public class eShopCore {
 
-	/**
-	 * @param av Artikelvewaltung
-	 * @param kv Kundenverwaltung
-	 * @param mv Mitarbeiterverwaltung
-	 * @param wv Warenkorbverwaltung
-	 */
-	public eShopCore(Artikelverwaltung av, Kundenverwaltung kv, Mitarbeiterverwaltung mv, Warenkorbverwaltung wv) {
-		super();
-		this.av = av;
-		this.kv = kv;
-		this.mv = mv;
-		this.wv = wv;
-	}
-	
 	private Artikelverwaltung av;
 	private Kundenverwaltung kv;
 	private Mitarbeiterverwaltung mv;
 	private Warenkorbverwaltung wv;
 	
+	/**
+	 */
+	public eShopCore() {
+		super();
+		av = new Artikelverwaltung();
+		kv = new Kundenverwaltung();
+		mv = new Mitarbeiterverwaltung();
+		wv = new Warenkorbverwaltung();
+	}
+	
 	//private HashMap<Integer,? extends Person> nutzerzuordnung;
 	//-1 = nicht angemeldet, 0 = user, 1 = mitarbeiter
 	private byte userClass = -1;
 	
-	public String anmelden(String firstname, String lastname, int id){
+	public Person anmelden(String firstname, String lastname, int id) throws LoginFailedException {
+		Person p = null; 
+		
+		try {
+			p = mv.anmelden(firstname, lastname);
+		} catch (LoginFailedException lfe) {
+			//
+			p = kv.anmelden(firstname, lastname);
+		}
+		
+		return p;
+		
+/*		
 		try {
 			if(mv.sucheMitarbeiter(firstname, lastname) != null){
 				userClass = 1;
@@ -50,6 +58,7 @@ public class eShopCore {
 			e.printStackTrace();
 			return "Fehler (Vektoren leer)";
 		}
+		*/
 	}
 	
 	/**

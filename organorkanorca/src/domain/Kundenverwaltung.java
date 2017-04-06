@@ -1,14 +1,25 @@
 package domain;
 
 import java.util.Vector;
+
+import data_objects.Ereignis;
 import data_objects.Kunde;
-import data_objects.Warenkorb;
+import data_objects.Person;
+import data_objects.Typ;
+import domain.exceptions.LoginFailedException;
 import domain.exceptions.VectorIsEmptyException;
 
 public class Kundenverwaltung {
 	
 	private Vector<Kunde> kunden = new Vector<Kunde>();
 	
+	
+	public Kunde anmelden(String login, String passwort) throws LoginFailedException {
+
+		if (!passwort.isEmpty())
+			return new Kunde(login, passwort, 0);
+		throw new LoginFailedException(login);
+	}
 	
 	/**
 	 * Prüft, ob ein bestimmter Kunde in der Kundenverwaltung liegt.
