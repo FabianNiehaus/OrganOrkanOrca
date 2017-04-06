@@ -2,6 +2,8 @@ package domain;
 
 import java.util.HashMap;
 
+import util.AccessControl;
+
 import data_objects.*;
 
 public class eShopCore {
@@ -25,21 +27,22 @@ public class eShopCore {
 	private Mitarbeiterverwaltung mv;
 	private Warenkorbverwaltung wv;
 	
-	private HashMap<Integer,? extends Person> nutzerzuordnung;
+	//private HashMap<Integer,? extends Person> nutzerzuordnung;
+	//-1 = nicht angemeldet, 0 = user, 1 = mitarbeiter
+	private byte userClass = -1;
 	
-	public void anmelden(String firstname, String lastname){
+	public String anmelden(String firstname, String lastname){
 		if(mv.sucheMitarbeiter(firstname, lastname) != null){
-			/*
-			 * TO-DO: Anmeldelogik für Mitarbeiter
-			 */
+			userClass = 1;
+			return "Angemeldet als Mitarbeiter " + firstname + " " + lastname;
+			
 		} else if(kv.sucheKunde(firstname, lastname) != null){
-			/*
-			 * TO-DO: Anmeldelogik für Kunden
-			 */
+			userClass = 0;
+			return "Angemeldet als Kunde " + firstname + " " + lastname;
+			
 		} else {
-			/*
-			 * TO-DO: Anmeldelogik für falsche Anmeldung
-			 */
+			userClass = -1;
+			return "Keine Kunde / Mitarbeiter für Anmeldedaten " + firstname + " " + lastname + " gefunden!";
 		}
 	}
 	
