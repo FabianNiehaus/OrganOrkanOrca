@@ -7,6 +7,7 @@ public class Kundenverwaltung {
 	
 	private Vector<Kunde> kunden;
 	
+	
 	/**
 	 * Prüft, ob ein bestimmter Kunde in diesem Warenkorb liegt.
 	 * @param art Zu überprüfender Kunde

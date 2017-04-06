@@ -1,5 +1,7 @@
 package domain;
 
+import java.util.HashMap;
+
 import data_objects.*;
 
 public class eShopCore {
@@ -22,6 +24,8 @@ public class eShopCore {
 	private Kundenverwaltung kv;
 	private Mitarbeiterverwaltung mv;
 	private Warenkorbverwaltung wv;
+	
+	private HashMap<Integer,? extends Person> nutzerzuordnung;
 	
 	public void anmelden(String firstname, String lastname){
 		if(mv.sucheMitarbeiter(firstname, lastname) != null){
