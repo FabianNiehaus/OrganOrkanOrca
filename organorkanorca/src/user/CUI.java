@@ -10,7 +10,8 @@ import util.IO;
 
 public class CUI {
 	
-	private static String input;
+	private static String input = "";
+	private boolean loggedIn;
 	
 	public static void main(String[] args){
 		
@@ -21,7 +22,18 @@ public class CUI {
 				new Warenkorbverwaltung()
 		);
 		
-		while(!input.equals("quit") || !input.equals("exit") ){
+		IO.println("Willkommen bei OrganOrkanOrca.org.");
+		IO.println("Bitte melden Sie Sich an.");
+		IO.print("Vorname: ");
+		String firstname = IO.readString();
+		IO.print("Nachname: ");
+		String lastname = IO.readString();
+		IO.print("ID: ");
+		int id = IO.readInt();
+		
+		IO.println(eShop.anmelden(firstname, lastname, id));
+		
+		while(!input.equals("quit") || !input.equals("exit")){
 			
 			IO.println("eShop Hauptseite");
 			IO.println("Eigabe \"a\" um alle Artikel auszugeben");
@@ -31,14 +43,7 @@ public class CUI {
 			
 			input = IO.readString();
 			
-			switch (input) {
-				case "a": 	eShop.alleArtikelAusgeben();
-							break;
-				case "k":	eShop.alleKundenAusgeben();
-							break;
-				case "m":	eShop.alleMitarbeiterAusgeben();
-							break;
-			}
+			
 		}
 	}
 }
