@@ -1,6 +1,11 @@
 package domain;
 
+import java.util.HashMap;
+
+import util.AccessControl;
+
 import data_objects.*;
+import domain.exceptions.VectorIsEmptyException;
 
 public class eShopCore {
 
@@ -23,19 +28,27 @@ public class eShopCore {
 	private Mitarbeiterverwaltung mv;
 	private Warenkorbverwaltung wv;
 	
-	public void anmelden(String firstname, String lastname){
-		if(mv.sucheMitarbeiter(firstname, lastname) != null){
-			/*
-			 * TO-DO: Anmeldelogik für Mitarbeiter
-			 */
-		} else if(kv.sucheKunde(firstname, lastname) != null){
-			/*
-			 * TO-DO: Anmeldelogik für Kunden
-			 */
-		} else {
-			/*
-			 * TO-DO: Anmeldelogik für falsche Anmeldung
-			 */
+	//private HashMap<Integer,? extends Person> nutzerzuordnung;
+	//-1 = nicht angemeldet, 0 = user, 1 = mitarbeiter
+	private byte userClass = -1;
+	
+	public String anmelden(String firstname, String lastname, int id){
+		try {
+			if(mv.sucheMitarbeiter(firstname, lastname) != null){
+				userClass = 1;
+				return "Angemeldet als Mitarbeiter " + firstname + " " + lastname;
+				
+			} else if(kv.sucheKunde(firstname, lastname) != null){
+				userClass = 0;
+				return "Angemeldet als Kunde " + firstname + " " + lastname;
+				
+			} else {
+				userClass = -1;
+				return "Keine Kunde / Mitarbeiter für Anmeldedaten " + firstname + " " + lastname + " gefunden!";
+			}
+		} catch (VectorIsEmptyException e) {
+			e.printStackTrace();
+			return "Fehler (Vektoren leer)";
 		}
 	}
 	
