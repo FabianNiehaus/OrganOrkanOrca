@@ -28,15 +28,7 @@ public class eShopCore {
 	//-1 = nicht angemeldet, 0 = user, 1 = mitarbeiter
 	private byte userClass = -1;
 	
-<<<<<<< HEAD
-	/**
-	 * @param firstname Vorname des Benutzers
-	 * @param lastname Nachname des Benutzers
-	 * @param id ID des Benutzers
-	 * @return Erfolgs-/fehlermeldung
-	 */
-	public String anmelden(String firstname, String lastname, int id){
-=======
+
 	public Person anmelden(String firstname, String lastname, int id) throws LoginFailedException {
 		Person p = null; 
 		
