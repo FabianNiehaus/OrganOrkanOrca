@@ -13,9 +13,12 @@ public class Kunde extends Person {
 	private String address_Zip;
 	private String address_Town;
 	
-	public Kunde(String firstname, String lastname, int id, String passwort) {
+	private Warenkorb warenkorb;
+	
+	public Kunde(String firstname, String lastname, int id, String passwort, Warenkorb wk) {
 		super(firstname, lastname, id, passwort);
 		// TODO Auto-generated constructor stub
+		this.warenkorb = wk;
 	}
 
 	public String getAddress_Street() {
@@ -40,6 +43,14 @@ public class Kunde extends Person {
 
 	public void setAddress_Town(String address_Town) {
 		this.address_Town = address_Town;
+	}
+
+	public Warenkorb getWarenkorb() {
+		return warenkorb;
+	}
+
+	public void setWarenkorb(Warenkorb warenkorb) {
+		this.warenkorb = warenkorb;
 	}
 
 }

@@ -10,6 +10,7 @@ import java.util.Vector;
 import data_objects.Artikel;
 import data_objects.Kunde;
 import data_objects.Person;
+import data_objects.Warenkorb;
 import data_objects.Mitarbeiter;
 import domain.eShopCore;
 import domain.exceptions.LoginFailedException;
@@ -158,6 +159,18 @@ public class CUI {
 		
 	}
 	
+	private void artikelInWarenkorbLegen(){
+		IO.print("Artikelnummer:");
+		int artikelnummer = IO.readInt();
+		IO.print("Anzahl:");
+		int anzahl = IO.readInt();
+		IO.println("-----------------------");
+		
+		Warenkorb wk = eShop.artikelInWarenkorbLegen(artikelnummer, anzahl, user);
+		
+		IO.println(wk.toString());
+	}
+	
 	private void gibArtikelverwaltungAus(){
 		IO.println("");
 		
@@ -170,7 +183,7 @@ public class CUI {
 		
 		if((user instanceof Kunde)){
 			// Menüeingaben speziell für Kunde
-			IO.println("Eingabe \"k <Artikelnummer>\" um Artikel direkt in Warenkorb zu legen");
+			IO.println("Eingabe \"k\" um Artikel in Warenkorb zu legen");
 		} else if (user instanceof Mitarbeiter){
 			// Menüeingaben speziel für Mitarbeiter
 			IO.println("Eingabe \"e\" um Artikel zu erstellen");
@@ -187,6 +200,7 @@ public class CUI {
 		case "s": artikelSortiertAusgeben(eShop.alleArtikelAusgeben()); break;
 		case "e": artikelErstellen(); break;
 		case "b": artikelBestandErhoehen(); break;
+		case "k": artikelInWarenkorbLegen(); break;
 		}
 		
 	}

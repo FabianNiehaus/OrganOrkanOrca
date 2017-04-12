@@ -1,19 +1,18 @@
 package data_objects;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Warenkorb {
 	
 	/**
 	 * @param id Eindeutige ID des Warenkorbs
 	 */
-	public Warenkorb(int id) {
+	public Warenkorb() {
 		super();
-		this.id = id;
 	}
 
-	private LinkedHashMap<Artikel,Integer> artikel;
-	private int id;
+	private HashMap<Artikel,Integer> artikel = new HashMap<>();
 	
 	/**
 	 * Prüft, ob ein bestimmter Artikel in diesem Warenkorb liegt.
@@ -21,12 +20,15 @@ public class Warenkorb {
 	 * @return Gibt <b>true</b> zurück, wenn zu prüfender Artikel in der HAsMap artikel gespeichert ist. Sonst <b>false</b>.
 	 */
 	public boolean sucheArtikel(Artikel art){
-		if(artikel.containsKey(art)){
-			return true;
+		if(!artikel.isEmpty()){
+			if(artikel.containsKey(art)){
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
-		else {
-			return false;
-		}
+		return false;
 	}
 	
 	public void aendereAnzahl(Artikel art, int anz){
@@ -47,15 +49,13 @@ public class Warenkorb {
 			artikel.remove(art, artikel.get(art));
 		}
 	}
-
-	public int getId() {
-		return id;
-	}
 	
-	/* ID soll nach Erzeugung nicht verändert werden
-	 * 
-	public void setId(int id) {
-		this.id = id;
+	public String toString(){
+		String retStr = "";
+		int pos = 1;
+		for (Map.Entry<Artikel, Integer> ent : artikel.entrySet()){
+			retStr += pos + ") " + ent.getKey().getBezeichnung() + " | " + ent.getValue() + " Stk.\n";
+		}
+		return retStr;
 	}
-	*/
 }

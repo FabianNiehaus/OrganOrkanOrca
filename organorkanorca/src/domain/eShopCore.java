@@ -24,6 +24,9 @@ public class eShopCore {
 		kv = new Kundenverwaltung();
 		mv = new Mitarbeiterverwaltung();
 		wv = new Warenkorbverwaltung();
+		
+		Kunde ku = kv.erstelleKunde("Fabian","Niehaus", "test", wv.erstelleWarenkorb());
+		System.out.println(ku.getId());
 	}
 	
 	//private HashMap<Integer,? extends Person> nutzerzuordnung;
@@ -83,8 +86,7 @@ public class eShopCore {
 	 * @param lastname Nachname des anzulegenden Kunden
 	 */
 	public void erstelleKunde(String firstname, String lastname, String passwort){
-		Kunde k = new Kunde(firstname, lastname, kv.getNextID(), passwort);
-		kv.erstelleKunde(k);
+		kv.erstelleKunde(firstname, lastname, passwort, wv.erstelleWarenkorb());
 	}
 	
 	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis){
@@ -93,5 +95,12 @@ public class eShopCore {
 	
 	public Artikel erhoeheArtikelBestand(int artikelnummer, int bestand){
 		return av.erhoeheBestand(artikelnummer, bestand);
+	}
+	
+	public Warenkorb artikelInWarenkorbLegen(int artikelnummer, int anzahl, Person p){
+		Warenkorb wk = kv.gibWarenkorbVonKunde(p);
+		Artikel art = av.sucheArtikel(artikelnummer);
+		wv.legeInWarenkorb(wk, art, anzahl);
+		return wk;
 	}
 }

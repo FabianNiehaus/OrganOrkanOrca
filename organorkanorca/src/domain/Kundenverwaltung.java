@@ -6,6 +6,7 @@ import data_objects.Ereignis;
 import data_objects.Kunde;
 import data_objects.Person;
 import data_objects.Typ;
+import data_objects.Warenkorb;
 import domain.exceptions.LoginFailedException;
 import domain.exceptions.VectorIsEmptyException;
 
@@ -14,7 +15,7 @@ public class Kundenverwaltung {
 	private Vector<Kunde> kunden = new Vector<Kunde>();
 	
 	public Kundenverwaltung(){
-		kunden.add(new Kunde("Fabian","Niehaus",100,"test"));
+		
 	}
 	
 	
@@ -50,9 +51,10 @@ public class Kundenverwaltung {
 			return null;
 		}
 	
-	public void erstelleKunde(Kunde einKunde) {
-		kunden.add(einKunde);
-		
+	public Kunde erstelleKunde(String firstname, String lastname, String passwort, Warenkorb wk) {
+		Kunde ku = new Kunde(firstname, lastname, getNextID(), passwort, wk);
+		kunden.add(ku);
+		return ku;
 	}
 	
 	public void loescheKunde(Kunde einKunde) {
@@ -79,6 +81,10 @@ public class Kundenverwaltung {
 	
 	public Vector<Kunde> getKunden() {
 		return kunden;
+	}
+	
+	public Warenkorb gibWarenkorbVonKunde(Person ku){
+		return ((Kunde) ku).getWarenkorb();
 	}
 
 	
