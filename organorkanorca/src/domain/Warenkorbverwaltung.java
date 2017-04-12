@@ -1,5 +1,6 @@
 package domain;
 
+import java.util.LinkedHashMap;
 import java.util.Vector;
 import data_objects.*;
 
@@ -45,6 +46,10 @@ public class Warenkorbverwaltung {
 	
 	public void leereWarenkorb(Warenkorb wk){
 		wk.leereWarkenkorb();
+	}
+	
+	public LinkedHashMap<Artikel, Integer> getArtikel(Warenkorb wk){
+		return wk.getArtikel();
 	}
 
 }

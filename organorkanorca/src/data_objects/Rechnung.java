@@ -17,11 +17,12 @@ public class Rechnung {
 	 * @param wk
 	 * @param gesamt
 	 */
-	public Rechnung(Kunde ku, Date datum, Warenkorb wk) {
+	public Rechnung(Kunde ku, Date datum, Warenkorb wk, double gesamt) {
 		super();
 		this.ku = ku;
 		this.datum = datum;
 		this.wk = wk;
+		this.gesamt = gesamt;
 	}
 	
 	private Kunde ku;
@@ -41,6 +42,5 @@ public class Rechnung {
 	public double getGesamt() {
 		return gesamt;
 	}
-	
 	
 }

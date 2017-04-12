@@ -1,12 +1,14 @@
 package user;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Vector;
 
 import data_objects.Artikel;
 import data_objects.Kunde;
 import data_objects.Person;
-
+import data_objects.Rechnung;
 import data_objects.Mitarbeiter;
 import domain.eShopCore;
 import domain.exceptions.LoginFailedException;
@@ -197,15 +199,37 @@ public class CUI {
 		gibWarenkorbAus();
 	}
 	
+	private void warenkorbKaufen(){
+		//Formatierungsvorlage für Datum
+		DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+		//Kauf abwickeln und Rechnung erzeugen
+		Rechnung re = eShop.warenkorbKaufen(user);
+		
+		IO.println("Rechnung");
+		IO.println("");
+		IO.println(dateFormat.format(re.getDatum()));
+		IO.println("");
+		IO.println("Kunde:");
+		IO.println("Kundennummer: " + re.getKu().getId());
+		IO.println(re.getKu().getFirstname() + " " + re.getKu().getLastname());
+		IO.println(re.getKu().getAddress_Street());
+		IO.println(re.getKu().getAddress_Zip() + " " + re.getKu().getAddress_Town());
+		IO.println("");
+		gibWarenkorbAus();
+		IO.println("Gesamtbetrag: " + re.getGesamt() + "€");
+	}
+	
 	private void gibWarenkorbverwaltungAus(){
 		String input = "";
 		
 		do{
 			IO.println("");		
 			
-			IO.println("Eingabe \"w\" um Warenkorb auszugeben");			IO.println("Eingabe \"k\" um Artikel in Warenkorb zu legen");
+			IO.println("Eingabe \"w\" um Warenkorb auszugeben");			
+			IO.println("Eingabe \"k\" um Artikel in Warenkorb zu legen");
 			IO.println("Eingabe \"a\" um Artikel im Warenkorb zu ändern");
 			IO.println("Eingabe \"l\" um Warenkorb zu leeren");
+			IO.println("Eingabe \"b\" um Warenkorb zu bezahlen");
 			IO.println("Eingabe \"q\" um zum Hauptmenü zurückzukehren");
 			IO.println("---------------------------------------------------------------------");
 			
@@ -216,6 +240,7 @@ public class CUI {
 			case "k": artikelInWarenkorbLegen(); break;
 			case "a": aendereArtiklInWarenkorb(); break;
 			case "l": eShop.warenkorbLeeren(user); break;
+			case "b": warenkorbKaufen(); break;
 			}
 		} while (!input.equals("q"));
 	}

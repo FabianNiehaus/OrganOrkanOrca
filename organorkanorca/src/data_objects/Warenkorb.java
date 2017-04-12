@@ -68,8 +68,13 @@ public class Warenkorb {
 		String retStr = "";
 		int pos = 1;
 		for (Map.Entry<Artikel, Integer> ent : artikel.entrySet()){
-			retStr += pos + ") " + ent.getKey().getBezeichnung() + " | " + ent.getValue() + " Stk.\n";
+			retStr += pos + ") " + ent.getKey().getBezeichnung() + " | " + ent.getValue() + " Stk. | á " + ent.getKey().getPreis() + "€\n";
+			pos++;
 		}
 		return retStr;
+	}
+	
+	public LinkedHashMap<Artikel, Integer> getArtikel(){
+		return artikel;
 	}
 }

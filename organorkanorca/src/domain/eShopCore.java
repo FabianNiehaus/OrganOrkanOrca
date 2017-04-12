@@ -1,6 +1,9 @@
 package domain;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import data_objects.Artikel;
@@ -130,7 +133,27 @@ public class eShopCore {
 		wv.aendereWarenkorb(wk, pos, anz);
 	}
 	
-	public Rechnung rechnungErzeugen(Person p){
-		return null;
-	}
+	public Rechnung warenkorbKaufen(Person p){
+		//Warenkorb des Benutzers abfragen
+		Warenkorb wk = kv.gibWarenkorbVonKunde(p);
+		
+		//Bestand der Artikel im Warenkorb reduzieren und Gesamtpreis errechnen
+		int gesamt = 0;
+		LinkedHashMap<Artikel,Integer> inhalt = wk.getArtikel();
+		for(Map.Entry<Artikel, Integer> ent : inhalt.entrySet()){
+			try{
+				av.erhoeheBestand(ent.getKey().getArtikelNr(), -1 * ent.getValue());
+			} catch (ArticleNumberNonexistantException anne){
+				
+			}
+			gesamt += (ent.getValue() * ent.getKey().getPreis());
+		}
+		
+		//Rechnung erzeugen und Warenkorb leeren
+		Rechnung re = rv.rechnungErzeugen((Kunde) p, new Date(), wk, gesamt);
+		wv.leereWarenkorb(wk);
+		
+		//Rechnungsobjekt an C/GUI zurückgeben
+		return re;
+	}	
 }
