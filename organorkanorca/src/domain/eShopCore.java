@@ -103,4 +103,8 @@ public class eShopCore {
 		wv.legeInWarenkorb(wk, art, anzahl);
 		return wk;
 	}
+	
+	public Warenkorb warenkorbAusgeben(Person p){
+		return kv.gibWarenkorbVonKunde(p);
+	}
 }

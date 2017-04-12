@@ -171,6 +171,11 @@ public class CUI {
 		IO.println(wk.toString());
 	}
 	
+	private void gibWarenkorbAus(){
+		IO.println("Warenkorb");
+		IO.println(eShop.warenkorbAusgeben(user).toString());
+	}
+	
 	private void gibArtikelverwaltungAus(){
 		IO.println("");
 		
@@ -236,6 +241,7 @@ public class CUI {
 		case "a": gibArtikelverwaltungAus(); break;
 		case "k": artikelAusgeben(eShop.alleKundenAusgeben()); break;
 		case "m": artikelAusgeben(eShop.alleMitarbeiterAusgeben()); break;
+		case "w": gibWarenkorbAus(); break;
 		}
 	}
 	
