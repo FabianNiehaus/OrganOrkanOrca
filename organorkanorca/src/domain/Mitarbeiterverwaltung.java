@@ -10,9 +10,16 @@ public class Mitarbeiterverwaltung {
 
 	private Vector<Mitarbeiter> mitarbeiter = new Vector<Mitarbeiter>();
 	
+	public Mitarbeiterverwaltung(){
+		mitarbeiter.add(new Mitarbeiter("Mathis", "Möhlenkamp", 900, "test2"));
+	}
 	
 	public Mitarbeiter anmelden(int id, String passwort) throws LoginFailedException {
-		throw new LoginFailedException(id);
+		for (Mitarbeiter m : mitarbeiter){
+			if(m.getId() == id && m.getPasswort().equals(passwort)){
+				return m;
+			}
+		} throw new LoginFailedException(id);
 	}
 
 	/**

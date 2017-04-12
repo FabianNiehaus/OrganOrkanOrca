@@ -48,25 +48,24 @@ public class eShopCore {
 	 * @return Alle in der Artikelverwaltung gespeicherten Artikel
 	 */
 	public Vector<Artikel> alleArtikelAusgeben(){
+		//To-Do: Kopie von Artikelliste zurückgeben
 		return av.getArtikel();
 	}
 
 	/**
 	 * @return Alle in der Kundenverwaltung gespeicherten Kunden
 	 */
-	public void alleKundenAusgeben(){
-		for (Kunde k : kv.getKunden()){
-			k.toString();
-		}
+	public Vector<Kunde> alleKundenAusgeben(){
+		//To-Do: Kopie von Kundenliste zurückgeben
+		return kv.getKunden();
 	}
 	
 	/**
 	 * @return Alle in der Mitarbeiterverwaltung gespeicherten Mitarbeiter
 	 */
-	public void alleMitarbeiterAusgeben(){
-		for (Mitarbeiter m : mv.getMitarbeiter()){
-			m.toString();
-		}
+	public Vector<Mitarbeiter> alleMitarbeiterAusgeben(){
+		//To-Do: Kopie von Mitarbeiterliste zurückgeben
+		return mv.getMitarbeiter();
 	}
 	
 	/**

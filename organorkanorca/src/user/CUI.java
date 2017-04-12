@@ -4,30 +4,27 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.util.Arrays;
 import java.util.Vector;
 
+import data_objects.Artikel;
 import data_objects.Kunde;
 import data_objects.Person;
 import data_objects.Mitarbeiter;
 import domain.eShopCore;
 import domain.exceptions.LoginFailedException;
 import util.IO;
+import util.StringComparator;
 
 public class CUI {
 	
 	private eShopCore eShop;
-	private BufferedReader in;
-	private BufferedWriter out;
 	private Person user = null; 
 	
 	public CUI(String datei) throws IOException {
 
 		eShop = new eShopCore();
 
-		// Stream-Objekt fuer Texteingabe ueber Konsolenfenster erzeugen
-		in = new BufferedReader(new InputStreamReader(System.in));
-		out = new BufferedWriter(new OutputStreamWriter(System.out));
 	}
 	
 	public void login(){
@@ -44,33 +41,151 @@ public class CUI {
 			user = eShop.anmelden(id, passwort);
 			IO.println(user.getFirstname() + " " + user.getLastname() + " hat sich als " + user.getClass().getSimpleName() + " eingeloggt.");
 		} catch (LoginFailedException lfe) {
-			System.out.println(lfe.getMessage());
-			System.out.println("Bitte noch einmal versuchen!");
+			IO.println(lfe.getMessage());
+			IO.println("Bitte noch einmal versuchen!");
+			IO.println("Eingabe \"q\" um den eShop zu beenden");
 		}
 	}
 	
-	public void gibMenueAus(){
+	private void artikelSuchen(Vector liste){
+		String searchType = "";
+		
+		IO.println("Artikel suchen");
+		IO.println("Eingabe \"nr\" um nach Artikelnummer zu suchen");
+		IO.println("Eingabe \"bez\" um nach Bezeichnung zu suchen");
+		IO.println("---------------------------------------------------------");
+		
+		searchType = IO.readString();
+		
+		if(searchType.equals("nr")){
+			//Logik Suche nach Artikelnummer
+		} else if(searchType.equals("bez")){
+			//Logik Suche nach Artikelbezeichnung
+		}
+	}
+	
+	private void artikelSortiertAusgeben(Vector liste){
+		String sortBy = "";
+		
+		IO.println("Artikel sortiert ausgeben:");
+		IO.println("Eingabe \"nr\" um nach Artikelnummer sortiert auszugeben");
+		IO.println("Eingabe \"bez\" um nach Bezeichnung sortiert auszugeben");
+		IO.println("---------------------------------------------------------");
+		
+		sortBy = IO.readString();
+		
+		Artikel[] artSort = new Artikel[liste.size()];
+		if (liste.isEmpty()) {
+			System.out.println("Keine Artikel auszugeben!");
+		} else {
+			int i = 0;
+			for(Object artikel : liste){
+				if(i < artSort.length){
+					artSort[i] = (Artikel) artikel;
+					i++;
+				}
+			}
+			
+			if (sortBy.equals("nr")){
+				//Sortieren nach Artikelnummer
+				boolean swapped = true;
+				int j = 0;
+				Artikel tmp;
+				while(swapped){
+					swapped = false;
+					j++;
+					for (int k = 0; k < artSort.length -j; k++){
+						if(artSort[k].getArtikelNr() > artSort[k+1].getArtikelNr()){
+							tmp = artSort[k];
+							artSort[k] = artSort[k+1];
+							artSort[k+1] = tmp;
+							swapped = true;
+						}
+					}
+				}
+			
+			} else if (sortBy.equals("bez")){
+				//Sortieren nach Artikelbezeichnung
+				//To-Do: Sortieren von Strings
+				boolean swapped = true;
+				int j = 0;
+				Artikel tmp;
+				while(swapped){
+					swapped = false;
+					j++;
+					for (int k = 0; k < artSort.length -j; k++){
+						if(StringComparator.compare(artSort[k].getBezeichnung(),artSort[k+1].getBezeichnung())){
+							tmp = artSort[k];
+							artSort[k] = artSort[k+1];
+							artSort[k+1] = tmp;
+							swapped = true;
+						}
+					}
+				}
+			}
+			for (Artikel art : artSort){
+				IO.println(art.toString());
+			}
+		}
+	}
+	
+	private void gibArtikelverwaltungAus(){
+		String input = "";
+		
+		IO.println("Eingabe \"a\" um alle Artikel auszugeben");
+		IO.println("Eingabe \"s\" um Artikel sortiert auszugeben");
+		IO.println("Eingabe \"f\" um Artikel zu suchen");
+		
+		
 		if((user instanceof Kunde)){
-			// Menüeingaben für Kunde
-		} else if((user instanceof Mitarbeiter)) {
-			// Menüeingaben für Mitarbeiter
+			// Menüeingaben speziell für Kunde
+			IO.println("Eingabe \"k <Artikelnummer>\" um Artikel direkt in Warenkorb zu legen");
+		} else if (user instanceof Mitarbeiter){
+			// Menüeingaben speziel für Mitarbeiter
+		}
+		
+		IO.println("Eingabe \"q\" um zum Hauptmenü zurückzukehren");
+		IO.println("---------------------------------------------------------------------");
+		
+		input = IO.readString();
+		
+		switch(input){
+		case "a": artikelAusgeben(eShop.alleArtikelAusgeben()); break;
+		case "s": artikelSortiertAusgeben(eShop.alleArtikelAusgeben()); break;
+		}
+		
+	}
+	
+	public void gibMenueAus(){
+		if ((user instanceof Kunde) || user instanceof Mitarbeiter){
 			IO.println("eShop Hauptseite");
-			IO.println("Eingabe \"a\" um alle Artikel auszugeben");
-			IO.println("Eingabe \"k\" um alle Kunden auszugeben");
-			IO.println("Eingabe \"m\" um alle Mitarbeiter auszugeben");
-			IO.println("Eingabe \"q\" um alle den eShop zu beenden");
+			
+			//Menüeingaben für alle
+			IO.println("Eingabe \"a\" um zur Artikelverwalung zu gelangen");
+			
+			if((user instanceof Kunde)){
+				// Menüeingaben speziell für Kunde
+				IO.println("Eingabe \"w\" um den Warenkorb auszugeben");
+				
+			} else if((user instanceof Mitarbeiter)) {
+				// Menüeingaben speziel für Mitarbeiter
+				
+				IO.println("Eingabe \"k\" um alle Kunden auszugeben");
+				IO.println("Eingabe \"m\" um alle Mitarbeiter auszugeben");
+				IO.println("Eingabe \"q\" um den eShop zu beenden");
+			}
+			
+			IO.println("Eingabe \"q\" um den eShop zu beenden");
 		} else {
 			login();
 		}
 	}
 	
-	private String liesEingabe() throws IOException {
-		return in.readLine();
-	}
-	
 	public void verarbeiteEingabe(String input) throws IOException{
 		switch(input){
-		case "a": artikelAusgeben(eShop.alleArtikelAusgeben()); break;
+		case "a": gibArtikelverwaltungAus(); break;
+		case "k": artikelAusgeben(eShop.alleKundenAusgeben()); break;
+		case "m": artikelAusgeben(eShop.alleMitarbeiterAusgeben()); break;
 		}
 	}
 	
@@ -87,13 +202,15 @@ public class CUI {
 		do {
 			gibMenueAus();
 			try {
-				input = liesEingabe();
+				input = IO.readString();
 				verarbeiteEingabe(input);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} while (!input.equals("q"));
+		
+		IO.println("OrganOrkanOrca wurde beendet.\nAuf Wiedersehen!");
 	}
 	
 	public static void main(String[] args){
@@ -109,12 +226,44 @@ public class CUI {
 		
 	}
 	
+	/**
+	 * Gibt in einer Liste gespeicherte Artikel auf der Konsole aus;
+	 * @param liste Liste der auszugebenden Artikel
+	 */
 	public void artikelAusgeben(Vector liste){
 		if (liste.isEmpty()) {
 			System.out.println("Keine Artikel auszugeben!");
 		} else {
 			for(Object artikel : liste){
 				IO.println(artikel.toString());
+			}
+		}
+	}
+	
+	/**
+	 * Gibt in einer Liste gespeicherte Mitarbeiter auf der Konsole aus;
+	 * @param liste Liste der auszugebenden Mitarbeiter
+	 */
+	public void  mitarbeiterAusgeben(Vector liste){
+		if (liste.isEmpty()) {
+			System.out.println("Keine Mitarbeiter auszugeben!");
+		} else {
+			for(Object mitarbeiter : liste){
+				IO.println(mitarbeiter.toString());
+			}
+		}
+	}
+	
+	/**
+	 * Gibt in einer Liste gespeicherte Kunden auf der Konsole aus;
+	 * @param liste Liste der auszugebenden Kunden
+	 */
+	public void  kundenAusgeben(Vector liste){
+		if (liste.isEmpty()) {
+			System.out.println("Keine Kunden auszugeben!");
+		} else {
+			for(Object kunde : liste){
+				IO.println(kunde.toString());
 			}
 		}
 	}

@@ -13,12 +13,17 @@ public class Kundenverwaltung {
 	
 	private Vector<Kunde> kunden = new Vector<Kunde>();
 	
+	public Kundenverwaltung(){
+		kunden.add(new Kunde("Fabian","Niehaus",100,"test"));
+	}
+	
 	
 	public Kunde anmelden(int id, String passwort) throws LoginFailedException {
-
-		if (!passwort.isEmpty())
-			return new Kunde("Test", "Kunde", 123, "testpasswort");
-		throw new LoginFailedException(id);
+		for (Kunde k : kunden){
+			if(k.getId() == id && k.getPasswort().equals(passwort)){
+				return k;
+			}
+		} throw new LoginFailedException(id);
 	}
 	
 	/**

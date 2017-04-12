@@ -4,27 +4,16 @@ import java.util.Vector;
 import data_objects.Artikel;
 
 public class Artikelverwaltung {
-
-	/**
-	 * 
-	 */
-	public Artikelverwaltung() {
-		super();
-	}
 	
-
-	/**
-	 * @param artikel Verwaltete Artikel
-	 */
-	public Artikelverwaltung(Vector<Artikel> artikel) {
-		super();
-		this.artikel = artikel;
+	public Artikelverwaltung(){
+		artikel.add(new Artikel("Orkan", 2, 5, 99999));
+		artikel.add(new Artikel("Orca", 3, 100, 5729.45));
+		artikel.add(new Artikel("Organ", 1, 2, 1000.00));
 	}
 
-	private Vector<Artikel> artikel;
+	private Vector<Artikel> artikel = new Vector<Artikel>(0);
 	
 	public Vector<Artikel> getArtikel() {
-		//To-Do: Kopie von Artikelliste zurückgeben
 		return artikel;
 	}
 
