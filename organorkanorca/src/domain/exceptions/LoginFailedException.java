@@ -2,7 +2,7 @@ package domain.exceptions;
 
 public class LoginFailedException extends Exception {
 
-	public LoginFailedException(String login) {
-		super("Login für Nutzer " + login + " ist fehlgeschlaggen.");
+	public LoginFailedException(int id) {
+		super("Login fï¿½r Nutzer " + id + " ist fehlgeschlaggen.");
 	}
 }

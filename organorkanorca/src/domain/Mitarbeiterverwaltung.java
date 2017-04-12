@@ -11,8 +11,8 @@ public class Mitarbeiterverwaltung {
 	private Vector<Mitarbeiter> mitarbeiter = new Vector<Mitarbeiter>();
 	
 	
-	public Mitarbeiter anmelden(String login, String passwort) throws LoginFailedException {
-		throw new LoginFailedException(login);
+	public Mitarbeiter anmelden(int id, String passwort) throws LoginFailedException {
+		throw new LoginFailedException(id);
 	}
 
 	/**

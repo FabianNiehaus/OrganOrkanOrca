@@ -18,15 +18,13 @@ public class CUI {
 
 		IO.println("Willkommen bei OrganOrkanOrca.org.");
 		IO.println("Bitte melden Sie Sich an.");
-		IO.print("Vorname: ");
-		String firstname = IO.readString();
-		IO.print("Nachname: ");
-		String lastname = IO.readString();
 		IO.print("ID: ");
 		int id = IO.readInt();
+		IO.print("Passwort: ");
+		String passwort = IO.readString();
 		
 		try {
-			Person p = eShop.anmelden(firstname, lastname, id);
+			Person p = eShop.anmelden(id, passwort);
 			String typ = (p instanceof Kunde) ? "Kunde" : "Mitarbeiter";
 			IO.println(p.getFirstname() + " hat sich als " + typ + " eingeloggt.");
 			IO.println(p.getFirstname() + " hat sich als " + p.getClass().getSimpleName() + " eingeloggt.");

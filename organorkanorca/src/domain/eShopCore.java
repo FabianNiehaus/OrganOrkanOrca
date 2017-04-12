@@ -31,14 +31,14 @@ public class eShopCore {
 	private byte userClass = -1;
 	
 
-	public Person anmelden(String firstname, String lastname, int id) throws LoginFailedException {
+	public Person anmelden(int id, String passwort) throws LoginFailedException {
 		Person p = null; 
 		
 		try {
-			p = mv.anmelden(firstname, lastname);
+			p = mv.anmelden(id, passwort);
 		} catch (LoginFailedException lfe) {
 			//
-			p = kv.anmelden(firstname, lastname);
+			p = kv.anmelden(id, passwort);
 		}
 		
 		return p;
@@ -83,8 +83,8 @@ public class eShopCore {
 	 * @param firstname Vorname des anzulegenden Kunden
 	 * @param lastname Nachname des anzulegenden Kunden
 	 */
-	public void erstelleKunde(String firstname, String lastname){
-		Kunde k = new Kunde(firstname, lastname, kv.getNextID());
+	public void erstelleKunde(String firstname, String lastname, String passwort){
+		Kunde k = new Kunde(firstname, lastname, kv.getNextID(), passwort);
 		kv.erstelleKunde(k);
 	}
 }

@@ -13,8 +13,8 @@ public class Kunde extends Person {
 	private String address_Zip;
 	private String address_Town;
 	
-	public Kunde(String firstname, String lastname, int id) {
-		super(firstname, lastname, id);
+	public Kunde(String firstname, String lastname, int id, String passwort) {
+		super(firstname, lastname, id, passwort);
 		// TODO Auto-generated constructor stub
 	}
 

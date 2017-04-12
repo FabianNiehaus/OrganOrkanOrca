@@ -14,11 +14,11 @@ public class Kundenverwaltung {
 	private Vector<Kunde> kunden = new Vector<Kunde>();
 	
 	
-	public Kunde anmelden(String login, String passwort) throws LoginFailedException {
+	public Kunde anmelden(int id, String passwort) throws LoginFailedException {
 
 		if (!passwort.isEmpty())
-			return new Kunde(login, passwort, 0);
-		throw new LoginFailedException(login);
+			return new Kunde("Test", "Kunde", 123, "testpasswort");
+		throw new LoginFailedException(id);
 	}
 	
 	/**
