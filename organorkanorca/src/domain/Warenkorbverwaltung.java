@@ -42,5 +42,9 @@ public class Warenkorbverwaltung {
 	public Vector<Warenkorb> getWarenkoerbe() {
 		return warenkoerbe;
 	}
+	
+	public void leereWarenkorb(Warenkorb wk){
+		wk.leereWarkenkorb();
+	}
 
 }

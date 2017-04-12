@@ -107,4 +107,9 @@ public class eShopCore {
 	public Warenkorb warenkorbAusgeben(Person p){
 		return kv.gibWarenkorbVonKunde(p);
 	}
+	
+	public void warenkorbLeeren(Person p){
+		Warenkorb wk = kv.gibWarenkorbVonKunde(p);
+		wv.leereWarenkorb(wk);
+	}
 }

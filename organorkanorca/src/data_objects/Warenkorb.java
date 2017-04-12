@@ -50,6 +50,12 @@ public class Warenkorb {
 		}
 	}
 	
+	public void leereWarkenkorb(){
+		for(Map.Entry<Artikel, Integer> ent : artikel.entrySet()){
+			artikel.remove(ent);
+		}
+	}
+	
 	public String toString(){
 		String retStr = "";
 		int pos = 1;

@@ -176,13 +176,36 @@ public class CUI {
 		IO.println(eShop.warenkorbAusgeben(user).toString());
 	}
 	
+	private void leereWarenkorb(){
+		eShop.warenkorbLeeren(user);
+	}
+	
+	private void gibWarenkorbverwaltungAus(){
+		IO.println("");
+		
+		String input = "";
+		
+		IO.println("Eingabe \"w\" um Warenkorb auszugeben");
+		IO.println("Eingabe \"k\" um Artikel in Warenkorb zu legen");
+		IO.println("Eingabe \"a\" um Artikel im Warenkorb zu ändern");
+		IO.println("Eingabe \"l\" um Warenkorb zu leeren");
+		
+		switch(input){
+		case "w": gibWarenkorbAus(); break;
+		case "k": artikelInWarenkorbLegen(); break;
+		case "a": ;break;
+		case "l": leereWarenkorb(); break;
+		}
+		
+	}
+	
 	private void gibArtikelverwaltungAus(){
 		IO.println("");
 		
 		String input = "";
 		
 		IO.println("Eingabe \"a\" um alle Artikel auszugeben");
-		IO.println("Eingabe \"s\" um Artikel sortiert auszugeben");
+		IO.println("Eingabe \"k\" um Artikel sortiert auszugeben");
 		IO.println("Eingabe \"f\" um Artikel zu suchen");
 		
 		
@@ -217,11 +240,11 @@ public class CUI {
 			IO.println("eShop Hauptseite");
 			
 			//Menüeingaben für alle
-			IO.println("Eingabe \"a\" um zur Artikelverwalung zu gelangen");
+			IO.println("Eingabe \"a\" um zur Artikelverwaltung zu gelangen");
 			
 			if((user instanceof Kunde)){
 				// Menüeingaben speziell für Kunde
-				IO.println("Eingabe \"w\" um den Warenkorb auszugeben");
+				IO.println("Eingabe \"w\" zur Warenkobverwaltung zu gelangen");
 				
 			} else if((user instanceof Mitarbeiter)) {
 				// Menüeingaben speziel für Mitarbeiter
@@ -241,7 +264,7 @@ public class CUI {
 		case "a": gibArtikelverwaltungAus(); break;
 		case "k": artikelAusgeben(eShop.alleKundenAusgeben()); break;
 		case "m": artikelAusgeben(eShop.alleMitarbeiterAusgeben()); break;
-		case "w": gibWarenkorbAus(); break;
+		case "w": gibWarenkorbverwaltungAus();; break;
 		}
 	}
 	
