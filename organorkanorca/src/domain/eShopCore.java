@@ -8,6 +8,7 @@ import data_objects.Mitarbeiter;
 import data_objects.Person;
 import data_objects.Warenkorb;
 import domain.exceptions.LoginFailedException;
+import domain.exceptions.PositionNotExistantException;
 
 public class eShopCore {
 
@@ -93,14 +94,22 @@ public class eShopCore {
 		return av.erstelleArtikel(bezeichnung, bestand, preis);
 	}
 	
-	public Artikel erhoeheArtikelBestand(int artikelnummer, int bestand){
-		return av.erhoeheBestand(artikelnummer, bestand);
+	public Artikel erhoeheArtikelBestand(int artikelnummer, int bestand) throws PositionNotExistantException{
+		try{
+			return av.erhoeheBestand(artikelnummer, bestand);
+		} catch (PositionNotExistantException pnee){
+			throw new PositionNotExistantException();
+		}
 	}
 	
-	public void artikelInWarenkorbLegen(int artikelnummer, int anzahl, Person p){
+	public void artikelInWarenkorbLegen(int artikelnummer, int anzahl, Person p) throws PositionNotExistantException{
 		Warenkorb wk = kv.gibWarenkorbVonKunde(p);
+		try{
 		Artikel art = av.sucheArtikel(artikelnummer);
 		wv.legeInWarenkorb(wk, art, anzahl);
+		} catch (PositionNotExistantException pnee){
+			throw new PositionNotExistantException();
+		}
 	}
 	
 	public Warenkorb warenkorbAusgeben(Person p){

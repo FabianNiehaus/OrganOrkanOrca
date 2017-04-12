@@ -3,6 +3,7 @@ package domain;
 import java.util.Vector;
 import data_objects.Artikel;
 import data_objects.Kunde;
+import domain.exceptions.PositionNotExistantException;
 
 public class Artikelverwaltung {
 	
@@ -38,19 +39,24 @@ public class Artikelverwaltung {
 		return art;
 	}
 	
-	public Artikel sucheArtikel(int artikelnummer){
+	public Artikel sucheArtikel(int artikelnummer) throws PositionNotExistantException{
 		for(Artikel art : artikel){
 			if(art.getArtikelNr() == artikelnummer){
 				return art;
 			}
 		}
-		return null;
+		throw new PositionNotExistantException();
 	}
 	
-	public Artikel erhoeheBestand(int artikelnummer, int bestand){
-		Artikel art = sucheArtikel(artikelnummer);
-		art.setBestand(art.getBestand() + bestand);
-		return art;
+	public Artikel erhoeheBestand(int artikelnummer, int bestand) throws PositionNotExistantException{
+		try{
+			Artikel art = sucheArtikel(artikelnummer);
+			art.setBestand(art.getBestand() + bestand);
+			return art;
+		} catch (PositionNotExistantException pnee){
+			throw new PositionNotExistantException();
+		}
+		
 	}
 	
 }

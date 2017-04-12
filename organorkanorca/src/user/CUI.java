@@ -10,6 +10,7 @@ import data_objects.Person;
 import data_objects.Mitarbeiter;
 import domain.eShopCore;
 import domain.exceptions.LoginFailedException;
+import domain.exceptions.PositionNotExistantException;
 import util.IO;
 import util.StringComparator;
 
@@ -149,9 +150,12 @@ public class CUI {
 		int bestand = IO.readInt();
 		IO.println("-----------------------");
 		
-		Artikel art = eShop.erhoeheArtikelBestand(artikelnummer, bestand);
-		
-		IO.println(art.toString());
+		try{
+			Artikel art = eShop.erhoeheArtikelBestand(artikelnummer, bestand);			
+			IO.println(art.toString());
+		} catch (PositionNotExistantException pnee){
+			IO.println("Artikelnummer existiert nicht!");
+		}
 		
 	}
 	
@@ -162,7 +166,11 @@ public class CUI {
 		int anzahl = IO.readInt();
 		IO.println("-----------------------");
 		
-		eShop.artikelInWarenkorbLegen(artikelnummer, anzahl, user);
+		try{
+			eShop.artikelInWarenkorbLegen(artikelnummer, anzahl, user);
+		} catch (PositionNotExistantException pnee){
+			IO.println("Artikelnummer existiert nicht!");
+		}
 		
 		gibWarenkorbAus();
 	}
