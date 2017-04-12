@@ -10,6 +10,7 @@ import data_objects.Kunde;
 import data_objects.Mitarbeiter;
 import data_objects.Person;
 import data_objects.Rechnung;
+import data_objects.Typ;
 import data_objects.Warenkorb;
 import domain.exceptions.LoginFailedException;
 import domain.exceptions.ArticleNumberNonexistantException;
@@ -21,6 +22,7 @@ public class eShopCore {
 	private Mitarbeiterverwaltung mv;
 	private Warenkorbverwaltung wv;
 	private Rechnungsverwaltung rv;
+	private Ereignisverwaltung ev;
 	
 	/**
 	 */
@@ -31,6 +33,7 @@ public class eShopCore {
 		mv = new Mitarbeiterverwaltung();
 		wv = new Warenkorbverwaltung();
 		rv = new Rechnungsverwaltung();
+		ev = new Ereignisverwaltung();
 		
 		Kunde ku = kv.erstelleKunde("Fabian","Niehaus", "test", wv.erstelleWarenkorb());
 		System.out.println(ku.getId());
@@ -96,13 +99,19 @@ public class eShopCore {
 		kv.erstelleKunde(firstname, lastname, passwort, wv.erstelleWarenkorb());
 	}
 	
-	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis){
-		return av.erstelleArtikel(bezeichnung, bestand, preis);
+	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, Person p){
+		Artikel art = av.erstelleArtikel(bezeichnung, bestand, preis);
+		//Ereignis erzeugen
+		ev.ereignisErstellen(p, Typ.NEU, art, bestand);
+		return art;
 	}
 	
-	public Artikel erhoeheArtikelBestand(int artikelnummer, int bestand) throws ArticleNumberNonexistantException{
+	public Artikel erhoeheArtikelBestand(int artikelnummer, int bestand, Person p) throws ArticleNumberNonexistantException{
 		try{
-			return av.erhoeheBestand(artikelnummer, bestand);
+			Artikel art = av.erhoeheBestand(artikelnummer, bestand);
+			//Ereignis erzeugen
+			ev.ereignisErstellen(p, Typ.EINLAGERUNG, art, bestand);
+			return art;
 		} catch (ArticleNumberNonexistantException anne){
 			throw new ArticleNumberNonexistantException();
 		}
@@ -142,11 +151,15 @@ public class eShopCore {
 		for(Map.Entry<Artikel, Integer> ent : inhalt.entrySet()){
 			try{
 				av.erhoeheBestand(ent.getKey().getArtikelNr(), -1 * ent.getValue());
+				//Ereignis erstellen
+				ev.ereignisErstellen(p, Typ.KAUF, ent.getKey(), (int) ent.getValue());
 			} catch (ArticleNumberNonexistantException anne){
 				
 			}
 			gesamt += (ent.getValue() * ent.getKey().getPreis());
 		}
+		
+		
 		
 		//Rechnung erzeugen und Warenkorb leeren
 		Rechnung re = rv.rechnungErzeugen((Kunde) p, new Date(), wk, gesamt);

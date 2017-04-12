@@ -140,7 +140,7 @@ public class CUI {
 		double preis = IO.readDouble();
 		IO.println("-----------------------");
 		
-		Artikel art = eShop.erstelleArtikel(bezeichnung, bestand, preis);
+		Artikel art = eShop.erstelleArtikel(bezeichnung, bestand, preis, user);
 		
 		IO.println(art.toString());
 	}
@@ -153,7 +153,7 @@ public class CUI {
 		IO.println("-----------------------");
 		
 		try{
-			Artikel art = eShop.erhoeheArtikelBestand(artikelnummer, bestand);			
+			Artikel art = eShop.erhoeheArtikelBestand(artikelnummer, bestand, user);			
 			IO.println(art.toString());
 		} catch (ArticleNumberNonexistantException anne){
 			IO.println("Artikelnummer existiert nicht!");
