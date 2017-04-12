@@ -24,6 +24,7 @@ public class Artikelverwaltung {
 	private Vector<Artikel> artikel;
 	
 	public Vector<Artikel> getArtikel() {
+		//To-Do: Kopie von Artikelliste zurückgeben
 		return artikel;
 	}
 
