@@ -35,12 +35,14 @@ public class Warenkorb {
 		int i = 0;
 		
 		for(Map.Entry<Artikel, Integer> ent : artikel.entrySet()){
-			i++;
+			
 			if(i == pos-1){
 				Artikel art = ent.getKey();
 				artikel.remove(ent);
 				artikel.put(art, anz);
 			}
+			
+			i++;
 		}
 	}
 	

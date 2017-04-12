@@ -1,16 +1,12 @@
 package user;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.Vector;
 
 import data_objects.Artikel;
 import data_objects.Kunde;
 import data_objects.Person;
-import data_objects.Warenkorb;
+
 import data_objects.Mitarbeiter;
 import domain.eShopCore;
 import domain.exceptions.LoginFailedException;
@@ -199,8 +195,7 @@ public class CUI {
 		do{
 			IO.println("");		
 			
-			IO.println("Eingabe \"w\" um Warenkorb auszugeben");
-			IO.println("Eingabe \"k\" um Artikel in Warenkorb zu legen");
+			IO.println("Eingabe \"w\" um Warenkorb auszugeben");			IO.println("Eingabe \"k\" um Artikel in Warenkorb zu legen");
 			IO.println("Eingabe \"a\" um Artikel im Warenkorb zu ändern");
 			IO.println("Eingabe \"l\" um Warenkorb zu leeren");
 			IO.println("Eingabe \"q\" um zum Hauptmenü zurückzukehren");
@@ -224,7 +219,7 @@ public class CUI {
 			IO.println("");		
 			
 			IO.println("Eingabe \"a\" um alle Artikel auszugeben");
-			IO.println("Eingabe \"k\" um Artikel sortiert auszugeben");
+			IO.println("Eingabe \"s\" um Artikel sortiert auszugeben");
 			IO.println("Eingabe \"f\" um Artikel zu suchen");
 			
 			
