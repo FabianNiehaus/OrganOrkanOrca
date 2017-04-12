@@ -10,7 +10,7 @@ import data_objects.Person;
 import data_objects.Mitarbeiter;
 import domain.eShopCore;
 import domain.exceptions.LoginFailedException;
-import domain.exceptions.PositionNotExistantException;
+import domain.exceptions.ArticleNumberNonexistantException;
 import util.IO;
 import util.StringComparator;
 
@@ -153,7 +153,7 @@ public class CUI {
 		try{
 			Artikel art = eShop.erhoeheArtikelBestand(artikelnummer, bestand);			
 			IO.println(art.toString());
-		} catch (PositionNotExistantException pnee){
+		} catch (ArticleNumberNonexistantException anne){
 			IO.println("Artikelnummer existiert nicht!");
 		}
 		
@@ -168,7 +168,7 @@ public class CUI {
 		
 		try{
 			eShop.artikelInWarenkorbLegen(artikelnummer, anzahl, user);
-		} catch (PositionNotExistantException pnee){
+		} catch (ArticleNumberNonexistantException anne){
 			IO.println("Artikelnummer existiert nicht!");
 		}
 		

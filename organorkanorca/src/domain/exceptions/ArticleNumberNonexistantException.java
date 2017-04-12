@@ -7,9 +7,9 @@ package domain.exceptions;
  * @author Fabian
  *
  */
-public class PositionNotExistantException extends Exception {
+public class ArticleNumberNonexistantException extends Exception {
 	
-	public PositionNotExistantException(){
+	public ArticleNumberNonexistantException(){
 		super("Die gesuchte Position existiert nicht!");
 	}
 }
