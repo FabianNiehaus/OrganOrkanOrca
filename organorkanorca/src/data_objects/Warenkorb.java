@@ -1,6 +1,6 @@
 package data_objects;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Warenkorb {
@@ -12,7 +12,7 @@ public class Warenkorb {
 		super();
 	}
 
-	private HashMap<Artikel,Integer> artikel = new HashMap<>();
+	private LinkedHashMap<Artikel,Integer> artikel = new LinkedHashMap<>();
 	
 	/**
 	 * Prüft, ob ein bestimmter Artikel in diesem Warenkorb liegt.
@@ -31,10 +31,16 @@ public class Warenkorb {
 		return false;
 	}
 	
-	public void aendereAnzahl(Artikel art, int anz){
-		if(sucheArtikel(art)){
-			artikel.remove(art, artikel.get(art));
-			artikel.put(art, anz);
+	public void aendereAnzahl(int pos, int anz){
+		int i = 0;
+		
+		for(Map.Entry<Artikel, Integer> ent : artikel.entrySet()){
+			i++;
+			if(i == pos-1){
+				Artikel art = ent.getKey();
+				artikel.remove(ent);
+				artikel.put(art, anz);
+			}
 		}
 	}
 	

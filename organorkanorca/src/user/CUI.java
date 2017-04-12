@@ -166,9 +166,9 @@ public class CUI {
 		int anzahl = IO.readInt();
 		IO.println("-----------------------");
 		
-		Warenkorb wk = eShop.artikelInWarenkorbLegen(artikelnummer, anzahl, user);
+		eShop.artikelInWarenkorbLegen(artikelnummer, anzahl, user);
 		
-		IO.println(wk.toString());
+		gibWarenkorbAus();
 	}
 	
 	private void gibWarenkorbAus(){
@@ -176,60 +176,81 @@ public class CUI {
 		IO.println(eShop.warenkorbAusgeben(user).toString());
 	}
 	
-	private void leereWarenkorb(){
-		eShop.warenkorbLeeren(user);
+	private void aendereArtiklInWarenkorb(){
+		gibWarenkorbAus();
+		
+		IO.println("Artikel anpassen");
+		IO.print("Position eingeben:");
+		
+		int pos = IO.readInt();
+		
+		IO.print("Anzahl eingeben:");
+		
+		int anz = IO.readInt();
+		
+		eShop.artikelInWarenkorbAendern(pos, anz, user);
+		
+		gibWarenkorbAus();
 	}
 	
 	private void gibWarenkorbverwaltungAus(){
-		IO.println("");
-		
 		String input = "";
 		
-		IO.println("Eingabe \"w\" um Warenkorb auszugeben");
-		IO.println("Eingabe \"k\" um Artikel in Warenkorb zu legen");
-		IO.println("Eingabe \"a\" um Artikel im Warenkorb zu ändern");
-		IO.println("Eingabe \"l\" um Warenkorb zu leeren");
-		
-		switch(input){
-		case "w": gibWarenkorbAus(); break;
-		case "k": artikelInWarenkorbLegen(); break;
-		case "a": ;break;
-		case "l": leereWarenkorb(); break;
-		}
-		
+		do{
+			IO.println("");		
+			
+			IO.println("Eingabe \"w\" um Warenkorb auszugeben");
+			IO.println("Eingabe \"k\" um Artikel in Warenkorb zu legen");
+			IO.println("Eingabe \"a\" um Artikel im Warenkorb zu ändern");
+			IO.println("Eingabe \"l\" um Warenkorb zu leeren");
+			IO.println("Eingabe \"q\" um zum Hauptmenü zurückzukehren");
+			IO.println("---------------------------------------------------------------------");
+			
+			input = IO.readString();
+			
+			switch(input){
+			case "w": gibWarenkorbAus(); break;
+			case "k": artikelInWarenkorbLegen(); break;
+			case "a": aendereArtiklInWarenkorb(); break;
+			case "l": eShop.warenkorbLeeren(user); break;
+			}
+		} while (!input.equals("q"));
 	}
 	
 	private void gibArtikelverwaltungAus(){
-		IO.println("");
-		
 		String input = "";
 		
-		IO.println("Eingabe \"a\" um alle Artikel auszugeben");
-		IO.println("Eingabe \"k\" um Artikel sortiert auszugeben");
-		IO.println("Eingabe \"f\" um Artikel zu suchen");
-		
-		
-		if((user instanceof Kunde)){
-			// Menüeingaben speziell für Kunde
-			IO.println("Eingabe \"k\" um Artikel in Warenkorb zu legen");
-		} else if (user instanceof Mitarbeiter){
-			// Menüeingaben speziel für Mitarbeiter
-			IO.println("Eingabe \"e\" um Artikel zu erstellen");
-			IO.println("Eingabe \"b\" um den Bestand zu erhöhen");
-		}
-		
-		IO.println("Eingabe \"q\" um zum Hauptmenü zurückzukehren");
-		IO.println("---------------------------------------------------------------------");
-		
-		input = IO.readString();
-		
-		switch(input){
-		case "a": artikelAusgeben(eShop.alleArtikelAusgeben()); break;
-		case "s": artikelSortiertAusgeben(eShop.alleArtikelAusgeben()); break;
-		case "e": artikelErstellen(); break;
-		case "b": artikelBestandErhoehen(); break;
-		case "k": artikelInWarenkorbLegen(); break;
-		}
+		do{
+			IO.println("");		
+			
+			IO.println("Eingabe \"a\" um alle Artikel auszugeben");
+			IO.println("Eingabe \"k\" um Artikel sortiert auszugeben");
+			IO.println("Eingabe \"f\" um Artikel zu suchen");
+			
+			
+			if((user instanceof Kunde)){
+				// Menüeingaben speziell für Kunde
+				IO.println("Eingabe \"k\" um Artikel in Warenkorb zu legen");
+			} else if (user instanceof Mitarbeiter){
+				// Menüeingaben speziel für Mitarbeiter
+				IO.println("Eingabe \"e\" um Artikel zu erstellen");
+				IO.println("Eingabe \"b\" um den Bestand zu erhöhen");
+			}
+			
+			IO.println("Eingabe \"q\" um zum Hauptmenü zurückzukehren");
+			IO.println("---------------------------------------------------------------------");
+			
+			input = IO.readString();
+			
+			switch(input){
+			case "a": artikelAusgeben(eShop.alleArtikelAusgeben()); break;
+			case "s": artikelSortiertAusgeben(eShop.alleArtikelAusgeben()); break;
+			case "e": artikelErstellen(); break;
+			case "b": artikelBestandErhoehen(); break;
+			case "k": artikelInWarenkorbLegen(); break;
+			}
+				
+		} while (!input.equals("q"));
 		
 	}
 	
@@ -264,7 +285,7 @@ public class CUI {
 		case "a": gibArtikelverwaltungAus(); break;
 		case "k": artikelAusgeben(eShop.alleKundenAusgeben()); break;
 		case "m": artikelAusgeben(eShop.alleMitarbeiterAusgeben()); break;
-		case "w": gibWarenkorbverwaltungAus();; break;
+		case "w": gibWarenkorbverwaltungAus(); break;
 		}
 	}
 	

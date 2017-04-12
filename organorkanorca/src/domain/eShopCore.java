@@ -97,11 +97,10 @@ public class eShopCore {
 		return av.erhoeheBestand(artikelnummer, bestand);
 	}
 	
-	public Warenkorb artikelInWarenkorbLegen(int artikelnummer, int anzahl, Person p){
+	public void artikelInWarenkorbLegen(int artikelnummer, int anzahl, Person p){
 		Warenkorb wk = kv.gibWarenkorbVonKunde(p);
 		Artikel art = av.sucheArtikel(artikelnummer);
 		wv.legeInWarenkorb(wk, art, anzahl);
-		return wk;
 	}
 	
 	public Warenkorb warenkorbAusgeben(Person p){
@@ -111,5 +110,10 @@ public class eShopCore {
 	public void warenkorbLeeren(Person p){
 		Warenkorb wk = kv.gibWarenkorbVonKunde(p);
 		wv.leereWarenkorb(wk);
+	}
+	
+	public void artikelInWarenkorbAendern(int pos, int anz, Person p){
+		Warenkorb wk = kv.gibWarenkorbVonKunde(p);
+		wv.aendereWarenkorb(wk, pos, anz);
 	}
 }

@@ -30,9 +30,9 @@ public class Warenkorbverwaltung {
 		}
 	}
 	
-	public void aendereWarenkorb(Warenkorb aend, Artikel art, int anz){
+	public void aendereWarenkorb(Warenkorb aend, int position, int anz){
 		Warenkorb wk = getWarenkorb(aend);
-		wk.aendereAnzahl(art, anz);
+		wk.aendereAnzahl(position, anz);
 	}
 	
 	public void legeInWarenkorb(Warenkorb wk, Artikel art, int anz){
