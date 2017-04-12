@@ -1,5 +1,7 @@
 package domain;
 
+import java.util.Vector;
+
 import data_objects.Artikel;
 import data_objects.Kunde;
 import data_objects.Mitarbeiter;
@@ -40,36 +42,13 @@ public class eShopCore {
 		}
 		
 		return p;
-		
-/*		
->>>>>>> refs/remotes/origin/master
-		try {
-			if(mv.sucheMitarbeiter(firstname, lastname) != null){
-				userClass = 1;
-				return "Angemeldet als Mitarbeiter " + firstname + " " + lastname;
-				
-			} else if(kv.sucheKunde(firstname, lastname) != null){
-				userClass = 0;
-				return "Angemeldet als Kunde " + firstname + " " + lastname;
-				
-			} else {
-				userClass = -1;
-				return "Keine Kunde / Mitarbeiter für Anmeldedaten " + firstname + " " + lastname + " gefunden!";
-			}
-		} catch (VectorIsEmptyException e) {
-			e.printStackTrace();
-			return "Fehler (Vektoren leer)";
-		}
-		*/
 	}
 	
 	/**
 	 * @return Alle in der Artikelverwaltung gespeicherten Artikel
 	 */
-	public void alleArtikelAusgeben(){
-		for (Artikel a : av.getArtikel()){
-			a.toString();
-		}
+	public Vector<Artikel> alleArtikelAusgeben(){
+		return av.getArtikel();
 	}
 
 	/**

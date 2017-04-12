@@ -101,5 +101,7 @@ public class Artikel {
 		this.bewertung = bewertung;
 	}
 	
-	
+	public String toString(){
+		return artikelNr  + " | " + bezeichnung + " | " + preis + " | " + bestand; 
+	}
 }

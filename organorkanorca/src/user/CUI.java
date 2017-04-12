@@ -1,5 +1,7 @@
 package user;
 
+import java.util.Vector;
+
 import data_objects.Kunde;
 import data_objects.Person;
 import domain.eShopCore;
@@ -9,17 +11,11 @@ import util.IO;
 public class CUI {
 	
 	private static String input = "";
-	private boolean loggedIn;
 	
 	public static void main(String[] args){
 		
 		eShopCore eShop = new eShopCore();
-//				new Artikelverwaltung(),
-//				new Kundenverwaltung(),
-//				new Mitarbeiterverwaltung(),
-//				new Warenkorbverwaltung()
-//		);
-		
+
 		IO.println("Willkommen bei OrganOrkanOrca.org.");
 		IO.println("Bitte melden Sie Sich an.");
 		IO.print("Vorname: ");
@@ -49,7 +45,19 @@ public class CUI {
 			
 			input = IO.readString();
 			
-			
+			if(input.equals("a")){
+				eShop.alleArtikelAusgeben();
+			}
+		}
+	}
+	
+	public void artikelAusgeben(Vector<Object> liste){
+		if (liste.isEmpty()) {
+			System.out.println("Keine Artikel auszugeben!");
+		} else {
+			for(Object artikel : liste){
+				IO.println(artikel.toString());
+			}
 		}
 	}
 }
