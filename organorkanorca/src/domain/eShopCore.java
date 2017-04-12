@@ -86,4 +86,8 @@ public class eShopCore {
 		Kunde k = new Kunde(firstname, lastname, kv.getNextID(), passwort);
 		kv.erstelleKunde(k);
 	}
+	
+	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis){
+		return av.erstelleArtikel(bezeichnung, bestand, preis);
+	}
 }

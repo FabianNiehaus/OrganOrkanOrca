@@ -129,6 +129,22 @@ public class CUI {
 		}
 	}
 	
+	private void artikelErstellen(){
+		
+		IO.println("Artikel erstellen");
+		IO.print("Bezeichnung:");
+		String bezeichnung = IO.readString();
+		IO.print("Bestand:");
+		int bestand = IO.readInt();
+		IO.print("Preis");
+		double preis = IO.readDouble();
+		IO.println("-----------------------");
+		
+		Artikel art = eShop.erstelleArtikel(bezeichnung, bestand, preis);
+		
+		IO.println(art.toString());
+	}
+	
 	private void gibArtikelverwaltungAus(){
 		String input = "";
 		
@@ -142,6 +158,7 @@ public class CUI {
 			IO.println("Eingabe \"k <Artikelnummer>\" um Artikel direkt in Warenkorb zu legen");
 		} else if (user instanceof Mitarbeiter){
 			// Menüeingaben speziel für Mitarbeiter
+			IO.println("Eingabe \"e\" um Artikel zu erstellen");
 		}
 		
 		IO.println("Eingabe \"q\" um zum Hauptmenü zurückzukehren");
@@ -152,6 +169,7 @@ public class CUI {
 		switch(input){
 		case "a": artikelAusgeben(eShop.alleArtikelAusgeben()); break;
 		case "s": artikelSortiertAusgeben(eShop.alleArtikelAusgeben()); break;
+		case "e": artikelErstellen(); break;
 		}
 		
 	}

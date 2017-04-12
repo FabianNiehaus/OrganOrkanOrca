@@ -2,6 +2,7 @@ package domain;
 
 import java.util.Vector;
 import data_objects.Artikel;
+import data_objects.Kunde;
 
 public class Artikelverwaltung {
 	
@@ -21,5 +22,20 @@ public class Artikelverwaltung {
 		this.artikel = artikel;
 	}
 	
+	public int getNextID() {
+		int hoechsteID = 0;
+		for(Artikel art : artikel){
+			if(art.getArtikelNr() > hoechsteID){
+				hoechsteID = art.getArtikelNr() ;
+			}
+		}		
+		return hoechsteID+1;
+	}
+	
+	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis){
+		Artikel art = new Artikel(bezeichnung, getNextID(), bestand, preis);
+		artikel.add(art);
+		return art;
+	}
 	
 }
