@@ -38,4 +38,19 @@ public class Artikelverwaltung {
 		return art;
 	}
 	
+	public Artikel sucheArtikel(int artikelnummer){
+		for(Artikel art : artikel){
+			if(art.getArtikelNr() == artikelnummer){
+				return art;
+			}
+		}
+		return null;
+	}
+	
+	public Artikel erhoeheBestand(int artikelnummer, int bestand){
+		Artikel art = sucheArtikel(artikelnummer);
+		art.setBestand(art.getBestand() + bestand);
+		return art;
+	}
+	
 }

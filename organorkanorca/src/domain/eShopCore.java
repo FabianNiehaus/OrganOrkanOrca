@@ -90,4 +90,8 @@ public class eShopCore {
 	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis){
 		return av.erstelleArtikel(bezeichnung, bestand, preis);
 	}
+	
+	public Artikel erhoeheArtikelBestand(int artikelnummer, int bestand){
+		return av.erhoeheBestand(artikelnummer, bestand);
+	}
 }

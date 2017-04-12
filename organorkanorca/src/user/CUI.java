@@ -145,7 +145,22 @@ public class CUI {
 		IO.println(art.toString());
 	}
 	
+	private void artikelBestandErhoehen(){		
+		IO.print("Artikelnummer:");
+		int artikelnummer = IO.readInt();
+		IO.print("Bestand erhöhen um:");
+		int bestand = IO.readInt();
+		IO.println("-----------------------");
+		
+		Artikel art = eShop.erhoeheArtikelBestand(artikelnummer, bestand);
+		
+		IO.println(art.toString());
+		
+	}
+	
 	private void gibArtikelverwaltungAus(){
+		IO.println("");
+		
 		String input = "";
 		
 		IO.println("Eingabe \"a\" um alle Artikel auszugeben");
@@ -159,6 +174,7 @@ public class CUI {
 		} else if (user instanceof Mitarbeiter){
 			// Menüeingaben speziel für Mitarbeiter
 			IO.println("Eingabe \"e\" um Artikel zu erstellen");
+			IO.println("Eingabe \"b\" um den Bestand zu erhöhen");
 		}
 		
 		IO.println("Eingabe \"q\" um zum Hauptmenü zurückzukehren");
@@ -170,11 +186,14 @@ public class CUI {
 		case "a": artikelAusgeben(eShop.alleArtikelAusgeben()); break;
 		case "s": artikelSortiertAusgeben(eShop.alleArtikelAusgeben()); break;
 		case "e": artikelErstellen(); break;
+		case "b": artikelBestandErhoehen(); break;
 		}
 		
 	}
 	
 	public void gibMenueAus(){
+		IO.println("");
+		
 		if ((user instanceof Kunde) || user instanceof Mitarbeiter){
 			IO.println("eShop Hauptseite");
 			
@@ -190,7 +209,6 @@ public class CUI {
 				
 				IO.println("Eingabe \"k\" um alle Kunden auszugeben");
 				IO.println("Eingabe \"m\" um alle Mitarbeiter auszugeben");
-				IO.println("Eingabe \"q\" um den eShop zu beenden");
 			}
 			
 			IO.println("Eingabe \"q\" um den eShop zu beenden");
