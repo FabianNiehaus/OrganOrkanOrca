@@ -59,9 +59,7 @@ public class Warenkorb {
 	}
 	
 	public void leereWarkenkorb(){
-		for(Map.Entry<Artikel, Integer> ent : artikel.entrySet()){
-			artikel.remove(ent);
-		}
+		artikel = new LinkedHashMap<>();
 	}
 	
 	public String toString(){
