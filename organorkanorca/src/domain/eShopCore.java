@@ -1,11 +1,13 @@
 package domain;
 
+import java.util.Date;
 import java.util.Vector;
 
 import data_objects.Artikel;
 import data_objects.Kunde;
 import data_objects.Mitarbeiter;
 import data_objects.Person;
+import data_objects.Rechnung;
 import data_objects.Warenkorb;
 import domain.exceptions.LoginFailedException;
 import domain.exceptions.ArticleNumberNonexistantException;
@@ -16,6 +18,7 @@ public class eShopCore {
 	private Kundenverwaltung kv;
 	private Mitarbeiterverwaltung mv;
 	private Warenkorbverwaltung wv;
+	private Rechnungsverwaltung rv;
 	
 	/**
 	 */
@@ -25,6 +28,7 @@ public class eShopCore {
 		kv = new Kundenverwaltung();
 		mv = new Mitarbeiterverwaltung();
 		wv = new Warenkorbverwaltung();
+		rv = new Rechnungsverwaltung();
 		
 		Kunde ku = kv.erstelleKunde("Fabian","Niehaus", "test", wv.erstelleWarenkorb());
 		System.out.println(ku.getId());
@@ -124,5 +128,9 @@ public class eShopCore {
 	public void artikelInWarenkorbAendern(int pos, int anz, Person p){
 		Warenkorb wk = kv.gibWarenkorbVonKunde(p);
 		wv.aendereWarenkorb(wk, pos, anz);
+	}
+	
+	public Rechnung rechnungErzeugen(Person p){
+		return null;
 	}
 }
