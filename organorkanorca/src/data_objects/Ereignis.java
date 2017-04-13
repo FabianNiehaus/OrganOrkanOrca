@@ -25,6 +25,6 @@ public class Ereignis {
 		//Formatierungsvorlage für Datum
 		DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss");
 				
-		return dateFormat.format(wann) + " | " + wer.getId() + ": " + wer.getLastname() + " " + wer.getLastname() + " | " + was + " | " + womit.getArtikelNr() + ": " + womit.getBezeichnung() + " | " + wieviel; 
+		return dateFormat.format(wann) + " | " + wer.getId() + ": " + wer.getLastname() + " " + wer.getLastname() + " | " + was + " | " + womit.getArtikelnummer() + ": " + womit.getBezeichnung() + " | " + wieviel; 
 	}
 }

@@ -4,32 +4,32 @@ public class Artikel {
 	
 	/**
 	 * @param bezeichnung	Bezeichnung / Name des Artikels
-	 * @param artikelNr	Eindeutige Artikelnummer
+	 * @param artikelnummer	Eindeutige Artikelnummer
 	 * @param bestand	Aktueller Bestand des Artikels
 	 * @param preis	Preis des Artikels
 	 */
-	public Artikel(String bezeichnung, int artikelNr, int bestand, double preis) {
+	public Artikel(String bezeichnung, int artikelnummer, int bestand, double preis) {
 		super();
 		this.bezeichnung = bezeichnung;
-		this.artikelNr = artikelNr;
+		this.artikelnummer = artikelnummer;
 		this.bestand = bestand;
 		this.preis = preis;
 	}
 	
 	/**
 	 * @param bezeichnung	Bezeichnung / Name des Artikels
-	 * @param artikelNr	Eindeutige Artikelnummer
+	 * @param artikelnummer	Eindeutige Artikelnummer
 	 * @param bestand	Aktueller Bestand des Artikels
 	 * @param preis	Preis des Artikels
 	 * @param kategorie	Kategorie des Artikels
 	 * @param angebot	Zeigt an, ob Artikel aktuell im Angebot ist
 	 * @param bewertung	Nuzterbewertung des Artikels
 	 */
-	public Artikel(String bezeichnung, int artikelNr, int bestand, double preis, String kategorie, boolean angebot,
+	public Artikel(String bezeichnung, int artikelnummer, int bestand, double preis, String kategorie, boolean angebot,
 			int bewertung) {
 		super();
 		this.bezeichnung = bezeichnung;
-		this.artikelNr = artikelNr;
+		this.artikelnummer = artikelnummer;
 		this.bestand = bestand;
 		this.preis = preis;
 		this.kategorie = kategorie;
@@ -38,7 +38,7 @@ public class Artikel {
 	}
 	
 	private String bezeichnung;
-	private int artikelNr;
+	private int artikelnummer;
 	private int bestand;
 	private double preis;
 	
@@ -53,12 +53,12 @@ public class Artikel {
 		this.bezeichnung = bezeichnung;
 	}
 
-	public int getArtikelNr() {
-		return artikelNr;
+	public int getArtikelnummer() {
+		return artikelnummer;
 	}
 
-	public void setArtikelNr(int artikelNr) {
-		this.artikelNr = artikelNr;
+	public void setArtikelnummer(int artikelnummer) {
+		this.artikelnummer = artikelnummer;
 	}
 
 	public int getBestand() {
@@ -102,6 +102,6 @@ public class Artikel {
 	}
 	
 	public String toString(){
-		return artikelNr  + " | " + bezeichnung + " | " + preis + " | " + bestand; 
+		return artikelnummer  + " | " + bezeichnung + " | " + preis + " | " + bestand; 
 	}
 }

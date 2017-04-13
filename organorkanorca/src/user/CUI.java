@@ -95,7 +95,7 @@ public class CUI {
 					swapped = false;
 					j++;
 					for (int k = 0; k < artSort.length -j; k++){
-						if(artSort[k].getArtikelNr() > artSort[k+1].getArtikelNr()){
+						if(artSort[k].getArtikelnummer() > artSort[k+1].getArtikelnummer()){
 							tmp = artSort[k];
 							artSort[k] = artSort[k+1];
 							artSort[k+1] = tmp;
@@ -300,6 +300,7 @@ public class CUI {
 				
 				IO.println("Eingabe \"k\" um alle Kunden auszugeben");
 				IO.println("Eingabe \"m\" um alle Mitarbeiter auszugeben");
+				IO.println("Eingabe \"s\" um alle Laufzeitdaten zu speichern");
 			}
 			
 			IO.println("Eingabe \"q\" um den eShop zu beenden");
@@ -314,6 +315,7 @@ public class CUI {
 		case "k": artikelAusgeben(eShop.alleKundenAusgeben()); break;
 		case "m": artikelAusgeben(eShop.alleMitarbeiterAusgeben()); break;
 		case "w": gibWarenkorbverwaltungAus(); break;
+		case "s": eShop.schreibeDaten(); break;
 		}
 	}
 	

@@ -1,5 +1,6 @@
 package domain;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -24,9 +25,11 @@ public class eShopCore {
 	private Rechnungsverwaltung rv;
 	private Ereignisverwaltung ev;
 	
+	private String dateipfad = "";
+	
 	/**
 	 */
-	public eShopCore() {
+	public eShopCore()  throws IOException {
 		super();
 		av = new Artikelverwaltung();
 		kv = new Kundenverwaltung();
@@ -34,6 +37,12 @@ public class eShopCore {
 		wv = new Warenkorbverwaltung();
 		rv = new Rechnungsverwaltung();
 		ev = new Ereignisverwaltung();
+		
+		try{
+			av.liesDaten(dateipfad + "ARTIKEL.txt");
+		} catch (IOException ie){
+			
+		}
 		
 		Kunde ku = kv.erstelleKunde("Fabian","Niehaus", "test", wv.erstelleWarenkorb());
 		System.out.println(ku.getId());
@@ -150,7 +159,7 @@ public class eShopCore {
 		LinkedHashMap<Artikel,Integer> inhalt = wk.getArtikel();
 		for(Map.Entry<Artikel, Integer> ent : inhalt.entrySet()){
 			try{
-				av.erhoeheBestand(ent.getKey().getArtikelNr(), -1 * ent.getValue());
+				av.erhoeheBestand(ent.getKey().getArtikelnummer(), -1 * ent.getValue());
 				//Ereignis erstellen
 				ev.ereignisErstellen(p, Typ.KAUF, ent.getKey(), (int) ent.getValue());
 			} catch (ArticleNumberNonexistantException anne){
@@ -168,4 +177,8 @@ public class eShopCore {
 		//Rechnungsobjekt an C/GUI zurückgeben
 		return re;
 	}	
+	
+	public void schreibeDaten() throws IOException{
+		av.schreibeDaten(dateipfad + "ARTIKEL.txt"); 
+	}
 }
