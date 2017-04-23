@@ -62,7 +62,7 @@ public class CUI {
 	 * Logik für das Suchen eines Artikels
 	 * @param liste
 	 */
-	private void artikelSuchen(Vector liste){
+	private void artikelSuchen(Vector<Artikel> liste){
 		String searchType = "";
 		
 		IO.println("Artikel suchen");
@@ -82,7 +82,7 @@ public class CUI {
 	/** Logik für die Sortierte Ausgabe der Artikelliste
 	 * @param liste
 	 */
-	private void artikelSortiertAusgeben(Vector liste){
+	private void artikelSortiertAusgeben(Vector<Artikel> liste){
 		String sortBy = "";
 		
 		IO.println("Artikel sortiert ausgeben:");

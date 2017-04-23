@@ -2,6 +2,10 @@ package util;
 
 import domain.eShopCore;
 
+/**
+ * @author Fabian Niehaus
+ *
+ */
 public class AccessControl {
 	public static boolean checkCore(Object o){
 		if (o instanceof eShopCore){
