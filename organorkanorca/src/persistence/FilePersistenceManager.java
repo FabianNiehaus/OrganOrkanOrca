@@ -22,14 +22,23 @@ public class FilePersistenceManager implements PersistenceManager {
 	private BufferedReader reader = null;
 	private PrintWriter writer = null;
 	
+	/* (non-Javadoc)
+	 * @see persistence.PersistenceManager#openForReading(java.lang.String)
+	 */
 	public void openForReading(String datei) throws FileNotFoundException {
 		reader = new BufferedReader(new FileReader(datei));
 	}
 
+	/* (non-Javadoc)
+	 * @see persistence.PersistenceManager#openForWriting(java.lang.String)
+	 */
 	public void openForWriting(String datei) throws IOException {
 		writer = new PrintWriter(new BufferedWriter(new FileWriter(datei)));
 	}
 
+	/* (non-Javadoc)
+	 * @see persistence.PersistenceManager#close()
+	 */
 	public boolean close() {
 		if (writer != null)
 			writer.close();
@@ -121,6 +130,11 @@ public class FilePersistenceManager implements PersistenceManager {
 		return true;
 	}
 
+	/**
+	 * Liest eine Zeile aus
+	 * @return Inhalt der Zeile als String
+	 * @throws IOException
+	 */
 	private String liesZeile() throws IOException {
 		if (reader != null)
 			try{
@@ -132,6 +146,10 @@ public class FilePersistenceManager implements PersistenceManager {
 			return "";
 	}
 
+	/**
+	 * Schreibt eine Zeile
+	 * @param daten Zu schreibende Zeile als String
+	 */
 	private void schreibeZeile(String daten) {
 		if (writer != null)
 			writer.println(daten);

@@ -16,10 +16,24 @@ import data_objects.*;
  */
 public interface PersistenceManager {
 
+	/**
+	 * Erstellt neuen Reader für jeweiligen Persistenz-Typ
+	 * @param datenquelle Datenquelle des Readers
+	 * @throws IOException
+	 */
 	public void openForReading(String datenquelle) throws IOException;
 	
+	/**
+	 * Erstellt neuen Writer für jeweiligen Persistenz-Typ
+	 * @param datenquelle Datenquelle des Writers
+	 * @throws IOException
+	 */
 	public void openForWriting(String datenquelle) throws IOException;
 	
+	/**
+	 * Schließt / 'löscht' den Writer & Writer
+	 * @return <b>true</b>, wenn Schließen erfolgreich, sonst <b>false</b>
+	 */
 	public boolean close();
 
 	/**
@@ -37,12 +51,4 @@ public interface PersistenceManager {
 	 */
 	public boolean speichereArtikel(Artikel art) throws IOException;
 
-	/*
-	 *  Wenn später mal eine Kundenverwaltung ergänzt wird:
-
-	public Kunde ladeKunde() throws IOException;
-
-	public boolean speichereKunde(Kunde k) throws IOException;
-	
-	*/
 }
