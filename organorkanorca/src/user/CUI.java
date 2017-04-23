@@ -16,17 +16,28 @@ import domain.exceptions.ArticleNumberNonexistantException;
 import util.IO;
 import util.StringComparator;
 
+/**
+ * @author Fabian Niehaus
+ * Command-Line-Interface für den eSHop
+ */
+/**
+ * @author Manic
+ *
+ */
 public class CUI {
 	
 	private eShopCore eShop;
 	private Person user = null; 
 	
-	public CUI(String datei) throws IOException {
+	public CUI() throws IOException {
 
 		eShop = new eShopCore();
 
 	}
 	
+	/**
+	 * Logik für Nutzer-Login
+	 */
 	public void login(){
 		
 		IO.println("Bitte melden Sie Sich an.");
@@ -47,6 +58,10 @@ public class CUI {
 		}
 	}
 	
+	/**
+	 * Logik für das Suchen eines Artikels
+	 * @param liste
+	 */
 	private void artikelSuchen(Vector liste){
 		String searchType = "";
 		
@@ -64,6 +79,9 @@ public class CUI {
 		}
 	}
 	
+	/** Logik für die Sortierte Ausgabe der Artikelliste
+	 * @param liste
+	 */
 	private void artikelSortiertAusgeben(Vector liste){
 		String sortBy = "";
 		
@@ -129,6 +147,9 @@ public class CUI {
 		}
 	}
 	
+	/**
+	 * Logik für das Erstellen eines Artikels
+	 */
 	private void artikelErstellen(){
 		
 		IO.println("Artikel erstellen");
@@ -145,6 +166,9 @@ public class CUI {
 		IO.println(art.toString());
 	}
 	
+	/**
+	 * Logik für das Erhöhen des Bestands eines Artikels
+	 */
 	private void artikelBestandErhoehen(){		
 		IO.print("Artikelnummer:");
 		int artikelnummer = IO.readInt();
@@ -161,6 +185,9 @@ public class CUI {
 		
 	}
 	
+	/**
+	 * Logik für das Hinzufügen eines Artikels zu einem Warenkorb
+	 */
 	private void artikelInWarenkorbLegen(){
 		IO.print("Artikelnummer:");
 		int artikelnummer = IO.readInt();
@@ -177,11 +204,17 @@ public class CUI {
 		gibWarenkorbAus();
 	}
 	
+	/**
+	 * Logik für das Ausgeben des Warenkorb des Kunden
+	 */
 	private void gibWarenkorbAus(){
 		IO.println("Warenkorb");
 		IO.println(eShop.warenkorbAusgeben(user).toString());
 	}
 	
+	/**
+	 * Logik für die Änderung der Anzahl eines Artikels im Warenkorb des Kunden Warenkorb
+	 */
 	private void aendereArtiklInWarenkorb(){
 		gibWarenkorbAus();
 		
@@ -199,6 +232,9 @@ public class CUI {
 		gibWarenkorbAus();
 	}
 	
+	/**
+	 * Logik fpr das Kaufen des Warenkorbs des Kunden
+	 */
 	private void warenkorbKaufen(){
 		//Formatierungsvorlage für Datum
 		DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
@@ -219,6 +255,9 @@ public class CUI {
 		IO.println("Gesamtbetrag: " + re.getGesamt() + "€");
 	}
 	
+	/**
+	 * Logik für die Anzeige der Warenkorbverwaltung des Kunden
+	 */
 	private void gibWarenkorbverwaltungAus(){
 		String input = "";
 		
@@ -245,6 +284,9 @@ public class CUI {
 		} while (!input.equals("q"));
 	}
 	
+	/**
+	 * Logik für die Anzeige der Artikelverwaltung 
+	 */
 	private void gibArtikelverwaltungAus(){
 		String input = "";
 		
@@ -282,6 +324,9 @@ public class CUI {
 		
 	}
 	
+	/**
+	 * Logik für die Ausgabe des Hauptmenüs
+	 */
 	public void gibMenueAus(){
 		IO.println("");
 		
@@ -309,16 +354,24 @@ public class CUI {
 		}
 	}
 	
+	/**
+	 * Logik für die Verarbeitung der Nutzereingabe im Hauptmenü
+	 * @param input Nutzereingabe
+	 * @throws IOException
+	 */
 	public void verarbeiteEingabe(String input) throws IOException{
 		switch(input){
 		case "a": gibArtikelverwaltungAus(); break;
-		case "k": artikelAusgeben(eShop.alleKundenAusgeben()); break;
-		case "m": artikelAusgeben(eShop.alleMitarbeiterAusgeben()); break;
+		case "k": kundenAusgeben(eShop.alleKundenAusgeben()); break;
+		case "m": mitarbeiterAusgeben(eShop.alleMitarbeiterAusgeben()); break;
 		case "w": gibWarenkorbverwaltungAus(); break;
 		case "s": eShop.schreibeDaten(); break;
 		}
 	}
 	
+	/**
+	 * Hauptmethode der CUI
+	 */
 	public void run(){
 		String input = ""; 
 		
@@ -343,11 +396,15 @@ public class CUI {
 		IO.println("OrganOrkanOrca wurde beendet.\nAuf Wiedersehen!");
 	}
 	
+	/**
+	 * Start-Methode der CUI
+	 * @param args
+	 */
 	public static void main(String[] args){
 		
 		CUI cui;
 		try {
-			cui = new CUI("eShop");
+			cui = new CUI();
 			cui.run();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -360,7 +417,7 @@ public class CUI {
 	 * Gibt in einer Liste gespeicherte Artikel auf der Konsole aus;
 	 * @param liste Liste der auszugebenden Artikel
 	 */
-	public void artikelAusgeben(Vector liste){
+	public void artikelAusgeben(Vector<Artikel> liste){
 		if (liste.isEmpty()) {
 			System.out.println("Keine Artikel auszugeben!");
 		} else {
@@ -374,7 +431,7 @@ public class CUI {
 	 * Gibt in einer Liste gespeicherte Mitarbeiter auf der Konsole aus;
 	 * @param liste Liste der auszugebenden Mitarbeiter
 	 */
-	public void  mitarbeiterAusgeben(Vector liste){
+	public void  mitarbeiterAusgeben(Vector<Mitarbeiter> liste){
 		if (liste.isEmpty()) {
 			System.out.println("Keine Mitarbeiter auszugeben!");
 		} else {
@@ -388,7 +445,7 @@ public class CUI {
 	 * Gibt in einer Liste gespeicherte Kunden auf der Konsole aus;
 	 * @param liste Liste der auszugebenden Kunden
 	 */
-	public void  kundenAusgeben(Vector liste){
+	public void  kundenAusgeben(Vector<Kunde> liste){
 		if (liste.isEmpty()) {
 			System.out.println("Keine Kunden auszugeben!");
 		} else {
