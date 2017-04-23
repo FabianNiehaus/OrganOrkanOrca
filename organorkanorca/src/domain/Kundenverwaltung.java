@@ -18,10 +18,10 @@ public class Kundenverwaltung {
 	
 	/**
 	 * Logik zur Anmeldung
-	 * @param id
-	 * @param passwort
-	 * @return
-	 * @throws LoginFailedException
+	 * @param id Benutzer-ID
+	 * @param passwort Benutzer-Passwort
+	 * @return Angemeldeter Benutzer
+	 * @throws LoginFailedException Anmeldung fehlgeschlagen
 	 */
 	public Kunde anmelden(int id, String passwort) throws LoginFailedException {
 		for (Kunde k : kunden){
