@@ -56,7 +56,7 @@ public class Artikelverwaltung {
 		pm.openForWriting(datei);
 
 		if (!artikel.isEmpty()) {
-			Iterator iter = artikel.iterator();
+			Iterator<Artikel> iter = artikel.iterator();
 			while (iter.hasNext()) {
 				Artikel art = (Artikel) iter.next();
 				pm.speichereArtikel(art);				
