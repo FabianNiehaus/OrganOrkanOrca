@@ -3,11 +3,12 @@ package data_objects;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * @author FabianNiehaus
+ *
+ */
 public class Warenkorb {
 	
-	/**
-	 * @param id Eindeutige ID des Warenkorbs
-	 */
 	public Warenkorb() {
 		super();
 	}
@@ -31,6 +32,11 @@ public class Warenkorb {
 		return false;
 	}
 	
+	/**
+	 * Dient zur Änderung der Anzahl eines Artikels im Warenkorb. Der Zugriff erfolgt (nutzerfreundlich) über die Position des Artikels im Warenkorb.
+	 * @param pos Position des Artikels im Warenkorb
+	 * @param anz Neue Anzahl (muss größer 0 sein)
+	 */
 	public void aendereAnzahl(int pos, int anz){
 		int i = 0;
 		
@@ -39,29 +45,48 @@ public class Warenkorb {
 			if(i == pos-1){
 				Artikel art = ent.getKey();
 				artikel.remove(ent);
-				artikel.put(art, anz);
+				if (anz > 0){
+					artikel.put(art, anz);
+				}
 			}
 			
 			i++;
 		}
 	}
 	
+	/**
+	 * Legt einen Artikel im Warenkorb ab
+	 * @param art Gewünschter Artikel
+	 * @param anz Gewünschte Anzahl (muss größer 0 sein)
+	 */
 	public void speichereArtikel(Artikel art, int anz){
 		if(!sucheArtikel(art)){
-			artikel.put(art, anz);
+			if(anz > 0){
+				artikel.put(art, anz);
+			} 
 		}
 	}
 	
+	/**
+	 * Entfernt einen Artikel aus dem Warenkorb
+	 * @param art
+	 */
 	public void loescheArtikel(Artikel art){
 		if(sucheArtikel(art)){
 			artikel.remove(art, artikel.get(art));
 		}
 	}
 	
+	/**
+	 * Leert Warenkorb, indem Artikelliste verworfen wird
+	 */
 	public void leereWarkenkorb(){
 		artikel = new LinkedHashMap<>();
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString(){
 		String retStr = "";
 		int pos = 1;
@@ -72,6 +97,9 @@ public class Warenkorb {
 		return retStr;
 	}
 	
+	/**
+	 * @return Gibt die LinkedHashMap mit Artikeln und Anzahl zurück
+	 */
 	public LinkedHashMap<Artikel, Integer> getArtikel(){
 		return artikel;
 	}

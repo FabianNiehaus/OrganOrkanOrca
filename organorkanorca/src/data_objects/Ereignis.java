@@ -4,6 +4,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * @author Fabian Niehaus
+ * Dient zur Ereignisspeicherung für den eShop
+ */
 public class Ereignis {
 
 	private Person wer;
@@ -12,6 +16,13 @@ public class Ereignis {
 	private Artikel womit;
 	private int wieviel;
 	
+	
+	/**
+	 * @param wer Person, die die Aktion durchgeführt hat
+	 * @param was Typ der Aktion (EINLAGERUNG, AUSLAGERUNG, KAUF, NEU)
+	 * @param womit Welcher Artikel ist betroffen
+	 * @param wieviel Betroffene Stückzahl
+	 */
 	public Ereignis(Person wer, Typ was, Artikel womit, int wieviel) {
 		super();
 		this.wer = wer;
@@ -21,6 +32,9 @@ public class Ereignis {
 		this.wann = new Date();
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString(){
 		//Formatierungsvorlage für Datum
 		DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss");

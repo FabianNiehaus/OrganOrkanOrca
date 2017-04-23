@@ -32,9 +32,12 @@ public class Artikel {
 		this.artikelnummer = artikelnummer;
 		this.bestand = bestand;
 		this.preis = preis;
+		
+		/* Noch nicht verwendet
 		this.kategorie = kategorie;
 		this.angebot = angebot;
 		this.bewertung = bewertung;
+		*/
 	}
 	
 	private String bezeichnung;
@@ -42,65 +45,73 @@ public class Artikel {
 	private int bestand;
 	private double preis;
 	
+	/* Nocht nicht verwendet
 	private String kategorie;
 	private boolean angebot;
 	private int bewertung;
+	*/
+	
+	
+	/**
+	 * @return Gibt die Bezeichnung des Artikels aus
+	 */
 	public String getBezeichnung() {
 		return bezeichnung;
 	}
 
+	/**
+	 * Setzt die Bezeichnung des Artikel
+	 * @param bezeichnung Gewünschte Artikelbezeichnung
+	 */
 	public void setBezeichnung(String bezeichnung) {
 		this.bezeichnung = bezeichnung;
 	}
 
+	/**
+	 * @return
+	 */
 	public int getArtikelnummer() {
 		return artikelnummer;
 	}
 
+	/**
+	 * @param artikelnummer
+	 */
 	public void setArtikelnummer(int artikelnummer) {
 		this.artikelnummer = artikelnummer;
 	}
 
+	/**
+	 * @return
+	 */
 	public int getBestand() {
 		return bestand;
 	}
 
+	/**
+	 * @param bestand
+	 */
 	public void setBestand(int bestand) {
 		this.bestand = bestand;
 	}
 
+	/**
+	 * @return
+	 */
 	public double getPreis() {
 		return preis;
 	}
 
+	/**
+	 * @param preis
+	 */
 	public void setPreis(double preis) {
 		this.preis = preis;
 	}
-
-	public String getKategorie() {
-		return kategorie;
-	}
-
-	public void setKategorie(String kategorie) {
-		this.kategorie = kategorie;
-	}
-
-	public boolean isAngebot() {
-		return angebot;
-	}
-
-	public void setAngebot(boolean angebot) {
-		this.angebot = angebot;
-	}
-
-	public int getBewertung() {
-		return bewertung;
-	}
-
-	public void setBewertung(int bewertung) {
-		this.bewertung = bewertung;
-	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString(){
 		return artikelnummer  + " | " + bezeichnung + " | " + preis + " | " + bestand; 
 	}

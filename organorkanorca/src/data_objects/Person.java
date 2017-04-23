@@ -19,7 +19,6 @@ public abstract class Person {
 	 * @param lastname Nachname
 	 * @param id Eindeutige Identifikationsnummer
 	 */
-	
 	public Person(String firstname, String lastname, int id, String passwort) {
 		super();
 		this.firstname = firstname;
@@ -28,38 +27,59 @@ public abstract class Person {
 		this.setPasswort(passwort);
 	}
 
+	/**
+	 * @return
+	 */
 	public String getFirstname() {
 		return firstname;
 	}
 
+	/**
+	 * @param firstname
+	 */
 	public void setFirstname(String firstname) {
 		this.firstname = firstname;
 	}
 
+	/**
+	 * @return
+	 */
 	public String getLastname() {
 		return lastname;
 	}
 
+	/**
+	 * @param lastname
+	 */
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
 	}
 
+	/**
+	 * @return
+	 */
 	public int getId() {
 		return id;
 	}
 
+	/**
+	 * @param id
+	 */
 	public void setId(int id) {
 		this.id = id;
 	}
 
+	/**
+	 * @return
+	 */
 	public String getPasswort() {
 		return passwort;
 	}
 
+	/**
+	 * @param passwort
+	 */
 	public void setPasswort(String passwort) {
 		this.passwort = passwort;
 	}
-	
-	
-
 }

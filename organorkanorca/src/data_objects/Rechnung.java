@@ -7,15 +7,19 @@ import java.util.Date;
 
 /**
  * @author Fabian
+ * Dient zur Speicherung einer Rechnung
+ */
+/**
+ * @author Manic
  *
  */
 public class Rechnung {
 
 	/**
-	 * @param ku
-	 * @param datum
-	 * @param wk
-	 * @param gesamt
+	 * @param ku Zugehöriger Kunde
+	 * @param datum Rechnungsdatum
+	 * @param wk Zugehöriger Warenkorb
+	 * @param gesamt Gesamtsumme der Rechnung
 	 */
 	public Rechnung(Kunde ku, Date datum, Warenkorb wk, double gesamt) {
 		super();
@@ -30,15 +34,30 @@ public class Rechnung {
 	private Warenkorb wk;
 	private double gesamt;
 	
+	/**
+	 * @return
+	 */
 	public Kunde getKu() {
 		return ku;
 	}
+	
+	/**
+	 * @return
+	 */
 	public Date getDatum() {
 		return datum;
 	}
+	
+	/**
+	 * @return
+	 */
 	public Warenkorb getWk() {
 		return wk;
 	}
+	
+	/**
+	 * @return
+	 */
 	public double getGesamt() {
 		return gesamt;
 	}
