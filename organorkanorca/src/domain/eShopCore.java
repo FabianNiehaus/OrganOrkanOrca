@@ -16,6 +16,10 @@ import data_objects.Warenkorb;
 import domain.exceptions.LoginFailedException;
 import domain.exceptions.ArticleNumberNonexistantException;
 
+/**
+ * @author Fabian Niehaus
+ * Zentrales Modul des eShop
+ */
 public class eShopCore {
 
 	private Artikelverwaltung av;
@@ -48,11 +52,19 @@ public class eShopCore {
 		System.out.println(ku.getId());
 	}
 	
+	/* Noch nicht verwendet
 	//private HashMap<Integer,? extends Person> nutzerzuordnung;
 	//-1 = nicht angemeldet, 0 = user, 1 = mitarbeiter
 	private byte userClass = -1;
-	
+	*/
 
+	/**
+	 * Anmelden des Nutzers
+	 * @param id Nutzer-ID
+	 * @param passwort Nutzer-Passwort
+	 * @return Objekt des Nutzers der Klasse Kunde oder Mitarbeiter
+	 * @throws LoginFailedException Anmeldung fehlgeschlagen
+	 */
 	public Person anmelden(int id, String passwort) throws LoginFailedException {
 		Person p = null; 
 		
@@ -108,6 +120,14 @@ public class eShopCore {
 		kv.erstelleKunde(firstname, lastname, passwort, wv.erstelleWarenkorb());
 	}
 	
+	/**
+	 * Erstellt einen neuen Artikel
+	 * @param bezeichnung Artikelbezeichnung
+	 * @param bestand Artikelbestamd
+	 * @param preis Artikelpreis
+	 * @param p Userobjekt
+	 * @return Erstellten Artikel
+	 */
 	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, Person p){
 		Artikel art = av.erstelleArtikel(bezeichnung, bestand, preis);
 		//Ereignis erzeugen
@@ -115,6 +135,14 @@ public class eShopCore {
 		return art;
 	}
 	
+	/**
+	 * Erhöht den Bestand eines Artikels
+	 * @param artikelnummer Artikelnummer des zu bearbeitenden Artikels
+	 * @param bestand Neuer Bestand
+	 * @param p Userobjekt
+	 * @return Bearbeiteten Artikel
+	 * @throws ArticleNumberNonexistantException Artikelnummer existiert nicht
+	 */
 	public Artikel erhoeheArtikelBestand(int artikelnummer, int bestand, Person p) throws ArticleNumberNonexistantException{
 		try{
 			Artikel art = av.erhoeheBestand(artikelnummer, bestand);
@@ -126,6 +154,13 @@ public class eShopCore {
 		}
 	}
 	
+	/**
+	 * Legt einen Artikel in den Warenkorb
+	 * @param artikelnummer Auszuwählender Artikel
+	 * @param anzahl Auszuwählende Anzahl
+	 * @param p Userobjekt
+	 * @throws ArticleNumberNonexistantException Artikelnummer existiert nicht
+	 */
 	public void artikelInWarenkorbLegen(int artikelnummer, int anzahl, Person p) throws ArticleNumberNonexistantException{
 		Warenkorb wk = kv.gibWarenkorbVonKunde(p);
 		try{
@@ -136,20 +171,40 @@ public class eShopCore {
 		}
 	}
 	
+	/**
+	 * Gibt den Warenkorb eines Kunden zurück
+	 * @param p Userobjekt
+	 * @return Warenkorb
+	 */
 	public Warenkorb warenkorbAusgeben(Person p){
 		return kv.gibWarenkorbVonKunde(p);
 	}
 	
+	/**
+	 * Leert den Warenkorb eines Kunden
+	 * @param p Userobjekt
+	 */
 	public void warenkorbLeeren(Person p){
 		Warenkorb wk = kv.gibWarenkorbVonKunde(p);
 		wv.leereWarenkorb(wk);
 	}
 	
+	/**
+	 * Verändert die Anzahl eines Artikels im Warenkorb eines Kunden
+	 * @param pos Position des Artikels
+	 * @param anz Neue Anzahl
+	 * @param p Userobjekt
+	 */
 	public void artikelInWarenkorbAendern(int pos, int anz, Person p){
 		Warenkorb wk = kv.gibWarenkorbVonKunde(p);
 		wv.aendereWarenkorb(wk, pos, anz);
 	}
 	
+	/**
+	 * Warenkorb kaufen und Rechnung erstellen
+	 * @param p Userobjekt
+	 * @return Erstellte Rechnung
+	 */
 	public Rechnung warenkorbKaufen(Person p){
 		//Warenkorb des Benutzers abfragen
 		Warenkorb wk = kv.gibWarenkorbVonKunde(p);
@@ -178,6 +233,10 @@ public class eShopCore {
 		return re;
 	}	
 	
+	/**
+	 * Schreibt die Daten der Verwaltungen in die Persistenz
+	 * @throws IOException
+	 */
 	public void schreibeDaten() throws IOException{
 		av.schreibeDaten(dateipfad + "ARTIKEL.txt"); 
 	}
