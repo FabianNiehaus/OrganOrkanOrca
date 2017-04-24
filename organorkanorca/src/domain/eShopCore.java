@@ -144,14 +144,10 @@ public class eShopCore {
 	 * @throws ArticleNumberNonexistantException Artikelnummer existiert nicht
 	 */
 	public Artikel erhoeheArtikelBestand(int artikelnummer, int bestand, Person p) throws ArticleNumberNonexistantException{
-		try{
-			Artikel art = av.erhoeheBestand(artikelnummer, bestand);
-			//Ereignis erzeugen
-			ev.ereignisErstellen(p, Typ.EINLAGERUNG, art, bestand);
-			return art;
-		} catch (ArticleNumberNonexistantException anne){
-			throw new ArticleNumberNonexistantException();
-		}
+		Artikel art = av.erhoeheBestand(artikelnummer, bestand);
+		//Ereignis erzeugen
+		ev.ereignisErstellen(p, Typ.EINLAGERUNG, art, bestand);
+		return art;
 	}
 	
 	/**
@@ -163,12 +159,9 @@ public class eShopCore {
 	 */
 	public void artikelInWarenkorbLegen(int artikelnummer, int anzahl, Person p) throws ArticleNumberNonexistantException{
 		Warenkorb wk = kv.gibWarenkorbVonKunde(p);
-		try{
+
 		Artikel art = av.sucheArtikel(artikelnummer);
 		wv.legeInWarenkorb(wk, art, anzahl);
-		} catch (ArticleNumberNonexistantException anne){
-			throw new ArticleNumberNonexistantException();
-		}
 	}
 	
 	/**
