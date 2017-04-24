@@ -14,6 +14,7 @@ import data_objects.Rechnung;
 import data_objects.Typ;
 import data_objects.Warenkorb;
 import domain.exceptions.LoginFailedException;
+import domain.exceptions.MaxIDsException;
 import domain.exceptions.ArticleNumberNonexistantException;
 
 /**
@@ -48,8 +49,12 @@ public class eShopCore {
 			
 		}
 		
-		Kunde ku = kv.erstelleKunde("Fabian","Niehaus", "test", wv.erstelleWarenkorb());
-		System.out.println(ku.getId());
+		try{
+			Kunde ku = kv.erstelleKunde("Fabian","Niehaus", "test", wv.erstelleWarenkorb());
+			System.out.println(ku.getId());
+		} catch(MaxIDsException mie){
+			
+		}
 	}
 	
 	/* Noch nicht verwendet
@@ -118,7 +123,7 @@ public class eShopCore {
 	 * @param firstname Vorname des anzulegenden Kunden
 	 * @param lastname Nachname des anzulegenden Kunden
 	 */
-	public void erstelleKunde(String firstname, String lastname, String passwort){
+	public void erstelleKunde(String firstname, String lastname, String passwort) throws MaxIDsException{
 		kv.erstelleKunde(firstname, lastname, passwort, wv.erstelleWarenkorb());
 	}
 	

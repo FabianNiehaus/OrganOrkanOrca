@@ -13,7 +13,7 @@ public class Mitarbeiterverwaltung {
 	 * 
 	 */
 	public Mitarbeiterverwaltung(){
-		mitarbeiter.add(new Mitarbeiter("Mathis", "Möhlenkamp", 900, "test2"));
+		mitarbeiter.add(new Mitarbeiter("Mathis", "Möhlenkamp", 9000, "test2"));
 	}
 	
 	/**
@@ -84,15 +84,22 @@ public class Mitarbeiterverwaltung {
 	/**
 	 * Erzeugt die nächste zu verwendende Mitarbeiternummer
 	 * @return Erzeugte Mitarbeiternummer
+	 * @throws MaxIDsException 
 	 */
-	public int getNextID() {
-		int hoechsteID = 0;
+	public int getNextID() throws MaxIDsException {
+		int hoechsteID = 9000;
 		for(Mitarbeiter ma : mitarbeiter){
 			if(ma.getId() > hoechsteID){
 				hoechsteID = ma.getId();
 			}
 		}		
-		return hoechsteID+1;
+		
+		if(hoechsteID < 9999){
+			return hoechsteID+1;
+		} else {
+			throw new MaxIDsException("Mitarbeiter");
+		}
+		
 	}
 	
 	/**

@@ -6,6 +6,7 @@ import data_objects.Kunde;
 import data_objects.Person;
 import data_objects.Warenkorb;
 import domain.exceptions.LoginFailedException;
+import domain.exceptions.MaxIDsException;
 import domain.exceptions.VectorIsEmptyException;
 
 /**
@@ -68,7 +69,7 @@ public class Kundenverwaltung {
 	 * @param wk Zugeordneter Warenkorb
 	 * @return Erstellter Kunde
 	 */
-	public Kunde erstelleKunde(String firstname, String lastname, String passwort, Warenkorb wk) {
+	public Kunde erstelleKunde(String firstname, String lastname, String passwort, Warenkorb wk) throws MaxIDsException {
 		Kunde ku = new Kunde(firstname, lastname, getNextID(), passwort, wk);
 		kunden.add(ku);
 		return ku;
@@ -98,15 +99,21 @@ public class Kundenverwaltung {
 	/**
 	 * Erzeugt die nächste zu verwendende Kundennummer
 	 * @return Erzeugte Kundennummer
+	 * @throws MaxIDsException 
 	 */
-	public int getNextID() {
-		int hoechsteID = 0;
+	public int getNextID() throws MaxIDsException {
+		int hoechsteID = 1000;
 		for(Kunde ku : kunden){
 			if(ku.getId() > hoechsteID){
 				hoechsteID = ku.getId();
 			}
 		}		
-		return hoechsteID+1;
+
+		if(hoechsteID < 8999){
+			return hoechsteID+1;
+		} else {
+			throw new MaxIDsException("Kunden");
+		}
 	}
 	
 	/**
