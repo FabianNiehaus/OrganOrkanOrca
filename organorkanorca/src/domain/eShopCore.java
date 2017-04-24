@@ -60,6 +60,7 @@ public class eShopCore {
 
 	/**
 	 * Anmelden des Nutzers
+	 * Kunden-ID 1000 - 8999, Mitarbeiter-ID 9000 - 9999
 	 * @param id Nutzer-ID
 	 * @param passwort Nutzer-Passwort
 	 * @return Objekt des Nutzers der Klasse Kunde oder Mitarbeiter
@@ -68,11 +69,12 @@ public class eShopCore {
 	public Person anmelden(int id, String passwort) throws LoginFailedException {
 		Person p = null; 
 		
-		try {
-			p = mv.anmelden(id, passwort);
-		} catch (LoginFailedException lfe) {
-			//
+		if (id >= 1000 && id < 9000){
 			p = kv.anmelden(id, passwort);
+		} else if (id >= 9000 && id < 10000){
+			p = mv.anmelden(id, passwort);
+		} else {
+			throw new LoginFailedException();
 		}
 		
 		return p;

@@ -181,6 +181,7 @@ public class CUI {
 			IO.println(art.toString());
 		} catch (ArticleNumberNonexistantException anne){
 			IO.println("Artikelnummer existiert nicht!");
+			anne.printStackTrace();
 		}
 		
 	}
@@ -199,6 +200,7 @@ public class CUI {
 			eShop.artikelInWarenkorbLegen(artikelnummer, anzahl, user);
 		} catch (ArticleNumberNonexistantException anne){
 			IO.println("Artikelnummer existiert nicht!");
+			anne.printStackTrace();
 		}
 		
 		gibWarenkorbAus();
@@ -388,7 +390,6 @@ public class CUI {
 				input = IO.readString();
 				verarbeiteEingabe(input);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} while (!input.equals("q"));

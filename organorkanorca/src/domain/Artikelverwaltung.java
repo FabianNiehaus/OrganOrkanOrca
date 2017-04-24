@@ -127,7 +127,7 @@ public class Artikelverwaltung {
 				return art;
 			}
 		}
-		throw new ArticleNumberNonexistantException();
+		throw new ArticleNumberNonexistantException(artikelnummer);
 	}
 	
 	/**
@@ -143,7 +143,7 @@ public class Artikelverwaltung {
 			art.setBestand(art.getBestand() + bestand);
 			return art;
 		} catch (ArticleNumberNonexistantException anne){
-			throw new ArticleNumberNonexistantException();
+			throw new ArticleNumberNonexistantException(artikelnummer);
 		}
 		
 	}

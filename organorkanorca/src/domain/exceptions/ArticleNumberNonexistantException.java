@@ -11,7 +11,7 @@ public class ArticleNumberNonexistantException extends Exception {
 
 	private static final long serialVersionUID = 5248914535441215896L;
 
-	public ArticleNumberNonexistantException(){
-		super("Die gesuchte Position existiert nicht!");
+	public ArticleNumberNonexistantException(int artikelnummer){
+		super("Die gesuchte Artikelnummer " + artikelnummer + " existiert nicht!");
 	}
 }
