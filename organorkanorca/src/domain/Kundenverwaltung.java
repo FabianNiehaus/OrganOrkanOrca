@@ -1,12 +1,19 @@
 package domain;
 
+import java.io.IOException;
+import java.util.Iterator;
 import java.util.Vector;
 
+import data_objects.Artikel;
 import data_objects.Kunde;
 import data_objects.Person;
 import data_objects.Warenkorb;
+import domain.exceptions.ArticleNumberNonexistantException;
+import domain.exceptions.KundenIdNonexistantException;
 import domain.exceptions.LoginFailedException;
 import domain.exceptions.VectorIsEmptyException;
+import persistence.FilePersistenceManager;
+import persistence.PersistenceManager;
 
 /**
  * @author Fabian Niehaus
@@ -14,8 +21,70 @@ import domain.exceptions.VectorIsEmptyException;
  */
 public class Kundenverwaltung {
 	
-	private Vector<Kunde> kunden = new Vector<Kunde>();
+	// Persistenz-Schnittstelle, die f�r die Details des Dateizugriffs verantwortlich ist
+	private PersistenceManager pm = new FilePersistenceManager();
 	
+	private Vector<Kunde> kunden = new Vector<Kunde>();
+		
+	/**@author Mathis M�hlenkamp
+	 * Methode zum Einlesen von Kunden aus einer Datei.
+	 * 
+	 * @param datei Datei, die einzulesenden 
+	 * @throws IOException
+	 */
+	public void liesDaten(String datei) throws IOException {
+		// PersistenzManager f�r Lesevorgänge öffnen
+		pm.openForReading(datei);
+
+		Kunde ku;
+		do {
+			// Kunden-Objekt einlesen
+			ku = pm.ladeKunde();
+			
+			if (ku!= null) {
+				// Kunden in Kundenliste einfügen
+				einfuegen(ku);
+			}
+		} while (ku != null);
+
+		// Persistenz-Schnittstelle wieder schließen
+		pm.close();
+	}
+	
+	/**
+	 * Methode zum Schreiben der Kundendaten in eine Datei.
+	 * 
+	 * @param datei Datei, in die der...
+	 * @throws IOException
+	 */
+	public void schreibeDaten(String datei) throws IOException  {
+		// PersistenzManager für Schreibvorgänge öffnen
+		pm.openForWriting(datei);
+
+		if (!kunden.isEmpty()) {
+			Iterator<Kunde> iter = kunden.iterator();
+			while (iter.hasNext()) {
+				Kunde ku = (Kunde) iter.next();
+				pm.speichereKunde(ku);				
+			}
+		}
+		
+		// Persistenz-Schnittstelle wieder schließen
+		pm.close();
+	}
+	
+	/**
+	 * Artikel in Liste der Verwalteten Artikel einfügen
+	 * @param art Einzufügender Artikel
+	 */
+	public void einfuegen(Kunde ku){
+		try{
+			sucheKunde(ku.getId());
+		} catch (KundenIdNonexistantException kine){	//Fabi fragen, exception never thrown 
+														//muss unten noch hinzugef�gt werden
+			kunden.add(ku);
+		}
+	}
 	/**
 	 * Logik zur Anmeldung
 	 * @param id Benutzer-ID

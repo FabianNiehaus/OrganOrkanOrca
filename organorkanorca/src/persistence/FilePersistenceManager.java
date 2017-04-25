@@ -129,6 +129,67 @@ public class FilePersistenceManager implements PersistenceManager {
 		
 		return true;
 	}
+	
+	/**
+	 * @author Mathis Möhlenkamp
+	 */
+	public Kunde ladeKunde() throws IOException {
+		/*
+		//Kunden-Header suchen
+		while(!liesZeile().equals("<---Kunden--->"));{}
+		*/
+		int id = 0;
+		String firstname = "";
+		String lastname = "";
+		String passwort = "";
+		Warenkorb warenkorb = new Warenkorb();  //richtig??
+		
+		//Lies ID
+		try{
+			id = Integer.parseInt(liesZeile());
+		} catch (NumberFormatException nfe) {
+			//Abbruch wenn Leerzeile -> keine Kunden mehr vorhanden
+			return null;
+		}
+				
+		//Lies firstname & lastname
+		firstname = liesZeile();
+		lastname = liesZeile();
+		
+		//Lies passwort
+		passwort = liesZeile();
+		
+		/*
+		while(!liesZeile().equals("<---END Kunden--->"));{}
+		*/
+		
+		return new Kunde(firstname, lastname, id, passwort, warenkorb);
+	}
+	
+	public boolean speichereKunde(Kunde art) throws IOException {
+		/*
+		//Schreibe Kunden-Header
+		schreibeZeile("<---ARTIKEL--->");
+		*/
+		
+		//Schreibe ID
+		schreibeZeile(String.valueOf(art.getId()));
+		//Schreibe firstname
+		schreibeZeile(art.getFirstname());
+		//Schreibe lastname
+		schreibeZeile(art.getLastname());
+		//Schreibe passwort
+		schreibeZeile(art.getPasswort());
+		//Schreibe Warenkorb
+		schreibeZeile(String.valueOf(art.getWarenkorb()));
+		
+		/*
+		//Schreibe Kunden-Limiter
+		schreibeZeile("<---END ARTIKEL--->");
+		*/
+		
+		return true;
+	}
 
 	/**
 	 * Liest eine Zeile aus
