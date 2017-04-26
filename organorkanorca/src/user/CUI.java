@@ -13,6 +13,7 @@ import data_objects.Mitarbeiter;
 import domain.eShopCore;
 import domain.exceptions.LoginFailedException;
 import domain.exceptions.ArticleNumberNonexistantException;
+import domain.exceptions.ArticleStockNotSufficientException;
 import util.IO;
 import util.StringComparator;
 
@@ -198,12 +199,12 @@ public class CUI {
 		
 		try{
 			eShop.artikelInWarenkorbLegen(artikelnummer, anzahl, user);
+			gibWarenkorbAus();
 		} catch (ArticleNumberNonexistantException anne){
-			IO.println("Artikelnummer existiert nicht!");
-			anne.printStackTrace();
+			anne.getMessage();
+		} catch (ArticleStockNotSufficientException asnse){
+			IO.print(asnse.getMessage());
 		}
-		
-		gibWarenkorbAus();
 	}
 	
 	/**
@@ -228,10 +229,12 @@ public class CUI {
 		IO.print("Anzahl eingeben:");
 		
 		int anz = IO.readInt();
-		
-		eShop.artikelInWarenkorbAendern(pos, anz, user);
-		
-		gibWarenkorbAus();
+		try{
+			eShop.artikelInWarenkorbAendern(pos, anz, user);
+			gibWarenkorbAus();
+		} catch (ArticleStockNotSufficientException asnse){
+			asnse.getMessage();
+		}
 	}
 	
 	/**

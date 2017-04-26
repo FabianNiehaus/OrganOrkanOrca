@@ -16,6 +16,7 @@ import data_objects.Warenkorb;
 import domain.exceptions.LoginFailedException;
 import domain.exceptions.MaxIDsException;
 import domain.exceptions.ArticleNumberNonexistantException;
+import domain.exceptions.ArticleStockNotSufficientException;
 
 /**
  * @author Fabian Niehaus
@@ -163,8 +164,9 @@ public class eShopCore {
 	 * @param anzahl Auszuwählende Anzahl
 	 * @param p Userobjekt
 	 * @throws ArticleNumberNonexistantException Artikelnummer existiert nicht
+	 * @throws ArticleStockNotSufficientException Artikelbestand nicht ausreichend
 	 */
-	public void artikelInWarenkorbLegen(int artikelnummer, int anzahl, Person p) throws ArticleNumberNonexistantException{
+	public void artikelInWarenkorbLegen(int artikelnummer, int anzahl, Person p) throws ArticleNumberNonexistantException, ArticleStockNotSufficientException{
 		Warenkorb wk = kv.gibWarenkorbVonKunde(p);
 
 		Artikel art = av.sucheArtikel(artikelnummer);
@@ -194,8 +196,9 @@ public class eShopCore {
 	 * @param pos Position des Artikels
 	 * @param anz Neue Anzahl
 	 * @param p Userobjekt
+	 * @throws ArticleStockNotSufficientException Artikelbestand nicht ausreichend
 	 */
-	public void artikelInWarenkorbAendern(int pos, int anz, Person p){
+	public void artikelInWarenkorbAendern(int pos, int anz, Person p) throws ArticleStockNotSufficientException{
 		Warenkorb wk = kv.gibWarenkorbVonKunde(p);
 		wv.aendereWarenkorb(wk, pos, anz);
 	}

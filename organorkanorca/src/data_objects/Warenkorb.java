@@ -3,6 +3,8 @@ package data_objects;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import domain.exceptions.ArticleStockNotSufficientException;
+
 /**
  * @author FabianNiehaus
  *
@@ -36,8 +38,9 @@ public class Warenkorb {
 	 * Dient zur Änderung der Anzahl eines Artikels im Warenkorb. Der Zugriff erfolgt (nutzerfreundlich) über die Position des Artikels im Warenkorb.
 	 * @param pos Position des Artikels im Warenkorb
 	 * @param anz Neue Anzahl (muss größer 0 sein)
+	 * @throws Nicht genug Artikel auf Lager
 	 */
-	public void aendereAnzahl(int pos, int anz){
+	public void aendereAnzahl(int pos, int anz) throws ArticleStockNotSufficientException{
 		int i = 0;
 		
 		for(Map.Entry<Artikel, Integer> ent : artikel.entrySet()){
@@ -46,6 +49,7 @@ public class Warenkorb {
 				Artikel art = ent.getKey();
 				artikel.remove(ent);
 				if (anz > 0){
+					pruefeBestand(art, anz);
 					artikel.put(art, anz);
 				}
 			}
@@ -58,10 +62,12 @@ public class Warenkorb {
 	 * Legt einen Artikel im Warenkorb ab
 	 * @param art Gewünschter Artikel
 	 * @param anz Gewünschte Anzahl (muss größer 0 sein)
+	 * @throws Nicht genug Artikel auf Lager
 	 */
-	public void speichereArtikel(Artikel art, int anz){
+	public void speichereArtikel(Artikel art, int anz) throws ArticleStockNotSufficientException{
 		if(!sucheArtikel(art)){
 			if(anz > 0){
+				pruefeBestand(art, anz);
 				artikel.put(art, anz);
 			} 
 		}
@@ -102,5 +108,16 @@ public class Warenkorb {
 	 */
 	public LinkedHashMap<Artikel, Integer> getArtikel(){
 		return artikel;
+	}
+	
+	/**
+	 * Prüft, ob genug Bestand von einem Artikel verfügbar ist 
+	 * @param art Gewünschter Artikel
+	 * @param anz Gewünschte Anzahl
+	 */
+	private void pruefeBestand(Artikel art, int anz) throws ArticleStockNotSufficientException{
+		if (art.getBestand() < anz){
+			throw new ArticleStockNotSufficientException(art, anz);
+		}
 	}
 }

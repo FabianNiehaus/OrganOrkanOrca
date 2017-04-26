@@ -3,6 +3,7 @@ package domain;
 import java.util.LinkedHashMap;
 import java.util.Vector;
 import data_objects.*;
+import domain.exceptions.ArticleStockNotSufficientException;
 
 /**
  * @author Fabian Niehaus
@@ -53,8 +54,9 @@ public class Warenkorbverwaltung {
 	 * @param aend Zu bearbeitender Warenkorb
 	 * @param position Position des zu verändernden Artikels
 	 * @param anz Neue Anzahl
+	 * @throws Nicht genug Artikel auf Lager
 	 */
-	public void aendereWarenkorb(Warenkorb aend, int position, int anz){
+	public void aendereWarenkorb(Warenkorb aend, int position, int anz) throws ArticleStockNotSufficientException {
 		Warenkorb wk = getWarenkorb(aend);
 		wk.aendereAnzahl(position, anz);
 	}
@@ -64,8 +66,9 @@ public class Warenkorbverwaltung {
 	 * @param wk Zu bearbeitender Warenkorb
 	 * @param art Hinzuzufügender Artikel
 	 * @param anz Anzahl des Artikels
+	 * @throws ArticleStockNotSufficientException 
 	 */
-	public void legeInWarenkorb(Warenkorb wk, Artikel art, int anz){
+	public void legeInWarenkorb(Warenkorb wk, Artikel art, int anz) throws ArticleStockNotSufficientException{
 		wk.speichereArtikel(art, anz);
 	}
 	
