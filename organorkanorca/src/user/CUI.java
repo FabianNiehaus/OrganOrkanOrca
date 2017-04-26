@@ -14,6 +14,7 @@ import domain.eShopCore;
 import domain.exceptions.LoginFailedException;
 import domain.exceptions.ArticleNumberNonexistantException;
 import domain.exceptions.ArticleStockNotSufficientException;
+import domain.exceptions.BasketNonexistantException;
 import util.IO;
 import util.StringComparator;
 
@@ -241,6 +242,8 @@ public class CUI {
 			gibWarenkorbAus();
 		} catch (ArticleStockNotSufficientException asnse){
 			asnse.getMessage();
+		} catch(BasketNonexistantException bne){
+			bne.getMessage();
 		}
 	}
 	

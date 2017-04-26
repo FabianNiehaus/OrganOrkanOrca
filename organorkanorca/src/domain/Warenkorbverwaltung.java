@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Vector;
 import data_objects.*;
 import domain.exceptions.ArticleStockNotSufficientException;
+import domain.exceptions.BasketNonexistantException;
 
 /**
  * @author Fabian Niehaus
@@ -18,13 +19,13 @@ public class Warenkorbverwaltung {
 	 * @param wk Gesuchter Warenkorb
 	 * @return Gesuchter Warenkorb
 	 */
-	public Warenkorb getWarenkorb(Warenkorb wk){
+	public Warenkorb getWarenkorb(Warenkorb wk) throws BasketNonexistantException{
 		for(Warenkorb ret : warenkoerbe){
 			if(ret.equals(wk)){
 				return ret;
 			}
 		}
-		return null;
+		throw new BasketNonexistantException();
 	}
 	
 	/**
@@ -56,7 +57,7 @@ public class Warenkorbverwaltung {
 	 * @param anz Neue Anzahl
 	 * @throws Nicht genug Artikel auf Lager
 	 */
-	public void aendereWarenkorb(Warenkorb aend, int position, int anz) throws ArticleStockNotSufficientException {
+	public void aendereWarenkorb(Warenkorb aend, int position, int anz) throws ArticleStockNotSufficientException, BasketNonexistantException {
 		Warenkorb wk = getWarenkorb(aend);
 		wk.aendereAnzahl(position, anz);
 	}

@@ -39,7 +39,7 @@ public class Mitarbeiterverwaltung {
 	 * @return Gesuchter Mitarbeiter
 	 * @throws VectorIsEmptyException Mitarbeiterliste leer
 	 */
-	public Mitarbeiter sucheMitarbeiter(String firstname, String lastname) throws VectorIsEmptyException{
+	public Mitarbeiter sucheMitarbeiter(String firstname, String lastname) throws PersonNonexistantException{
 		if(mitarbeiter.size() > 0){
 			for(Mitarbeiter ma : mitarbeiter){
 				if (ma.getFirstname().equals(firstname) && ma.getLastname().equals(lastname)){
@@ -47,7 +47,7 @@ public class Mitarbeiterverwaltung {
 				}
 			}
 		}
-		return null;
+		throw new PersonNonexistantException(firstname, lastname);
 	}
 	
 	/**
@@ -56,13 +56,13 @@ public class Mitarbeiterverwaltung {
 	 * @return Gesuchter Mitarbeiter
 	 * @throws VectorIsEmptyException Mitarbeiterliste leer
 	 */
-	public Mitarbeiter suchMitarbeiter(int id) throws VectorIsEmptyException{
+	public Mitarbeiter suchMitarbeiter(int id) throws PersonNonexistantException{
 		for(Mitarbeiter ma : mitarbeiter){
 			if(ma.getId() == id){
 				return ma;
 				}
 			}
-			return null;
+			throw new PersonNonexistantException(id);
 		}
 	
 	/**

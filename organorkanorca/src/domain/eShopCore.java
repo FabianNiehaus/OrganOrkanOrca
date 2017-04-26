@@ -17,6 +17,7 @@ import domain.exceptions.LoginFailedException;
 import domain.exceptions.MaxIDsException;
 import domain.exceptions.ArticleNumberNonexistantException;
 import domain.exceptions.ArticleStockNotSufficientException;
+import domain.exceptions.BasketNonexistantException;
 
 /**
  * @author Fabian Niehaus
@@ -73,17 +74,14 @@ public class eShopCore {
 	 * @throws LoginFailedException Anmeldung fehlgeschlagen
 	 */
 	public Person anmelden(int id, String passwort) throws LoginFailedException {
-		Person p = null; 
-		
+
 		if (id >= 1000 && id < 9000){
-			p = kv.anmelden(id, passwort);
+			return kv.anmelden(id, passwort);
 		} else if (id >= 9000 && id < 10000){
-			p = mv.anmelden(id, passwort);
+			return mv.anmelden(id, passwort);
 		} else {
 			throw new LoginFailedException();
 		}
-		
-		return p;
 	}
 	
 	/**
@@ -198,7 +196,7 @@ public class eShopCore {
 	 * @param p Userobjekt
 	 * @throws ArticleStockNotSufficientException Artikelbestand nicht ausreichend
 	 */
-	public void artikelInWarenkorbAendern(int pos, int anz, Person p) throws ArticleStockNotSufficientException{
+	public void artikelInWarenkorbAendern(int pos, int anz, Person p) throws ArticleStockNotSufficientException, BasketNonexistantException{
 		Warenkorb wk = kv.gibWarenkorbVonKunde(p);
 		wv.aendereWarenkorb(wk, pos, anz);
 	}
