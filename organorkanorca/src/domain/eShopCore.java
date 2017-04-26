@@ -87,15 +87,14 @@ public class eShopCore {
 	/**
 	 * @return Alle in der Artikelverwaltung gespeicherten Artikel
 	 */
-	public Vector<Artikel> alleArtikelAusgeben(){
-		//To-Do: Kopie von Artikelliste zurückgeben
+	public Vector<Artikel> alleArtikelAusgeben(Person p){
 		return av.getArtikel();
 	}
 
 	/**
 	 * @return Alle in der Kundenverwaltung gespeicherten Kunden
 	 */
-	public Vector<Kunde> alleKundenAusgeben(){
+	public Vector<Kunde> alleKundenAusgeben(Person p){
 		//To-Do: Kopie von Kundenliste zurückgeben
 		return kv.getKunden();
 	}
@@ -103,7 +102,7 @@ public class eShopCore {
 	/**
 	 * @return Alle in der Mitarbeiterverwaltung gespeicherten Mitarbeiter
 	 */
-	public Vector<Mitarbeiter> alleMitarbeiterAusgeben(){
+	public Vector<Mitarbeiter> alleMitarbeiterAusgeben(Person p){
 		//To-Do: Kopie von Mitarbeiterliste zurückgeben
 		return mv.getMitarbeiter();
 	}
@@ -111,7 +110,7 @@ public class eShopCore {
 	/**
 	 * @return Alle in der Warenkorbverwaltung gespeicherten Warenkörbe
 	 */
-	public void alleWarenkoerbeAusgeben(){
+	public void alleWarenkoerbeAusgeben(Person p){
 		for (Warenkorb w : wv.getWarenkoerbe()){
 			w.toString();
 		}
@@ -122,7 +121,7 @@ public class eShopCore {
 	 * @param firstname Vorname des anzulegenden Kunden
 	 * @param lastname Nachname des anzulegenden Kunden
 	 */
-	public void erstelleKunde(String firstname, String lastname, String passwort) throws MaxIDsException{
+	public void erstelleKunde(String firstname, String lastname, String passwort, Person p) throws MaxIDsException{
 		kv.erstelleKunde(firstname, lastname, passwort, wv.erstelleWarenkorb());
 	}
 	
@@ -248,7 +247,7 @@ public class eShopCore {
 	 * @return Gesuchter Artikel
 	 * @throws ArticleNonexistantException
 	 */
-	public Artikel artikelSuchen(int artikelnummer) throws ArticleNonexistantException{
+	public Artikel artikelSuchen(int artikelnummer, Person p) throws ArticleNonexistantException{
 		return av.sucheArtikel(artikelnummer);
 	}
 	
@@ -258,7 +257,7 @@ public class eShopCore {
 	 * @return Liste der zur Bezeichnung passenden Artikel
 	 * @throws ArticleNonexistantException Keine Artikel gefunden
 	 */
-	public Vector<Artikel> artikelSuchen(String bezeichnung) throws ArticleNonexistantException{
+	public Vector<Artikel> artikelSuchen(String bezeichnung, Person p) throws ArticleNonexistantException{
 		return av.sucheArtikel(bezeichnung);
 	}
 }

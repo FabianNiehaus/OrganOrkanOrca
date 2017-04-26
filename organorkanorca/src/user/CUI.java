@@ -78,7 +78,7 @@ public class CUI {
 			IO.println("Bitte Artikelnummer eingeben:");
 			int artikelnummer = IO.readInt();
 			try {
-				Artikel art = eShop.artikelSuchen(artikelnummer);
+				Artikel art = eShop.artikelSuchen(artikelnummer, user);
 				IO.println(art.toString());
 			} catch (ArticleNonexistantException ane) {
 				IO.println(ane.getMessage());
@@ -87,7 +87,7 @@ public class CUI {
 			IO.println("Bitte Artikelbezeichnung eingeben:");
 			String bezeichnung = IO.readString();
 			try {
-				Vector<Artikel> liste = eShop.artikelSuchen(bezeichnung);
+				Vector<Artikel> liste = eShop.artikelSuchen(bezeichnung, user);
 				for(Artikel art : liste){
 					IO.println(art.toString());
 				}
@@ -337,8 +337,8 @@ public class CUI {
 			input = IO.readString();
 			
 			switch(input){
-			case "a": artikelAusgeben(eShop.alleArtikelAusgeben()); break;
-			case "s": artikelSortiertAusgeben(eShop.alleArtikelAusgeben()); break;
+			case "a": artikelAusgeben(eShop.alleArtikelAusgeben(user)); break;
+			case "s": artikelSortiertAusgeben(eShop.alleArtikelAusgeben(user)); break;
 			case "e": artikelErstellen(); break;
 			case "b": artikelBestandErhoehen(); break;
 			case "k": artikelInWarenkorbLegen(); break;
@@ -387,8 +387,8 @@ public class CUI {
 	public void verarbeiteEingabe(String input) throws IOException{
 		switch(input){
 		case "a": gibArtikelverwaltungAus(); break;
-		case "k": kundenAusgeben(eShop.alleKundenAusgeben()); break;
-		case "m": mitarbeiterAusgeben(eShop.alleMitarbeiterAusgeben()); break;
+		case "k": kundenAusgeben(eShop.alleKundenAusgeben(user)); break;
+		case "m": mitarbeiterAusgeben(eShop.alleMitarbeiterAusgeben(user)); break;
 		case "w": gibWarenkorbverwaltungAus(); break;
 		case "s": eShop.schreibeDaten(); break;
 		}
