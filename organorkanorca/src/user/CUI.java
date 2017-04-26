@@ -12,7 +12,7 @@ import data_objects.Rechnung;
 import data_objects.Mitarbeiter;
 import domain.eShopCore;
 import domain.exceptions.LoginFailedException;
-import domain.exceptions.ArticleNumberNonexistantException;
+import domain.exceptions.ArticleNonexistantException;
 import domain.exceptions.ArticleStockNotSufficientException;
 import domain.exceptions.BasketNonexistantException;
 import util.IO;
@@ -79,12 +79,21 @@ public class CUI {
 			int artikelnummer = IO.readInt();
 			try {
 				Artikel art = eShop.artikelSuchen(artikelnummer);
-				art.toString();
-			} catch (ArticleNumberNonexistantException anne) {
-				anne.getMessage();
+				IO.println(art.toString());
+			} catch (ArticleNonexistantException ane) {
+				IO.println(ane.getMessage());
 			}
 		} else if(searchType.equals("bez")){
-			//Logik Suche nach Artikelbezeichnung
+			IO.println("Bitte Artikelbezeichnung eingeben:");
+			String bezeichnung = IO.readString();
+			try {
+				Vector<Artikel> liste = eShop.artikelSuchen(bezeichnung);
+				for(Artikel art : liste){
+					IO.println(art.toString());
+				}
+			} catch (ArticleNonexistantException ane) {
+				IO.println(ane.getMessage());
+			}
 		}
 	}
 	
@@ -188,9 +197,9 @@ public class CUI {
 		try{
 			Artikel art = eShop.erhoeheArtikelBestand(artikelnummer, bestand, user);			
 			IO.println(art.toString());
-		} catch (ArticleNumberNonexistantException anne){
+		} catch (ArticleNonexistantException ane){
 			IO.println("Artikelnummer existiert nicht!");
-			anne.printStackTrace();
+			ane.printStackTrace();
 		}
 		
 	}
@@ -208,10 +217,10 @@ public class CUI {
 		try{
 			eShop.artikelInWarenkorbLegen(artikelnummer, anzahl, user);
 			gibWarenkorbAus();
-		} catch (ArticleNumberNonexistantException anne){
-			anne.getMessage();
+		} catch (ArticleNonexistantException ane){
+			IO.println(ane.getMessage());
 		} catch (ArticleStockNotSufficientException asnse){
-			IO.print(asnse.getMessage());
+			IO.println(asnse.getMessage());
 		}
 	}
 	

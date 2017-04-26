@@ -15,7 +15,7 @@ import data_objects.Typ;
 import data_objects.Warenkorb;
 import domain.exceptions.LoginFailedException;
 import domain.exceptions.MaxIDsException;
-import domain.exceptions.ArticleNumberNonexistantException;
+import domain.exceptions.ArticleNonexistantException;
 import domain.exceptions.ArticleStockNotSufficientException;
 import domain.exceptions.BasketNonexistantException;
 
@@ -147,9 +147,9 @@ public class eShopCore {
 	 * @param bestand Neuer Bestand
 	 * @param p Userobjekt
 	 * @return Bearbeiteten Artikel
-	 * @throws ArticleNumberNonexistantException Artikelnummer existiert nicht
+	 * @throws ArticleNonexistantException Artikelnummer existiert nicht
 	 */
-	public Artikel erhoeheArtikelBestand(int artikelnummer, int bestand, Person p) throws ArticleNumberNonexistantException{
+	public Artikel erhoeheArtikelBestand(int artikelnummer, int bestand, Person p) throws ArticleNonexistantException{
 		Artikel art = av.erhoeheBestand(artikelnummer, bestand);
 		//Ereignis erzeugen
 		ev.ereignisErstellen(p, Typ.EINLAGERUNG, art, bestand);
@@ -161,10 +161,10 @@ public class eShopCore {
 	 * @param artikelnummer Auszuwählender Artikel
 	 * @param anzahl Auszuwählende Anzahl
 	 * @param p Userobjekt
-	 * @throws ArticleNumberNonexistantException Artikelnummer existiert nicht
+	 * @throws ArticleNonexistantException Artikelnummer existiert nicht
 	 * @throws ArticleStockNotSufficientException Artikelbestand nicht ausreichend
 	 */
-	public void artikelInWarenkorbLegen(int artikelnummer, int anzahl, Person p) throws ArticleNumberNonexistantException, ArticleStockNotSufficientException{
+	public void artikelInWarenkorbLegen(int artikelnummer, int anzahl, Person p) throws ArticleNonexistantException, ArticleStockNotSufficientException{
 		Warenkorb wk = kv.gibWarenkorbVonKunde(p);
 
 		Artikel art = av.sucheArtikel(artikelnummer);
@@ -218,7 +218,7 @@ public class eShopCore {
 				av.erhoeheBestand(ent.getKey().getArtikelnummer(), -1 * ent.getValue());
 				//Ereignis erstellen
 				ev.ereignisErstellen(p, Typ.KAUF, ent.getKey(), (int) ent.getValue());
-			} catch (ArticleNumberNonexistantException anne){
+			} catch (ArticleNonexistantException anne){
 				
 			}
 			gesamt += (ent.getValue() * ent.getKey().getPreis());
@@ -246,9 +246,13 @@ public class eShopCore {
 	 * Erlaubt die Suche nach einer Artikelnummer
 	 * @param artikelnummer Artikelnumemr von geuschtem Artikel
 	 * @return Gesuchter Artikel
-	 * @throws ArticleNumberNonexistantException
+	 * @throws ArticleNonexistantException
 	 */
-	public Artikel artikelSuchen(int artikelnummer) throws ArticleNumberNonexistantException{
+	public Artikel artikelSuchen(int artikelnummer) throws ArticleNonexistantException{
 		return av.sucheArtikel(artikelnummer);
+	}
+	
+	public Vector<Artikel> artikelSuchen(String bezeichnung) throws ArticleNonexistantException{
+		return av.sucheArtikel(bezeichnung);
 	}
 }

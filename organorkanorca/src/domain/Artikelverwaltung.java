@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import data_objects.Artikel;
-import domain.exceptions.ArticleNumberNonexistantException;
+import domain.exceptions.ArticleNonexistantException;
 import persistence.*;
 
 /**
@@ -74,7 +74,7 @@ public class Artikelverwaltung {
 	public void einfuegen(Artikel art){
 		try{
 			sucheArtikel(art.getArtikelnummer());
-		} catch (ArticleNumberNonexistantException anne){
+		} catch (ArticleNonexistantException anne){
 			artikel.add(art);
 		}
 	}
@@ -119,15 +119,32 @@ public class Artikelverwaltung {
 	 * Sucht anhand der Artikelnummer nach einem Artikel
 	 * @param artikelnummer Artikelnummer des gesuchten Artikels
 	 * @return Gesuchter Artikel
-	 * @throws ArticleNumberNonexistantException Artikelnummer nicht vorhanden
+	 * @throws ArticleNonexistantException Artikelnummer nicht vorhanden
 	 */
-	public Artikel sucheArtikel(int artikelnummer) throws ArticleNumberNonexistantException{
+	public Artikel sucheArtikel(int artikelnummer) throws ArticleNonexistantException{
 		for(Artikel art : artikel){
 			if(art.getArtikelnummer() == artikelnummer){
 				return art;
 			}
 		}
-		throw new ArticleNumberNonexistantException(artikelnummer);
+		throw new ArticleNonexistantException(artikelnummer);
+	}
+	
+	public Vector<Artikel> sucheArtikel(String bezeichnung) throws ArticleNonexistantException{
+		Vector<Artikel> liste = new Vector<Artikel>(0);
+		bezeichnung = bezeichnung.toLowerCase();
+		
+		for(Artikel art : artikel){
+			if(art.getBezeichnung().toLowerCase().contains(bezeichnung)){
+				liste.add(art);
+			}
+		}
+		
+		if (liste.isEmpty()){
+			throw new ArticleNonexistantException(bezeichnung);
+		} else {
+			return liste;
+		}
 	}
 	
 	/**
@@ -135,15 +152,15 @@ public class Artikelverwaltung {
 	 * @param artikelnummer Artikelnummer des gesuchten Artikels
 	 * @param bestand Neuer Bestand
 	 * @return Gesuchter Artikel
-	 * @throws ArticleNumberNonexistantException Artikelnummer nicht vorhanden
+	 * @throws ArticleNonexistantException Artikelnummer nicht vorhanden
 	 */
-	public Artikel erhoeheBestand(int artikelnummer, int bestand) throws ArticleNumberNonexistantException{
+	public Artikel erhoeheBestand(int artikelnummer, int bestand) throws ArticleNonexistantException{
 		try{
 			Artikel art = sucheArtikel(artikelnummer);
 			art.setBestand(art.getBestand() + bestand);
 			return art;
-		} catch (ArticleNumberNonexistantException anne){
-			throw new ArticleNumberNonexistantException(artikelnummer);
+		} catch (ArticleNonexistantException anne){
+			throw new ArticleNonexistantException(artikelnummer);
 		}
 		
 	}
