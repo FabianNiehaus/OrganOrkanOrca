@@ -52,7 +52,7 @@ public interface PersistenceManager {
 	public boolean speichereArtikel(Artikel art) throws IOException;
 	
 	/** 
-	 * @author Mathis Möhlenkamp
+	 * @author Mathis Mï¿½hlenkamp
 	 * 
 	 * Methode zum Einlesen der Kundendaten aus einer externen Datenqulle.
 	 * 

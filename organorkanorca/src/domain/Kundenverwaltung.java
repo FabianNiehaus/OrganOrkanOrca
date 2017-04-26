@@ -4,14 +4,11 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Vector;
 
-import data_objects.Artikel;
 import data_objects.Kunde;
 import data_objects.Person;
 import data_objects.Warenkorb;
-import domain.exceptions.ArticleNumberNonexistantException;
-import domain.exceptions.KundenIdNonexistantException;
 import domain.exceptions.LoginFailedException;
-import domain.exceptions.VectorIsEmptyException;
+import domain.exceptions.PersonNonexistantException;
 import persistence.FilePersistenceManager;
 import persistence.PersistenceManager;
 
@@ -21,19 +18,19 @@ import persistence.PersistenceManager;
  */
 public class Kundenverwaltung {
 	
-	// Persistenz-Schnittstelle, die f�r die Details des Dateizugriffs verantwortlich ist
+	// Persistenz-Schnittstelle, die f�r die Details des Dateizugriffs verantwortlich ist
 	private PersistenceManager pm = new FilePersistenceManager();
 	
 	private Vector<Kunde> kunden = new Vector<Kunde>();
 		
-	/**@author Mathis M�hlenkamp
+	/**@author Mathis M�hlenkamp
 	 * Methode zum Einlesen von Kunden aus einer Datei.
 	 * 
 	 * @param datei Datei, die einzulesenden 
 	 * @throws IOException
 	 */
 	public void liesDaten(String datei) throws IOException {
-		// PersistenzManager f�r Lesevorgänge öffnen
+		// PersistenzManager f�r Lesevorgänge öffnen
 		pm.openForReading(datei);
 
 		Kunde ku;
@@ -74,17 +71,13 @@ public class Kundenverwaltung {
 	}
 	
 	/**
-	 * Artikel in Liste der Verwalteten Artikel einfügen
-	 * @param art Einzufügender Artikel
+	 * Fügt einen Kunden hinzu
+	 * @param ku Kunde
 	 */
 	public void einfuegen(Kunde ku){
-		try{
-			sucheKunde(ku.getId());
-		} catch (KundenIdNonexistantException kine){	//Fabi fragen, exception never thrown 
-														//muss unten noch hinzugef�gt werden
-			kunden.add(ku);
-		}
+		kunden.add(ku);
 	}
+	
 	/**
 	 * Logik zur Anmeldung
 	 * @param id Benutzer-ID
@@ -106,13 +99,14 @@ public class Kundenverwaltung {
 	 * @return Gibt <b>true</b> zurück, wenn zu prüfender Kunde in der HAsMap Kunde gespeichert ist. Sonst <b>false</b>.
 	 * suche nach ID oder Name 
 	 */
-	public Kunde sucheKunde(String firstname, String lastname) throws VectorIsEmptyException{
+	public Kunde sucheKunde(String firstname, String lastname) throws PersonNonexistantException {
 		for(Kunde ku : kunden){
 			if (ku.getFirstname().equals(firstname) && ku.getLastname().equals(lastname)){
 				return ku;
 			}
 		}
-		return null;
+		
+		throw new PersonNonexistantException(firstname, lastname);
 	}
 	
 	/**
@@ -120,14 +114,16 @@ public class Kundenverwaltung {
 	 * @param id Kundenid
 	 * @return Gesuchter Kunde
 	 */
-	public Kunde sucheKunde(int id){
+	public Kunde sucheKunde(int id) throws PersonNonexistantException{
 		for(Kunde ku : kunden){
 			if(ku.getId() == id){
 				return ku;
 				}
 			}
-			return null;
-		}
+		
+		throw new PersonNonexistantException(id);
+		
+	}
 	
 	/**
 	 * Erstellt einen neuen Kunden und fügt in zur verwalteten Liste hinzu
