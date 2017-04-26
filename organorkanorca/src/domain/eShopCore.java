@@ -252,6 +252,12 @@ public class eShopCore {
 		return av.sucheArtikel(artikelnummer);
 	}
 	
+	/**
+	 * Erlaubt die Suche nach einer Artikelbezeichnung
+	 * @param bezeichnung (Teil-)Bezeichnung des gesuchten Artikels
+	 * @return Liste der zur Bezeichnung passenden Artikel
+	 * @throws ArticleNonexistantException Keine Artikel gefunden
+	 */
 	public Vector<Artikel> artikelSuchen(String bezeichnung) throws ArticleNonexistantException{
 		return av.sucheArtikel(bezeichnung);
 	}

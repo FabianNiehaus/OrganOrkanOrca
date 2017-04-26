@@ -130,6 +130,12 @@ public class Artikelverwaltung {
 		throw new ArticleNonexistantException(artikelnummer);
 	}
 	
+	/**
+	 * Sucht anhand einer (Teil-)Bezeichnung nach einem Artikel
+	 * @param bezeichnung Gesuchte (Teil-)bezeichnung
+	 * @return Liste der zur Bezeichnung passenden Artikel
+	 * @throws ArticleNonexistantException Keine Artikel gefunden
+	 */
 	public Vector<Artikel> sucheArtikel(String bezeichnung) throws ArticleNonexistantException{
 		Vector<Artikel> liste = new Vector<Artikel>(0);
 		bezeichnung = bezeichnung.toLowerCase();
