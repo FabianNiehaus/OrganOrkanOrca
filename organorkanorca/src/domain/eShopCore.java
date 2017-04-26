@@ -15,6 +15,7 @@ import data_objects.Typ;
 import data_objects.Warenkorb;
 import domain.exceptions.LoginFailedException;
 import domain.exceptions.MaxIDsException;
+import domain.exceptions.AccessRestrictedException;
 import domain.exceptions.ArticleNonexistantException;
 import domain.exceptions.ArticleStockNotSufficientException;
 import domain.exceptions.BasketNonexistantException;
@@ -86,33 +87,50 @@ public class eShopCore {
 	
 	/**
 	 * @return Alle in der Artikelverwaltung gespeicherten Artikel
+	 * @throws AccessRestrictedException 
 	 */
-	public Vector<Artikel> alleArtikelAusgeben(Person p){
-		return av.getArtikel();
+	public Vector<Artikel> alleArtikelAusgeben(Person p) throws AccessRestrictedException{
+		if(istKunde(p) || istMitarbeiter(p)){
+			return av.getArtikel();
+		} else {
+			throw new AccessRestrictedException(p, "\"Alle Artikel ausgeben\"");
+		}
 	}
 
 	/**
 	 * @return Alle in der Kundenverwaltung gespeicherten Kunden
+	 * @throws AccessRestrictedException
 	 */
-	public Vector<Kunde> alleKundenAusgeben(Person p){
-		//To-Do: Kopie von Kundenliste zurückgeben
-		return kv.getKunden();
+	public Vector<Kunde> alleKundenAusgeben(Person p) throws AccessRestrictedException{
+		if(istKunde(p) || istMitarbeiter(p)){
+			return kv.getKunden();
+		} else {
+			throw new AccessRestrictedException(p, "\"Alle Kunden ausgeben\"");
+		}
 	}
 	
 	/**
 	 * @return Alle in der Mitarbeiterverwaltung gespeicherten Mitarbeiter
 	 */
-	public Vector<Mitarbeiter> alleMitarbeiterAusgeben(Person p){
-		//To-Do: Kopie von Mitarbeiterliste zurückgeben
-		return mv.getMitarbeiter();
+	public Vector<Mitarbeiter> alleMitarbeiterAusgeben(Person p) throws AccessRestrictedException{
+		if(istMitarbeiter(p)){
+			return mv.getMitarbeiter();
+		} else {
+			throw new AccessRestrictedException(p, "\"Alle Mitarbeiter ausgeben\"");
+		}
 	}
 	
 	/**
 	 * @return Alle in der Warenkorbverwaltung gespeicherten Warenkörbe
+	 * @throws AccessRestrictedException 
 	 */
-	public void alleWarenkoerbeAusgeben(Person p){
-		for (Warenkorb w : wv.getWarenkoerbe()){
-			w.toString();
+	public void alleWarenkoerbeAusgeben(Person p) throws AccessRestrictedException{
+		if(istMitarbeiter(p)){
+			for (Warenkorb w : wv.getWarenkoerbe()){
+				w.toString();
+			}
+		} else {
+			throw new AccessRestrictedException(p, "\"Alle Warenkörbe ausgeben\"");
 		}
 	}
 	
@@ -120,9 +138,14 @@ public class eShopCore {
 	 * Erstellt einen neuen Kunden mit fortlaufender Kundennummer
 	 * @param firstname Vorname des anzulegenden Kunden
 	 * @param lastname Nachname des anzulegenden Kunden
+	 * @throws AccessRestrictedException 
 	 */
-	public void erstelleKunde(String firstname, String lastname, String passwort, Person p) throws MaxIDsException{
-		kv.erstelleKunde(firstname, lastname, passwort, wv.erstelleWarenkorb());
+	public void erstelleKunde(String firstname, String lastname, String passwort, Person p) throws MaxIDsException, AccessRestrictedException{
+		if(istMitarbeiter(p)){
+			kv.erstelleKunde(firstname, lastname, passwort, wv.erstelleWarenkorb());
+		} else {
+			throw new AccessRestrictedException(p, "\"Kunde anlegen\"");
+		}
 	}
 	
 	/**
@@ -132,12 +155,17 @@ public class eShopCore {
 	 * @param preis Artikelpreis
 	 * @param p Userobjekt
 	 * @return Erstellten Artikel
+	 * @throws AccessRestrictedException 
 	 */
-	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, Person p){
-		Artikel art = av.erstelleArtikel(bezeichnung, bestand, preis);
-		//Ereignis erzeugen
-		ev.ereignisErstellen(p, Typ.NEU, art, bestand);
-		return art;
+	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, Person p) throws AccessRestrictedException{
+		if(istMitarbeiter(p)){
+			Artikel art = av.erstelleArtikel(bezeichnung, bestand, preis);
+			//Ereignis erzeugen
+			ev.ereignisErstellen(p, Typ.NEU, art, bestand);
+			return art;
+		} else {
+			throw new AccessRestrictedException(p, "\"Artikel anlegen\"");
+		}
 	}
 	
 	/**
@@ -147,12 +175,17 @@ public class eShopCore {
 	 * @param p Userobjekt
 	 * @return Bearbeiteten Artikel
 	 * @throws ArticleNonexistantException Artikelnummer existiert nicht
+	 * @throws AccessRestrictedException 
 	 */
-	public Artikel erhoeheArtikelBestand(int artikelnummer, int bestand, Person p) throws ArticleNonexistantException{
-		Artikel art = av.erhoeheBestand(artikelnummer, bestand);
-		//Ereignis erzeugen
-		ev.ereignisErstellen(p, Typ.EINLAGERUNG, art, bestand);
-		return art;
+	public Artikel erhoeheArtikelBestand(int artikelnummer, int bestand, Person p) throws ArticleNonexistantException, AccessRestrictedException{
+		if(istMitarbeiter(p)){
+			Artikel art = av.erhoeheBestand(artikelnummer, bestand);
+			//Ereignis erzeugen
+			ev.ereignisErstellen(p, Typ.EINLAGERUNG, art, bestand);
+			return art;
+		} else {
+			throw new AccessRestrictedException(p, "\"Bestand erhöhen\"");
+		}
 	}
 	
 	/**
@@ -162,30 +195,45 @@ public class eShopCore {
 	 * @param p Userobjekt
 	 * @throws ArticleNonexistantException Artikelnummer existiert nicht
 	 * @throws ArticleStockNotSufficientException Artikelbestand nicht ausreichend
+	 * @throws AccessRestrictedException 
 	 */
-	public void artikelInWarenkorbLegen(int artikelnummer, int anzahl, Person p) throws ArticleNonexistantException, ArticleStockNotSufficientException{
-		Warenkorb wk = kv.gibWarenkorbVonKunde(p);
-
-		Artikel art = av.sucheArtikel(artikelnummer);
-		wv.legeInWarenkorb(wk, art, anzahl);
+	public void artikelInWarenkorbLegen(int artikelnummer, int anzahl, Person p) throws ArticleNonexistantException, ArticleStockNotSufficientException, AccessRestrictedException{
+		if(istKunde(p)){
+			Warenkorb wk = kv.gibWarenkorbVonKunde(p);
+	
+			Artikel art = av.sucheArtikel(artikelnummer);
+			wv.legeInWarenkorb(wk, art, anzahl);
+		} else {
+			throw new AccessRestrictedException(p, "\"Artikel in Warenkorb legen\"");
+		}
 	}
 	
 	/**
 	 * Gibt den Warenkorb eines Kunden zurück
 	 * @param p Userobjekt
 	 * @return Warenkorb
+	 * @throws AccessRestrictedException 
 	 */
-	public Warenkorb warenkorbAusgeben(Person p){
-		return kv.gibWarenkorbVonKunde(p);
+	public Warenkorb warenkorbAusgeben(Person p) throws AccessRestrictedException{
+		if(istKunde(p)){
+			return kv.gibWarenkorbVonKunde(p);
+		} else {
+			throw new AccessRestrictedException(p, "\"Warenkorb anzeigen\"");
+		}
 	}
 	
 	/**
 	 * Leert den Warenkorb eines Kunden
 	 * @param p Userobjekt
+	 * @throws AccessRestrictedException 
 	 */
-	public void warenkorbLeeren(Person p){
-		Warenkorb wk = kv.gibWarenkorbVonKunde(p);
-		wv.leereWarenkorb(wk);
+	public void warenkorbLeeren(Person p) throws AccessRestrictedException{
+		if(istKunde(p)){
+			Warenkorb wk = kv.gibWarenkorbVonKunde(p);
+			wv.leereWarenkorb(wk);
+		} else {
+			throw new AccessRestrictedException(p, "\"Warenkorb leeren\"");
+		}
 	}
 	
 	/**
@@ -194,43 +242,55 @@ public class eShopCore {
 	 * @param anz Neue Anzahl
 	 * @param p Userobjekt
 	 * @throws ArticleStockNotSufficientException Artikelbestand nicht ausreichend
+	 * @throws AccessRestrictedException 
 	 */
-	public void artikelInWarenkorbAendern(int pos, int anz, Person p) throws ArticleStockNotSufficientException, BasketNonexistantException{
-		Warenkorb wk = kv.gibWarenkorbVonKunde(p);
-		wv.aendereWarenkorb(wk, pos, anz);
+	public void artikelInWarenkorbAendern(int pos, int anz, Person p) throws ArticleStockNotSufficientException, BasketNonexistantException, AccessRestrictedException{
+		if(istKunde(p)){
+			Warenkorb wk = kv.gibWarenkorbVonKunde(p);
+			wv.aendereWarenkorb(wk, pos, anz);
+		} else {
+			throw new AccessRestrictedException(p, "\"Anzahl Artikel in Warenkorb ändern\"");
+		}
 	}
 	
 	/**
 	 * Warenkorb kaufen und Rechnung erstellen
 	 * @param p Userobjekt
 	 * @return Erstellte Rechnung
+	 * @throws AccessRestrictedException 
 	 */
-	public Rechnung warenkorbKaufen(Person p){
-		//Warenkorb des Benutzers abfragen
-		Warenkorb wk = kv.gibWarenkorbVonKunde(p);
+	public Rechnung warenkorbKaufen(Person p) throws AccessRestrictedException{
+		if(istKunde(p)){
 		
-		//Bestand der Artikel im Warenkorb reduzieren und Gesamtpreis errechnen
-		int gesamt = 0;
-		LinkedHashMap<Artikel,Integer> inhalt = wk.getArtikel();
-		for(Map.Entry<Artikel, Integer> ent : inhalt.entrySet()){
-			try{
-				av.erhoeheBestand(ent.getKey().getArtikelnummer(), -1 * ent.getValue());
-				//Ereignis erstellen
-				ev.ereignisErstellen(p, Typ.KAUF, ent.getKey(), (int) ent.getValue());
-			} catch (ArticleNonexistantException anne){
-				
+			//Warenkorb des Benutzers abfragen
+			Warenkorb wk = kv.gibWarenkorbVonKunde(p);
+			
+			//Bestand der Artikel im Warenkorb reduzieren und Gesamtpreis errechnen
+			int gesamt = 0;
+			LinkedHashMap<Artikel,Integer> inhalt = wk.getArtikel();
+			for(Map.Entry<Artikel, Integer> ent : inhalt.entrySet()){
+				try{
+					av.erhoeheBestand(ent.getKey().getArtikelnummer(), -1 * ent.getValue());
+					//Ereignis erstellen
+					ev.ereignisErstellen(p, Typ.KAUF, ent.getKey(), (int) ent.getValue());
+				} catch (ArticleNonexistantException anne){
+					
+				}
+				gesamt += (ent.getValue() * ent.getKey().getPreis());
 			}
-			gesamt += (ent.getValue() * ent.getKey().getPreis());
+			
+			
+			
+			//Rechnung erzeugen und Warenkorb leeren
+			Rechnung re = rv.rechnungErzeugen((Kunde) p, new Date(), wk, gesamt);
+			wv.leereWarenkorb(wk);
+			
+			//Rechnungsobjekt an C/GUI zurückgeben
+			return re;
+			
+		} else {
+			throw new AccessRestrictedException(p, "\"Warenkorb bezahlen\"");
 		}
-		
-		
-		
-		//Rechnung erzeugen und Warenkorb leeren
-		Rechnung re = rv.rechnungErzeugen((Kunde) p, new Date(), wk, gesamt);
-		wv.leereWarenkorb(wk);
-		
-		//Rechnungsobjekt an C/GUI zurückgeben
-		return re;
 	}	
 	
 	/**
@@ -246,9 +306,14 @@ public class eShopCore {
 	 * @param artikelnummer Artikelnumemr von geuschtem Artikel
 	 * @return Gesuchter Artikel
 	 * @throws ArticleNonexistantException
+	 * @throws AccessRestrictedException 
 	 */
-	public Artikel artikelSuchen(int artikelnummer, Person p) throws ArticleNonexistantException{
-		return av.sucheArtikel(artikelnummer);
+	public Artikel artikelSuchen(int artikelnummer, Person p) throws ArticleNonexistantException, AccessRestrictedException{
+		if(istMitarbeiter(p) || istKunde(p)){
+			return av.sucheArtikel(artikelnummer);
+		} else {
+			throw new AccessRestrictedException(p, "\"Artikel suchen (Artikelnummer)\"");
+		}
 	}
 	
 	/**
@@ -256,8 +321,30 @@ public class eShopCore {
 	 * @param bezeichnung (Teil-)Bezeichnung des gesuchten Artikels
 	 * @return Liste der zur Bezeichnung passenden Artikel
 	 * @throws ArticleNonexistantException Keine Artikel gefunden
+	 * @throws AccessRestrictedException 
 	 */
-	public Vector<Artikel> artikelSuchen(String bezeichnung, Person p) throws ArticleNonexistantException{
-		return av.sucheArtikel(bezeichnung);
+	public Vector<Artikel> artikelSuchen(String bezeichnung, Person p) throws ArticleNonexistantException, AccessRestrictedException{
+		if(istMitarbeiter(p) || istKunde(p)){
+			return av.sucheArtikel(bezeichnung);
+		} else {
+			throw new AccessRestrictedException(p, "\"Artikel suchen (Bezeichnung)\"");
+		}
+	}
+	
+	public boolean istMitarbeiter(Person p){
+		if(p instanceof Mitarbeiter){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean istKunde(Person p){
+		if(p instanceof Kunde){
+			return true;
+		} else {
+			return false;
+		}
+
 	}
 }

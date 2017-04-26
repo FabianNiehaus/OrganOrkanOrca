@@ -12,6 +12,7 @@ import data_objects.Rechnung;
 import data_objects.Mitarbeiter;
 import domain.eShopCore;
 import domain.exceptions.LoginFailedException;
+import domain.exceptions.AccessRestrictedException;
 import domain.exceptions.ArticleNonexistantException;
 import domain.exceptions.ArticleStockNotSufficientException;
 import domain.exceptions.BasketNonexistantException;
@@ -82,6 +83,8 @@ public class CUI {
 				IO.println(art.toString());
 			} catch (ArticleNonexistantException ane) {
 				IO.println(ane.getMessage());
+			} catch (AccessRestrictedException are){
+				IO.println(are.getMessage());
 			}
 		} else if(searchType.equals("bez")){
 			IO.println("Bitte Artikelbezeichnung eingeben:");
@@ -93,6 +96,8 @@ public class CUI {
 				}
 			} catch (ArticleNonexistantException ane) {
 				IO.println(ane.getMessage());
+			} catch (AccessRestrictedException are){
+				IO.println(are.getMessage());
 			}
 		}
 	}
@@ -179,9 +184,14 @@ public class CUI {
 		double preis = IO.readDouble();
 		IO.println("-----------------------");
 		
-		Artikel art = eShop.erstelleArtikel(bezeichnung, bestand, preis, user);
+		Artikel art;
 		
-		IO.println(art.toString());
+		try {
+			art = eShop.erstelleArtikel(bezeichnung, bestand, preis, user);
+			IO.println(art.toString());
+		} catch (AccessRestrictedException are) {
+			IO.println(are.getMessage());
+		}
 	}
 	
 	/**
@@ -200,6 +210,8 @@ public class CUI {
 		} catch (ArticleNonexistantException ane){
 			IO.println("Artikelnummer existiert nicht!");
 			ane.printStackTrace();
+		} catch (AccessRestrictedException are){
+			IO.println(are.getMessage());
 		}
 		
 	}
@@ -221,6 +233,8 @@ public class CUI {
 			IO.println(ane.getMessage());
 		} catch (ArticleStockNotSufficientException asnse){
 			IO.println(asnse.getMessage());
+		} catch (AccessRestrictedException are){
+			IO.println(are.getMessage());
 		}
 	}
 	
@@ -228,8 +242,12 @@ public class CUI {
 	 * Logik für das Ausgeben des Warenkorb des Kunden
 	 */
 	private void gibWarenkorbAus(){
-		IO.println("Warenkorb");
-		IO.println(eShop.warenkorbAusgeben(user).toString());
+		try{
+			IO.println("Warenkorb");
+			IO.println(eShop.warenkorbAusgeben(user).toString());
+		} catch (AccessRestrictedException are){
+			IO.println(are.getMessage());
+		}
 	}
 	
 	/**
@@ -253,6 +271,8 @@ public class CUI {
 			asnse.getMessage();
 		} catch(BasketNonexistantException bne){
 			bne.getMessage();
+		} catch (AccessRestrictedException are){
+			IO.println(are.getMessage());
 		}
 	}
 	
@@ -262,21 +282,26 @@ public class CUI {
 	private void warenkorbKaufen(){
 		//Formatierungsvorlage für Datum
 		DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-		//Kauf abwickeln und Rechnung erzeugen
-		Rechnung re = eShop.warenkorbKaufen(user);
 		
-		IO.println("Rechnung");
-		IO.println("");
-		IO.println(dateFormat.format(re.getDatum()));
-		IO.println("");
-		IO.println("Kunde:");
-		IO.println("Kundennummer: " + re.getKu().getId());
-		IO.println(re.getKu().getFirstname() + " " + re.getKu().getLastname());
-		IO.println(re.getKu().getAddress_Street());
-		IO.println(re.getKu().getAddress_Zip() + " " + re.getKu().getAddress_Town());
-		IO.println("");
-		gibWarenkorbAus();
-		IO.println("Gesamtbetrag: " + re.getGesamt() + "€");
+		try {
+			//Kauf abwickeln und Rechnung erzeugen
+			Rechnung re = eShop.warenkorbKaufen(user);
+			
+			IO.println("Rechnung");
+			IO.println("");
+			IO.println(dateFormat.format(re.getDatum()));
+			IO.println("");
+			IO.println("Kunde:");
+			IO.println("Kundennummer: " + re.getKu().getId());
+			IO.println(re.getKu().getFirstname() + " " + re.getKu().getLastname());
+			IO.println(re.getKu().getAddress_Street());
+			IO.println(re.getKu().getAddress_Zip() + " " + re.getKu().getAddress_Town());
+			IO.println("");
+			gibWarenkorbAus();
+			IO.println("Gesamtbetrag: " + re.getGesamt() + "€");
+		} catch(AccessRestrictedException are){
+			IO.println(are.getMessage());
+		}
 	}
 	
 	/**
@@ -302,7 +327,13 @@ public class CUI {
 			case "w": gibWarenkorbAus(); break;
 			case "k": artikelInWarenkorbLegen(); break;
 			case "a": aendereArtiklInWarenkorb(); break;
-			case "l": eShop.warenkorbLeeren(user); break;
+			case "l": {
+				try{
+					eShop.warenkorbLeeren(user); 
+				} catch (AccessRestrictedException are) {
+					IO.println(are.getMessage());
+				} break;
+			}
 			case "b": warenkorbKaufen(); break;
 			}
 		} while (!input.equals("q"));
@@ -337,8 +368,20 @@ public class CUI {
 			input = IO.readString();
 			
 			switch(input){
-			case "a": artikelAusgeben(eShop.alleArtikelAusgeben(user)); break;
-			case "s": artikelSortiertAusgeben(eShop.alleArtikelAusgeben(user)); break;
+			case "a": {
+				try{
+					artikelAusgeben(eShop.alleArtikelAusgeben(user));
+				} catch(AccessRestrictedException are){
+					IO.println(are.getMessage());
+				} break;
+			}
+			case "s": {
+				try{
+					artikelSortiertAusgeben(eShop.alleArtikelAusgeben(user));
+				} catch (AccessRestrictedException are){
+					IO.println(are.getMessage());
+				} break;
+			}
 			case "e": artikelErstellen(); break;
 			case "b": artikelBestandErhoehen(); break;
 			case "k": artikelInWarenkorbLegen(); break;
@@ -387,8 +430,20 @@ public class CUI {
 	public void verarbeiteEingabe(String input) throws IOException{
 		switch(input){
 		case "a": gibArtikelverwaltungAus(); break;
-		case "k": kundenAusgeben(eShop.alleKundenAusgeben(user)); break;
-		case "m": mitarbeiterAusgeben(eShop.alleMitarbeiterAusgeben(user)); break;
+		case "k": {
+			try{
+				kundenAusgeben(eShop.alleKundenAusgeben(user));
+			} catch(AccessRestrictedException are){
+				IO.println(are.getMessage());
+			} break;
+		}
+		case "m": {
+			try{
+				mitarbeiterAusgeben(eShop.alleMitarbeiterAusgeben(user));
+			} catch(AccessRestrictedException are){
+				IO.println(are.getMessage());
+			} break;
+		}
 		case "w": gibWarenkorbverwaltungAus(); break;
 		case "s": eShop.schreibeDaten(); break;
 		}

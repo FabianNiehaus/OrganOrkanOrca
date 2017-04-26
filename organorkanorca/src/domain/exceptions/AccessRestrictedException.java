@@ -3,6 +3,8 @@
  */
 package domain.exceptions;
 
+import data_objects.Person;
+
 /**
  * @author Fabian Niehaus
  * Exception bei nicht erlaubtem Zugriffversuch
@@ -11,26 +13,8 @@ public class AccessRestrictedException extends Exception {
 
 	private static final long serialVersionUID = 5192318380507367574L;
 
-	/**
-	 * @param userClass
-	 * @param methodName
-	 */
-	public AccessRestrictedException(byte userClass, String methodName) {
-		super("Die ausgewählte Methode " + methodName + " kann von Zugriffsklasse " + resolveUserClass(userClass) + " nicht ausgeführt werden!");
-	}
-	
-	/**
-	 * @param userClass
-	 * @return
-	 */
-	public static String resolveUserClass(byte userClass){
-		if(userClass == 0){
-			return "Kunde";
-		} else if(userClass == 1){
-			return "Mitarbeiter";
-		} else {
-			return "Unbekannt";
-		}
+	public AccessRestrictedException(Person p, String methodName) {
+		super("Die Funktion " + methodName + " steht für Mitglieder der Gruppe " + p.getClass().getSimpleName() + " nicht zur Verfügung!");
 	}
 	
 }
