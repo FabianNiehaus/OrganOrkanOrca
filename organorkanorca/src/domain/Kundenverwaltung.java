@@ -1,13 +1,19 @@
 package domain;
 
+import java.io.IOException;
+import java.util.Iterator;
 import java.util.Vector;
 
 import data_objects.Kunde;
 import data_objects.Person;
 import data_objects.Warenkorb;
 import domain.exceptions.LoginFailedException;
+
 import domain.exceptions.MaxIDsException;
-import domain.exceptions.VectorIsEmptyException;
+import domain.exceptions.PersonNonexistantException;
+import persistence.FilePersistenceManager;
+import persistence.PersistenceManager;
+
 
 /**
  * @author Fabian Niehaus
@@ -15,7 +21,65 @@ import domain.exceptions.VectorIsEmptyException;
  */
 public class Kundenverwaltung {
 	
+	// Persistenz-Schnittstelle, die f�r die Details des Dateizugriffs verantwortlich ist
+	private PersistenceManager pm = new FilePersistenceManager();
+	
 	private Vector<Kunde> kunden = new Vector<Kunde>();
+		
+	/**@author Mathis M�hlenkamp
+	 * Methode zum Einlesen von Kunden aus einer Datei.
+	 * 
+	 * @param datei Datei, die einzulesenden 
+	 * @throws IOException
+	 */
+	public void liesDaten(String datei) throws IOException {
+		// PersistenzManager f�r Lesevorgänge öffnen
+		pm.openForReading(datei);
+
+		Kunde ku;
+		do {
+			// Kunden-Objekt einlesen
+			ku = pm.ladeKunde();
+			
+			if (ku!= null) {
+				// Kunden in Kundenliste einfügen
+				einfuegen(ku);
+			}
+		} while (ku != null);
+
+		// Persistenz-Schnittstelle wieder schließen
+		pm.close();
+	}
+	
+	/**
+	 * Methode zum Schreiben der Kundendaten in eine Datei.
+	 * 
+	 * @param datei Datei, in die der...
+	 * @throws IOException
+	 */
+	public void schreibeDaten(String datei) throws IOException  {
+		// PersistenzManager für Schreibvorgänge öffnen
+		pm.openForWriting(datei);
+
+		if (!kunden.isEmpty()) {
+			Iterator<Kunde> iter = kunden.iterator();
+			while (iter.hasNext()) {
+				Kunde ku = (Kunde) iter.next();
+				pm.speichereKunde(ku);				
+			}
+		}
+		
+		// Persistenz-Schnittstelle wieder schließen
+		pm.close();
+	}
+	
+	/**
+	 * Fügt einen Kunden hinzu
+	 * @param ku Kunde
+	 */
+	public void einfuegen(Kunde ku){
+		kunden.add(ku);
+	}
 	
 	/**
 	 * Logik zur Anmeldung
@@ -38,13 +102,14 @@ public class Kundenverwaltung {
 	 * @return Gibt <b>true</b> zurück, wenn zu prüfender Kunde in der HAsMap Kunde gespeichert ist. Sonst <b>false</b>.
 	 * suche nach ID oder Name 
 	 */
-	public Kunde sucheKunde(String firstname, String lastname) throws VectorIsEmptyException{
+	public Kunde sucheKunde(String firstname, String lastname) throws PersonNonexistantException {
 		for(Kunde ku : kunden){
 			if (ku.getFirstname().equals(firstname) && ku.getLastname().equals(lastname)){
 				return ku;
 			}
 		}
-		return null;
+		
+		throw new PersonNonexistantException(firstname, lastname);
 	}
 	
 	/**
@@ -52,14 +117,16 @@ public class Kundenverwaltung {
 	 * @param id Kundenid
 	 * @return Gesuchter Kunde
 	 */
-	public Kunde sucheKunde(int id){
+	public Kunde sucheKunde(int id) throws PersonNonexistantException{
 		for(Kunde ku : kunden){
 			if(ku.getId() == id){
 				return ku;
 				}
 			}
-			return null;
-		}
+		
+		throw new PersonNonexistantException(id);
+		
+	}
 	
 	/**
 	 * Erstellt einen neuen Kunden und fügt in zur verwalteten Liste hinzu
