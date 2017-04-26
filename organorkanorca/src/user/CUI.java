@@ -63,7 +63,7 @@ public class CUI {
 	 * Logik für das Suchen eines Artikels
 	 * @param liste
 	 */
-	private void artikelSuchen(Vector<Artikel> liste){
+	private void artikelSuchen(){
 		String searchType = "";
 		
 		IO.println("Artikel suchen");
@@ -74,7 +74,14 @@ public class CUI {
 		searchType = IO.readString();
 		
 		if(searchType.equals("nr")){
-			//Logik Suche nach Artikelnummer
+			IO.println("Bitte Artikelnummer eingeben:");
+			int artikelnummer = IO.readInt();
+			try {
+				Artikel art = eShop.artikelSuchen(artikelnummer);
+				art.toString();
+			} catch (ArticleNumberNonexistantException anne) {
+				anne.getMessage();
+			}
 		} else if(searchType.equals("bez")){
 			//Logik Suche nach Artikelbezeichnung
 		}
@@ -323,6 +330,7 @@ public class CUI {
 			case "e": artikelErstellen(); break;
 			case "b": artikelBestandErhoehen(); break;
 			case "k": artikelInWarenkorbLegen(); break;
+			case "f": artikelSuchen(); break;
 			}
 				
 		} while (!input.equals("q"));

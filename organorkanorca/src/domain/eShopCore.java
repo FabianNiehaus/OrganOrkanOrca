@@ -243,4 +243,14 @@ public class eShopCore {
 	public void schreibeDaten() throws IOException{
 		av.schreibeDaten(dateipfad + "ARTIKEL.txt"); 
 	}
+	
+	/**
+	 * Erlaubt die Suche nach einer Artikelnummer
+	 * @param artikelnummer Artikelnumemr von geuschtem Artikel
+	 * @return Gesuchter Artikel
+	 * @throws ArticleNumberNonexistantException
+	 */
+	public Artikel artikelSuchen(int artikelnummer) throws ArticleNumberNonexistantException{
+		return av.sucheArtikel(artikelnummer);
+	}
 }
