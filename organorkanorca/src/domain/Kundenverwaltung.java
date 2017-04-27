@@ -32,20 +32,23 @@ public class Kundenverwaltung {
 	 * @param datei Datei, die einzulesenden 
 	 * @throws IOException
 	 */
-	public void liesDaten(String datei) throws IOException {
+	public void liesDaten(String datei, Warenkorbverwaltung wv) throws IOException {
 		// PersistenzManager f�r Lesevorgänge öffnen
 		pm.openForReading(datei);
 
 		Kunde ku;
+		
 		do {
-			// Kunden-Objekt einlesen
-			ku = pm.ladeKunde();
 			
-			if (ku!= null) {
+			Vector<Object> info = pm.ladeKunde();
+			
+			ku = new Kunde((String) info.elementAt(1), (String) info.elementAt(2), (int) info.elementAt(0), (String) info.elementAt(3), (String) info.elementAt(4), (String) info.elementAt(5), (String) info.elementAt(6), wv.erstelleWarenkorb()); 
+			
+			if (ku.getId() != 0) {
 				// Kunden in Kundenliste einfügen
 				einfuegen(ku);
 			}
-		} while (ku != null);
+		} while (ku.getId() != 0);
 
 		// Persistenz-Schnittstelle wieder schließen
 		pm.close();
@@ -133,11 +136,15 @@ public class Kundenverwaltung {
 	 * @param firstname Vorname
 	 * @param lastname Nachname
 	 * @param passwort Passwort
+	 * @param address_Street Straße + Hausnummer
+	 * @param address_Zip Postleitzahl
+	 * @param address_Town Stadt
 	 * @param wk Zugeordneter Warenkorb
-	 * @return Erstellter Kunde
+	 * @return
+	 * @throws MaxIDsException
 	 */
-	public Kunde erstelleKunde(String firstname, String lastname, String passwort, Warenkorb wk) throws MaxIDsException {
-		Kunde ku = new Kunde(firstname, lastname, getNextID(), passwort, wk);
+	public Kunde erstelleKunde(String firstname, String lastname, String passwort, String address_Street, String address_Zip, String address_Town, Warenkorb wk) throws MaxIDsException {
+		Kunde ku = new Kunde(firstname, lastname, getNextID(), passwort, address_Street, address_Zip, address_Town, wk);
 		kunden.add(ku);
 		return ku;
 	}

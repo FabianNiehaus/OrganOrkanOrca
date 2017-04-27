@@ -13,18 +13,24 @@ public class Kunde extends Person {
 	private String address_Zip;
 	private String address_Town;
 	
-	private Warenkorb warenkorb;
+	private Warenkorb wk;
 	
 	/**
 	 * @param firstname Vorname
 	 * @param lastname Nachmane
 	 * @param id Eindeutige ID
 	 * @param passwort Passwort
-	 * @param wk Zugeordneter Warenkorb
+	 * @param address_Street Adresse + Hausnummer
+	 * @param address_Zip Postleitzahl
+	 * @param address_Town Stadt
+	 * @param wk Warenkorb
 	 */
-	public Kunde(String firstname, String lastname, int id, String passwort, Warenkorb wk) {
+	public Kunde(String firstname, String lastname, int id, String passwort, String address_Street, String address_Zip, String address_Town, Warenkorb wk) {
 		super(firstname, lastname, id, passwort);
-		this.warenkorb = wk;
+		this.address_Street = address_Street;
+		this.address_Zip = address_Zip;
+		this.address_Town = address_Town;
+		this.wk = wk;
 	}
 
 	/**
@@ -73,14 +79,14 @@ public class Kunde extends Person {
 	 * @return
 	 */
 	public Warenkorb getWarenkorb() {
-		return warenkorb;
+		return wk;
 	}
 
 	/**
 	 * @param warenkorb
 	 */
 	public void setWarenkorb(Warenkorb warenkorb) {
-		this.warenkorb = warenkorb;
+		this.wk = warenkorb;
 	}
 	
 	public String toString(){

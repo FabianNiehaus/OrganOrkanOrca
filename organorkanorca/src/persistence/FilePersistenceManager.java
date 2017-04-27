@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Vector;
 
 import data_objects.*;
 
@@ -131,18 +132,18 @@ public class FilePersistenceManager implements PersistenceManager {
 	}
 	
 	/**
-	 * @author Mathis Möhlenkamp
+	 * @author Mathis Mï¿½hlenkamp
 	 */
-	public Kunde ladeKunde() throws IOException {
-		/*
-		//Kunden-Header suchen
-		while(!liesZeile().equals("<---Kunden--->"));{}
-		*/
+	public Vector<Object> ladeKunde() throws IOException {
+		Vector<Object> ret = new Vector<Object>(7);
+		
 		int id = 0;
 		String firstname = "";
 		String lastname = "";
 		String passwort = "";
-		Warenkorb warenkorb = new Warenkorb();  //richtig??
+		String address_Street = "";
+		String address_Zip = "";
+		String address_Town = "";
 		
 		//Lies ID
 		try{
@@ -159,18 +160,23 @@ public class FilePersistenceManager implements PersistenceManager {
 		//Lies passwort
 		passwort = liesZeile();
 		
-		/*
-		while(!liesZeile().equals("<---END Kunden--->"));{}
-		*/
+		//Lies Adresse
+		address_Street = liesZeile();
+		address_Zip = liesZeile();
+		address_Town = liesZeile();		
 		
-		return new Kunde(firstname, lastname, id, passwort, warenkorb);
+		ret.add(id);
+		ret.add(firstname);
+		ret.add(lastname);
+		ret.add(passwort);
+		ret.add(address_Street);
+		ret.add(address_Zip);
+		ret.add(address_Town);		
+		
+		return ret;
 	}
 	
 	public boolean speichereKunde(Kunde art) throws IOException {
-		/*
-		//Schreibe Kunden-Header
-		schreibeZeile("<---ARTIKEL--->");
-		*/
 		
 		//Schreibe ID
 		schreibeZeile(String.valueOf(art.getId()));
@@ -180,13 +186,11 @@ public class FilePersistenceManager implements PersistenceManager {
 		schreibeZeile(art.getLastname());
 		//Schreibe passwort
 		schreibeZeile(art.getPasswort());
-		//Schreibe Warenkorb
-		schreibeZeile(String.valueOf(art.getWarenkorb()));
 		
-		/*
-		//Schreibe Kunden-Limiter
-		schreibeZeile("<---END ARTIKEL--->");
-		*/
+		//Schreibe Adresse
+		schreibeZeile(art.getAddress_Street());
+		schreibeZeile(art.getAddress_Zip());
+		schreibeZeile(art.getAddress_Town());
 		
 		return true;
 	}

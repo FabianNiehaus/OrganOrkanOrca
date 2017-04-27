@@ -1,6 +1,7 @@
 package persistence;
 
 import java.io.IOException;
+import java.util.Vector;
 
 import data_objects.*;
 
@@ -59,7 +60,7 @@ public interface PersistenceManager {
 	 * @return Kunden-Objekt, wenn Einlesen erfolgreich, false null
 	 * 
 	 */
-	public Kunde ladeKunde() throws IOException;
+	public Vector<Object> ladeKunde() throws IOException;
 	
 	/**
 	 * Methode zum Schreiben der Kundendaten in eine externe Datenquelle.

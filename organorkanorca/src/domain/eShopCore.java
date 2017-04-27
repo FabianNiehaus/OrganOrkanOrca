@@ -52,7 +52,7 @@ public class eShopCore {
 		}
 		
 		try{
-			Kunde ku = kv.erstelleKunde("Fabian","Niehaus", "test", wv.erstelleWarenkorb());
+			Kunde ku = kv.erstelleKunde("Fabian","Niehaus", "test", "Lange Str. 123", "404", "Bielefeld", wv.erstelleWarenkorb());
 			System.out.println(ku.getId());
 		} catch(MaxIDsException mie){
 			
@@ -133,9 +133,9 @@ public class eShopCore {
 	 * @param lastname Nachname des anzulegenden Kunden
 	 * @throws AccessRestrictedException 
 	 */
-	public void erstelleKunde(String firstname, String lastname, String passwort, Person p) throws MaxIDsException, AccessRestrictedException{
+	public Kunde erstelleKunde(String firstname, String lastname, String passwort, String address_Street, String address_Zip, String address_Town, Person p) throws MaxIDsException, AccessRestrictedException{
 		if(istMitarbeiter(p)){
-			kv.erstelleKunde(firstname, lastname, passwort, wv.erstelleWarenkorb());
+			return kv.erstelleKunde(firstname, lastname, passwort, address_Street, address_Zip, address_Town, wv.erstelleWarenkorb());
 		} else {
 			throw new AccessRestrictedException(p, "\"Kunde anlegen\"");
 		}
@@ -298,6 +298,8 @@ public class eShopCore {
 	 */
 	public void schreibeDaten() throws IOException{
 		av.schreibeDaten(dateipfad + "ARTIKEL.txt"); 
+		kv.schreibeDaten(dateipfad + "KUNDEN.txt");
+		//mv.schreibeDaten(dateipfad + "MITARBEITER.txt");
 	}
 	
 	/**

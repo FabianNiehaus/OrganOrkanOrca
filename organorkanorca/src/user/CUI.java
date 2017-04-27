@@ -12,6 +12,7 @@ import data_objects.Rechnung;
 import data_objects.Mitarbeiter;
 import domain.eShopCore;
 import domain.exceptions.LoginFailedException;
+import domain.exceptions.MaxIDsException;
 import domain.exceptions.AccessRestrictedException;
 import domain.exceptions.ArticleNonexistantException;
 import domain.exceptions.ArticleStockNotSufficientException;
@@ -21,12 +22,9 @@ import util.StringComparator;
 
 /**
  * @author Fabian Niehaus
- * Command-Line-Interface für den eSHop
+ * Command-Line-Interface für den eShop
  */
-/**
- * @author Manic
- *
- */
+
 public class CUI {
 	
 	private eShopCore eShop;
@@ -193,6 +191,39 @@ public class CUI {
 			IO.println(art.toString());
 		} catch (AccessRestrictedException are) {
 			IO.println(are.getMessage());
+		}
+	}
+	
+	/**
+	 * Logik für das Erstellen eines Kunden
+	 */
+	private void kundeErstellen(){
+		
+		IO.println("Kunde erstellen");
+		IO.println("Vorname:");
+		String firstname = IO.readString();
+		IO.println("Nachname:");
+		String lastname = IO.readString();
+		IO.println("Passwort");
+		String passwort = IO.readString();
+
+		IO.println("Straße / Hausnummer");
+		String address_Street = IO.readString();
+		IO.println("Postleitzahl");
+		String address_Zip = IO.readString();
+		IO.println("Stadt");
+		String address_Town = IO.readString();
+		IO.println("--------------------------------");
+		
+		Kunde ku;
+		
+		try {
+			ku = eShop.erstelleKunde(firstname, lastname, passwort, address_Street, address_Zip, address_Town, user);
+			IO.println(ku.toString());
+		} catch (AccessRestrictedException are) {
+			IO.println(are.getMessage());
+		} catch (MaxIDsException mie){
+			IO.println(mie.getMessage());
 		}
 	}
 	
@@ -395,6 +426,35 @@ public class CUI {
 		
 	}
 	
+	public void gibKundenverwaltungAus(){
+		
+		String input = "";
+		
+		do{
+			IO.println("");
+		
+			IO.println("Kundenverwaltung");
+			IO.println("Eingabe \"k\" um alle Kunden auszugeben");
+			IO.println("Eingabe \"a\" um neuen Kunden anzulegen");
+			IO.println("Eingabe \"q\" um zum Hauptmenü zurückzukehren");
+			IO.println("---------------------------------------------------------------------");
+			
+			input = IO.readString();
+			
+			switch(input){
+			case "k":{
+				try{
+					kundenAusgeben(eShop.alleKundenAusgeben(user));
+				} catch(AccessRestrictedException are){
+					IO.println(are.getMessage());
+				}
+			} break;
+			case "a": kundeErstellen(); break;
+			}
+			
+		}while(!input.equals("q"));
+	}
+	
 	/**
 	 * Logik für die Ausgabe des Hauptmenüs
 	 */
@@ -430,13 +490,7 @@ public class CUI {
 	public void verarbeiteEingabe(String input) throws IOException{
 		switch(input){
 		case "a": gibArtikelverwaltungAus(); break;
-		case "k": {
-			try{
-				kundenAusgeben(eShop.alleKundenAusgeben(user));
-			} catch(AccessRestrictedException are){
-				IO.println(are.getMessage());
-			} break;
-		}
+		case "k": gibKundenverwaltungAus(); break;
 		case "m": {
 			try{
 				mitarbeiterAusgeben(eShop.alleMitarbeiterAusgeben(user));
