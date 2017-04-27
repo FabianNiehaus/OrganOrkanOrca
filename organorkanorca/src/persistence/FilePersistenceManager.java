@@ -194,6 +194,48 @@ public class FilePersistenceManager implements PersistenceManager {
 		
 		return true;
 	}
+	
+	/**
+	 * @author Mathis M�hlenkamp
+	 */
+	public Mitarbeiter ladeMitarbeiter() throws IOException {
+
+		int id = 0;
+		String firstname = "";
+		String lastname = "";
+		String passwort = "";
+		
+		//Lies ID
+		try{
+			id = Integer.parseInt(liesZeile());
+		} catch (NumberFormatException nfe) {
+			//Abbruch wenn Leerzeile -> keine Kunden mehr vorhanden
+			return null;
+		}
+				
+		//Lies firstname & lastname
+		firstname = liesZeile();
+		lastname = liesZeile();
+		
+		//Lies passwort
+		passwort = liesZeile();
+
+		return new Mitarbeiter(firstname, lastname, id, passwort);
+	}
+	
+	public boolean speichereMitarbeiter(Mitarbeiter mi) throws IOException {
+		
+		//Schreibe ID
+		schreibeZeile(String.valueOf(mi.getId()));
+		//Schreibe firstname
+		schreibeZeile(mi.getFirstname());
+		//Schreibe lastname
+		schreibeZeile(mi.getLastname());
+		//Schreibe passwort
+		schreibeZeile(mi.getPasswort());
+
+		return true;
+	}
 
 	/**
 	 * Liest eine Zeile aus
