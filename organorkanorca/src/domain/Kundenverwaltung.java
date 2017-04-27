@@ -38,17 +38,20 @@ public class Kundenverwaltung {
 
 		Kunde ku;
 		
-		do {
+		try{
+			do {
 			
-			Vector<Object> info = pm.ladeKunde();
-			
-			ku = new Kunde((String) info.elementAt(1), (String) info.elementAt(2), (int) info.elementAt(0), (String) info.elementAt(3), (String) info.elementAt(4), (String) info.elementAt(5), (String) info.elementAt(6), wv.erstelleWarenkorb()); 
-			
-			if (ku.getId() != 0) {
+				Vector<Object> info = pm.ladeKunde();
+				
+				ku = new Kunde((String) info.elementAt(1), (String) info.elementAt(2), (int) info.elementAt(0), (String) info.elementAt(3), (String) info.elementAt(4), (String) info.elementAt(5), (String) info.elementAt(6), wv.erstelleWarenkorb()); 
+				
 				// Kunden in Kundenliste einfügen
 				einfuegen(ku);
-			}
-		} while (ku.getId() != 0);
+				
+			} while (ku.getId() != 0);
+		} catch (NullPointerException npe){
+			
+		}
 
 		// Persistenz-Schnittstelle wieder schließen
 		pm.close();
