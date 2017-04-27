@@ -416,6 +416,7 @@ public class CUI {
 				IO.println("Eingabe \"s\" um alle Laufzeitdaten zu speichern");
 			}
 			
+			IO.println("Eingabe \"n\" um sich neu anzumelden");
 			IO.println("Eingabe \"q\" um den eShop zu beenden");
 		} else {
 			login();
@@ -446,6 +447,10 @@ public class CUI {
 		}
 		case "w": gibWarenkorbverwaltungAus(); break;
 		case "s": eShop.schreibeDaten(); break;
+		case "n": {
+				user = null;
+				login();
+			} break;
 		}
 	}
 	
