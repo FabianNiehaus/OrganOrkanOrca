@@ -47,14 +47,9 @@ public class eShopCore {
 		
 		try{
 			av.liesDaten(dateipfad + "ARTIKEL.txt");
+			kv.liesDaten(dateipfad + "KUNDEN.txt", wv);
+			mv.liesDaten(dateipfad + "MITARBEITER.txt");
 		} catch (IOException ie){
-			
-		}
-		
-		try{
-			Kunde ku = kv.erstelleKunde("Fabian","Niehaus", "test", "Lange Str. 123", "404", "Bielefeld", wv.erstelleWarenkorb());
-			System.out.println(ku.getId());
-		} catch(MaxIDsException mie){
 			
 		}
 	}
@@ -299,7 +294,7 @@ public class eShopCore {
 	public void schreibeDaten() throws IOException{
 		av.schreibeDaten(dateipfad + "ARTIKEL.txt"); 
 		kv.schreibeDaten(dateipfad + "KUNDEN.txt");
-		//mv.schreibeDaten(dateipfad + "MITARBEITER.txt");
+		mv.schreibeDaten(dateipfad + "MITARBEITER.txt");
 	}
 	
 	/**

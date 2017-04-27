@@ -69,5 +69,23 @@ public interface PersistenceManager {
 	 * @return true, wenn Schreibvorgang erfolgreich, false sonst
 	 */
 	public boolean speichereKunde(Kunde art) throws IOException;
+	
+	/** 
+	 * @author Mathis M�hlenkamp
+	 * 
+	 * Methode zum Einlesen der Mitarbeiterdaten aus einer externen Datenqulle.
+	 * 
+	 * @return Mitarbeiter-Objekt, wenn Einlesen erfolgreich, false null
+	 * 
+	 */
+	public Mitarbeiter ladeMitarbeiter() throws IOException;
+	
+	/**
+	 * Methode zum Schreiben der Mitarbeiterdaten in eine externe Datenquelle.
+	 * 
+	 * @param b Mitarbeiter-Objekt, das gespeichert werden soll
+	 * @return true, wenn Schreibvorgang erfolgreich, false sonst
+	 */
+	public boolean speichereMitarbeiter(Mitarbeiter mi) throws IOException;
 
 }

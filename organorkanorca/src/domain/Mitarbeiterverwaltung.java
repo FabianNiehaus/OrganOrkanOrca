@@ -1,19 +1,69 @@
 package domain;
 
+import java.io.IOException;
+import java.util.Iterator;
 import java.util.Vector;
 
 import data_objects.Mitarbeiter;
 import domain.exceptions.*;
+import persistence.FilePersistenceManager;
+import persistence.PersistenceManager;
 
 public class Mitarbeiterverwaltung {
 
 	private Vector<Mitarbeiter> mitarbeiter = new Vector<Mitarbeiter>();
 	
-	/**
-	 * 
-	 */
+	// Persistenz-Schnittstelle, die f�r die Details des Dateizugriffs verantwortlich ist
+	private PersistenceManager pm = new FilePersistenceManager();
+	
 	public Mitarbeiterverwaltung(){
 		mitarbeiter.add(new Mitarbeiter("Mathis", "Möhlenkamp", 9000, "test2"));
+	}
+	
+	public void liesDaten(String datei) throws IOException {
+		// PersistenzManager f�r Lesevorgänge öffnen
+		pm.openForReading(datei);
+
+		Mitarbeiter mi;
+		do {
+			// Mitarbeiter-Objekt einlesen
+			mi = pm.ladeMitarbeiter();
+			
+			if (mi!= null) {
+				// Mitarbeiter in Mitarbeiterliste einfügen
+				einfuegen(mi);
+			}
+		} while (mi != null);
+
+		// Persistenz-Schnittstelle wieder schließen
+		pm.close();
+	}
+	
+	/**
+	 * Methode zum Schreiben der Kundendaten in eine Datei.
+	 * 
+	 * @param datei Datei, in die der...
+	 * @throws IOException
+	 */
+	public void schreibeDaten(String datei) throws IOException  {
+		// PersistenzManager für Schreibvorgänge öffnen
+		pm.openForWriting(datei);
+
+		if (!mitarbeiter.isEmpty()) {
+			Iterator<Mitarbeiter> iter = mitarbeiter.iterator();
+			while (iter.hasNext()) {
+				Mitarbeiter mi = (Mitarbeiter) iter.next();
+				pm.speichereMitarbeiter(mi);				
+			}
+		}
+		
+		// Persistenz-Schnittstelle wieder schließen
+		pm.close();
+	}
+	
+	
+	public void einfuegen(Mitarbeiter mi) {
+		mitarbeiter.add(mi);
 	}
 	
 	/**
