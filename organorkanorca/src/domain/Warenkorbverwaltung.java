@@ -1,6 +1,7 @@
 package domain;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Vector;
 import data_objects.*;
 import domain.exceptions.ArticleStockNotSufficientException;
@@ -93,7 +94,7 @@ public class Warenkorbverwaltung {
 	 * @param wk Gewünschter Warenkorb
 	 * @return Alle Artikel mit Anzahl
 	 */
-	public LinkedHashMap<Artikel, Integer> getArtikel(Warenkorb wk){
+	public Map<Artikel, Integer> getArtikel(Warenkorb wk){
 		return wk.getArtikel();
 	}
 

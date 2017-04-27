@@ -10,3 +10,7 @@ Orca
 Organ
 1000.0
 2
+4
+Pringles
+2.79
+500

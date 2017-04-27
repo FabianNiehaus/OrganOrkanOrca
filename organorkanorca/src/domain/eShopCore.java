@@ -2,7 +2,6 @@ package domain;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Vector;
 
@@ -59,12 +58,6 @@ public class eShopCore {
 			
 		}
 	}
-	
-	/* Noch nicht verwendet
-	//private HashMap<Integer,? extends Person> nutzerzuordnung;
-	//-1 = nicht angemeldet, 0 = user, 1 = mitarbeiter
-	private byte userClass = -1;
-	*/
 
 	/**
 	 * Anmelden des Nutzers
@@ -267,7 +260,7 @@ public class eShopCore {
 			
 			//Bestand der Artikel im Warenkorb reduzieren und Gesamtpreis errechnen
 			int gesamt = 0;
-			LinkedHashMap<Artikel,Integer> inhalt = wk.getArtikel();
+			Map<Artikel,Integer> inhalt = wk.getArtikel();
 			for(Map.Entry<Artikel, Integer> ent : inhalt.entrySet()){
 				try{
 					av.erhoeheBestand(ent.getKey().getArtikelnummer(), -1 * ent.getValue());
@@ -281,8 +274,14 @@ public class eShopCore {
 			
 			
 			
-			//Rechnung erzeugen und Warenkorb leeren
-			Rechnung re = rv.rechnungErzeugen((Kunde) p, new Date(), wk, gesamt);
+			//Warenkorb für Rechnung erzeugen
+			Warenkorb temp = new Warenkorb();
+			temp.setArtikel(wk.getArtikel());
+			
+			//Rechnung erzeugen
+			Rechnung re = rv.rechnungErzeugen((Kunde) p, new Date(), temp, gesamt);
+			
+			//Warenkorb von Kunde leeren
 			wv.leereWarenkorb(wk);
 			
 			//Rechnungsobjekt an C/GUI zurückgeben

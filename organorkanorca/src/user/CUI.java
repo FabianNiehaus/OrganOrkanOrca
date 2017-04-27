@@ -147,7 +147,6 @@ public class CUI {
 			
 			} else if (sortBy.equals("bez")){
 				//Sortieren nach Artikelbezeichnung
-				//To-Do: Sortieren von Strings
 				boolean swapped = true;
 				int j = 0;
 				Artikel tmp;
@@ -297,7 +296,8 @@ public class CUI {
 			IO.println(re.getKu().getAddress_Street());
 			IO.println(re.getKu().getAddress_Zip() + " " + re.getKu().getAddress_Town());
 			IO.println("");
-			gibWarenkorbAus();
+			IO.println("Warenkorb");
+			IO.println(re.getWk().toString());
 			IO.println("Gesamtbetrag: " + re.getGesamt() + "€");
 		} catch(AccessRestrictedException are){
 			IO.println(are.getMessage());

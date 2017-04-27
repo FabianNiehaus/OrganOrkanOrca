@@ -15,7 +15,7 @@ public class Warenkorb {
 		super();
 	}
 
-	private LinkedHashMap<Artikel,Integer> artikel = new LinkedHashMap<>();
+	private Map<Artikel,Integer> artikel = new LinkedHashMap<>();
 	
 	/**
 	 * Prüft, ob ein bestimmter Artikel in diesem Warenkorb liegt.
@@ -87,7 +87,7 @@ public class Warenkorb {
 	 * Leert Warenkorb, indem Artikelliste verworfen wird
 	 */
 	public void leereWarkenkorb(){
-		artikel = new LinkedHashMap<>();
+		artikel.clear();
 	}
 	
 	/* (non-Javadoc)
@@ -106,7 +106,7 @@ public class Warenkorb {
 	/**
 	 * @return Gibt die LinkedHashMap mit Artikeln und Anzahl zurück
 	 */
-	public LinkedHashMap<Artikel, Integer> getArtikel(){
+	public Map<Artikel, Integer> getArtikel(){
 		return artikel;
 	}
 	
@@ -118,6 +118,13 @@ public class Warenkorb {
 	private void pruefeBestand(Artikel art, int anz) throws ArticleStockNotSufficientException{
 		if (art.getBestand() < anz){
 			throw new ArticleStockNotSufficientException(art, anz);
+		}
+	}
+	
+	public void setArtikel(Map<Artikel,Integer> map){
+		for(Map.Entry<Artikel, Integer> ent : map.entrySet()){
+			artikel.clear();
+			artikel.put(ent.getKey(), ent.getValue());
 		}
 	}
 }
