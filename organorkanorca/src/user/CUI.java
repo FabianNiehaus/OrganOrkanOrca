@@ -41,7 +41,7 @@ public class CUI {
 	/**
 	 * Logik für Nutzer-Login
 	 */
-	public boolean login(){
+	public void login(){
 		
 		IO.println("Bitte melden Sie Sich an.");
 		IO.print("ID: ");
@@ -56,15 +56,12 @@ public class CUI {
 		try {
 			user = eShop.anmelden(id, passwort);
 			IO.println(user.getFirstname() + " " + user.getLastname() + " hat sich als " + user.getClass().getSimpleName() + " eingeloggt.");
-			return true;
+			IO.println("Eingabe \"Enter\" um fortzufahren");
 		} catch (LoginFailedException lfe) {
 			IO.println(lfe.getMessage());
 			IO.println("Eingabe \"Enter\" um es erneut zu versuchen");
 			IO.println("Eingabe \"q\" um den eShop zu beenden");
 		}
-		
-		return false;
-
 	}
 	
 	/**
