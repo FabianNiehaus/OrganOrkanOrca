@@ -41,11 +41,13 @@ public class CUI {
 	/**
 	 * Logik für Nutzer-Login
 	 */
-	public void login(){
+	public boolean login(){
 		
 		IO.println("Bitte melden Sie Sich an.");
 		IO.print("ID: ");
+
 		int id = IO.readInt();
+		
 		IO.print("Passwort: ");
 		String passwort = IO.readString();
 		
@@ -54,11 +56,15 @@ public class CUI {
 		try {
 			user = eShop.anmelden(id, passwort);
 			IO.println(user.getFirstname() + " " + user.getLastname() + " hat sich als " + user.getClass().getSimpleName() + " eingeloggt.");
+			return true;
 		} catch (LoginFailedException lfe) {
 			IO.println(lfe.getMessage());
-			IO.println("Bitte noch einmal versuchen!");
+			IO.println("Eingabe \"Enter\" um es erneut zu versuchen");
 			IO.println("Eingabe \"q\" um den eShop zu beenden");
 		}
+		
+		return false;
+
 	}
 	
 	/**
@@ -398,29 +404,25 @@ public class CUI {
 	public void gibMenueAus(){
 		IO.println("");
 		
-		if ((user instanceof Kunde) || user instanceof Mitarbeiter){
-			IO.println("eShop Hauptseite");
+		IO.println("eShop Hauptseite");
+		
+		//Menüeingaben für alle
+		IO.println("Eingabe \"a\" um zur Artikelverwaltung zu gelangen");
+		
+		if((user instanceof Kunde)){
+			// Menüeingaben speziell für Kunde
+			IO.println("Eingabe \"w\" zur Warenkobverwaltung zu gelangen");
 			
-			//Menüeingaben für alle
-			IO.println("Eingabe \"a\" um zur Artikelverwaltung zu gelangen");
+		} else if((user instanceof Mitarbeiter)) {
+			// Menüeingaben speziel für Mitarbeiter
 			
-			if((user instanceof Kunde)){
-				// Menüeingaben speziell für Kunde
-				IO.println("Eingabe \"w\" zur Warenkobverwaltung zu gelangen");
-				
-			} else if((user instanceof Mitarbeiter)) {
-				// Menüeingaben speziel für Mitarbeiter
-				
-				IO.println("Eingabe \"k\" um alle Kunden auszugeben");
-				IO.println("Eingabe \"m\" um alle Mitarbeiter auszugeben");
-				IO.println("Eingabe \"s\" um alle Laufzeitdaten zu speichern");
-			}
-			
-			IO.println("Eingabe \"n\" um sich neu anzumelden");
-			IO.println("Eingabe \"q\" um den eShop zu beenden");
-		} else {
-			login();
+			IO.println("Eingabe \"k\" um alle Kunden auszugeben");
+			IO.println("Eingabe \"m\" um alle Mitarbeiter auszugeben");
+			IO.println("Eingabe \"s\" um alle Laufzeitdaten zu speichern");
 		}
+		
+		IO.println("Eingabe \"n\" um sich neu anzumelden");
+		IO.println("Eingabe \"q\" um den eShop zu beenden");
 	}
 	
 	/**
@@ -462,18 +464,20 @@ public class CUI {
 		
 		//Willkommensnachrich
 		IO.println("Willkommen bei OrganOrkanOrca.org.");
-		
-		//Login
-		login();
-		
+			
 		// Hauptschleife der Benutzungsschnittstelle
 		do {
-			gibMenueAus();
-			try {
+			if ((user instanceof Kunde) || user instanceof Mitarbeiter){
+				gibMenueAus();
+				try {
+					input = IO.readString();
+					verarbeiteEingabe(input);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else {
+				login();
 				input = IO.readString();
-				verarbeiteEingabe(input);
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
 		} while (!input.equals("q"));
 		
