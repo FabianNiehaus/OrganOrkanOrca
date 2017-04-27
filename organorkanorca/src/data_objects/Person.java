@@ -8,9 +8,9 @@ package data_objects;
  *
  */
 public abstract class Person {
-	private String firstname;
-	private String lastname;
-	private int id;
+	protected String firstname;
+	protected String lastname;
+	protected int id;
 	private String passwort;
 	
 	/**

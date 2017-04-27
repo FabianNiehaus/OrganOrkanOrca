@@ -16,5 +16,9 @@ public class Mitarbeiter extends Person {
 		super(firstname, lastname, id, passwort);
 		// TODO Auto-generated constructor stub
 	}
+	
+	public String toString(){
+		return id + ": " + firstname + " " + lastname;
+	}
 
 }

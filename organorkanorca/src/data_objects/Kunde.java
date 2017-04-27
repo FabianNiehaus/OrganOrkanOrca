@@ -82,5 +82,9 @@ public class Kunde extends Person {
 	public void setWarenkorb(Warenkorb warenkorb) {
 		this.warenkorb = warenkorb;
 	}
+	
+	public String toString(){
+		return id + ": " + firstname + " " + lastname + " | " + address_Street + " ," + address_Zip + " " + address_Town;
+	}
 
 }
