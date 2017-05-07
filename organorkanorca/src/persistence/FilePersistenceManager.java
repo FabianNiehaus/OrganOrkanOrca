@@ -2,11 +2,13 @@ package persistence;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.util.Vector;
@@ -248,6 +250,12 @@ public class FilePersistenceManager implements PersistenceManager {
 		int wieviel = 0;
 		//Date wann;
 
+		ObjectInputStream ois = new ObjectInputStream(new FileInputStream("ereignis.ser"));
+			wer = (Person) ois.readObject();
+			was = (Typ) ois.readObject();
+			womit = (Artikel) ois.readObject();
+			
+		
 		wieviel = Integer.parseInt(liesZeile());
 		
 		return ret;
@@ -255,12 +263,11 @@ public class FilePersistenceManager implements PersistenceManager {
 	
 	public boolean speichereEreignis(Ereignis er) throws IOException {
 		
-		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("Wer.ser"));
+		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("ereignis.ser"));
 		oos.writeObject(er.getWer());
 		oos.writeObject(er.getTyp());
 		oos.writeObject(er.getWomit());
 		schreibeZeile(String.valueOf(er.getWieviel()));
-		
 		schreibeZeile(String.valueOf(er.getWann())); //ändern
 		
 		return true;
