@@ -250,8 +250,6 @@ public class FilePersistenceManager implements PersistenceManager {
 		int wieviel = 0;
 		//Date date;
 
-		
-
 		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("ereignis.ser"))) {	
 			wer = (Person) ois.readObject();
 			was = (Typ) ois.readObject();

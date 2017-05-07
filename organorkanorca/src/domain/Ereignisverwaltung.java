@@ -30,6 +30,10 @@ public class Ereignisverwaltung {
 			
 		
 	}
+	
+	public void schreibeDaten(String datei) throws IOException {
+		
+	}
 	public void einfuegen(Ereignis er) {
 		ereignisse.add(er);
 	}
