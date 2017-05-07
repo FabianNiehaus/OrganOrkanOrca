@@ -32,6 +32,47 @@ public class Ereignis {
 		this.wann = new Date();
 	}
 	
+	public void setWer(Person wer) {
+		this.wer = wer;
+	}
+	
+	public Person getWer() {
+		return wer;
+	}
+	
+	public void setWas(Typ was) {
+		this.was = was;
+	}
+	
+	public Typ getTyp() {
+		return was;
+	}
+	
+	public void setWomit(Artikel womit) {
+		this.womit = womit;
+	}
+	
+	public Artikel getWomit() {
+		return womit;
+	}
+	
+	public void setWieviel(int wieviel) {
+		this.wieviel = wieviel;
+	}
+	
+	public int getWieviel() {
+		return wieviel;
+	}
+	
+	public void setWann(Date wann) {
+		this.wann = wann;
+	}
+	
+	public Date getWann() {
+		return wann;
+	}
+	
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

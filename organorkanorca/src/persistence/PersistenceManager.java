@@ -87,5 +87,11 @@ public interface PersistenceManager {
 	 * @return true, wenn Schreibvorgang erfolgreich, false sonst
 	 */
 	public boolean speichereMitarbeiter(Mitarbeiter mi) throws IOException;
+	
+	public Vector<Object> ladeEreignis() throws IOException;
+	
+	public boolean speichereEreignis(Ereignis er) throws IOException;
+	
+
 
 }

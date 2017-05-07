@@ -3,9 +3,11 @@ package persistence;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.util.Vector;
 
@@ -176,21 +178,21 @@ public class FilePersistenceManager implements PersistenceManager {
 		return ret;
 	}
 	
-	public boolean speichereKunde(Kunde art) throws IOException {
+	public boolean speichereKunde(Kunde ku) throws IOException {
 		
 		//Schreibe ID
-		schreibeZeile(String.valueOf(art.getId()));
+		schreibeZeile(String.valueOf(ku.getId()));
 		//Schreibe firstname
-		schreibeZeile(art.getFirstname());
+		schreibeZeile(ku.getFirstname());
 		//Schreibe lastname
-		schreibeZeile(art.getLastname());
+		schreibeZeile(ku.getLastname());
 		//Schreibe passwort
-		schreibeZeile(art.getPasswort());
+		schreibeZeile(ku.getPasswort());
 		
 		//Schreibe Adresse
-		schreibeZeile(art.getAddress_Street());
-		schreibeZeile(art.getAddress_Zip());
-		schreibeZeile(art.getAddress_Town());
+		schreibeZeile(ku.getAddress_Street());
+		schreibeZeile(ku.getAddress_Zip());
+		schreibeZeile(ku.getAddress_Town());
 		
 		return true;
 	}
@@ -237,6 +239,34 @@ public class FilePersistenceManager implements PersistenceManager {
 		return true;
 	}
 
+	public Vector<Object> ladeEreignis() throws IOException {
+		Vector<Object> ret = new Vector<Object>(5);
+		
+		Person wer = null;
+		Typ was;
+		Artikel womit;
+		int wieviel = 0;
+		//Date wann;
+
+		wieviel = Integer.parseInt(liesZeile());
+		
+		return ret;
+	}
+	
+	public boolean speichereEreignis(Ereignis er) throws IOException {
+		
+		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("Wer.ser"));
+		oos.writeObject(er.getWer());
+		oos.writeObject(er.getTyp());
+		oos.writeObject(er.getWomit());
+		schreibeZeile(String.valueOf(er.getWieviel()));
+		
+		schreibeZeile(String.valueOf(er.getWann())); //ändern
+		
+		return true;
+	}
+	
+	
 	/**
 	 * Liest eine Zeile aus
 	 * @return Inhalt der Zeile als String
