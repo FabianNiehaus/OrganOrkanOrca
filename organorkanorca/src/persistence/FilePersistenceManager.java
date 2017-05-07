@@ -241,24 +241,32 @@ public class FilePersistenceManager implements PersistenceManager {
 		return true;
 	}
 
-	public Vector<Object> ladeEreignis() throws IOException {
-		Vector<Object> ret = new Vector<Object>(5);
+	public Ereignis ladeEreignis() throws IOException {
 		
+		Ereignis er = null;
 		Person wer = null;
 		Typ was;
 		Artikel womit;
 		int wieviel = 0;
-		//Date wann;
+		//Date date;
 
-		ObjectInputStream ois = new ObjectInputStream(new FileInputStream("ereignis.ser"));
+		
+
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("ereignis.ser"))) {	
 			wer = (Person) ois.readObject();
 			was = (Typ) ois.readObject();
 			womit = (Artikel) ois.readObject();
+			wieviel = (int) ois.readObject();
+			//wann = (Date) ois.readObject();
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 			
 		
-		wieviel = Integer.parseInt(liesZeile());
-		
-		return ret;
+		return er;
 	}
 	
 	public boolean speichereEreignis(Ereignis er) throws IOException {
@@ -267,8 +275,8 @@ public class FilePersistenceManager implements PersistenceManager {
 		oos.writeObject(er.getWer());
 		oos.writeObject(er.getTyp());
 		oos.writeObject(er.getWomit());
-		schreibeZeile(String.valueOf(er.getWieviel()));
-		schreibeZeile(String.valueOf(er.getWann())); //ändern
+		oos.writeObject(er.getWieviel());
+		oos.writeObject(er.getWann()); //ändern
 		
 		return true;
 	}

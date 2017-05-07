@@ -26,25 +26,9 @@ public class Ereignisverwaltung {
 		// PersistenzManager f�r Lesevorgänge öffnen
 		pm.openForReading(datei);
 
-		Ereignis er;
+		//Ereignis er;
+			
 		
-		try{
-			do {
-			
-				Vector<Object> info = pm.ladeEreignis();
-				
-				er = new Kunde((String) info.elementAt(1), (String) info.elementAt(2), (int) info.elementAt(0), (String) info.elementAt(3), (String) info.elementAt(4), (String) info.elementAt(5), (String) info.elementAt(6), wv.erstelleWarenkorb()); 
-				
-				// Ereignisse in die Liste einf�gen
-				einfuegen(er);
-				
-			} while (er.getId() != 0);
-		} catch (NullPointerException npe){
-			
-		}
-
-		// Persistenz-Schnittstelle wieder schließen
-		pm.close();
 	}
 	public void einfuegen(Ereignis er) {
 		ereignisse.add(er);
