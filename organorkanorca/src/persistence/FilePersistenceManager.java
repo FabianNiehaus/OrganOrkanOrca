@@ -241,40 +241,44 @@ public class FilePersistenceManager implements PersistenceManager {
 		return true;
 	}
 
-	public Ereignis ladeEreignis() throws IOException {
+	public Vector<Object> ladeEreignis() throws IOException {
 		
-		Ereignis er = null;
+		Vector<Object> ret = new Vector<Object>(6);
+		
+		int id = 0;
 		Person wer = null;
-		Typ was;
-		Artikel womit;
+		int werId = wer.getId();
+		Typ was = null;
+		Artikel womit = null;
+		int womitId = womit.getArtikelnummer();
 		int wieviel = 0;
-		//Date date;
-
-		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("ereignis.ser"))) {	
-			wer = (Person) ois.readObject();
-			was = (Typ) ois.readObject();
-			womit = (Artikel) ois.readObject();
-			wieviel = (int) ois.readObject();
-			//wann = (Date) ois.readObject();
-			
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-			
+		String wann = "";
 		
-		return er;
+		try{
+			id = Integer.parseInt(liesZeile());
+		} catch (NumberFormatException nfe) {
+			//Abbruch wenn Leerzeile -> keine Kunden mehr vorhanden
+			return null;
+		}
+		
+		werId = Integer.parseInt(liesZeile());
+		//was = liesZeile();
+		womitId = Integer.parseInt(liesZeile());
+		wieviel = Integer.parseInt(liesZeile());
+		//wann
+		
+		ret.add(id);
+		ret.add(werId);
+		ret.add(was);
+		ret.add(womitId);
+		ret.add(wieviel);
+		ret.add(wann);
+		
+		return ret;
 	}
 	
 	public boolean speichereEreignis(Ereignis er) throws IOException {
 		
-		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("ereignis.ser"));
-		oos.writeObject(er.getWer());
-		oos.writeObject(er.getTyp());
-		oos.writeObject(er.getWomit());
-		oos.writeObject(er.getWieviel());
-		oos.writeObject(er.getWann()); //ändern
 		
 		return true;
 	}

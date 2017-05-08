@@ -88,7 +88,7 @@ public interface PersistenceManager {
 	 */
 	public boolean speichereMitarbeiter(Mitarbeiter mi) throws IOException;
 	
-	public Ereignis ladeEreignis() throws IOException;
+	public Vector<Object> ladeEreignis() throws IOException;
 	
 	public boolean speichereEreignis(Ereignis er) throws IOException;
 	
