@@ -1,6 +1,7 @@
 package domain;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Vector;
 import data_objects.Artikel;
 import data_objects.Ereignis;
@@ -25,12 +26,43 @@ public class Ereignisverwaltung {
 		// PersistenzManager f�r Lesevorgänge öffnen
 		pm.openForReading(datei);
 
-		//Ereignis er;
+		Ereignis er;
+		
+		
+		try{
+			do {
+			
+				Vector<Object> info = pm.ladeEreignis();
+				
+				er = new Ereignis((int) info.elementAt(0), (int) info.elementAt(1), (Typ) info.elementAt(2), (int) info.elementAt(3), (int) info.elementAt(4), (String) info.elementAt(5)); 
+				
+				// Ereignisse in die Ereignisliste einfügen
+				einfuegen(er);
+				
+			} while (er.getId() != 0);
+		} catch (NullPointerException npe){
+			
+		}
+
+		// Persistenz-Schnittstelle wieder schließen
+		pm.close();
 				
 	}
 	
 	public void schreibeDaten(String datei) throws IOException {
+		// PersistenzManager für Schreibvorgänge öffnen
+		pm.openForWriting(datei);
+
+		if (!ereignisse.isEmpty()) {
+			Iterator<Ereignis> iter = ereignisse.iterator();
+			while (iter.hasNext()) {
+				Ereignis er = (Ereignis) iter.next();
+				pm.speichereEreignis(er);				
+			}
+		}
 		
+		// Persistenz-Schnittstelle wieder schließen
+		pm.close();
 	}
 	public void einfuegen(Ereignis er) {
 		ereignisse.add(er);
