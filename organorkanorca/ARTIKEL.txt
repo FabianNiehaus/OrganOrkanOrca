@@ -9,7 +9,7 @@ Orca
 1
 Organ
 1000.0
-10
+18
 4
 Pringles
 2.79

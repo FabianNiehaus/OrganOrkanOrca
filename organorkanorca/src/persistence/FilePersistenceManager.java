@@ -7,6 +7,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Vector;
 
 import data_objects.*;
@@ -260,7 +262,7 @@ public class FilePersistenceManager implements PersistenceManager {
 		}
 		
 		werId = Integer.parseInt(liesZeile());
-		//was = liesZeile();
+		was = Typ.valueOf(liesZeile());
 		womitId = Integer.parseInt(liesZeile());
 		wieviel = Integer.parseInt(liesZeile());
 		wann = liesZeile();
@@ -289,7 +291,10 @@ public class FilePersistenceManager implements PersistenceManager {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss");
 		dateFormat.format(wann);
 		*/
-		schreibeZeile(String.valueOf(er.getWann()));
+		
+		DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+		
+		schreibeZeile(String.valueOf(dateFormat.format(er.getWann())));
 		
 		
 		return true;

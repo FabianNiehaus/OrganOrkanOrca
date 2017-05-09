@@ -1,6 +1,9 @@
 package domain;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
@@ -59,7 +62,15 @@ public class Ereignisverwaltung {
 				Artikel art = null;
 				art = av.sucheArtikel((int) info.elementAt(3));
 				
-				er = new Ereignis((int) info.elementAt(0), p, (Typ) info.elementAt(2), art, (int) info.elementAt(4), (Date) info.elementAt(5)); 
+				Date date = null;
+				DateFormat formatter = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+				try {
+				  date = formatter.parse((String) info.elementAt(5));
+				} catch (ParseException e) {
+				  e.printStackTrace();
+				}
+				
+				er = new Ereignis((int) info.elementAt(0), p, (Typ) info.elementAt(2), art, (int) info.elementAt(4), date); 
 				
 				// Ereignisse in die Ereignisliste einfügen
 				einfuegen(er);

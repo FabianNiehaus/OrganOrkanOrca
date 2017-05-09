@@ -88,7 +88,7 @@ public class Ereignis {
 	 */
 	public String toString(){
 		//Formatierungsvorlage für Datum
-		DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 				
 		return dateFormat.format(wann) + " | " + wer.getId() + ": " + wer.getLastname() + " " + wer.getLastname() + " | " + was + " | " + womit.getArtikelnummer() + ": " + womit.getBezeichnung() + " | " + wieviel; 
 	}
