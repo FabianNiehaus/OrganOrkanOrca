@@ -17,6 +17,7 @@ import domain.exceptions.AccessRestrictedException;
 import domain.exceptions.ArticleNonexistantException;
 import domain.exceptions.ArticleStockNotSufficientException;
 import domain.exceptions.BasketNonexistantException;
+import domain.exceptions.InvalidAmountException;
 import util.IO;
 import util.StringComparator;
 
@@ -176,21 +177,25 @@ public class CUI {
 	private void artikelErstellen(){
 		
 		IO.println("Artikel erstellen");
-		IO.print("Bezeichnung:");
+		IO.println("Bezeichnung:");
 		String bezeichnung = IO.readString();
-		IO.print("Bestand:");
+		IO.println("Bestand:");
 		int bestand = IO.readInt();
-		IO.print("Preis");
+		IO.println("Preis");
 		double preis = IO.readDouble();
+		IO.println("Packungsgrösse:");
+		int packungsgroesse = IO.readInt();
 		IO.println("-----------------------");
 		
 		Artikel art;
 		
 		try {
-			art = eShop.erstelleArtikel(bezeichnung, bestand, preis, user);
+			art = eShop.erstelleArtikel(bezeichnung, bestand, preis, packungsgroesse, user);
 			IO.println(art.toString());
 		} catch (AccessRestrictedException are) {
 			IO.println(are.getMessage());
+		} catch (InvalidAmountException e) {
+			IO.println(e.getMessage());
 		}
 	}
 	
@@ -245,6 +250,8 @@ public class CUI {
 			ane.printStackTrace();
 		} catch (AccessRestrictedException are){
 			IO.println(are.getMessage());
+		} catch (InvalidAmountException e) {
+			IO.println(e.getMessage());
 		}
 		
 	}
@@ -268,6 +275,8 @@ public class CUI {
 			IO.println(asnse.getMessage());
 		} catch (AccessRestrictedException are){
 			IO.println(are.getMessage());
+		} catch (InvalidAmountException e) {
+			IO.println(e.getMessage());
 		}
 	}
 	
@@ -335,6 +344,8 @@ public class CUI {
 			IO.println("Gesamtbetrag: " + re.getGesamt() + "€");
 		} catch(AccessRestrictedException are){
 			IO.println(are.getMessage());
+		} catch (InvalidAmountException e) {
+			IO.println(e.getMessage());
 		}
 	}
 	

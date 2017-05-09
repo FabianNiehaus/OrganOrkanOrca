@@ -5,7 +5,9 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import data_objects.Artikel;
+import data_objects.Massengutartikel;
 import domain.exceptions.ArticleNonexistantException;
+import domain.exceptions.InvalidAmountException;
 import persistence.*;
 
 /**
@@ -108,11 +110,20 @@ public class Artikelverwaltung {
 	 * @param bestand Artikelbestand
 	 * @param preis Artikelpreis
 	 * @return Erstellter Artikel
+	 * @throws InvalidAmountException 
 	 */
-	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis){
-		Artikel art = new Artikel(bezeichnung, getNextID(), bestand, preis);
-		artikel.add(art);
-		return art;
+	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, int packungsgroesse) throws InvalidAmountException{
+		if(packungsgroesse == 1){
+			Artikel art = new Artikel(bezeichnung, getNextID(), bestand, preis);
+			artikel.add(art);
+			return art;
+		} if(packungsgroesse > 1){
+			Massengutartikel art = new Massengutartikel(bezeichnung, getNextID(), bestand, preis, packungsgroesse);
+			artikel.add(art);
+			return art;
+		} else {
+			throw new InvalidAmountException();
+		}
 	}
 	
 	/**
@@ -159,11 +170,21 @@ public class Artikelverwaltung {
 	 * @param bestand Neuer Bestand
 	 * @return Gesuchter Artikel
 	 * @throws ArticleNonexistantException Artikelnummer nicht vorhanden
+	 * @throws InvalidAmountException 
 	 */
-	public Artikel erhoeheBestand(int artikelnummer, int bestand) throws ArticleNonexistantException{
+	public Artikel erhoeheBestand(int artikelnummer, int bestand) throws ArticleNonexistantException, InvalidAmountException{
 		try{
 			Artikel art = sucheArtikel(artikelnummer);
-			art.setBestand(art.getBestand() + bestand);
+			if(art instanceof Massengutartikel){
+				Massengutartikel tmp = (Massengutartikel) art;
+				if(bestand % tmp.getPackungsgroesse() != 0){
+					throw new InvalidAmountException(tmp);
+				} else {
+					tmp.setBestand(tmp.getBestand() + bestand);
+				}
+			} else {
+				art.setBestand(art.getBestand() + bestand);
+			}
 			return art;
 		} catch (ArticleNonexistantException anne){
 			throw new ArticleNonexistantException(artikelnummer);

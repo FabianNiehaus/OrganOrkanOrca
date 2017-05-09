@@ -7,6 +7,7 @@ import java.util.Vector;
 
 import data_objects.Artikel;
 import data_objects.Kunde;
+import data_objects.Massengutartikel;
 import data_objects.Mitarbeiter;
 import data_objects.Person;
 import data_objects.Rechnung;
@@ -19,6 +20,7 @@ import domain.exceptions.AccessRestrictedException;
 import domain.exceptions.ArticleNonexistantException;
 import domain.exceptions.ArticleStockNotSufficientException;
 import domain.exceptions.BasketNonexistantException;
+import domain.exceptions.InvalidAmountException;
 
 /**
  * @author Fabian Niehaus
@@ -148,10 +150,11 @@ public class eShopCore {
 	 * @param p Userobjekt
 	 * @return Erstellten Artikel
 	 * @throws AccessRestrictedException 
+	 * @throws InvalidAmountException 
 	 */
-	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, Person p) throws AccessRestrictedException{
+	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, int packungsgroesse, Person p) throws AccessRestrictedException, InvalidAmountException{
 		if(istMitarbeiter(p)){
-			Artikel art = av.erstelleArtikel(bezeichnung, bestand, preis);
+			Artikel art = av.erstelleArtikel(bezeichnung, bestand, preis, packungsgroesse);
 			//Ereignis erzeugen
 			ev.ereignisErstellen(p, Typ.NEU, art, bestand);
 			return art;
@@ -168,8 +171,9 @@ public class eShopCore {
 	 * @return Bearbeiteten Artikel
 	 * @throws ArticleNonexistantException Artikelnummer existiert nicht
 	 * @throws AccessRestrictedException 
+	 * @throws InvalidAmountException 
 	 */
-	public Artikel erhoeheArtikelBestand(int artikelnummer, int bestand, Person p) throws ArticleNonexistantException, AccessRestrictedException{
+	public Artikel erhoeheArtikelBestand(int artikelnummer, int bestand, Person p) throws ArticleNonexistantException, AccessRestrictedException, InvalidAmountException{
 		if(istMitarbeiter(p)){
 			Artikel art = av.erhoeheBestand(artikelnummer, bestand);
 			//Ereignis erzeugen
@@ -188,13 +192,23 @@ public class eShopCore {
 	 * @throws ArticleNonexistantException Artikelnummer existiert nicht
 	 * @throws ArticleStockNotSufficientException Artikelbestand nicht ausreichend
 	 * @throws AccessRestrictedException 
+	 * @throws InvalidAmountException 
 	 */
-	public void artikelInWarenkorbLegen(int artikelnummer, int anzahl, Person p) throws ArticleNonexistantException, ArticleStockNotSufficientException, AccessRestrictedException{
+	public void artikelInWarenkorbLegen(int artikelnummer, int anzahl, Person p) throws ArticleNonexistantException, ArticleStockNotSufficientException, AccessRestrictedException, InvalidAmountException{
 		if(istKunde(p)){
 			Warenkorb wk = kv.gibWarenkorbVonKunde(p);
 	
 			Artikel art = av.sucheArtikel(artikelnummer);
-			wv.legeInWarenkorb(wk, art, anzahl);
+			if(art instanceof Massengutartikel){
+				Massengutartikel tmp = (Massengutartikel) art;
+				if (anzahl % tmp.getPackungsgroesse() != 0){
+					throw new InvalidAmountException(tmp);
+				} else {
+					wv.legeInWarenkorb(wk, tmp, anzahl);
+				}
+			} else {
+				wv.legeInWarenkorb(wk, art, anzahl);
+			}
 		} else {
 			throw new AccessRestrictedException(p, "\"Artikel in Warenkorb legen\"");
 		}
@@ -250,8 +264,9 @@ public class eShopCore {
 	 * @param p Userobjekt
 	 * @return Erstellte Rechnung
 	 * @throws AccessRestrictedException 
+	 * @throws InvalidAmountException 
 	 */
-	public Rechnung warenkorbKaufen(Person p) throws AccessRestrictedException{
+	public Rechnung warenkorbKaufen(Person p) throws AccessRestrictedException, InvalidAmountException{
 		if(istKunde(p)){
 		
 			//Warenkorb des Benutzers abfragen
@@ -270,8 +285,6 @@ public class eShopCore {
 				}
 				gesamt += (ent.getValue() * ent.getKey().getPreis());
 			}
-			
-			
 			
 			//Warenkorb für Rechnung erzeugen
 			Warenkorb temp = new Warenkorb();
