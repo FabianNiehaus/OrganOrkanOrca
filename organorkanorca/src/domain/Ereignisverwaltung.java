@@ -52,8 +52,8 @@ public class Ereignisverwaltung {
 	 * @param womit Welcher Artikel ist betroffen
 	 * @param wieviel Betroffene Stückzahl
 	 */
-	public void ereignisErstellen(Person wer, Typ was, Artikel womit, int wieviel){
-		ereignisse.add(new Ereignis(wer, was, womit, wieviel));
+	public void ereignisErstellen(int id,Person wer, Typ was, Artikel womit, int wieviel){
+		ereignisse.add(new Ereignis(id,wer, was, womit, wieviel));
 	}
 
 }
