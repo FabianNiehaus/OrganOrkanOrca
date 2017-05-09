@@ -279,6 +279,14 @@ public class FilePersistenceManager implements PersistenceManager {
 	
 	public boolean speichereEreignis(Ereignis er) throws IOException {
 		
+		//Schreibe 
+		//schreibeZeile(String.valueOf(er.getId));
+		schreibeZeile(String.valueOf(er.getWer().getId()));
+		schreibeZeile(String.valueOf(er.getTyp()));
+		schreibeZeile(String.valueOf(er.getWomit().getArtikelnummer()));
+		schreibeZeile(String.valueOf(er.getWieviel()));
+		
+
 		
 		return true;
 	}

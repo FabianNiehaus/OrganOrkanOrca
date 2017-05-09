@@ -15,7 +15,7 @@ public class Ereignis {
 	private Typ was;
 	private Artikel womit;
 	private int wieviel;
-	
+
 	
 	/**
 	 * @param wer Person, die die Aktion durchgeführt hat
