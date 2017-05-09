@@ -1,18 +1,11 @@
 package persistence;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.util.Vector;
 
@@ -34,7 +27,11 @@ public class FilePersistenceManager implements PersistenceManager {
 	 * @see persistence.PersistenceManager#openForReading(java.lang.String)
 	 */
 	public void openForReading(String datei) throws FileNotFoundException {
-		reader = new BufferedReader(new FileReader(datei));
+		try {
+			reader = new BufferedReader(new FileReader(datei));
+		} catch (FileNotFoundException fnfe) {
+			throw new FileNotFoundException(datei);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -55,7 +52,6 @@ public class FilePersistenceManager implements PersistenceManager {
 			try {
 				reader.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				
 				return false;
@@ -249,11 +245,9 @@ public class FilePersistenceManager implements PersistenceManager {
 		Vector<Object> ret = new Vector<Object>(6);
 		
 		int id = 0;
-		Person wer = null;
-		int werId = wer.getId();
+		int werId = 0;
 		Typ was = null;
-		Artikel womit = null;
-		int womitId = womit.getArtikelnummer();
+		int womitId = 0;
 		int wieviel = 0;
 		String wann;
 		
@@ -261,7 +255,7 @@ public class FilePersistenceManager implements PersistenceManager {
 		try{
 			id = Integer.parseInt(liesZeile());
 		} catch (NumberFormatException nfe) {
-			//Abbruch wenn Leerzeile -> keine Kunden mehr vorhanden
+			//Abbruch wenn Leerzeile -> keine Ereignisse mehr vorhanden
 			return null;
 		}
 		

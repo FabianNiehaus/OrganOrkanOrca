@@ -40,7 +40,6 @@ public class Ereignisverwaltung {
 
 		Ereignis er;
 		
-		
 		try{
 			do {
 			
