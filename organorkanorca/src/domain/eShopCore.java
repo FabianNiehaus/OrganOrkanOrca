@@ -14,6 +14,7 @@ import data_objects.Typ;
 import data_objects.Warenkorb;
 import domain.exceptions.LoginFailedException;
 import domain.exceptions.MaxIDsException;
+import domain.exceptions.PersonNonexistantException;
 import domain.exceptions.AccessRestrictedException;
 import domain.exceptions.ArticleNonexistantException;
 import domain.exceptions.ArticleStockNotSufficientException;
@@ -36,20 +37,23 @@ public class eShopCore {
 	
 	/**
 	 */
-	public eShopCore()  throws IOException {
+	public eShopCore() throws IOException {
 		super();
 		av = new Artikelverwaltung();
 		kv = new Kundenverwaltung();
 		mv = new Mitarbeiterverwaltung();
 		wv = new Warenkorbverwaltung();
 		rv = new Rechnungsverwaltung();
-		ev = new Ereignisverwaltung();
+		ev = new Ereignisverwaltung(kv,mv,av);
 		
 		try{
 			av.liesDaten(dateipfad + "ARTIKEL.txt");
 			kv.liesDaten(dateipfad + "KUNDEN.txt", wv);
 			mv.liesDaten(dateipfad + "MITARBEITER.txt");
-		} catch (IOException ie){
+			ev.liesDaten(dateipfad + "EREIGNISSE.txt"); 
+		} catch (ArticleNonexistantException e) {
+			
+		} catch (PersonNonexistantException e) {
 			
 		}
 	}
@@ -295,6 +299,7 @@ public class eShopCore {
 		av.schreibeDaten(dateipfad + "ARTIKEL.txt"); 
 		kv.schreibeDaten(dateipfad + "KUNDEN.txt");
 		mv.schreibeDaten(dateipfad + "MITARBEITER.txt");
+		ev.schreibeDaten(dateipfad + "EREIGNISSE.txt");
 	}
 	
 	/**

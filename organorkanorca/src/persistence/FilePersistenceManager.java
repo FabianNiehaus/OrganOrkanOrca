@@ -257,6 +257,7 @@ public class FilePersistenceManager implements PersistenceManager {
 		int wieviel = 0;
 		String wann;
 		
+		
 		try{
 			id = Integer.parseInt(liesZeile());
 		} catch (NumberFormatException nfe) {
@@ -277,6 +278,7 @@ public class FilePersistenceManager implements PersistenceManager {
 		ret.add(wieviel);
 		ret.add(wann);
 		
+		
 		return ret;
 	}
 	
@@ -288,10 +290,12 @@ public class FilePersistenceManager implements PersistenceManager {
 		schreibeZeile(String.valueOf(er.getTyp()));
 		schreibeZeile(String.valueOf(er.getWomit().getArtikelnummer()));
 		schreibeZeile(String.valueOf(er.getWieviel()));
+		/*
 		Date wann = new Date();
 		DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss");
 		dateFormat.format(wann);
-		schreibeZeile(String.valueOf(wann));
+		*/
+		schreibeZeile(String.valueOf(er.getWann()));
 		
 		
 		return true;
