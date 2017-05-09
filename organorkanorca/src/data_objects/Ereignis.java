@@ -24,9 +24,8 @@ public class Ereignis {
 	 * @param womit Welcher Artikel ist betroffen
 	 * @param wieviel Betroffene Stückzahl
 	 */
-	public Ereignis(int id,Person wer, Typ was, Artikel womit, int wieviel) {
+	public Ereignis(Person wer, Typ was, Artikel womit, int wieviel) {
 		super();
-		this.id = id;
 		this.wer = wer;
 		this.was = was;
 		this.womit = womit;
@@ -74,6 +73,7 @@ public class Ereignis {
 	}
 	
 	public void setWann(Date wann) {
+		
 		this.wann = wann;
 	}
 	

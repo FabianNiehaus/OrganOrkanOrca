@@ -1,5 +1,8 @@
 package persistence;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
@@ -252,7 +255,7 @@ public class FilePersistenceManager implements PersistenceManager {
 		Artikel womit = null;
 		int womitId = womit.getArtikelnummer();
 		int wieviel = 0;
-		String wann = "";
+		String wann;
 		
 		try{
 			id = Integer.parseInt(liesZeile());
@@ -265,7 +268,7 @@ public class FilePersistenceManager implements PersistenceManager {
 		//was = liesZeile();
 		womitId = Integer.parseInt(liesZeile());
 		wieviel = Integer.parseInt(liesZeile());
-		//wann
+		wann = liesZeile();
 		
 		ret.add(id);
 		ret.add(werId);
@@ -279,14 +282,17 @@ public class FilePersistenceManager implements PersistenceManager {
 	
 	public boolean speichereEreignis(Ereignis er) throws IOException {
 		
-		//Schreibe 
+		//Schreibe
 		schreibeZeile(String.valueOf(er.getId()));
 		schreibeZeile(String.valueOf(er.getWer().getId()));
 		schreibeZeile(String.valueOf(er.getTyp()));
 		schreibeZeile(String.valueOf(er.getWomit().getArtikelnummer()));
 		schreibeZeile(String.valueOf(er.getWieviel()));
-		//schreibeZeile(er.getWann());
-
+		Date wann = new Date();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss");
+		dateFormat.format(wann);
+		schreibeZeile(String.valueOf(wann));
+		
 		
 		return true;
 	}

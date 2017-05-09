@@ -2,7 +2,6 @@ package domain;
 
 import java.io.IOException;
 import java.util.Vector;
-
 import data_objects.Artikel;
 import data_objects.Ereignis;
 import data_objects.Kunde;
@@ -27,8 +26,7 @@ public class Ereignisverwaltung {
 		pm.openForReading(datei);
 
 		//Ereignis er;
-			
-		
+				
 	}
 	
 	public void schreibeDaten(String datei) throws IOException {
@@ -52,8 +50,8 @@ public class Ereignisverwaltung {
 	 * @param womit Welcher Artikel ist betroffen
 	 * @param wieviel Betroffene Stückzahl
 	 */
-	public void ereignisErstellen(int id,Person wer, Typ was, Artikel womit, int wieviel){
-		ereignisse.add(new Ereignis(id,wer, was, womit, wieviel));
+	public void ereignisErstellen(Person wer, Typ was, Artikel womit, int wieviel){
+		ereignisse.add(new Ereignis(wer, was, womit, wieviel));
 	}
 
 }
