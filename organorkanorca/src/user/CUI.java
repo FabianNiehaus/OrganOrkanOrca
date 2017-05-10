@@ -341,7 +341,7 @@ public class CUI {
 			IO.println("");
 			IO.println("Warenkorb");
 			IO.println(re.getWk().toString());
-			IO.println("Gesamtbetrag: " + re.getGesamt() + "€");
+			IO.println("Gesamtbetrag: " + re.getGesamt() + "�");
 		} catch(AccessRestrictedException are){
 			IO.println(are.getMessage());
 		} catch (InvalidAmountException e) {
@@ -484,7 +484,7 @@ public class CUI {
 		} else if((user instanceof Mitarbeiter)) {
 			// Menüeingaben speziel für Mitarbeiter
 			
-			IO.println("Eingabe \"k\" um alle Kunden auszugeben");
+			IO.println("Eingabe \"k\" zur Kundenverwaltung zu gelangen");
 			IO.println("Eingabe \"m\" um alle Mitarbeiter auszugeben");
 			IO.println("Eingabe \"s\" um alle Laufzeitdaten zu speichern");
 		}
