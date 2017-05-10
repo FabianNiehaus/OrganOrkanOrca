@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Vector;
 
 import data_objects.*;
+import domain.exceptions.InvalidAmountException;
 
 /**
  * @author teschke
@@ -80,6 +81,8 @@ public class FilePersistenceManager implements PersistenceManager {
 		String bezeichnung = "";
 		double preis = 0;
 		int bestand = 0;
+		int packungsgroesse = 0;
+		Artikel art = null;
 		
 		//Lies Artikelnummer
 		try{
@@ -97,6 +100,9 @@ public class FilePersistenceManager implements PersistenceManager {
 		
 		//Lies Artikel-Bestand
 		bestand = Integer.parseInt(liesZeile());
+		
+		packungsgroesse = Integer.parseInt(liesZeile());
+		//packungsgröße muss noch zugewiesen werden
 		
 		/*
 		while(!liesZeile().equals("<---END ARTIKEL--->"));{}
@@ -128,6 +134,15 @@ public class FilePersistenceManager implements PersistenceManager {
 		//Schreibe Bestand
 		schreibeZeile(String.valueOf(art.getBestand()));
 		
+		//wenn Artikel ein Massengutartikel ist, wird die Packungsgröße geschrieben, ansonsten "0"
+		if(art instanceof Massengutartikel) {
+			Massengutartikel tmp = (Massengutartikel) art;
+			schreibeZeile(String.valueOf(tmp.getPackungsgroesse()));
+		}
+		else {
+			schreibeZeile(String.valueOf(0));
+		}
+				
 		/*
 		//Schreibe Artikel-Limiter
 		schreibeZeile("<---END ARTIKEL--->");
@@ -286,14 +301,9 @@ public class FilePersistenceManager implements PersistenceManager {
 		schreibeZeile(String.valueOf(er.getTyp()));
 		schreibeZeile(String.valueOf(er.getWomit().getArtikelnummer()));
 		schreibeZeile(String.valueOf(er.getWieviel()));
-		/*
-		Date wann = new Date();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss");
-		dateFormat.format(wann);
-		*/
-		
+
+		//Datum wird richtig formatiert
 		DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-		
 		schreibeZeile(String.valueOf(dateFormat.format(er.getWann())));
 		
 		

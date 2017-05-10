@@ -51,17 +51,20 @@ public class Ereignisverwaltung {
 				Person p = null;
 				int personennummer = (int) info.elementAt(1);
 				
+				//wenn Person ein Kunde ist (Unterscheidung durch Personennummern)
 				if (personennummer > 1000 && personennummer < 9000){
 					p = kv.sucheKunde(personennummer);
+				//wenn Person ein Mitarbeiter ist				
 				} else if (personennummer >= 9000 && personennummer < 10000 ) {
 					p = mv.suchMitarbeiter(personennummer);
 				} else {
 					throw new PersonNonexistantException(personennummer);
 				}
-				
+				//Artikel wird durch Artikelnummer gesucht
 				Artikel art = null;
 				art = av.sucheArtikel((int) info.elementAt(3));
 				
+				//Datum wird eingelesen und von String zu date
 				Date date = null;
 				DateFormat formatter = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 				try {
@@ -69,7 +72,7 @@ public class Ereignisverwaltung {
 				} catch (ParseException e) {
 				  e.printStackTrace();
 				}
-				
+				//Ereignis wird aus dem Vector Elementen erstellt
 				er = new Ereignis((int) info.elementAt(0), p, (Typ) info.elementAt(2), art, (int) info.elementAt(4), date); 
 				
 				// Ereignisse in die Ereignisliste einfügen
