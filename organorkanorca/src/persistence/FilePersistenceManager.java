@@ -12,7 +12,6 @@ import java.text.SimpleDateFormat;
 import java.util.Vector;
 
 import data_objects.*;
-import domain.exceptions.InvalidAmountException;
 
 /**
  * @author teschke
@@ -82,7 +81,6 @@ public class FilePersistenceManager implements PersistenceManager {
 		double preis = 0;
 		int bestand = 0;
 		int packungsgroesse = 0;
-		Artikel art = null;
 		
 		//Lies Artikelnummer
 		try{
@@ -101,14 +99,14 @@ public class FilePersistenceManager implements PersistenceManager {
 		//Lies Artikel-Bestand
 		bestand = Integer.parseInt(liesZeile());
 		
+		//Lies PackungsgrÃ¶ÃŸe
 		packungsgroesse = Integer.parseInt(liesZeile());
-		//packungsgröße muss noch zugewiesen werden
-		
-		/*
-		while(!liesZeile().equals("<---END ARTIKEL--->"));{}
-		*/
-		
-		return new Artikel(bezeichnung, artikelnummer, bestand, preis);
+
+		if(packungsgroesse == 1){
+			return new Artikel(bezeichnung, artikelnummer, bestand, preis);
+		} else {
+			return new Massengutartikel(bezeichnung, artikelnummer, bestand, preis, packungsgroesse);
+		}
 	}
 
 	/**
@@ -134,7 +132,7 @@ public class FilePersistenceManager implements PersistenceManager {
 		//Schreibe Bestand
 		schreibeZeile(String.valueOf(art.getBestand()));
 		
-		//wenn Artikel ein Massengutartikel ist, wird die Packungsgröße geschrieben, ansonsten "0"
+		//wenn Artikel ein Massengutartikel ist, wird die Packungsgrï¿½ï¿½e geschrieben, ansonsten "0"
 		if(art instanceof Massengutartikel) {
 			Massengutartikel tmp = (Massengutartikel) art;
 			schreibeZeile(String.valueOf(tmp.getPackungsgroesse()));
