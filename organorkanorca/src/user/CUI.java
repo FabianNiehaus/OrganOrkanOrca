@@ -3,6 +3,7 @@ package user;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Vector;
 
 import data_objects.Artikel;
@@ -19,7 +20,6 @@ import domain.exceptions.ArticleStockNotSufficientException;
 import domain.exceptions.BasketNonexistantException;
 import domain.exceptions.InvalidAmountException;
 import util.IO;
-import util.StringComparator;
 
 /**
  * @author Fabian Niehaus
@@ -107,7 +107,7 @@ public class CUI {
 	/** Logik fÃ¼r die Sortierte Ausgabe der Artikelliste
 	 * @param liste
 	 */
-	private void artikelSortiertAusgeben(Vector<Artikel> liste){
+	private void artikelSortiertAusgeben(Vector<Artikel> artSort){
 		String sortBy = "";
 		
 		IO.println("Artikel sortiert ausgeben:");
@@ -117,53 +117,19 @@ public class CUI {
 		
 		sortBy = IO.readString();
 		
-		Artikel[] artSort = new Artikel[liste.size()];
-		if (liste.isEmpty()) {
+		if (artSort.isEmpty()) {
 			System.out.println("Keine Artikel auszugeben!");
 		} else {
-			int i = 0;
-			for(Object artikel : liste){
-				if(i < artSort.length){
-					artSort[i] = (Artikel) artikel;
-					i++;
-				}
-			}
 			
 			if (sortBy.equals("nr")){
 				//Sortieren nach Artikelnummer
-				boolean swapped = true;
-				int j = 0;
-				Artikel tmp;
-				while(swapped){
-					swapped = false;
-					j++;
-					for (int k = 0; k < artSort.length -j; k++){
-						if(artSort[k].getArtikelnummer() > artSort[k+1].getArtikelnummer()){
-							tmp = artSort[k];
-							artSort[k] = artSort[k+1];
-							artSort[k+1] = tmp;
-							swapped = true;
-						}
-					}
-				}
+				Collections.sort(artSort, 
+						(Artikel o1, Artikel o2) -> o1.getArtikelnummer() - o2.getArtikelnummer());
 			
 			} else if (sortBy.equals("bez")){
 				//Sortieren nach Artikelbezeichnung
-				boolean swapped = true;
-				int j = 0;
-				Artikel tmp;
-				while(swapped){
-					swapped = false;
-					j++;
-					for (int k = 0; k < artSort.length -j; k++){
-						if(StringComparator.compare(artSort[k].getBezeichnung(),artSort[k+1].getBezeichnung())){
-							tmp = artSort[k];
-							artSort[k] = artSort[k+1];
-							artSort[k+1] = tmp;
-							swapped = true;
-						}
-					}
-				}
+				Collections.sort(artSort, 
+						(Artikel o1, Artikel o2) -> o1.getBezeichnung().compareTo(o2.getBezeichnung()));
 			}
 			for (Artikel art : artSort){
 				IO.println(art.toString());
@@ -341,7 +307,7 @@ public class CUI {
 			IO.println("");
 			IO.println("Warenkorb");
 			IO.println(re.getWk().toString());
-			IO.println("Gesamtbetrag: " + re.getGesamt() + "€");
+			IO.println("Gesamtbetrag: " + re.getGesamt() + "ï¿½");
 		} catch(AccessRestrictedException are){
 			IO.println(are.getMessage());
 		} catch (InvalidAmountException e) {
