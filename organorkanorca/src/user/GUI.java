@@ -95,24 +95,26 @@ public class GUI extends JFrame {
 		JTextField sucheField = new JTextField();
 		
 		JPanel leftAreaActionField = new JPanel();
-		JTable auflistung;
+		JScrollPane auflistungContainer = new JScrollPane();
+		JTable auflistung = new JTable();
 		JButton aktion = new JButton();
 		JTextField anzahl = new JTextField();
 		
-		public Sichtfenster(AbstractTableModel atm, String aktionsname, boolean anzahlZeigen){
+		public Sichtfenster(String aktionsname, boolean anzahlZeigen){
 			
 			this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			this.setPreferredSize(new Dimension((int)(GUI.this.getWidth()*0.55), (int)(GUI.this.getHeight()*0.8)));
 			
 			overviewButtons.setMaximumSize(new Dimension(1024, 40));
-						
-			auflistung = new JTable(atm);
+					
+			this.add(overviewButtons);
+			this.add(auflistungContainer);
+			this.add(leftAreaActionField);
+			
 			auflistung.setAutoCreateRowSorter(true);
 			
-			this.add(overviewButtons);
-			this.add(auflistung);
-			this.add(leftAreaActionField);
-						
+			auflistungContainer.add(auflistung);
+				
 			overviewButtons.setLayout(new BoxLayout(overviewButtons, BoxLayout.X_AXIS));
 			alleButton.addActionListener(new ButtonActionListener());
 			overviewButtons.add(alleButton);
@@ -141,6 +143,8 @@ public class GUI extends JFrame {
 		
 		public abstract void suche(String suchStr);
 		
+		public abstract Vector<Vector<Object>> createTableData(Vector<Object> daten);
+
 		class ButtonActionListener implements ActionListener {
 
 			@Override
@@ -157,14 +161,30 @@ public class GUI extends JFrame {
 		}
 	}
 	
-	
-	class ArtikelTableModel extends AbstractTableModel{
+	class ArtikelTableModel extends DefaultTableModel{
 
-		private String[] columnNames = {"Artikelnummer","Bezeichnung","Preis","Packungsgröße","Bestand"};
-		private Vector<Vector<Object>> data = new Vector<>();
 		
 		public ArtikelTableModel(Vector<Artikel> liste) {
-
+				columnIdentifiers = setColumns();
+				dataVector = setData(liste);
+		}
+		
+		public Vector<String> setColumns(){
+			Vector<String> columns = new Vector<>();
+			
+			columns.addElement("Artikelnummer");
+			columns.addElement("Bezeichnung");
+			columns.addElement("Preis");
+			columns.addElement("Packungsgröße");
+			columns.addElement("Bestand");
+			
+			return columns;
+		}
+		
+		public Vector<Vector<Object>> setData(Vector<Artikel> liste){
+			
+			Vector<Vector<Object>> data = new Vector<>();
+			
 			for(Artikel art : liste){
 				
 				Vector<Object> tmp = new Vector<>();
@@ -176,39 +196,31 @@ public class GUI extends JFrame {
 				tmp.addElement(art.getBestand());
 				
 				data.addElement(tmp);
-				
 			}
-
+			
+			return data;
 		}
-
-		@Override
-		public int getColumnCount() {
-			return columnNames.length;
-		}
-
-		@Override
-		public int getRowCount() {
-			return data.size();
-		}
-
-		@Override
-		public Object getValueAt(int arg0, int arg1) {
-			return data.elementAt(arg0).elementAt(arg1);
-		}
-		
-		
 		
 	}
 	
 	class Artikelsichtfenster extends Sichtfenster{
 
+		ArtikelTableModel atm;
+		
 		public Artikelsichtfenster() throws AccessRestrictedException{
-			super(new ArtikelTableModel(eShop.alleArtikelAusgeben(user)),"In Warenkorb", true);		
+			super("In Warenkorb", true);
+			auflistungInitialize();
 		}
 				
 		@Override
 		public void auflistungInitialize() {
-			//auflistung.set
+			try {
+				atm = new ArtikelTableModel(eShop.alleArtikelAusgeben(user));
+				auflistung.setModel(atm);
+				auflistung.repaint();
+			} catch (AccessRestrictedException e) {
+				JOptionPane.showMessageDialog(new JOptionPane(), e.getMessage());
+			}
 		}
 
 		@Override
@@ -280,12 +292,18 @@ public class GUI extends JFrame {
 			}
 			*/
 		}
+
+		@Override
+		public Vector<Vector<Object>> createTableData(Vector<Object> daten) {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 	
 	class Kundensichtfenster extends Sichtfenster{
 		
 		public Kundensichtfenster(){
-			super(null,"Bearbeiten", false);
+			super(null,false);
 		}
 
 		@Override
@@ -331,12 +349,18 @@ public class GUI extends JFrame {
 			// TODO Auto-generated method stub
 			
 		}
+
+		@Override
+		public Vector<Vector<Object>> createTableData(Vector<Object> daten) {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 	
 	class Mitarbeitersichtfenster extends Sichtfenster{
 
 		public Mitarbeitersichtfenster(){
-			super(null,"Bearbeiten", false);
+			super(null,false);
 		}
 
 		@Override
@@ -373,6 +397,12 @@ public class GUI extends JFrame {
 		public void suche(String suchStr) {
 			// TODO Auto-generated method stub
 			
+		}
+
+		@Override
+		public Vector<Vector<Object>> createTableData(Vector<Object> daten) {
+			// TODO Auto-generated method stub
+			return null;
 		}
 	}
 	
