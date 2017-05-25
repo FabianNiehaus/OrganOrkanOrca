@@ -96,10 +96,10 @@ public class eShopCore {
 	 * @throws AccessRestrictedException
 	 */
 	public Vector<Kunde> alleKundenAusgeben(Person p) throws AccessRestrictedException{
-		if(istKunde(p) || istMitarbeiter(p)){
+		if(istMitarbeiter(p)){
 			return kv.getKunden();
 		} else {
-			throw new AccessRestrictedException(p, "\"Alle Kunden ausgeben\"");
+			throw new AccessRestrictedException(p, "Kundenverwaltung");
 		}
 	}
 	
@@ -110,7 +110,7 @@ public class eShopCore {
 		if(istMitarbeiter(p)){
 			return mv.getMitarbeiter();
 		} else {
-			throw new AccessRestrictedException(p, "\"Alle Mitarbeiter ausgeben\"");
+			throw new AccessRestrictedException(p, "Mitarbeiterverwaltung");
 		}
 	}
 	

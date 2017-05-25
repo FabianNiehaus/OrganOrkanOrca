@@ -3,6 +3,11 @@ package user;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import data_objects.Artikel;
 import data_objects.Kunde;
@@ -19,6 +24,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Vector;
@@ -38,11 +45,12 @@ public class GUI extends JFrame {
 		}
 		
 		try {
-			user = eShop.anmelden(1001, "test");
+			user = eShop.anmelden(9000, "test2");
 		} catch (LoginFailedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 	}
 	
 	JSplitPane main = new JSplitPane();
@@ -54,8 +62,16 @@ public class GUI extends JFrame {
 	JButton kundenButton = new JButton("Kunden");
 	JButton mitarbeiterButton = new JButton("Mitarbeiter");
 	JButton shopButton = new JButton("Shop");
+	
+	Kundensichtfenster kundensichtfenster;
+	Artikelsichtfenster artikelsichtfenster;
+	Mitarbeitersichtfenster mitarbeitersichtfenster;
+	
+	Warenkorbverwaltungsfenster warenkorbverwaltungsfenster;
+	Artikelverwaltungsfenster artikelverwaltungsfenster;
 		
 	public void initialize() {
+		
 		this.setSize(1024, 512);
 		getContentPane().add(main);
 		
@@ -69,13 +85,16 @@ public class GUI extends JFrame {
 		moduleButtons.add(shopButton);
 		
 		leftArea.add(moduleButtons);
-		try {
-			leftArea.add(new Artikelsichtfenster());
-		} catch (AccessRestrictedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		
+		kundensichtfenster = new Kundensichtfenster();
+		artikelsichtfenster = new Artikelsichtfenster();
+		mitarbeitersichtfenster = new Mitarbeitersichtfenster();
+		
+		leftArea.add(artikelsichtfenster);
+		
+		if(user instanceof Kunde){
+			rightArea.add(new Warenkorbverwaltungsfenster());
 		}
-		rightArea.add(new Warenkorbverwaltungsfenster());
 
 		main.setDividerLocation((int)(this.getWidth()*0.60));
 		main.setLeftComponent(leftArea);
@@ -95,12 +114,12 @@ public class GUI extends JFrame {
 		JTextField sucheField = new JTextField();
 		
 		JPanel leftAreaActionField = new JPanel();
-		JScrollPane auflistungContainer = new JScrollPane();
 		JTable auflistung = new JTable();
+		JScrollPane auflistungContainer = new JScrollPane(auflistung);
 		JButton aktion = new JButton();
 		JTextField anzahl = new JTextField();
 		
-		public Sichtfenster(String aktionsname, boolean anzahlZeigen){
+		public Sichtfenster(){
 			
 			this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			this.setPreferredSize(new Dimension((int)(GUI.this.getWidth()*0.55), (int)(GUI.this.getHeight()*0.8)));
@@ -110,50 +129,44 @@ public class GUI extends JFrame {
 			this.add(overviewButtons);
 			this.add(auflistungContainer);
 			this.add(leftAreaActionField);
-			
-			auflistung.setAutoCreateRowSorter(true);
-			
-			auflistungContainer.add(auflistung);
-				
+						
 			overviewButtons.setLayout(new BoxLayout(overviewButtons, BoxLayout.X_AXIS));
 			alleButton.addActionListener(new ButtonActionListener());
 			overviewButtons.add(alleButton);
-			sortNrButton.addActionListener(new ButtonActionListener());
-			overviewButtons.add(sortNrButton);
-			sortBezButton.addActionListener(new ButtonActionListener());
-			overviewButtons.add(sortBezButton);
 			overviewButtons.add(sucheField);
 			sucheButton.addActionListener(new ButtonActionListener());
 			overviewButtons.add(sucheButton);
 			overviewButtons.setVisible(true);
-					
-			aktion.setText(aktionsname);
 			
+			JTableHeader header = auflistung.getTableHeader();
+			header.setUpdateTableInRealTime(true);
+			header.setReorderingAllowed(false);
+			auflistung.setAutoCreateRowSorter(true);
+
 			leftAreaActionField.add(aktion);
-			if(anzahlZeigen){
-				leftAreaActionField.add(anzahl);
+			leftAreaActionField.add(anzahl);
+			
+			try {
+				auflistungInitialize();
+			} catch (AccessRestrictedException e) {
+				removeAll();
+				add(new JLabel(e.getMessage()));
 			}
+
 		}
 		
-		public abstract void auflistungInitialize();
-		
-		public abstract void sortiereNummer();
-		
-		public abstract void sortiereBezeichnung();
+		public abstract void auflistungInitialize() throws AccessRestrictedException;
 		
 		public abstract void suche(String suchStr);
 		
-		public abstract Vector<Vector<Object>> createTableData(Vector<Object> daten);
+//		public abstract Vector<Vector<Object>> createTableData(Vector<Object> daten);
 
 		class ButtonActionListener implements ActionListener {
 
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				if (ae.getSource().equals(alleButton) || ae.getSource().equals(sortNrButton)){
-					sortiereNummer();
-				} else if (ae.getSource().equals(sortBezButton)){
-					sortiereBezeichnung();
-				} else if (ae.getSource().equals(sucheButton)){
+				
+				if (ae.getSource().equals(sucheButton)){
 					suche(sucheField.getText());
 				}
 			}
@@ -161,31 +174,81 @@ public class GUI extends JFrame {
 		}
 	}
 	
-	class ArtikelTableModel extends DefaultTableModel{
-
+	class eShopTableModel extends AbstractTableModel{
 		
-		public ArtikelTableModel(Vector<Artikel> liste) {
-				columnIdentifiers = setColumns();
-				dataVector = setData(liste);
+		Vector<String> columnIdentifiers;
+		Vector<Vector<Object>> dataVector;
+		
+		public eShopTableModel(Vector<Vector<Object>> data, String[] columnNames) {
+			
+			columnIdentifiers = setColumns(columnNames);
+			dataVector = data;
 		}
 		
-		public Vector<String> setColumns(){
+		public Vector<String> setColumns(String[] columnNames){
 			Vector<String> columns = new Vector<>();
 			
-			columns.addElement("Artikelnummer");
-			columns.addElement("Bezeichnung");
-			columns.addElement("Preis");
-			columns.addElement("Packungsgröße");
-			columns.addElement("Bestand");
+			for(String str : columnNames){
+				columns.addElement(str);
+			}
 			
 			return columns;
 		}
+
+		@Override
+		public int getColumnCount() {
+			return columnIdentifiers.size();
+		}
+
+		@Override
+		public int getRowCount() {
+			return dataVector.size();
+		}
+
+		@Override
+		public Object getValueAt(int arg0, int arg1) {
+			return dataVector.elementAt(arg0).elementAt(arg1);
+		}
 		
-		public Vector<Vector<Object>> setData(Vector<Artikel> liste){
+		@Override
+		public String getColumnName(int column) {
+			  return columnIdentifiers.elementAt(column);
+		}
+		
+	}
+	
+	class Artikelsichtfenster extends Sichtfenster{
+
+		eShopTableModel etm;
+		
+		public Artikelsichtfenster(){
+			super();
+			if (user instanceof Kunde){
+				aktion.setText("In Warenkorb");
+				aktion.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						
+					}
+				});
+			} else if (user instanceof Mitarbeiter){
+				aktion.setText("Bearbeiten");
+				aktion.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						
+					}
+				});
+			}
+		}
+				
+		@Override
+		public void auflistungInitialize() throws AccessRestrictedException {
 			
+				
 			Vector<Vector<Object>> data = new Vector<>();
 			
-			for(Artikel art : liste){
+			for(Artikel art : eShop.alleArtikelAusgeben(user)){
 				
 				Vector<Object> tmp = new Vector<>();
 				
@@ -197,70 +260,10 @@ public class GUI extends JFrame {
 				
 				data.addElement(tmp);
 			}
+				
 			
-			return data;
-		}
-		
-	}
-	
-	class Artikelsichtfenster extends Sichtfenster{
-
-		ArtikelTableModel atm;
-		
-		public Artikelsichtfenster() throws AccessRestrictedException{
-			super("In Warenkorb", true);
-			auflistungInitialize();
-		}
-				
-		@Override
-		public void auflistungInitialize() {
-			try {
-				atm = new ArtikelTableModel(eShop.alleArtikelAusgeben(user));
-				auflistung.setModel(atm);
-				auflistung.repaint();
-			} catch (AccessRestrictedException e) {
-				JOptionPane.showMessageDialog(new JOptionPane(), e.getMessage());
-			}
-		}
-
-		@Override
-		public void sortiereNummer() {
-			/*
-			Vector<Artikel> artSort;
-			try {
-				artSort = eShop.alleArtikelAusgeben(user);
-				//Sortieren nach Artikelnummer
-				Collections.sort(artSort, 
-					(Artikel o1, Artikel o2) -> o1.getArtikelnummer() - o2.getArtikelnummer());
-				auflistung.setText("");
-				
-				for (Artikel art : artSort){
-					auflistung.append(art.toString() + "\n");
-				}
-			} catch (AccessRestrictedException e) {
-				auflistung.setText(e.getMessage());
-			}
-			*/
-		}
-
-		@Override
-		public void sortiereBezeichnung() {
-			/*
-			Vector<Artikel> artSort;
-			try {
-				artSort = eShop.alleArtikelAusgeben(user);
-				//Sortieren nach Artikelnummer
-				Collections.sort(artSort, 
-					(Artikel o1, Artikel o2) -> o1.getBezeichnung().compareTo(o2.getBezeichnung()));
-				auflistung.setText("");
-				for (Artikel art : artSort){
-					auflistung.append(art.toString() + "\n");
-				}
-			} catch (AccessRestrictedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			*/
+			etm = new eShopTableModel(data, new String[]{"Artikelnummer","Bezeichnung","Preis","Packungsgröße","Bestand"});
+			auflistung.setModel(etm);
 		}
 
 		@Override
@@ -292,56 +295,40 @@ public class GUI extends JFrame {
 			}
 			*/
 		}
-
-		@Override
-		public Vector<Vector<Object>> createTableData(Vector<Object> daten) {
-			// TODO Auto-generated method stub
-			return null;
-		}
 	}
 	
 	class Kundensichtfenster extends Sichtfenster{
 		
+		eShopTableModel etm;
+		
 		public Kundensichtfenster(){
-			super(null,false);
+			super();
+			aktion.setText("Bearbeiten");
 		}
-
+				
 		@Override
-		public void auflistungInitialize() {
-			/*
-			try {
-				auflistung.setText("");
-				for (Kunde ku : eShop.alleKundenAusgeben(user)){
-					auflistung.append(ku.toString() + "\n");
-				}
-			} catch (AccessRestrictedException e) {
-				auflistung.setText(e.getMessage());
-			}	
-			*/	
-		}
-
-		@Override
-		public void sortiereNummer() {
-//			Vector<Kunde> kuSort;
-//			try {
-//				kuSort = eShop.alleKundenAusgeben(user);
-//				//Sortieren nach Artikelnummer
-//				Collections.sort(kuSort, 
-//					(Kunde o1, Kunde o2) -> o1.getId() - o2.getId());
-//				auflistung.setText("");
-//				for (Kunde ku : kuSort){
-//					auflistung.append(ku.toString() + "\n");
-//				}
-//			} catch (AccessRestrictedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-		}
-
-		@Override
-		public void sortiereBezeichnung() {
-			// TODO Auto-generated method stub
+		public void auflistungInitialize() throws AccessRestrictedException {
 			
+				
+			Vector<Vector<Object>> data = new Vector<>();
+			
+			for(Kunde ku : eShop.alleKundenAusgeben(user)){
+				
+				Vector<Object> tmp = new Vector<>();
+				
+				tmp.addElement(ku.getId());
+				tmp.addElement(ku.getFirstname());
+				tmp.addElement(ku.getLastname());
+				tmp.addElement(ku.getAddress_Street());
+				tmp.addElement(ku.getAddress_Zip());
+				tmp.addElement(ku.getAddress_Town());
+				
+				data.addElement(tmp);
+			}
+				
+			
+			etm = new eShopTableModel(data, new String[]{"Kundennummer","Vorname","Nachname","Straße","PLZ","Ort"});
+			auflistung.setModel(etm);
 		}
 
 		@Override
@@ -349,60 +336,44 @@ public class GUI extends JFrame {
 			// TODO Auto-generated method stub
 			
 		}
-
-		@Override
-		public Vector<Vector<Object>> createTableData(Vector<Object> daten) {
-			// TODO Auto-generated method stub
-			return null;
-		}
+		
 	}
 	
 	class Mitarbeitersichtfenster extends Sichtfenster{
-
+		
+		eShopTableModel etm;
+		
 		public Mitarbeitersichtfenster(){
-			super(null,false);
+			super();
+			aktion.setText("Bearbeiten");
 		}
-
+				
 		@Override
-		public void auflistungInitialize() {
-			// TODO Auto-generated method stub
+		public void auflistungInitialize() throws AccessRestrictedException {
 			
-		}
-
-		@Override
-		public void sortiereNummer() {
-//			Vector<Mitarbeiter> maSort;
-//			try {
-//				maSort = eShop.alleMitarbeiterAusgeben(user);
-//				//Sortieren nach Artikelnummer
-//				Collections.sort(maSort, 
-//					(Mitarbeiter o1, Mitarbeiter o2) -> o1.getId() - o2.getId());
-//				auflistung.setText("");
-//				for (Mitarbeiter ma : maSort){
-//					auflistung.append(ma.toString() + "\n");
-//				}
-//			} catch (AccessRestrictedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-		}
-
-		@Override
-		public void sortiereBezeichnung() {
-			// TODO Auto-generated method stub
+				
+			Vector<Vector<Object>> data = new Vector<>();
 			
+			for(Mitarbeiter mi : eShop.alleMitarbeiterAusgeben(user)){
+				
+				Vector<Object> tmp = new Vector<>();
+				
+				tmp.addElement(mi.getId());
+				tmp.addElement(mi.getFirstname());
+				tmp.addElement(mi.getLastname());
+				
+				data.addElement(tmp);
+			}
+				
+			
+			etm = new eShopTableModel(data, new String[]{"Mitarbeiternummer","Vorname","Nachname"});
+			auflistung.setModel(etm);
 		}
 
 		@Override
 		public void suche(String suchStr) {
 			// TODO Auto-generated method stub
 			
-		}
-
-		@Override
-		public Vector<Vector<Object>> createTableData(Vector<Object> daten) {
-			// TODO Auto-generated method stub
-			return null;
 		}
 	}
 	
@@ -497,23 +468,18 @@ public class GUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent ae) {
 			if (ae.getSource().equals(artikelButton)){
-				try {
-					leftArea.remove(leftArea.getComponent(1));
-					leftArea.add(new Artikelsichtfenster());
-					leftArea.revalidate();
-					leftArea.repaint();
-				} catch (AccessRestrictedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				leftArea.remove(leftArea.getComponent(1));
+				leftArea.add(artikelsichtfenster);
+				leftArea.revalidate();
+				leftArea.repaint();
 			} else if (ae.getSource().equals(kundenButton)) {
 				leftArea.remove(leftArea.getComponent(1));
-				leftArea.add(new Kundensichtfenster());
+				leftArea.add(kundensichtfenster);
 				leftArea.revalidate();
 				leftArea.repaint();
 			} else if (ae.getSource().equals(mitarbeiterButton)) {
 				leftArea.remove(leftArea.getComponent(1));
-				leftArea.add(new Mitarbeitersichtfenster());
+				leftArea.add(mitarbeitersichtfenster);
 				leftArea.revalidate();
 				leftArea.repaint();
 			} else if (ae.getSource().equals(shopButton)) {
@@ -526,6 +492,8 @@ public class GUI extends JFrame {
 		}
 		
 	}
+	
+	
 	
 	public static void main(String[] args){
 		GUI gui = new GUI("OrganOrkanOrca eShop");
