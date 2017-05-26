@@ -166,6 +166,9 @@ public class GUI {
 			if(user instanceof Kunde){
 				warenkorbverwaltungsfenster = new Warenkorbverwaltungsfenster();
 				rightArea.add(warenkorbverwaltungsfenster);
+			} else {
+				artikelverwaltungsfenster = new Artikelverwaltungsfenster();
+				rightArea.add(artikelverwaltungsfenster);
 			}
 	
 			main.setDividerLocation((int)(this.getWidth()*0.60));
@@ -175,7 +178,50 @@ public class GUI {
 			this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			this.setVisible(true);
 		}
+		
+		class eShopTableModel extends AbstractTableModel{
 			
+			Vector<String> columnIdentifiers;
+			Vector<Vector<Object>> dataVector;
+			
+			public eShopTableModel(Vector<Vector<Object>> data, String[] columnNames) {
+				
+				columnIdentifiers = setColumns(columnNames);
+				dataVector = data;
+			}
+			
+			public Vector<String> setColumns(String[] columnNames){
+				Vector<String> columns = new Vector<>();
+				
+				for(String str : columnNames){
+					columns.addElement(str);
+				}
+				
+				return columns;
+			}
+	
+			@Override
+			public int getColumnCount() {
+				return columnIdentifiers.size();
+			}
+	
+			@Override
+			public int getRowCount() {
+				return dataVector.size();
+			}
+	
+			@Override
+			public Object getValueAt(int arg0, int arg1) {
+				return dataVector.elementAt(arg0).elementAt(arg1);
+			}
+			
+			@Override
+			public String getColumnName(int column) {
+				  return columnIdentifiers.elementAt(column);
+			}
+			
+		}
+				
 		abstract class Sichtfenster extends JPanel{
 			
 			JPanel overviewButtons = new JPanel();
@@ -268,49 +314,21 @@ public class GUI {
 					}
 				}
 			}
-		}
-		
-		class eShopTableModel extends AbstractTableModel{
 			
-			Vector<String> columnIdentifiers;
-			Vector<Vector<Object>> dataVector;
-			
-			public eShopTableModel(Vector<Vector<Object>> data, String[] columnNames) {
-				
-				columnIdentifiers = setColumns(columnNames);
-				dataVector = data;
-			}
-			
-			public Vector<String> setColumns(String[] columnNames){
-				Vector<String> columns = new Vector<>();
-				
-				for(String str : columnNames){
-					columns.addElement(str);
+			class ArtikelBearbeitenListener implements ActionListener{
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					try {
+						artikelverwaltungsfenster.artikelAnzeigen(eShop.artikelSuchen((int)auflistung.getValueAt(auflistung.getSelectedRow(),0), user));
+					} catch (ArticleNonexistantException e1) {
+						JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
+					} catch (AccessRestrictedException e1) {
+						JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
+					}
 				}
 				
-				return columns;
 			}
-	
-			@Override
-			public int getColumnCount() {
-				return columnIdentifiers.size();
-			}
-	
-			@Override
-			public int getRowCount() {
-				return dataVector.size();
-			}
-	
-			@Override
-			public Object getValueAt(int arg0, int arg1) {
-				return dataVector.elementAt(arg0).elementAt(arg1);
-			}
-			
-			@Override
-			public String getColumnName(int column) {
-				  return columnIdentifiers.elementAt(column);
-			}
-			
 		}
 		
 		class Artikelsichtfenster extends Sichtfenster{
@@ -322,14 +340,11 @@ public class GUI {
 				if (user instanceof Kunde){
 					aktion.setText("In Warenkorb");
 					aktion.addActionListener(new ArtikelInWarenkorbListener());
+					anzahl.setVisible(true);
 				} else if (user instanceof Mitarbeiter){
 					aktion.setText("Bearbeiten");
-					aktion.addActionListener(new ActionListener() {
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							
-						}
-					});
+					aktion.addActionListener(new ArtikelBearbeitenListener());
+					anzahl.setVisible(false);
 				}
 			}
 					
@@ -499,6 +514,7 @@ public class GUI {
 			JButton neuAnlegenButton = new JButton("Neu");
 			JButton aendernButton = new JButton("Ändern");
 			JButton bestandAendernButton = new JButton("Bestand");
+			JButton neuAnlegenBestaetigenButton = new JButton("Anlegen");
 			
 			public Artikelverwaltungsfenster(){
 				
@@ -520,6 +536,12 @@ public class GUI {
 				buttons.add(neuAnlegenButton);
 				buttons.add(aendernButton);
 				buttons.add(bestandAendernButton);
+				buttons.add(neuAnlegenBestaetigenButton);
+				
+				neuAnlegenBestaetigenButton.setVisible(false);
+				
+				neuAnlegenButton.addActionListener(new ArtikelNeuAnlegenListener());
+				neuAnlegenBestaetigenButton.addActionListener(new ArtikelNeuAnlegenListener());
 				
 				this.add(buttons);
 				
@@ -527,7 +549,97 @@ public class GUI {
 				this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 				
 				this.setVisible(true);
-			}	
+			}
+			
+			public void artikelAnzeigen(Artikel art){
+				artNrField.setText(String.valueOf(art.getArtikelnummer()));
+				bezeichnungField.setText(art.getBezeichnung());
+				preisField.setText(String.valueOf(art.getPreis()));
+				if(art instanceof Massengutartikel){
+					pkggroesseField.setText(String.valueOf(((Massengutartikel)art).getPackungsgroesse()));
+				} else {
+					pkggroesseField.setText("1");
+				}
+				bestandField.setText(String.valueOf(art.getBestand()));
+			}
+			
+			public class ArtikelNeuAnlegenListener implements ActionListener{
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (e.getSource().equals(neuAnlegenButton)){
+						//Artikelnummer ausblenden, kann nicht neu angegeben werden
+						artNrLabel.setVisible(false);
+						artNrField.setVisible(false);
+						
+						//Alle Felder leeren
+						bezeichnungField.setText("");
+						preisField.setText("");
+						pkggroesseField.setText("");
+						bestandField.setText("");
+						
+						//Buttons anpassen
+						neuAnlegenButton.setVisible(false);
+						aendernButton.setVisible(false);
+						bestandAendernButton.setVisible(false);
+						neuAnlegenBestaetigenButton.setVisible(true);
+						
+					} else if (e.getSource().equals(neuAnlegenBestaetigenButton)){
+						
+						String bezeichnung = bezeichnungField.getText();
+						
+						try{
+							
+							int bestand = Integer.parseInt(bestandField.getText());
+							
+							try{
+								
+								double preis = Double.parseDouble(preisField.getText());
+								
+								try{
+									
+									int packungsgroesse = Integer.parseInt(pkggroesseField.getText());
+									
+									try {
+										
+										Artikel art = eShop.erstelleArtikel(bezeichnung, bestand, preis, packungsgroesse, user);
+										 
+										//Neu erstellten  Artikel anzeigen
+										artikelAnzeigen(art);
+										
+										//Artikelnummer wieder anzeigen
+										artNrLabel.setVisible(true);
+										artNrField.setVisible(true);
+										
+										//Buttons anpassen
+										neuAnlegenButton.setVisible(true);
+										aendernButton.setVisible(true);
+										bestandAendernButton.setVisible(true);
+										neuAnlegenBestaetigenButton.setVisible(false);
+										
+										artikelsichtfenster.auflistungInitialize();
+										
+									} catch (AccessRestrictedException e1) {
+										JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
+									} catch (InvalidAmountException e1) {
+										JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
+									}
+	
+								} catch(NumberFormatException e1){
+									JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, "Keine gültige Packungsgröße");
+								}
+								
+							} catch(NumberFormatException e1){
+								JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, "Kein gültiger Preis!");
+							}
+							
+						} catch(NumberFormatException e1){
+							JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, "Kein gültiger Bestand!");
+						}
+					}
+				}
+
+			}
 		}
 				
 		class Warenkorbverwaltungsfenster extends JPanel{
@@ -535,6 +647,7 @@ public class GUI {
 			JPanel buttons = new JPanel();
 			
 			JTable warenkorbAuflistung = new JTable();
+			JScrollPane warenkorbAuflistungContainer = new JScrollPane(warenkorbAuflistung);
 			
 			JButton neuAnlegenButton = new JButton("Neu");
 			JButton aendernButton = new JButton("Ändern");
@@ -551,6 +664,11 @@ public class GUI {
 				buttons.add(bestandAendernButton);
 				
 				this.add(buttons);
+				
+				JTableHeader header = warenkorbAuflistung.getTableHeader();
+				header.setUpdateTableInRealTime(true);
+				header.setReorderingAllowed(false);
+				warenkorbAuflistung.setAutoCreateRowSorter(true);
 				
 				this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 				
@@ -614,13 +732,29 @@ public class GUI {
 				if (ae.getSource().equals(artikelButton)){
 					leftArea.remove(leftArea.getComponent(1));
 					leftArea.add(artikelsichtfenster);
-					leftArea.revalidate();
+					leftArea.revalidate();					
 					leftArea.repaint();
+					
+					rightArea.removeAll();
+					if(user instanceof Kunde){
+						warenkorbverwaltungsfenster = new Warenkorbverwaltungsfenster();
+						rightArea.add(warenkorbverwaltungsfenster);
+					} else {
+						artikelverwaltungsfenster = new Artikelverwaltungsfenster();
+						rightArea.add(artikelverwaltungsfenster);
+					}
+					rightArea.revalidate();
+					rightArea.repaint();
+					
 				} else if (ae.getSource().equals(kundenButton)) {
 					leftArea.remove(leftArea.getComponent(1));
 					leftArea.add(kundensichtfenster);
 					leftArea.revalidate();
 					leftArea.repaint();
+					
+					rightArea.removeAll();
+					// TODO Kundenverwaltungsfenster
+					
 				} else if (ae.getSource().equals(mitarbeiterButton)) {
 					leftArea.remove(leftArea.getComponent(1));
 					leftArea.add(mitarbeitersichtfenster);
