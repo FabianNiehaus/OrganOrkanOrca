@@ -138,7 +138,7 @@ public class FilePersistenceManager implements PersistenceManager {
 			schreibeZeile(String.valueOf(tmp.getPackungsgroesse()));
 		}
 		else {
-			schreibeZeile(String.valueOf(0));
+			schreibeZeile(String.valueOf(1));
 		}
 				
 		/*
