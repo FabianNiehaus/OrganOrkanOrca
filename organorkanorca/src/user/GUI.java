@@ -4,26 +4,33 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+
+import org.jdesktop.swingx.JXTable;
 
 import data_objects.Artikel;
 import data_objects.Kunde;
 import data_objects.Massengutartikel;
 import data_objects.Mitarbeiter;
 import data_objects.Person;
+import data_objects.Rechnung;
 import data_objects.Warenkorb;
 import domain.eShopCore;
 import domain.exceptions.AccessRestrictedException;
 import domain.exceptions.ArticleNonexistantException;
 import domain.exceptions.ArticleStockNotSufficientException;
+import domain.exceptions.BasketNonexistantException;
 import domain.exceptions.InvalidAmountException;
 import domain.exceptions.LoginFailedException;
 import net.miginfocom.swing.MigLayout;
 import util.IO;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -32,6 +39,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -62,7 +71,7 @@ public class GUI {
 		public void actionPerformed(ActionEvent e) {
 			try {
 				user = eShop.anmelden(loginwindow.benutzerIdAuslesen(), loginwindow.passwortAuslesen());
-				mainwindow = new MainWindow();
+				mainwindow = new MainWindow("OrganOrkanOrca eShop");
 				loginwindow.dispose();		
 			} catch (NumberFormatException | LoginFailedException e1) {
 				JOptionPane.showMessageDialog(loginwindow, "Anmeldung fehlgeschlagen");
@@ -70,7 +79,43 @@ public class GUI {
 		}
 	}
 	
+	private class LoginUserUmgehenListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try {
+				user = eShop.anmelden(1001, "test");
+			} catch (LoginFailedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			mainwindow = new MainWindow("OrganOrkanOrca eShop");
+			loginwindow.dispose();
+			
+		}
+		
+	}
+	
+	private class LoginMitarbeiterUmgehenListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try {
+				user = eShop.anmelden(9000, "test2");
+			} catch (LoginFailedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			mainwindow = new MainWindow("OrganOrkanOrca eShop");
+			loginwindow.dispose();
+			
+		}
+
+	}
+	
 	private class LoginWindow extends JFrame {
+		
+		JTabbedPane tabbedPane = new JTabbedPane();
 		
 		JLabel benutzerLabel = new JLabel("Benutzer");
 		JLabel passwortLabel = new JLabel("Passwort");
@@ -85,9 +130,7 @@ public class GUI {
 		public LoginWindow(String titel){
 			super(titel);
 			
-			this.setSize(256,192);
-			
-			Container form = this.getContentPane();
+			JPanel form = new JPanel();
 			
 			form.setLayout(new MigLayout());
 			
@@ -98,11 +141,31 @@ public class GUI {
 			form.add(passwortField, "wrap");
 			form.add(anmeldenButton);
 			
+			JPanel pU = new JPanel();
+			JButton bU = new JButton("Als User anmelden");
+			bU.addActionListener(new LoginUserUmgehenListener());
+			pU.add(bU);
+			
+			JPanel pM = new JPanel();
+			JButton bM = new JButton("Als Mitarbeiter anmelden");
+			bM.addActionListener(new LoginMitarbeiterUmgehenListener());
+			pM.add(bM);
+			
+			tabbedPane.addTab("Anmelden", null, form, "Anmeldung");
+			tabbedPane.addTab("User", null, pU, "Shortcut User");
+			tabbedPane.addTab("Mitarbeiter", null, pM, "Shortcut Mitarbeiter");
+			
+			tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+			
+			this.getContentPane().add(tabbedPane);
+			
 			anmeldenButton.addActionListener(new LoginButtonListener());
 			
 			this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			
 			this.setLocationRelativeTo(null);
+			
+			this.pack();
 			
 			this.setVisible(true);
 		}
@@ -120,7 +183,8 @@ public class GUI {
 	
 	private class MainWindow extends JFrame {
 		
-		public MainWindow(){
+		public MainWindow(String titel){
+			super(titel);
 			initialize();
 		}
 		
@@ -142,8 +206,7 @@ public class GUI {
 		Artikelverwaltungsfenster artikelverwaltungsfenster;
 			
 		public void initialize() {
-			
-			this.setSize(1024, 512);
+
 			getContentPane().add(main);
 			
 			artikelButton.addActionListener(new MenuButtonsActionListener());
@@ -155,13 +218,17 @@ public class GUI {
 			shopButton.addActionListener(new MenuButtonsActionListener());
 			moduleButtons.add(shopButton);
 			
-			leftArea.add(moduleButtons);
+			leftArea.setLayout(new BorderLayout());
+			
+			leftArea.add(moduleButtons,BorderLayout.NORTH);
 			
 			kundensichtfenster = new Kundensichtfenster();
 			artikelsichtfenster = new Artikelsichtfenster();
 			mitarbeitersichtfenster = new Mitarbeitersichtfenster();
 			
-			leftArea.add(artikelsichtfenster);
+			leftArea.add(artikelsichtfenster,BorderLayout.CENTER);
+			
+			leftArea.add(new JPanel(),BorderLayout.WEST);
 			
 			if(user instanceof Kunde){
 				warenkorbverwaltungsfenster = new Warenkorbverwaltungsfenster();
@@ -171,11 +238,14 @@ public class GUI {
 				rightArea.add(artikelverwaltungsfenster);
 			}
 	
-			main.setDividerLocation((int)(this.getWidth()*0.60));
+			
 			main.setLeftComponent(leftArea);
 			main.setRightComponent(rightArea);
 	
 			this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			
+			this.pack();
+			
 			this.setVisible(true);
 		}
 		
@@ -232,7 +302,7 @@ public class GUI {
 			JTextField sucheField = new JTextField();
 			
 			JPanel leftAreaActionField = new JPanel();
-			JTable auflistung = new JTable();
+			JXTable auflistung = new JXTable();
 			JScrollPane auflistungContainer = new JScrollPane(auflistung);
 			JButton aktion = new JButton();
 			JTextField anzahl = new JTextField(5);
@@ -240,7 +310,6 @@ public class GUI {
 			public Sichtfenster(){
 				
 				this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-				this.setPreferredSize(new Dimension((int)(GUI.MainWindow.this.getWidth()*0.55), (int)(GUI.MainWindow.this.getHeight()*0.8)));
 				
 				overviewButtons.setMaximumSize(new Dimension(1024, 40));
 						
@@ -259,13 +328,19 @@ public class GUI {
 				JTableHeader header = auflistung.getTableHeader();
 				header.setUpdateTableInRealTime(true);
 				header.setReorderingAllowed(false);
-				auflistung.setAutoCreateRowSorter(true);
 	
 				leftAreaActionField.add(aktion);
 				leftAreaActionField.add(anzahl);
 				
 				try {
+					
 					auflistungInitialize();
+
+					//auflistung.setAutoResizeMode(JXTable.AUTO_RESIZE_OFF);
+					//auflistung.packAll();
+					
+					//auflistungContainer.
+					
 				} catch (AccessRestrictedException e) {
 					removeAll();
 					add(new JLabel(e.getMessage()));
@@ -300,6 +375,8 @@ public class GUI {
 						eShop.artikelInWarenkorbLegen(art.getArtikelnummer(),Integer.parseInt(anzahl.getText()), user);
 						
 						warenkorbverwaltungsfenster.warenkorbAufrufen();
+						
+						anzahl.setText("");
 						
 					} catch (NumberFormatException e1) {
 						JOptionPane.showMessageDialog(Sichtfenster.this, "Keine gültige Anzahl!");
@@ -372,7 +449,7 @@ public class GUI {
 				}
 					
 				
-				etm = new eShopTableModel(data, new String[]{"Artikelnummer","Bezeichnung","Preis","Packungsgröße","Bestand"});
+				etm = new eShopTableModel(data, new String[]{"ArtNr.","Bezeichnung","Preis","Einheit","Bestand"});
 				auflistung.setModel(etm);
 			}
 	
@@ -496,6 +573,8 @@ public class GUI {
 		
 		class Artikelverwaltungsfenster extends JPanel{
 			
+			Artikel art;
+			
 			JPanel detailArea = new JPanel();
 			
 			JLabel artNrLabel = new JLabel("Artikelnummer:");
@@ -513,7 +592,8 @@ public class GUI {
 			
 			JButton neuAnlegenButton = new JButton("Neu");
 			JButton aendernButton = new JButton("Ändern");
-			JButton bestandAendernButton = new JButton("Bestand");
+			JButton aendernBestaetigenButton = new JButton("Bestätigen");
+			JButton loeschenButton = new JButton("Löschen");
 			JButton neuAnlegenBestaetigenButton = new JButton("Anlegen");
 			
 			public Artikelverwaltungsfenster(){
@@ -535,15 +615,28 @@ public class GUI {
 				
 				buttons.add(neuAnlegenButton);
 				buttons.add(aendernButton);
-				buttons.add(bestandAendernButton);
+				buttons.add(aendernBestaetigenButton);
+				buttons.add(loeschenButton);
 				buttons.add(neuAnlegenBestaetigenButton);
 				
+				aendernBestaetigenButton.setVisible(false);
 				neuAnlegenBestaetigenButton.setVisible(false);
+				
+				aendernButton.addActionListener(new ArtikelBearbeitenListener());
+				aendernBestaetigenButton.addActionListener(new ArtikelBearbeitenListener());
 				
 				neuAnlegenButton.addActionListener(new ArtikelNeuAnlegenListener());
 				neuAnlegenBestaetigenButton.addActionListener(new ArtikelNeuAnlegenListener());
 				
+				loeschenButton.addActionListener(new ArtikelLoeschenListener());
+				
 				this.add(buttons);
+				
+				artNrField.setEditable(false);
+				bezeichnungField.setEditable(false);
+				preisField.setEditable(false);
+				pkggroesseField.setEditable(false);
+				bestandField.setEditable(false);
 				
 				detailArea.setLayout(new GridLayout(5,2));
 				this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -552,6 +645,8 @@ public class GUI {
 			}
 			
 			public void artikelAnzeigen(Artikel art){
+				this.art = art;
+				
 				artNrField.setText(String.valueOf(art.getArtikelnummer()));
 				bezeichnungField.setText(art.getBezeichnung());
 				preisField.setText(String.valueOf(art.getPreis()));
@@ -568,21 +663,24 @@ public class GUI {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					if (e.getSource().equals(neuAnlegenButton)){
-						//Artikelnummer ausblenden, kann nicht neu angegeben werden
-						artNrLabel.setVisible(false);
-						artNrField.setVisible(false);
 						
-						//Alle Felder leeren
-						bezeichnungField.setText("");
-						preisField.setText("");
-						pkggroesseField.setText("");
-						bestandField.setText("");
-						
-						//Buttons anpassen
-						neuAnlegenButton.setVisible(false);
-						aendernButton.setVisible(false);
-						bestandAendernButton.setVisible(false);
-						neuAnlegenBestaetigenButton.setVisible(true);
+						if(!artNrField.getText().equals("")){
+							//Artikelnummer ausblenden, kann nicht neu angegeben werden
+							artNrLabel.setVisible(false);
+							artNrField.setVisible(false);
+							
+							//Alle Felder leeren
+							bezeichnungField.setText("");
+							preisField.setText("");
+							pkggroesseField.setText("");
+							bestandField.setText("");
+							
+							//Buttons anpassen
+							neuAnlegenButton.setVisible(false);
+							aendernButton.setVisible(false);
+							loeschenButton.setVisible(false);
+							neuAnlegenBestaetigenButton.setVisible(true);
+						}
 						
 					} else if (e.getSource().equals(neuAnlegenBestaetigenButton)){
 						
@@ -614,7 +712,7 @@ public class GUI {
 										//Buttons anpassen
 										neuAnlegenButton.setVisible(true);
 										aendernButton.setVisible(true);
-										bestandAendernButton.setVisible(true);
+										loeschenButton.setVisible(true);
 										neuAnlegenBestaetigenButton.setVisible(false);
 										
 										artikelsichtfenster.auflistungInitialize();
@@ -640,28 +738,146 @@ public class GUI {
 				}
 
 			}
+			
+			public class ArtikelBearbeitenListener implements ActionListener{
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (e.getSource().equals(aendernButton)){
+						
+						if(!artNrField.getText().equals("")){
+							
+							//Felder editierbar machen
+							bezeichnungField.setEditable(true);
+							preisField.setEditable(true);
+							pkggroesseField.setEditable(true);
+							bestandField.setEditable(true);
+							
+							//Buttons anpassen
+							neuAnlegenButton.setVisible(false);
+							aendernButton.setVisible(false);
+							loeschenButton.setVisible(false);
+							aendernBestaetigenButton.setVisible(true);
+							
+						}
+
+					} else if (e.getSource().equals(aendernBestaetigenButton)){
+						
+						String bezeichnung = bezeichnungField.getText();
+						
+						try{
+							
+							int bestand = Integer.parseInt(bestandField.getText());
+							
+							try{
+								
+								double preis = Double.parseDouble(preisField.getText());
+								
+								try{
+									
+									int packungsgroesse = Integer.parseInt(pkggroesseField.getText());
+									
+										
+									try {
+										Artikel art = eShop.artikelSuchen(Integer.parseInt(artNrField.getText()), user);
+										
+										art.setBezeichnung(bezeichnung);
+										art.setBestand(bestand);
+										art.setPreis(preis);
+										if(packungsgroesse > 1){
+											eShop.artikelLoeschen(art, user);
+											art = eShop.erstelleArtikel(bezeichnung, bestand, preis, packungsgroesse, user);
+										}
+										
+										//Neu erstellten  Artikel anzeigen
+										artikelAnzeigen(art);
+										
+										//Buttons anpassen
+										neuAnlegenButton.setVisible(true);
+										aendernButton.setVisible(true);
+										loeschenButton.setVisible(true);
+										neuAnlegenBestaetigenButton.setVisible(false);
+										
+										artikelsichtfenster.auflistungInitialize();
+										
+									} catch (ArticleNonexistantException e1) {
+										JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
+									} catch (AccessRestrictedException e1) {
+										JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
+									} catch (InvalidAmountException e1) {
+										JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
+									}
+									 
+								} catch(NumberFormatException e1){
+									JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, "Keine gültige Packungsgröße");
+								}
+								
+							} catch(NumberFormatException e1){
+								JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, "Kein gültiger Preis!");
+							}
+							
+						} catch(NumberFormatException e1){
+							JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, "Kein gültiger Bestand!");
+						}
+					}
+				}				
+			}
+			
+			public class ArtikelLoeschenListener implements ActionListener{
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					try {
+						
+						eShop.artikelLoeschen(art, user);
+						
+						artNrField.setText("");
+						bezeichnungField.setText("");
+						preisField.setText("");
+						pkggroesseField.setText("");
+						bestandField.setText("");
+						
+						art = null;
+						
+						artikelsichtfenster.auflistungInitialize();
+						
+					} catch (AccessRestrictedException e1) {
+						JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
+					}
+				}
+			}
+			
 		}
 				
 		class Warenkorbverwaltungsfenster extends JPanel{
+			
+			Warenkorb wk;
 			
 			JPanel buttons = new JPanel();
 			
 			JTable warenkorbAuflistung = new JTable();
 			JScrollPane warenkorbAuflistungContainer = new JScrollPane(warenkorbAuflistung);
 			
-			JButton neuAnlegenButton = new JButton("Neu");
-			JButton aendernButton = new JButton("Ändern");
-			JButton bestandAendernButton = new JButton("Bestand");
+			JButton aendernButton = new JButton("Anzahl ändern");
+			JButton artikelEntfernenButton = new JButton("Entfernen");
+			JButton leerenButton = new JButton("Leeren");
+			JButton kaufenButton = new JButton("Kaufen");
 			
 			public Warenkorbverwaltungsfenster(){
 				
 				this.add(new JLabel("Warenkorbverwaltung"));
 				
-				this.add(warenkorbAuflistung);
+				this.add(warenkorbAuflistungContainer);
 				
-				buttons.add(neuAnlegenButton);
+				aendernButton.addActionListener(new WarenkorbActionListener());
+				artikelEntfernenButton.addActionListener(new WarenkorbActionListener());
+				leerenButton.addActionListener(new WarenkorbActionListener());
+				kaufenButton.addActionListener(new WarenkorbActionListener());
+				
 				buttons.add(aendernButton);
-				buttons.add(bestandAendernButton);
+				buttons.add(artikelEntfernenButton);
+				buttons.add(leerenButton);
+				buttons.add(kaufenButton);
 				
 				this.add(buttons);
 				
@@ -669,6 +885,8 @@ public class GUI {
 				header.setUpdateTableInRealTime(true);
 				header.setReorderingAllowed(false);
 				warenkorbAuflistung.setAutoCreateRowSorter(true);
+				
+				warenkorbAuflistung.setModel(new WarenkorbTableModel());
 				
 				this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 				
@@ -681,14 +899,146 @@ public class GUI {
 				warenkorbAuflistung.setModel(new WarenkorbTableModel(inhalt));
 			}
 			
+			class WarenkorbActionListener implements ActionListener{
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					
+					//Anzahl eines Artikels im Warenkorn ändern
+					if (e.getSource().equals(aendernButton)){
+						
+						try {
+							
+							int row = warenkorbAuflistung.getSelectedRow();
+							
+							if (row != -1) {
+							
+								int anz = Integer.parseInt(JOptionPane.showInputDialog("Bitte gewünschte Anzahl angeben"));
+								
+								if (anz > 0){
+	
+									eShop.artikelInWarenkorbAendern(row, anz, user);
+									
+								} else {
+									throw new InvalidAmountException();
+								}
+								
+								wk = eShop.warenkorbAusgeben(user);
+								
+								warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
+								
+							}
+							
+						} catch (ArticleStockNotSufficientException e1) {
+							JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
+						} catch (BasketNonexistantException e1) {
+							JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
+						} catch (AccessRestrictedException e1) {
+							JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
+						} catch (NumberFormatException e1) {
+							JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, "Keine gültige Anzahl!");
+						} catch (InvalidAmountException e1) {
+							JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
+						}
+					
+					//Artikel aus Warenkorb entfernen
+					} else if (e.getSource().equals(artikelEntfernenButton)){
+
+						try {
+							
+							int row = warenkorbAuflistung.getSelectedRow();
+							
+							if (row != -1) {
+							
+								int anz = 0;
+	
+								eShop.artikelInWarenkorbAendern(row, anz, user);
+								
+								wk = eShop.warenkorbAusgeben(user);
+								
+								warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
+								
+							}
+							
+						} catch (ArticleStockNotSufficientException e1) {
+							JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
+						} catch (BasketNonexistantException e1) {
+							JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
+						} catch (AccessRestrictedException e1) {
+							JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
+						}
+						
+						
+					//Warenkorb leeren
+					} else if (e.getSource().equals(leerenButton)){
+						
+						try {
+							
+							eShop.warenkorbLeeren(user);
+							
+							wk = eShop.warenkorbAusgeben(user);
+							
+							warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
+							
+						} catch (AccessRestrictedException e1) {
+							JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
+						}
+						
+						warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
+						
+						
+					//Warenkorb kaufen
+					} else if (e.getSource().equals(kaufenButton)){
+						
+						try {
+
+							//Formatierungsvorlage für Datum
+							DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+							
+							Rechnung re = eShop.warenkorbKaufen(user);
+							
+							artikelsichtfenster.auflistungInitialize();
+							
+							String rechnungsString = "";
+							
+							rechnungsString += "Rechnung" + "\n\n";
+							rechnungsString += dateFormat.format(re.getDatum()) + "\n\n";
+							rechnungsString += "Kundennummer: " + re.getKu().getId() + "\n";
+							rechnungsString += re.getKu().getFirstname() + " " + re.getKu().getLastname() + "\n";
+							rechnungsString += re.getKu().getAddress_Street() + "\n";
+							rechnungsString += re.getKu().getAddress_Zip() + " " + re.getKu().getAddress_Town() + "\n\n";
+							rechnungsString += "Warenkorb" + "\n";
+							rechnungsString += re.getWk().toString() + "\n";
+							rechnungsString += "Gesamtbetrag: " + re.getGesamt() + "€";
+							
+							JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, rechnungsString);
+							
+							wk = eShop.warenkorbAusgeben(user);
+							
+							warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
+							
+						} catch (AccessRestrictedException e1) {
+							JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
+						} catch (InvalidAmountException e1) {
+							JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
+						}
+					}
+					
+				}
+				
+			}
+			
 			class WarenkorbTableModel extends AbstractTableModel{
 				
-				String[] columnIdentifiers = {"Artikel","Preis","Menge","Gesamt"};
+				String[] columns = {"Artikel","Preis","Menge","Gesamt"};
+				
 				Vector<Vector<Object>> dataVector = new Vector<>(0);
+				Vector<String> columnIdentifiers = new Vector<>(0);
 				
 				public WarenkorbTableModel(Map<Artikel,Integer> inhalt) {
 					
-					
+					columnIdentifiers =  setColumns(columns);
+										
 					for(Map.Entry<Artikel, Integer> ent : inhalt.entrySet()){
 						Vector<Object> tmp = new Vector<>(0);
 						
@@ -701,10 +1051,24 @@ public class GUI {
 					}
 				}
 				
+				public WarenkorbTableModel(){
+					columnIdentifiers =  setColumns(columns);
+				}
+				
+				public Vector<String> setColumns(String[] columnNames){
+					Vector<String> columns = new Vector<>();
+					
+					for(String str : columnNames){
+						columns.addElement(str);
+					}
+					
+					return columns;
+				}
+				
 		
 				@Override
 				public int getColumnCount() {
-					return columnIdentifiers.length;
+					return columnIdentifiers.size();
 				}
 		
 				@Override
@@ -719,7 +1083,7 @@ public class GUI {
 				
 				@Override
 				public String getColumnName(int column) {
-					  return columnIdentifiers[column];
+					  return columnIdentifiers.elementAt(column);
 				}
 			}
 			
@@ -737,7 +1101,6 @@ public class GUI {
 					
 					rightArea.removeAll();
 					if(user instanceof Kunde){
-						warenkorbverwaltungsfenster = new Warenkorbverwaltungsfenster();
 						rightArea.add(warenkorbverwaltungsfenster);
 					} else {
 						artikelverwaltungsfenster = new Artikelverwaltungsfenster();

@@ -45,13 +45,15 @@ public class Warenkorb {
 		
 		for(Map.Entry<Artikel, Integer> ent : artikel.entrySet()){
 			
-			if(i == pos-1){
+			if(i == pos){
 				Artikel art = ent.getKey();
-				artikel.remove(ent);
+				artikel.remove(ent.getKey());
 				if (anz > 0){
 					pruefeBestand(art, anz);
 					artikel.put(art, anz);
 				}
+				
+				break;
 			}
 			
 			i++;
@@ -126,5 +128,9 @@ public class Warenkorb {
 			artikel.clear();
 			artikel.put(ent.getKey(), ent.getValue());
 		}
+	}
+	
+	public void copy(Warenkorb wk){
+		artikel.putAll(wk.getArtikel());
 	}
 }

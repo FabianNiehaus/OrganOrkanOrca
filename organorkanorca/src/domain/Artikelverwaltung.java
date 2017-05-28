@@ -192,4 +192,7 @@ public class Artikelverwaltung {
 		
 	}
 	
+	public void loeschen(Artikel art){
+		artikel.remove(art);
+	}
 }

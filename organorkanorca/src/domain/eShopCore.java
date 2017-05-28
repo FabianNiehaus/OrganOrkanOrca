@@ -288,7 +288,7 @@ public class eShopCore {
 			
 			//Warenkorb für Rechnung erzeugen
 			Warenkorb temp = new Warenkorb();
-			temp.setArtikel(wk.getArtikel());
+			temp.copy(wk);
 			
 			//Rechnung erzeugen
 			Rechnung re = rv.rechnungErzeugen((Kunde) p, new Date(), temp, gesamt);
@@ -342,6 +342,14 @@ public class eShopCore {
 			return av.sucheArtikel(bezeichnung);
 		} else {
 			throw new AccessRestrictedException(p, "\"Artikel suchen (Bezeichnung)\"");
+		}
+	}
+	
+	public void artikelLoeschen(Artikel art, Person p) throws AccessRestrictedException{
+		if(istMitarbeiter(p) || istKunde(p)){
+			av.loeschen(art);
+		} else {
+			throw new AccessRestrictedException(p, "\"Artikel suchen (Artikelnummer)\"");
 		}
 	}
 	

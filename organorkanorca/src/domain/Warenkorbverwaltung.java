@@ -96,5 +96,5 @@ public class Warenkorbverwaltung {
 	public Map<Artikel, Integer> getArtikel(Warenkorb wk){
 		return wk.getArtikel();
 	}
-
+	
 }
