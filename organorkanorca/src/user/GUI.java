@@ -2,14 +2,7 @@ package user;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
-
 import org.jdesktop.swingx.JXTable;
 
 import data_objects.Artikel;
@@ -27,23 +20,15 @@ import domain.exceptions.BasketNonexistantException;
 import domain.exceptions.InvalidAmountException;
 import domain.exceptions.LoginFailedException;
 import net.miginfocom.swing.MigLayout;
-import util.IO;
-
 import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Vector;
 
 public class GUI {
