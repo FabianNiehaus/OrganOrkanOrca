@@ -20,6 +20,7 @@ import domain.exceptions.ArticleStockNotSufficientException;
 import domain.exceptions.BasketNonexistantException;
 import domain.exceptions.InvalidAmountException;
 import domain.exceptions.LoginFailedException;
+import domain.exceptions.MaxIDsException;
 import net.miginfocom.swing.MigLayout;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -94,9 +95,70 @@ public class GUI {
 			}
 			mainwindow = new MainWindow("OrganOrkanOrca eShop");
 			loginwindow.dispose();
+		}
+	}
+	
+	private class LoginNeuerNutzerAnlegenListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+			JTextField firstnameField = new JTextField();
+			JTextField lastnameField = new JTextField();
+			JTextField addressStreetField = new JTextField();
+			JTextField addressTownField = new JTextField();
+			JTextField addressZipField = new JTextField();			
+			JTextField passwordField = new JPasswordField();
+			
+			Object[] message = {
+			    "Vorname:", firstnameField,
+			    "Nachname:", lastnameField,
+			    "Straße:", addressStreetField,
+			    "Stadt:", addressTownField,
+			    "PLZ:", addressZipField,
+			    "Passwort:", passwordField
+			};
+
+			int option = JOptionPane.showConfirmDialog(null, message, "Nutzer anlegen", JOptionPane.OK_CANCEL_OPTION);
+			if (option == JOptionPane.OK_OPTION) {
+			   if (!firstnameField.getText().equals("")){
+				   if (!lastnameField.getText().equals("")){
+					   if (!addressStreetField.getText().equals("")){
+						   if (!addressTownField.getText().equals("")){
+							   if (!addressZipField.getText().equals("") && addressZipField.getText().length() == 5){
+								   if (!passwordField.getText().equals("")){
+									   try {
+										   
+											Kunde ku = eShop.erstelleKunde(firstnameField.getText(), 
+														   lastnameField.getText(), 
+														   passwordField.getText(), 
+														   addressStreetField.getText(), 
+														   addressZipField.getText(), 
+														   addressTownField.getText(), 
+														   null);
+											
+											JOptionPane.showMessageDialog(loginwindow, "Benutzer " + ku.getId() + " erfolgreich erstellt");
+											
+										} catch (MaxIDsException e1) {
+											// TODO Auto-generated catch block
+											e1.printStackTrace();
+										} catch (AccessRestrictedException e1) {
+											// TODO Auto-generated catch block
+											e1.printStackTrace();
+										}
+								   }
+							   }
+						   }
+					   }
+				   }
+			   } else {
+				   JOptionPane.showMessageDialog(loginwindow, "Benutzer erstellen fehlgeschlagen");
+			   }
+			} else {
+				JOptionPane.showMessageDialog(loginwindow, "Benutzer erstellen abgebrochen");
+			}
 			
 		}
-
 	}
 	
 	private class LoginWindow extends JFrame {
@@ -112,6 +174,7 @@ public class GUI {
 		JLabel headerLabel = new JLabel("Willkommen bei OrganOrkanOrca");
 		
 		JButton anmeldenButton = new JButton("Login");
+		JButton registrierenButton = new JButton("Registrieren");
 		
 		public LoginWindow(String titel){
 			super(titel);
@@ -126,6 +189,7 @@ public class GUI {
 			form.add(passwortLabel);
 			form.add(passwortField, "wrap");
 			form.add(anmeldenButton);
+			form.add(registrierenButton);
 			
 			JPanel pU = new JPanel();
 			JButton bU = new JButton("Als User anmelden");
@@ -146,6 +210,7 @@ public class GUI {
 			this.getContentPane().add(tabbedPane);
 			
 			anmeldenButton.addActionListener(new LoginButtonListener());
+			registrierenButton.addActionListener(new LoginNeuerNutzerAnlegenListener());
 			
 			this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			
@@ -183,6 +248,7 @@ public class GUI {
 		JButton kundenButton = new JButton("Kunden");
 		JButton mitarbeiterButton = new JButton("Mitarbeiter");
 		JButton shopButton = new JButton("Shop");
+		JButton logoutButton = new JButton("Logout");
 		
 		Kundensichtfenster kundensichtfenster;
 		Artikelsichtfenster artikelsichtfenster;
@@ -203,6 +269,8 @@ public class GUI {
 			moduleButtons.add(mitarbeiterButton);
 			shopButton.addActionListener(new MenuButtonsActionListener());
 			moduleButtons.add(shopButton);
+			logoutButton.addActionListener(new MenuButtonsActionListener());
+			moduleButtons.add(logoutButton);
 			
 			leftArea.setLayout(new BorderLayout());
 			
@@ -1139,6 +1207,9 @@ public class GUI {
 					leftArea.add(new Shopstatistics());
 					leftArea.revalidate();
 					leftArea.repaint();
+				} else if(ae.getSource().equals(logoutButton)){
+					mainwindow.dispose();
+					loginwindow = new LoginWindow("OrganOrkanOrca eShop");
 				}
 				
 			}

@@ -136,7 +136,7 @@ public class eShopCore {
 	 * @throws AccessRestrictedException 
 	 */
 	public Kunde erstelleKunde(String firstname, String lastname, String passwort, String address_Street, String address_Zip, String address_Town, Person p) throws MaxIDsException, AccessRestrictedException{
-		if(istMitarbeiter(p)){
+		if(istMitarbeiter(p) || p == null){
 			return kv.erstelleKunde(firstname, lastname, passwort, address_Street, address_Zip, address_Town, wv.erstelleWarenkorb());
 		} else {
 			throw new AccessRestrictedException(p, "\"Kunde anlegen\"");
