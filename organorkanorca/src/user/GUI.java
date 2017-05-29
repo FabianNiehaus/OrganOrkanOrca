@@ -649,23 +649,30 @@ public class GUI {
 				public void actionPerformed(ActionEvent e) {
 					if (e.getSource().equals(neuAnlegenButton)){
 						
-						if(!artNrField.getText().equals("")){
-							//Artikelnummer ausblenden, kann nicht neu angegeben werden
-							artNrLabel.setVisible(false);
-							artNrField.setVisible(false);
-							
-							//Alle Felder leeren
-							bezeichnungField.setText("");
-							preisField.setText("");
-							pkggroesseField.setText("");
-							bestandField.setText("");
-							
-							//Buttons anpassen
-							neuAnlegenButton.setVisible(false);
-							aendernButton.setVisible(false);
-							loeschenButton.setVisible(false);
-							neuAnlegenBestaetigenButton.setVisible(true);
-						}
+						//Artikelnummer ausblenden, kann nicht neu angegeben werden
+						artNrLabel.setVisible(false);
+						artNrField.setVisible(false);
+						
+						//Alle Felder leeren
+						bezeichnungField.setText("");
+						preisField.setText("");
+						pkggroesseField.setText("");
+						bestandField.setText("");
+						
+						//Felder editierbar machen
+						bezeichnungField.setEditable(true);
+						preisField.setEditable(true);
+						pkggroesseField.setEditable(true);
+						bestandField.setEditable(true);
+						
+						//Buttons anpassen
+						neuAnlegenButton.setVisible(false);
+						aendernButton.setVisible(false);
+						loeschenButton.setVisible(false);
+						neuAnlegenBestaetigenButton.setVisible(true);
+						
+						artikelverwaltungsfenster.repaint();
+
 						
 					} else if (e.getSource().equals(neuAnlegenBestaetigenButton)){
 						
@@ -694,6 +701,12 @@ public class GUI {
 										artNrLabel.setVisible(true);
 										artNrField.setVisible(true);
 										
+										//Felder editierbar machen
+										bezeichnungField.setEditable(false);
+										preisField.setEditable(false);
+										pkggroesseField.setEditable(false);
+										bestandField.setEditable(false);
+										
 										//Buttons anpassen
 										neuAnlegenButton.setVisible(true);
 										aendernButton.setVisible(true);
@@ -701,6 +714,8 @@ public class GUI {
 										neuAnlegenBestaetigenButton.setVisible(false);
 										
 										artikelsichtfenster.auflistungInitialize();
+										
+										artikelverwaltungsfenster.repaint();
 										
 									} catch (AccessRestrictedException e1) {
 										JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
@@ -744,6 +759,8 @@ public class GUI {
 							loeschenButton.setVisible(false);
 							aendernBestaetigenButton.setVisible(true);
 							
+							artikelverwaltungsfenster.repaint();
+							
 						}
 
 					} else if (e.getSource().equals(aendernBestaetigenButton)){
@@ -784,6 +801,8 @@ public class GUI {
 										neuAnlegenBestaetigenButton.setVisible(false);
 										
 										artikelsichtfenster.auflistungInitialize();
+										
+										artikelverwaltungsfenster.repaint();
 										
 									} catch (ArticleNonexistantException e1) {
 										JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
