@@ -1,8 +1,14 @@
 package user;
 
 import javax.swing.*;
+import javax.swing.event.RowSorterEvent;
+import javax.swing.event.RowSorterListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableRowSorter;
+
 import org.jdesktop.swingx.JXTable;
 
 import data_objects.Artikel;
@@ -22,6 +28,8 @@ import domain.exceptions.InvalidAmountException;
 import domain.exceptions.LoginFailedException;
 import domain.exceptions.MaxIDsException;
 import net.miginfocom.swing.MigLayout;
+//import user.GUI.MainWindow.eShopTableModel;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -312,6 +320,7 @@ public class GUI {
 				
 				columnIdentifiers = setColumns(columnNames);
 				dataVector = data;
+				
 			}
 			
 			public Vector<String> setColumns(String[] columnNames){
@@ -372,10 +381,10 @@ public class GUI {
 				this.add(leftAreaActionField);
 							
 				overviewButtons.setLayout(new BoxLayout(overviewButtons, BoxLayout.X_AXIS));
-				alleButton.addActionListener(new ButtonActionListener());
+				alleButton.addActionListener(new TabelleAlleAnzeigenListener());
 				overviewButtons.add(alleButton);
 				overviewButtons.add(sucheField);
-				sucheButton.addActionListener(new ButtonActionListener());
+				sucheButton.addActionListener(new TabelleFilternListener());
 				overviewButtons.add(sucheButton);
 				overviewButtons.setVisible(true);
 				
@@ -403,20 +412,6 @@ public class GUI {
 			}
 			
 			public abstract void auflistungInitialize() throws AccessRestrictedException;
-			
-			public abstract void suche(String suchStr);
-	
-			class ButtonActionListener implements ActionListener {
-	
-				@Override
-				public void actionPerformed(ActionEvent ae) {
-					
-					if (ae.getSource().equals(sucheButton)){
-						suche(sucheField.getText());
-					}
-				}
-				
-			}
 			
 			class ArtikelInWarenkorbListener implements ActionListener{
 
@@ -466,6 +461,31 @@ public class GUI {
 				}
 				
 			}
+			
+			class TabelleFilternListener implements ActionListener{
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+
+					TableRowSorter<eShopTableModel> sorter = (TableRowSorter<eShopTableModel>) auflistung.getRowSorter();
+					
+				    sorter.setRowFilter(RowFilter.regexFilter(sucheField.getText()));
+				    
+				    sorter.setSortsOnUpdates(true);
+				}
+			}
+		
+			class TabelleAlleAnzeigenListener implements ActionListener{
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					try {
+						auflistungInitialize();
+					} catch (AccessRestrictedException e1) {
+						JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
+					}
+				}
+			}
 		}
 		
 		class Artikelsichtfenster extends Sichtfenster{
@@ -511,36 +531,10 @@ public class GUI {
 				
 				etm = new eShopTableModel(data, new String[]{"ArtNr.","Bezeichnung","Preis","Einheit","Bestand"});
 				auflistung.setModel(etm);
-			}
-	
-			@Override
-			public void suche(String suchStr) {
-				/*
-				try {
-					int suchInt = Integer.parseInt(suchStr);
-					try {
-						Artikel art = eShop.artikelSuchen(suchInt, user);
-						auflistung.setText(art.toString());
-					} catch (ArticleNonexistantException ane) {
-						// TODO Exception-Handling
-					} catch (AccessRestrictedException are){
-						// TODO Exception-Handling
-					}
-						
-				} catch (NumberFormatException e) {
-					try {
-						Vector<Artikel> art = eShop.artikelSuchen(suchStr, user);
-						auflistung.setText("");
-						for (Artikel artikel : art) {
-							auflistung.append(artikel.toString() + "\n");
-						}
-					} catch (ArticleNonexistantException ane) {
-						// TODO Exception-Handling
-					} catch (AccessRestrictedException are){
-						// TODO Exception-Handling
-					}
-				}
-				*/
+				
+				TableRowSorter<eShopTableModel> sorter = new TableRowSorter<eShopTableModel>(etm);
+				
+				auflistung.setRowSorter(sorter);
 			}
 		}
 		
@@ -576,14 +570,7 @@ public class GUI {
 				
 				etm = new eShopTableModel(data, new String[]{"Kundennummer","Vorname","Nachname","Straße","PLZ","Ort"});
 				auflistung.setModel(etm);
-			}
-	
-			@Override
-			public void suche(String suchStr) {
-				// TODO Auto-generated method stub
-				
-			}
-			
+			}		
 		}
 		
 		class Mitarbeitersichtfenster extends Sichtfenster{
@@ -615,12 +602,6 @@ public class GUI {
 				
 				etm = new eShopTableModel(data, new String[]{"Mitarbeiternummer","Vorname","Nachname"});
 				auflistung.setModel(etm);
-			}
-	
-			@Override
-			public void suche(String suchStr) {
-				// TODO Auto-generated method stub
-				
 			}
 		}
 		
