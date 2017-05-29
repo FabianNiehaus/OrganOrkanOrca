@@ -15,6 +15,7 @@ import domain.eShopCore;
 import domain.exceptions.LoginFailedException;
 import domain.exceptions.MaxIDsException;
 import domain.exceptions.AccessRestrictedException;
+import domain.exceptions.ArticleAlreadyInBasketException;
 import domain.exceptions.ArticleNonexistantException;
 import domain.exceptions.ArticleStockNotSufficientException;
 import domain.exceptions.BasketNonexistantException;
@@ -242,6 +243,8 @@ public class CUI {
 		} catch (AccessRestrictedException are){
 			IO.println(are.getMessage());
 		} catch (InvalidAmountException e) {
+			IO.println(e.getMessage());
+		} catch (ArticleAlreadyInBasketException e) {
 			IO.println(e.getMessage());
 		}
 	}

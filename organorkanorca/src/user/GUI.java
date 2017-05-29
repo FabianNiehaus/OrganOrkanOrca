@@ -14,6 +14,7 @@ import data_objects.Rechnung;
 import data_objects.Warenkorb;
 import domain.eShopCore;
 import domain.exceptions.AccessRestrictedException;
+import domain.exceptions.ArticleAlreadyInBasketException;
 import domain.exceptions.ArticleNonexistantException;
 import domain.exceptions.ArticleStockNotSufficientException;
 import domain.exceptions.BasketNonexistantException;
@@ -373,6 +374,10 @@ public class GUI {
 						JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
 					} catch (InvalidAmountException e1) {
 						JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
+					} catch (ArrayIndexOutOfBoundsException e1){
+						JOptionPane.showMessageDialog(Sichtfenster.this, "Kein Artikel ausgewählt");
+					} catch (ArticleAlreadyInBasketException e1){
+						JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
 					}
 				}
 			}
@@ -387,6 +392,8 @@ public class GUI {
 						JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
 					} catch (AccessRestrictedException e1) {
 						JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
+					} catch (ArrayIndexOutOfBoundsException e1){
+						JOptionPane.showMessageDialog(Sichtfenster.this, "Kein Artikel ausgewählt");
 					}
 				}
 				
@@ -795,11 +802,11 @@ public class GUI {
 										artikelAnzeigen(art);
 										
 										//Buttons anpassen
+										aendernBestaetigenButton.setVisible(false);
 										neuAnlegenButton.setVisible(true);
 										aendernButton.setVisible(true);
 										loeschenButton.setVisible(true);
-										neuAnlegenBestaetigenButton.setVisible(false);
-										
+
 										artikelsichtfenster.auflistungInitialize();
 										
 										artikelverwaltungsfenster.repaint();

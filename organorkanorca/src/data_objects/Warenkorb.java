@@ -3,6 +3,7 @@ package data_objects;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import domain.exceptions.ArticleAlreadyInBasketException;
 import domain.exceptions.ArticleStockNotSufficientException;
 
 /**
@@ -64,14 +65,17 @@ public class Warenkorb {
 	 * Legt einen Artikel im Warenkorb ab
 	 * @param art Gewünschter Artikel
 	 * @param anz Gewünschte Anzahl (muss größer 0 sein)
+	 * @throws ArticleAlreadyInBasketException 
 	 * @throws Nicht genug Artikel auf Lager
 	 */
-	public void speichereArtikel(Artikel art, int anz) throws ArticleStockNotSufficientException{
+	public void speichereArtikel(Artikel art, int anz) throws ArticleStockNotSufficientException, ArticleAlreadyInBasketException{
 		if(!sucheArtikel(art)){
 			if(anz > 0){
 				pruefeBestand(art, anz);
 				artikel.put(art, anz);
 			} 
+		} else {
+			throw new ArticleAlreadyInBasketException(art.getBezeichnung());
 		}
 	}
 	

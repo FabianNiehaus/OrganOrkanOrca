@@ -17,6 +17,7 @@ import domain.exceptions.LoginFailedException;
 import domain.exceptions.MaxIDsException;
 import domain.exceptions.PersonNonexistantException;
 import domain.exceptions.AccessRestrictedException;
+import domain.exceptions.ArticleAlreadyInBasketException;
 import domain.exceptions.ArticleNonexistantException;
 import domain.exceptions.ArticleStockNotSufficientException;
 import domain.exceptions.BasketNonexistantException;
@@ -193,8 +194,9 @@ public class eShopCore {
 	 * @throws ArticleStockNotSufficientException Artikelbestand nicht ausreichend
 	 * @throws AccessRestrictedException 
 	 * @throws InvalidAmountException 
+	 * @throws ArticleAlreadyInBasketException 
 	 */
-	public void artikelInWarenkorbLegen(int artikelnummer, int anzahl, Person p) throws ArticleNonexistantException, ArticleStockNotSufficientException, AccessRestrictedException, InvalidAmountException{
+	public void artikelInWarenkorbLegen(int artikelnummer, int anzahl, Person p) throws ArticleNonexistantException, ArticleStockNotSufficientException, AccessRestrictedException, InvalidAmountException, ArticleAlreadyInBasketException{
 		if(istKunde(p)){
 			Warenkorb wk = kv.gibWarenkorbVonKunde(p);
 	

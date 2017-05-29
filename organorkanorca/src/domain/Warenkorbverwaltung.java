@@ -3,6 +3,7 @@ package domain;
 import java.util.Map;
 import java.util.Vector;
 import data_objects.*;
+import domain.exceptions.ArticleAlreadyInBasketException;
 import domain.exceptions.ArticleStockNotSufficientException;
 import domain.exceptions.BasketNonexistantException;
 
@@ -68,8 +69,9 @@ public class Warenkorbverwaltung {
 	 * @param art Hinzuzufügender Artikel
 	 * @param anz Anzahl des Artikels
 	 * @throws ArticleStockNotSufficientException 
+	 * @throws ArticleAlreadyInBasketException 
 	 */
-	public void legeInWarenkorb(Warenkorb wk, Artikel art, int anz) throws ArticleStockNotSufficientException{
+	public void legeInWarenkorb(Warenkorb wk, Artikel art, int anz) throws ArticleStockNotSufficientException, ArticleAlreadyInBasketException{
 		wk.speichereArtikel(art, anz);
 	}
 	
