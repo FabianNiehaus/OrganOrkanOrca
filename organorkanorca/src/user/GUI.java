@@ -262,6 +262,7 @@ public class GUI {
 		Kundensichtfenster kundensichtfenster;
 		Artikelsichtfenster artikelsichtfenster;
 		Mitarbeitersichtfenster mitarbeitersichtfenster;
+		Shopstatistics shopstatistics;
 		
 		Warenkorbverwaltungsfenster warenkorbverwaltungsfenster;
 		Artikelverwaltungsfenster artikelverwaltungsfenster;
@@ -289,6 +290,7 @@ public class GUI {
 			kundensichtfenster = new Kundensichtfenster();
 			artikelsichtfenster = new Artikelsichtfenster();
 			mitarbeitersichtfenster = new Mitarbeitersichtfenster();
+			shopstatistics = new Shopstatistics();
 			
 			leftArea.add(artikelsichtfenster,BorderLayout.CENTER);
 			
@@ -1154,21 +1156,21 @@ public class GUI {
 			Kunde ku;
 			
 			JPanel detailArea = new JPanel();
-			
+
 			JLabel kuNrLabel = new JLabel("Kundennummer:");
-			JTextField kuNrField = new JTextField();
+			JTextField kuNrField = new JTextField(15);
 			JLabel vornameLabel = new JLabel("Vorname:");
-			JTextField vornameField = new JTextField();
+			JTextField vornameField = new JTextField(15);
 			JLabel nachnameLabel = new JLabel("Nachname:");
-			JTextField nachnameField = new JTextField();
+			JTextField nachnameField = new JTextField(15);
 			JLabel strasseLabel = new JLabel("Straße:");
-			JTextField strasseField = new JTextField();
+			JTextField strasseField = new JTextField(15);
 			JLabel ortLabel = new JLabel("Stadt");
-			JTextField ortField = new JTextField();
+			JTextField ortField = new JTextField(15);
 			JLabel zipLabel = new JLabel("PLZ:");
-			JTextField zipField = new JTextField();
+			JTextField zipField = new JTextField(15);
 			JLabel passwordLabel = new JLabel("Passwort:");
-			JTextField passwordField = new JTextField("*********");
+			JTextField passwordField = new JTextField("*********",15);
 			
 			JPanel buttons = new JPanel();
 			
@@ -1180,24 +1182,28 @@ public class GUI {
 			
 			public Kundenverwaltungsfenster(){
 				
-				this.add(new JLabel("Artikelverwaltung"));
+				this.setLayout(new MigLayout());
+				
+				detailArea.setLayout(new MigLayout());
+				
+				detailArea.add(new JLabel("Kundenverwaltung"), "span 2, align center, wrap");
 				
 				detailArea.add(kuNrLabel);
-				detailArea.add(kuNrField);
+				detailArea.add(kuNrField, "wrap");
 				detailArea.add(vornameLabel);
-				detailArea.add(vornameField);
+				detailArea.add(vornameField, "wrap");
 				detailArea.add(nachnameLabel);
-				detailArea.add(nachnameField);
+				detailArea.add(nachnameField, "wrap");
 				detailArea.add(strasseLabel);
-				detailArea.add(strasseField);
+				detailArea.add(strasseField, "wrap");
 				detailArea.add(ortLabel);
-				detailArea.add(ortField);
+				detailArea.add(ortField, "wrap");
 				detailArea.add(zipLabel);
-				detailArea.add(zipField);
+				detailArea.add(zipField, "wrap");
 				detailArea.add(passwordLabel);
 				detailArea.add(passwordField);
 				
-				this.add(detailArea);
+				this.add(detailArea, "wrap");
 				
 				buttons.add(neuAnlegenButton);
 				buttons.add(aendernButton);
@@ -1217,7 +1223,7 @@ public class GUI {
 				
 				loeschenButton.addActionListener(new ArtikelLoeschenListener());
 				
-				this.add(buttons);
+				this.add(buttons, "align center");
 				
 				kuNrField.setEditable(false);
 				vornameField.setEditable(false);
@@ -1226,9 +1232,6 @@ public class GUI {
 				ortField.setEditable(false);
 				zipField.setEditable(false);
 				passwordField.setEditable(false);
-				
-				detailArea.setLayout(new GridLayout(5,2));
-				this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 				
 				this.setVisible(true);
 			}
@@ -1441,9 +1444,14 @@ public class GUI {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				if (ae.getSource().equals(artikelButton)){
-					leftArea.remove(leftArea.getComponent(1));
-					leftArea.add(artikelsichtfenster);
-					leftArea.revalidate();					
+
+					leftArea.remove(kundensichtfenster);
+					leftArea.remove(mitarbeitersichtfenster);
+					leftArea.remove(shopstatistics);
+					
+					leftArea.add(artikelsichtfenster,BorderLayout.CENTER);
+					
+					//leftArea.revalidate();					
 					leftArea.repaint();
 					
 					rightArea.removeAll();
@@ -1455,42 +1463,79 @@ public class GUI {
 						rightArea.add(artikelverwaltungsfenster);
 					}
 					
-					rightArea.revalidate();
+					//rightArea.revalidate();
 					rightArea.repaint();
 					
 					mainwindow.pack();
 					
 				} else if (ae.getSource().equals(kundenButton)) {
-					leftArea.remove(leftArea.getComponent(1));
-					leftArea.add(kundensichtfenster);
-					leftArea.revalidate();
-					leftArea.repaint();
 					
-					rightArea.removeAll();
-					kundenverwaltungsfenster = new Kundenverwaltungsfenster();
-					rightArea.add(kundenverwaltungsfenster);
-					
-					mainwindow.pack();
+					if (user instanceof Mitarbeiter) {
+						
+						leftArea.remove(artikelsichtfenster);
+						leftArea.remove(mitarbeitersichtfenster);
+						leftArea.remove(shopstatistics);
+						
+						leftArea.add(kundensichtfenster,BorderLayout.CENTER);
+						
+						//leftArea.revalidate();
+						leftArea.repaint();
+						
+						rightArea.removeAll();
+						kundenverwaltungsfenster = new Kundenverwaltungsfenster();
+						rightArea.add(kundenverwaltungsfenster);
+						
+						mainwindow.pack();
+						
+					} else {
+						
+						JOptionPane.showMessageDialog(mainwindow, "Kein Zugriff!");
+						
+					}
 					
 				} else if (ae.getSource().equals(mitarbeiterButton)) {
-					leftArea.remove(leftArea.getComponent(1));
-					leftArea.add(mitarbeitersichtfenster);
 					
-					leftArea.revalidate();
-					leftArea.repaint();
+					if (user instanceof Mitarbeiter) {
+						
+						leftArea.remove(artikelsichtfenster);
+						leftArea.remove(kundensichtfenster);
+						leftArea.remove(shopstatistics);
+						
+						leftArea.add(mitarbeitersichtfenster,BorderLayout.CENTER);
+						
+						//leftArea.revalidate();
+						leftArea.repaint();
+						
+						rightArea.removeAll();
+						
+						mainwindow.pack();
 					
-					rightArea.removeAll();
-					
-					mainwindow.pack();
+					} else {
+						
+						JOptionPane.showMessageDialog(mainwindow, "Kein Zugriff!");
+						
+					}
 					
 				} else if (ae.getSource().equals(shopButton)) {
-					leftArea.remove(leftArea.getComponent(1));
-					leftArea.add(new Shopstatistics());
 					
-					leftArea.revalidate();
-					leftArea.repaint();
+					if (user instanceof Mitarbeiter) {
 					
-					mainwindow.pack();
+						leftArea.remove(artikelsichtfenster);
+						leftArea.remove(kundensichtfenster);
+						leftArea.remove(mitarbeitersichtfenster);
+						
+						leftArea.add(shopstatistics,BorderLayout.CENTER);
+						
+						//leftArea.revalidate();
+						leftArea.repaint();
+						
+						mainwindow.pack();
+						
+					} else {
+						
+						JOptionPane.showMessageDialog(mainwindow, "Kein Zugriff!");
+						
+					}
 					
 				} else if(ae.getSource().equals(logoutButton)){
 					mainwindow.dispose();
