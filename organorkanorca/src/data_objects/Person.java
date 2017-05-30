@@ -3,6 +3,8 @@
  */
 package data_objects;
 
+import domain.exceptions.InvalidPersonDataException;
+
 /**
  * @author Fabian Niehaus
  *
@@ -18,8 +20,9 @@ public abstract class Person {
 	 * @param firstname Vorname
 	 * @param lastname Nachname
 	 * @param id Eindeutige Identifikationsnummer
+	 * @throws InvalidPersonDataException 
 	 */
-	public Person(String firstname, String lastname, int id, String passwort) {
+	public Person(String firstname, String lastname, int id, String passwort) throws InvalidPersonDataException {
 		super();
 		this.firstname = firstname;
 		this.lastname = lastname;
@@ -36,9 +39,14 @@ public abstract class Person {
 
 	/**
 	 * @param firstname
+	 * @throws InvalidPersonDataException 
 	 */
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
+	public void setFirstname(String firstname) throws InvalidPersonDataException {
+		if(!firstname.equals("")){
+			this.firstname = firstname;
+		} else {
+			throw new InvalidPersonDataException(0, firstname); 
+		}
 	}
 
 	/**
@@ -50,9 +58,14 @@ public abstract class Person {
 
 	/**
 	 * @param lastname
+	 * @throws InvalidPersonDataException 
 	 */
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
+	public void setLastname(String lastname) throws InvalidPersonDataException {
+		if(!lastname.equals("")){
+			this.lastname = lastname;
+		} else {
+			throw new InvalidPersonDataException(1, firstname); 
+		}
 	}
 
 	/**
@@ -78,8 +91,13 @@ public abstract class Person {
 
 	/**
 	 * @param passwort
+	 * @throws InvalidPersonDataException 
 	 */
-	public void setPasswort(String passwort) {
-		this.passwort = passwort;
+	public void setPasswort(String passwort) throws InvalidPersonDataException {
+		if(!passwort.equals("")){
+			this.passwort = passwort;
+		} else {
+			throw new InvalidPersonDataException(6, ""); 
+		}
 	}
 }

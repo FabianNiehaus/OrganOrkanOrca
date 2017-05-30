@@ -22,6 +22,7 @@ import domain.exceptions.ArticleNonexistantException;
 import domain.exceptions.ArticleStockNotSufficientException;
 import domain.exceptions.BasketNonexistantException;
 import domain.exceptions.InvalidAmountException;
+import domain.exceptions.InvalidPersonDataException;
 
 /**
  * @author Fabian Niehaus
@@ -134,8 +135,9 @@ public class eShopCore {
 	 * @param firstname Vorname des anzulegenden Kunden
 	 * @param lastname Nachname des anzulegenden Kunden
 	 * @throws AccessRestrictedException 
+	 * @throws InvalidPersonDataException 
 	 */
-	public Kunde erstelleKunde(String firstname, String lastname, String passwort, String address_Street, String address_Zip, String address_Town, Person p) throws MaxIDsException, AccessRestrictedException{
+	public Kunde erstelleKunde(String firstname, String lastname, String passwort, String address_Street, String address_Zip, String address_Town, Person p) throws MaxIDsException, AccessRestrictedException, InvalidPersonDataException{
 		if(istMitarbeiter(p) || p == null){
 			return kv.erstelleKunde(firstname, lastname, passwort, address_Street, address_Zip, address_Town, wv.erstelleWarenkorb());
 		} else {
@@ -348,10 +350,18 @@ public class eShopCore {
 	}
 	
 	public void artikelLoeschen(Artikel art, Person p) throws AccessRestrictedException{
-		if(istMitarbeiter(p) || istKunde(p)){
+		if(istMitarbeiter(p)){
 			av.loeschen(art);
 		} else {
 			throw new AccessRestrictedException(p, "\"Artikel suchen (Artikelnummer)\"");
+		}
+	}
+	
+	public void kundeLoeschen(Kunde ku, Person p) throws AccessRestrictedException {
+		if(istMitarbeiter(p)){
+			kv.loescheKunde(ku);
+		} else {
+			throw new AccessRestrictedException(p, "Kunde löschen");
 		}
 	}
 	

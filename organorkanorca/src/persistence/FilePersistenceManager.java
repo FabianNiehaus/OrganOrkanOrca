@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Vector;
 
 import data_objects.*;
+import domain.exceptions.InvalidPersonDataException;
 
 /**
  * @author teschke
@@ -215,8 +216,9 @@ public class FilePersistenceManager implements PersistenceManager {
 	
 	/**
 	 * @author Mathis M�hlenkamp
+	 * @throws InvalidPersonData 
 	 */
-	public Mitarbeiter ladeMitarbeiter() throws IOException {
+	public Mitarbeiter ladeMitarbeiter() throws IOException, InvalidPersonDataException {
 
 		int id = 0;
 		String firstname = "";

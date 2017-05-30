@@ -16,22 +16,22 @@ public class Mitarbeiterverwaltung {
 	// Persistenz-Schnittstelle, die f�r die Details des Dateizugriffs verantwortlich ist
 	private PersistenceManager pm = new FilePersistenceManager();
 	
-	public Mitarbeiterverwaltung(){
-		mitarbeiter.add(new Mitarbeiter("Mathis", "Möhlenkamp", 9000, "test2"));
-	}
-	
 	public void liesDaten(String datei) throws IOException {
 		// PersistenzManager f�r Lesevorgänge öffnen
 		pm.openForReading(datei);
 
-		Mitarbeiter mi;
+		Mitarbeiter mi = null;
 		do {
 			// Mitarbeiter-Objekt einlesen
-			mi = pm.ladeMitarbeiter();
-			
-			if (mi!= null) {
-				// Mitarbeiter in Mitarbeiterliste einfügen
-				einfuegen(mi);
+			try {
+				mi = pm.ladeMitarbeiter();
+				if (mi!= null) {
+					// Mitarbeiter in Mitarbeiterliste einfügen
+					einfuegen(mi);
+				}
+			} catch (InvalidPersonDataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		} while (mi != null);
 

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Vector;
 
 import data_objects.*;
+import domain.exceptions.InvalidPersonDataException;
 
 /**
  * @author teschke
@@ -76,9 +77,10 @@ public interface PersistenceManager {
 	 * Methode zum Einlesen der Mitarbeiterdaten aus einer externen Datenqulle.
 	 * 
 	 * @return Mitarbeiter-Objekt, wenn Einlesen erfolgreich, false null
+	 * @throws InvalidPersonData 
 	 * 
 	 */
-	public Mitarbeiter ladeMitarbeiter() throws IOException;
+	public Mitarbeiter ladeMitarbeiter() throws IOException, InvalidPersonDataException;
 	
 	/**
 	 * Methode zum Schreiben der Mitarbeiterdaten in eine externe Datenquelle.

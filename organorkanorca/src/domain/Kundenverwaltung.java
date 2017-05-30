@@ -7,6 +7,7 @@ import java.util.Vector;
 import data_objects.Kunde;
 import data_objects.Person;
 import data_objects.Warenkorb;
+import domain.exceptions.InvalidPersonDataException;
 import domain.exceptions.LoginFailedException;
 
 import domain.exceptions.MaxIDsException;
@@ -51,6 +52,9 @@ public class Kundenverwaltung {
 			} while (ku.getId() != 0);
 		} catch (NullPointerException npe){
 			
+		} catch (InvalidPersonDataException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		// Persistenz-Schnittstelle wieder schließen
@@ -145,8 +149,9 @@ public class Kundenverwaltung {
 	 * @param wk Zugeordneter Warenkorb
 	 * @return
 	 * @throws MaxIDsException
+	 * @throws InvalidPersonData 
 	 */
-	public Kunde erstelleKunde(String firstname, String lastname, String passwort, String address_Street, String address_Zip, String address_Town, Warenkorb wk) throws MaxIDsException {
+	public Kunde erstelleKunde(String firstname, String lastname, String passwort, String address_Street, String address_Zip, String address_Town, Warenkorb wk) throws MaxIDsException, InvalidPersonDataException {
 		Kunde ku = new Kunde(firstname, lastname, getNextID(), passwort, address_Street, address_Zip, address_Town, wk);
 		kunden.add(ku);
 		return ku;

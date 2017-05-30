@@ -25,6 +25,7 @@ import domain.exceptions.ArticleNonexistantException;
 import domain.exceptions.ArticleStockNotSufficientException;
 import domain.exceptions.BasketNonexistantException;
 import domain.exceptions.InvalidAmountException;
+import domain.exceptions.InvalidPersonDataException;
 import domain.exceptions.LoginFailedException;
 import domain.exceptions.MaxIDsException;
 import net.miginfocom.swing.MigLayout;
@@ -148,11 +149,11 @@ public class GUI {
 											JOptionPane.showMessageDialog(loginwindow, "Benutzer " + ku.getId() + " erfolgreich erstellt");
 											
 										} catch (MaxIDsException e1) {
-											// TODO Auto-generated catch block
-											e1.printStackTrace();
+											JOptionPane.showMessageDialog(loginwindow, e1.getMessage());
 										} catch (AccessRestrictedException e1) {
-											// TODO Auto-generated catch block
-											e1.printStackTrace();
+											JOptionPane.showMessageDialog(loginwindow, e1.getMessage());
+										} catch (InvalidPersonDataException e1) {
+											JOptionPane.showMessageDialog(loginwindow, e1.getMessage());
 										}
 								   }
 							   }
@@ -264,6 +265,7 @@ public class GUI {
 		
 		Warenkorbverwaltungsfenster warenkorbverwaltungsfenster;
 		Artikelverwaltungsfenster artikelverwaltungsfenster;
+		Kundenverwaltungsfenster kundenverwaltungsfenster;
 			
 		public void initialize() {
 
@@ -359,8 +361,6 @@ public class GUI {
 			
 			JPanel overviewButtons = new JPanel();
 			JButton alleButton = new JButton("Alle");
-			JButton sortNrButton = new JButton("Sort. Nr.");
-			JButton sortBezButton = new JButton("Sort. Bez.");
 			JButton sucheButton = new JButton("Suche");
 			JTextField sucheField = new JTextField();
 			
@@ -1149,6 +1149,293 @@ public class GUI {
 			
 		}
 		
+		class Kundenverwaltungsfenster extends JPanel{
+			
+			Kunde ku;
+			
+			JPanel detailArea = new JPanel();
+			
+			JLabel kuNrLabel = new JLabel("Kundennummer:");
+			JTextField kuNrField = new JTextField();
+			JLabel vornameLabel = new JLabel("Vorname:");
+			JTextField vornameField = new JTextField();
+			JLabel nachnameLabel = new JLabel("Nachname:");
+			JTextField nachnameField = new JTextField();
+			JLabel strasseLabel = new JLabel("Straße:");
+			JTextField strasseField = new JTextField();
+			JLabel ortLabel = new JLabel("Stadt");
+			JTextField ortField = new JTextField();
+			JLabel zipLabel = new JLabel("PLZ:");
+			JTextField zipField = new JTextField();
+			JLabel passwordLabel = new JLabel("Passwort:");
+			JTextField passwordField = new JTextField("*********");
+			
+			JPanel buttons = new JPanel();
+			
+			JButton neuAnlegenButton = new JButton("Neu");
+			JButton aendernButton = new JButton("Ändern");
+			JButton aendernBestaetigenButton = new JButton("Bestätigen");
+			JButton loeschenButton = new JButton("Löschen");
+			JButton neuAnlegenBestaetigenButton = new JButton("Anlegen");
+			
+			public Kundenverwaltungsfenster(){
+				
+				this.add(new JLabel("Artikelverwaltung"));
+				
+				detailArea.add(kuNrLabel);
+				detailArea.add(kuNrField);
+				detailArea.add(vornameLabel);
+				detailArea.add(vornameField);
+				detailArea.add(nachnameLabel);
+				detailArea.add(nachnameField);
+				detailArea.add(strasseLabel);
+				detailArea.add(strasseField);
+				detailArea.add(ortLabel);
+				detailArea.add(ortField);
+				detailArea.add(zipLabel);
+				detailArea.add(zipField);
+				detailArea.add(passwordLabel);
+				detailArea.add(passwordField);
+				
+				this.add(detailArea);
+				
+				buttons.add(neuAnlegenButton);
+				buttons.add(aendernButton);
+				buttons.add(aendernBestaetigenButton);
+				buttons.add(loeschenButton);
+				buttons.add(neuAnlegenBestaetigenButton);
+				
+				aendernBestaetigenButton.setVisible(false);
+				neuAnlegenBestaetigenButton.setVisible(false);
+				
+				aendernButton.addActionListener(new KundeBearbeitenListener());
+				aendernBestaetigenButton.addActionListener(new KundeBearbeitenListener());
+				
+				
+				neuAnlegenButton.addActionListener(new KundeNeuAnlegenListener());
+				neuAnlegenBestaetigenButton.addActionListener(new KundeNeuAnlegenListener());
+				
+				loeschenButton.addActionListener(new ArtikelLoeschenListener());
+				
+				this.add(buttons);
+				
+				kuNrField.setEditable(false);
+				vornameField.setEditable(false);
+				nachnameField.setEditable(false);
+				strasseField.setEditable(false);
+				ortField.setEditable(false);
+				zipField.setEditable(false);
+				passwordField.setEditable(false);
+				
+				detailArea.setLayout(new GridLayout(5,2));
+				this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+				
+				this.setVisible(true);
+			}
+			
+			public void kundeAnzeigen(Kunde ku){
+				this.ku = ku;
+				
+				kuNrField.setText(String.valueOf(ku.getId()));
+				vornameField.setText(ku.getLastname());
+				nachnameField.setText(ku.getLastname());
+				strasseField.setText(ku.getAddress_Street());
+				ortField.setText(ku.getAddress_Town());
+				zipField.setText(ku.getAddress_Zip());
+			}
+			
+			public class KundeBearbeitenListener implements ActionListener{
+			
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if (e.getSource().equals(aendernButton)){
+							
+							if(!kuNrField.getText().equals("")){
+								
+								//Felder editierbar machen
+								vornameField.setEditable(true);
+								nachnameField.setEditable(true);
+								strasseField.setEditable(true);
+								ortField.setEditable(true);
+								zipField.setEditable(true);
+								passwordField.setEditable(true);
+								
+								//Buttons anpassen
+								neuAnlegenButton.setVisible(false);
+								aendernButton.setVisible(false);
+								loeschenButton.setVisible(false);
+								aendernBestaetigenButton.setVisible(true);
+								
+								artikelverwaltungsfenster.repaint();
+								
+							}
+			
+						} else if (e.getSource().equals(aendernBestaetigenButton)){
+							try {
+								String firstname = vornameField.getText();
+								String lastname = nachnameField.getText();
+								String address_Street = strasseField.getText();
+								String address_Town = ortField.getText();
+								String address_Zip = zipField.getText();
+								String passwort = passwordField.getText();
+				
+								ku.setFirstname(firstname);
+								ku.setLastname(lastname);
+								ku.setAddress_Street(address_Street);
+								ku.setAddress_Town(address_Town);
+								ku.setAddress_Zip(address_Zip);
+							
+								//Bearbeiteten Kunden anzeigen
+								kundeAnzeigen(ku);
+								
+								//Buttons anpassen
+								aendernBestaetigenButton.setVisible(false);
+								neuAnlegenButton.setVisible(true);
+								aendernButton.setVisible(true);
+								loeschenButton.setVisible(true);
+				
+								kundensichtfenster.auflistungInitialize();
+								
+								kundenverwaltungsfenster.repaint();
+								
+							} catch (InvalidPersonDataException e1) {
+		
+								JOptionPane.showMessageDialog(kundenverwaltungsfenster, e1.getMessage());
+								
+								kundeAnzeigen(ku);
+								
+							} catch (AccessRestrictedException e1) {
+								JOptionPane.showMessageDialog(kundenverwaltungsfenster, e1.getMessage());
+							}
+			
+					}				
+				}
+				
+			}
+		
+		
+		
+		
+			public class KundeNeuAnlegenListener implements ActionListener{
+		
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (e.getSource().equals(neuAnlegenButton)){
+						
+						//Kundennummer ausblenden, kann nicht neu angegeben werden
+						//kuNrLabel.setVisible(false);
+						//kuNrField.setVisible(false);
+						
+						//Alle Felder leeren
+						kuNrField.setText("");
+						vornameField.setText("");
+						nachnameField.setText("");
+						strasseField.setText("");
+						ortField.setText("");
+						zipField.setText("");
+						passwordField.setText("");
+						
+						//Felder editierbar machen
+						vornameField.setEditable(true);
+						nachnameField.setEditable(true);
+						strasseField.setEditable(true);
+						ortField.setEditable(true);
+						zipField.setEditable(true);
+						passwordField.setEditable(true);
+						
+						//Buttons anpassen
+						neuAnlegenButton.setVisible(false);
+						aendernButton.setVisible(false);
+						loeschenButton.setVisible(false);
+						neuAnlegenBestaetigenButton.setVisible(true);
+						
+						kundenverwaltungsfenster.repaint();
+		
+						
+					} else if (e.getSource().equals(neuAnlegenBestaetigenButton)){
+						
+						try {
+							String firstname = vornameField.getText();
+							String lastname = nachnameField.getText();
+							String address_Street = strasseField.getText();
+							String address_Town = ortField.getText();
+							String address_Zip = zipField.getText();
+							String passwort = passwordField.getText();
+										
+							Kunde ku = eShop.erstelleKunde(firstname, lastname, passwort, address_Street, address_Zip, address_Town, user);
+							 
+							//Neu erstellten  Artikel anzeigen
+							kundeAnzeigen(ku);
+							
+							//Artikelnummer wieder anzeigen
+							//artNrLabel.setVisible(true);
+							//artNrField.setVisible(true);
+							
+							//Felder nicht editierbar machen
+							vornameField.setEditable(false);
+							nachnameField.setEditable(false);
+							strasseField.setEditable(false);
+							ortField.setEditable(false);
+							zipField.setEditable(false);
+							passwordField.setEditable(false);
+							
+							//Buttons anpassen
+							neuAnlegenButton.setVisible(true);
+							aendernButton.setVisible(true);
+							loeschenButton.setVisible(true);
+							neuAnlegenBestaetigenButton.setVisible(false);
+							
+							kundensichtfenster.auflistungInitialize();
+							
+							kundenverwaltungsfenster.repaint();
+							
+						} catch (InvalidPersonDataException e1){
+							
+							JOptionPane.showMessageDialog(kundenverwaltungsfenster, e1.getMessage());
+							
+							kuNrField.setText("");
+							vornameField.setText("");
+							nachnameField.setText("");
+							strasseField.setText("");
+							ortField.setText("");
+							zipField.setText("");
+							passwordField.setText("");
+						} catch (AccessRestrictedException e1) {
+							JOptionPane.showMessageDialog(kundenverwaltungsfenster, e1.getMessage());
+						} catch (MaxIDsException e1) {
+							JOptionPane.showMessageDialog(kundenverwaltungsfenster, e1.getMessage());
+						}	
+					}
+				}
+			}
+		
+			public class ArtikelLoeschenListener implements ActionListener{
+			
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					try {
+						
+						eShop.kundeLoeschen(ku, user);
+						
+						kuNrField.setText("");
+						vornameField.setText("");
+						nachnameField.setText("");
+						strasseField.setText("");
+						ortField.setText("");
+						zipField.setText("");
+						passwordField.setText("");
+						
+						ku = null;
+						
+						kundensichtfenster.auflistungInitialize();
+						
+					} catch (AccessRestrictedException e1) {
+						JOptionPane.showMessageDialog(kundensichtfenster, e1.getMessage());
+					}
+				}
+			}
+		}
+
 		class MenuButtonsActionListener implements ActionListener{
 	
 			@Override
@@ -1160,14 +1447,18 @@ public class GUI {
 					leftArea.repaint();
 					
 					rightArea.removeAll();
+					
 					if(user instanceof Kunde){
 						rightArea.add(warenkorbverwaltungsfenster);
 					} else {
 						artikelverwaltungsfenster = new Artikelverwaltungsfenster();
 						rightArea.add(artikelverwaltungsfenster);
 					}
+					
 					rightArea.revalidate();
 					rightArea.repaint();
+					
+					mainwindow.pack();
 					
 				} else if (ae.getSource().equals(kundenButton)) {
 					leftArea.remove(leftArea.getComponent(1));
@@ -1176,18 +1467,31 @@ public class GUI {
 					leftArea.repaint();
 					
 					rightArea.removeAll();
-					// TODO Kundenverwaltungsfenster
+					kundenverwaltungsfenster = new Kundenverwaltungsfenster();
+					rightArea.add(kundenverwaltungsfenster);
+					
+					mainwindow.pack();
 					
 				} else if (ae.getSource().equals(mitarbeiterButton)) {
 					leftArea.remove(leftArea.getComponent(1));
 					leftArea.add(mitarbeitersichtfenster);
+					
 					leftArea.revalidate();
 					leftArea.repaint();
+					
+					rightArea.removeAll();
+					
+					mainwindow.pack();
+					
 				} else if (ae.getSource().equals(shopButton)) {
 					leftArea.remove(leftArea.getComponent(1));
 					leftArea.add(new Shopstatistics());
+					
 					leftArea.revalidate();
 					leftArea.repaint();
+					
+					mainwindow.pack();
+					
 				} else if(ae.getSource().equals(logoutButton)){
 					mainwindow.dispose();
 					loginwindow = new LoginWindow("OrganOrkanOrca eShop");
@@ -1198,11 +1502,7 @@ public class GUI {
 		}
 	}
 
-	
-	
-	
 	public static void main(String[] args){
 		GUI gui = new GUI();
 	}
-	
 }

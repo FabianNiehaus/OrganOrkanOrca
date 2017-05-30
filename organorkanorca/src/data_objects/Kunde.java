@@ -3,6 +3,8 @@
  */
 package data_objects;
 
+import domain.exceptions.InvalidPersonDataException;
+
 /**
  * @author Fabian Niehaus
  *
@@ -24,8 +26,9 @@ public class Kunde extends Person {
 	 * @param address_Zip Postleitzahl
 	 * @param address_Town Stadt
 	 * @param wk Warenkorb
+	 * @throws InvalidPersonDataException 
 	 */
-	public Kunde(String firstname, String lastname, int id, String passwort, String address_Street, String address_Zip, String address_Town, Warenkorb wk) {
+	public Kunde(String firstname, String lastname, int id, String passwort, String address_Street, String address_Zip, String address_Town, Warenkorb wk) throws InvalidPersonDataException {
 		super(firstname, lastname, id, passwort);
 		this.address_Street = address_Street;
 		this.address_Zip = address_Zip;
@@ -42,9 +45,14 @@ public class Kunde extends Person {
 
 	/**
 	 * @param address_Street
+	 * @throws InvalidPersonDataException 
 	 */
-	public void setAddress_Street(String address_Street) {
-		this.address_Street = address_Street;
+	public void setAddress_Street(String address_Street) throws InvalidPersonDataException {
+		if (!address_Street.equals("")){
+			this.address_Street = address_Street;
+		} else {
+			throw new InvalidPersonDataException(2, address_Street);
+		}
 	}
 
 	/**
@@ -56,9 +64,15 @@ public class Kunde extends Person {
 
 	/**
 	 * @param address_Zip
+	 * @throws InvalidPersonDataException 
 	 */
-	public void setAddress_Zip(String address_Zip) {
-		this.address_Zip = address_Zip;
+	public void setAddress_Zip(String address_Zip) throws InvalidPersonDataException {
+		if(!address_Zip.equals("")){
+			this.address_Zip = address_Zip;
+		} else {
+			throw new InvalidPersonDataException(5, address_Zip);
+		}
+
 	}
 
 	/**
@@ -70,9 +84,14 @@ public class Kunde extends Person {
 
 	/**
 	 * @param address_Town
+	 * @throws InvalidPersonDataException 
 	 */
-	public void setAddress_Town(String address_Town) {
-		this.address_Town = address_Town;
+	public void setAddress_Town(String address_Town) throws InvalidPersonDataException {
+		if(!address_Town.equals("")){
+			this.address_Town = address_Town;
+		} else {
+			throw new InvalidPersonDataException(4, address_Town);
+		}
 	}
 
 	/**

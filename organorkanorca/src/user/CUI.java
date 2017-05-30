@@ -20,6 +20,7 @@ import domain.exceptions.ArticleNonexistantException;
 import domain.exceptions.ArticleStockNotSufficientException;
 import domain.exceptions.BasketNonexistantException;
 import domain.exceptions.InvalidAmountException;
+import domain.exceptions.InvalidPersonDataException;
 import util.IO;
 
 /**
@@ -196,6 +197,8 @@ public class CUI {
 			IO.println(are.getMessage());
 		} catch (MaxIDsException mie){
 			IO.println(mie.getMessage());
+		} catch (InvalidPersonDataException e) {
+			IO.println(e.getMessage());
 		}
 	}
 	
