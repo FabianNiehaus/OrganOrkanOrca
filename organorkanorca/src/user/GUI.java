@@ -28,6 +28,7 @@ import domain.exceptions.InvalidAmountException;
 import domain.exceptions.InvalidPersonDataException;
 import domain.exceptions.LoginFailedException;
 import domain.exceptions.MaxIDsException;
+import domain.exceptions.PersonNonexistantException;
 import net.miginfocom.swing.MigLayout;
 //import user.GUI.MainWindow.eShopTableModel;
 
@@ -464,6 +465,22 @@ public class GUI {
 				
 			}
 			
+			class KundeBearbeitenListener implements ActionListener{
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					try {
+						kundenverwaltungsfenster.kundeAnzeigen(eShop.kundeSuchen((int)auflistung.getValueAt(auflistung.getSelectedRow(),0), user));
+					} catch (ArrayIndexOutOfBoundsException e1){
+						JOptionPane.showMessageDialog(Sichtfenster.this, "Kein Artikel ausgewählt");
+					} catch (PersonNonexistantException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				
+			}
+			
 			class TabelleFilternListener implements ActionListener{
 
 				@Override
@@ -547,6 +564,8 @@ public class GUI {
 			public Kundensichtfenster(){
 				super();
 				aktion.setText("Bearbeiten");
+				aktion.addActionListener(new KundeBearbeitenListener());
+				anzahl.setVisible(false);
 			}
 					
 			@Override
@@ -621,15 +640,15 @@ public class GUI {
 			JPanel detailArea = new JPanel();
 			
 			JLabel artNrLabel = new JLabel("Artikelnummer:");
-			JTextField artNrField = new JTextField();
+			JTextField artNrField = new JTextField(15);
 			JLabel bezeichnungLabel = new JLabel("Bezeichnung:");
-			JTextField bezeichnungField = new JTextField();
+			JTextField bezeichnungField = new JTextField(15);
 			JLabel preisLabel = new JLabel("Preis:");
-			JTextField preisField = new JTextField();
+			JTextField preisField = new JTextField(15);
 			JLabel pkggroesseLabel = new JLabel("Packungsgröße:");
-			JTextField pkggroesseField = new JTextField();
+			JTextField pkggroesseField = new JTextField(15);
 			JLabel bestandLabel = new JLabel("Bestand:");
-			JTextField bestandField = new JTextField();
+			JTextField bestandField = new JTextField(15);
 			
 			JPanel buttons = new JPanel();
 			
@@ -641,20 +660,24 @@ public class GUI {
 			
 			public Artikelverwaltungsfenster(){
 				
-				this.add(new JLabel("Artikelverwaltung"));
+				this.setLayout(new MigLayout());
+				
+				detailArea.setLayout(new MigLayout());
+				
+				this.add(new JLabel("Artikelverwaltung"),"align center, wrap");
 				
 				detailArea.add(artNrLabel);
-				detailArea.add(artNrField);
+				detailArea.add(artNrField,"wrap");
 				detailArea.add(bezeichnungLabel);
-				detailArea.add(bezeichnungField);
+				detailArea.add(bezeichnungField,"wrap");
 				detailArea.add(preisLabel);
-				detailArea.add(preisField);
+				detailArea.add(preisField,"wrap");
 				detailArea.add(pkggroesseLabel);
-				detailArea.add(pkggroesseField);
+				detailArea.add(pkggroesseField,"wrap");
 				detailArea.add(bestandLabel);
-				detailArea.add(bestandField);
+				detailArea.add(bestandField,"wrap");
 				
-				this.add(detailArea);
+				this.add(detailArea,"wrap");
 				
 				buttons.add(neuAnlegenButton);
 				buttons.add(aendernButton);
@@ -673,16 +696,13 @@ public class GUI {
 				
 				loeschenButton.addActionListener(new ArtikelLoeschenListener());
 				
-				this.add(buttons);
+				this.add(buttons,"align center, wrap");
 				
 				artNrField.setEditable(false);
 				bezeichnungField.setEditable(false);
 				preisField.setEditable(false);
 				pkggroesseField.setEditable(false);
 				bestandField.setEditable(false);
-				
-				detailArea.setLayout(new GridLayout(5,2));
-				this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 				
 				this.setVisible(true);
 			}
@@ -927,9 +947,11 @@ public class GUI {
 			
 			public Warenkorbverwaltungsfenster(){
 				
-				this.add(new JLabel("Warenkorbverwaltung"));
+				this.setLayout(new MigLayout());
 				
-				this.add(warenkorbAuflistungContainer);
+				this.add(new JLabel("Warenkorbverwaltung"),"align center, wrap");
+				
+				this.add(warenkorbAuflistungContainer,"wrap");
 				
 				aendernButton.addActionListener(new WarenkorbActionListener());
 				artikelEntfernenButton.addActionListener(new WarenkorbActionListener());
@@ -941,7 +963,7 @@ public class GUI {
 				buttons.add(leerenButton);
 				buttons.add(kaufenButton);
 				
-				this.add(buttons);
+				this.add(buttons,"align center, wrap");
 				
 				JTableHeader header = warenkorbAuflistung.getTableHeader();
 				header.setUpdateTableInRealTime(true);
@@ -949,8 +971,6 @@ public class GUI {
 				warenkorbAuflistung.setAutoCreateRowSorter(true);
 				
 				warenkorbAuflistung.setModel(new WarenkorbTableModel());
-				
-				this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 				
 				this.setVisible(true);
 			}
@@ -1186,7 +1206,7 @@ public class GUI {
 				
 				detailArea.setLayout(new MigLayout());
 				
-				detailArea.add(new JLabel("Kundenverwaltung"), "span 2, align center, wrap");
+				this.add(new JLabel("Kundenverwaltung"), "span 2, align center, wrap");
 				
 				detailArea.add(kuNrLabel);
 				detailArea.add(kuNrField, "wrap");
@@ -1221,7 +1241,7 @@ public class GUI {
 				neuAnlegenButton.addActionListener(new KundeNeuAnlegenListener());
 				neuAnlegenBestaetigenButton.addActionListener(new KundeNeuAnlegenListener());
 				
-				loeschenButton.addActionListener(new ArtikelLoeschenListener());
+				loeschenButton.addActionListener(new KundeLoeschenListener());
 				
 				this.add(buttons, "align center");
 				
@@ -1245,6 +1265,14 @@ public class GUI {
 				strasseField.setText(ku.getAddress_Street());
 				ortField.setText(ku.getAddress_Town());
 				zipField.setText(ku.getAddress_Zip());
+				passwordField.setText("*********");
+				
+				vornameField.setEditable(false);
+				nachnameField.setEditable(false);
+				strasseField.setEditable(false);
+				ortField.setEditable(false);
+				zipField.setEditable(false);
+				passwordField.setEditable(false);
 			}
 			
 			public class KundeBearbeitenListener implements ActionListener{
@@ -1315,10 +1343,7 @@ public class GUI {
 				}
 				
 			}
-		
-		
-		
-		
+				
 			public class KundeNeuAnlegenListener implements ActionListener{
 		
 				@Override
@@ -1412,7 +1437,7 @@ public class GUI {
 				}
 			}
 		
-			public class ArtikelLoeschenListener implements ActionListener{
+			public class KundeLoeschenListener implements ActionListener{
 			
 				@Override
 				public void actionPerformed(ActionEvent e) {

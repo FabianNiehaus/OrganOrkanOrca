@@ -381,4 +381,8 @@ public class eShopCore {
 		}
 
 	}
+
+	public Kunde kundeSuchen(int id, Person p) throws PersonNonexistantException {
+		return kv.sucheKunde(id);
+	}
 }
