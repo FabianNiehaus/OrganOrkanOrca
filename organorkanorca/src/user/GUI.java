@@ -1260,7 +1260,7 @@ public class GUI {
 				this.ku = ku;
 				
 				kuNrField.setText(String.valueOf(ku.getId()));
-				vornameField.setText(ku.getLastname());
+				vornameField.setText(ku.getFirstname());
 				nachnameField.setText(ku.getLastname());
 				strasseField.setText(ku.getAddress_Street());
 				ortField.setText(ku.getAddress_Town());
