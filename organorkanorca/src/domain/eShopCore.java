@@ -145,6 +145,14 @@ public class eShopCore {
 		}
 	}
 	
+	public Mitarbeiter erstelleMitarbeiter(String firstname, String lastname, String passwort, Person p) throws MaxIDsException, AccessRestrictedException, InvalidPersonDataException{
+			if(istKunde(p) || p == null){
+				return mv.erstelleMitarbeiter(firstname, lastname, passwort);
+			} else {
+				throw new AccessRestrictedException(p, "\"Mitarbeiter anlegen\"");
+			}
+		}
+	
 	/**
 	 * Erstellt einen neuen Artikel
 	 * @param bezeichnung Artikelbezeichnung
@@ -365,6 +373,13 @@ public class eShopCore {
 		}
 	}
 	
+	public void mitarbeiterLoeschen(Mitarbeiter mi, Person p) throws AccessRestrictedException {
+		if(istKunde(p)){
+			kv.loescheMitarbeiter(mi);
+		} else {
+			throw new AccessRestrictedException(p, "Mitarbeiter löschen");
+		}
+	}
 	public boolean istMitarbeiter(Person p){
 		if(p instanceof Mitarbeiter){
 			return true;
@@ -385,4 +400,6 @@ public class eShopCore {
 	public Kunde kundeSuchen(int id, Person p) throws PersonNonexistantException {
 		return kv.sucheKunde(id);
 	}
+
+	
 }

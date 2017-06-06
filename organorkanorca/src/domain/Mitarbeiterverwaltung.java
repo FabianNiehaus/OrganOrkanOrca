@@ -119,8 +119,10 @@ public class Mitarbeiterverwaltung {
 	 * Fügt einen neuen Mitarbeiter hinzu
 	 * @param einMa Neuer Mitarbeiter
 	 */
-	public void erstelleMitarbeiter(Mitarbeiter einMa) {
-		mitarbeiter.add(einMa);
+	public Mitarbeiter erstelleMitarbeiter(String firstname, String lastname, String passwort) throws MaxIDsException, InvalidPersonDataException {
+		Mitarbeiter mi = new Mitarbeiter(firstname, lastname, getNextID(), passwort);
+		mitarbeiter.add(mi);
+		return mi;
 	}
 	
 	/**

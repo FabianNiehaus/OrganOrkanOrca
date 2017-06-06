@@ -268,6 +268,8 @@ public class GUI {
 		Warenkorbverwaltungsfenster warenkorbverwaltungsfenster;
 		Artikelverwaltungsfenster artikelverwaltungsfenster;
 		Kundenverwaltungsfenster kundenverwaltungsfenster;
+		Mitarbeiterverwaltungsfenster mitarbeiterverwaltungsfenster;
+		
 			
 		public void initialize() {
 
@@ -472,7 +474,7 @@ public class GUI {
 					try {
 						kundenverwaltungsfenster.kundeAnzeigen(eShop.kundeSuchen((int)auflistung.getValueAt(auflistung.getSelectedRow(),0), user));
 					} catch (ArrayIndexOutOfBoundsException e1){
-						JOptionPane.showMessageDialog(Sichtfenster.this, "Kein Artikel ausgewÃ¤hlt");
+						JOptionPane.showMessageDialog(Sichtfenster.this, "Kein Kunde ausgewÃ¤hlt");
 					} catch (PersonNonexistantException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -1172,6 +1174,7 @@ public class GUI {
 		}
 		
 		class Kundenverwaltungsfenster extends JPanel{
+
 			
 			Kunde ku;
 			
@@ -1297,7 +1300,7 @@ public class GUI {
 								loeschenButton.setVisible(false);
 								aendernBestaetigenButton.setVisible(true);
 								
-								artikelverwaltungsfenster.repaint();
+								kundenverwaltungsfenster.repaint();
 								
 							}
 			
@@ -1464,6 +1467,259 @@ public class GUI {
 			}
 		}
 
+		class Mitarbeiterverwaltungsfenster extends JPanel{
+
+			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -2777127850231235447L;
+
+			Mitarbeiter mi;
+			
+			JPanel detailArea = new JPanel();
+
+			JLabel miNrLabel = new JLabel("Mitarbeiternummer:");
+			JTextField miNrField = new JTextField(15);
+			JLabel vornameLabel = new JLabel("Vorname:");
+			JTextField vornameField = new JTextField(15);
+			JLabel nachnameLabel = new JLabel("Nachname:");
+			JTextField nachnameField = new JTextField(15);
+			JLabel passwordLabel = new JLabel("Passwort:");
+			JTextField passwordField = new JTextField("*********",15);
+			
+			JPanel buttons = new JPanel();
+			
+			JButton neuAnlegenButton = new JButton("Neu");
+			JButton aendernButton = new JButton("Ändern");
+			JButton aendernBestaetigenButton = new JButton("Bestätigen");
+			JButton loeschenButton = new JButton("Löschen");
+			JButton neuAnlegenBestaetigenButton = new JButton("Anlegen");
+			
+			public Mitarbeiterverwaltungsfenster(){
+				
+				this.setLayout(new MigLayout());
+				
+				detailArea.setLayout(new MigLayout());
+				
+				this.add(new JLabel("Mitarbeiterverwaltung"), "span 2, align center, wrap");
+				
+				detailArea.add(miNrLabel);
+				detailArea.add(miNrField, "wrap");
+				detailArea.add(vornameLabel);
+				detailArea.add(vornameField, "wrap");
+				detailArea.add(nachnameLabel);
+				detailArea.add(nachnameField, "wrap");
+				detailArea.add(passwordLabel);
+				detailArea.add(passwordField);
+				
+				this.add(detailArea, "wrap");
+				
+				buttons.add(neuAnlegenButton);
+				buttons.add(aendernButton);
+				buttons.add(aendernBestaetigenButton);
+				buttons.add(loeschenButton);
+				buttons.add(neuAnlegenBestaetigenButton);
+				
+				aendernBestaetigenButton.setVisible(false);
+				neuAnlegenBestaetigenButton.setVisible(false);
+				
+				//ändern
+				aendernButton.addActionListener(new MitarbeiterBearbeitenListener());
+				aendernBestaetigenButton.addActionListener(new MitarbeiterBearbeitenListener());
+				
+				
+				neuAnlegenButton.addActionListener(new MitarbeiterNeuAnlegenListener());
+				neuAnlegenBestaetigenButton.addActionListener(new MitarbeiterNeuAnlegenListener());
+				
+				loeschenButton.addActionListener(new MitarbeiterLoeschenListener());
+				
+				this.add(buttons, "align center");
+				
+				miNrField.setEditable(false);
+				vornameField.setEditable(false);
+				nachnameField.setEditable(false);
+				passwordField.setEditable(false);
+				
+				this.setVisible(true);
+			}
+			
+			public void mitarbeiterAnzeigen(Mitarbeiter mi){
+				this.mi = mi;
+				
+				miNrField.setText(String.valueOf(mi.getId()));
+				vornameField.setText(mi.getLastname());
+				nachnameField.setText(mi.getLastname());
+				passwordField.setText("*********");
+				
+				vornameField.setEditable(false);
+				nachnameField.setEditable(false);
+				passwordField.setEditable(false);
+			}
+			
+			public class MitarbeiterBearbeitenListener implements ActionListener{
+			
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if (e.getSource().equals(aendernButton)){
+							
+							if(!miNrField.getText().equals("")){
+								
+								//Felder editierbar machen
+								vornameField.setEditable(true);
+								nachnameField.setEditable(true);
+								passwordField.setEditable(true);
+								
+								//Buttons anpassen
+								neuAnlegenButton.setVisible(false);
+								aendernButton.setVisible(false);
+								loeschenButton.setVisible(false);
+								aendernBestaetigenButton.setVisible(true);
+								
+								mitarbeiterverwaltungsfenster.repaint();
+								
+							}
+			
+						} else if (e.getSource().equals(aendernBestaetigenButton)){
+							try {
+								String firstname = vornameField.getText();
+								String lastname = nachnameField.getText();
+								String passwort = passwordField.getText();
+				
+								mi.setFirstname(firstname);
+								mi.setLastname(lastname);
+								
+								//Bearbeiteten Mitarbeiter anzeigen
+								mitarbeiterAnzeigen(mi);
+								
+								//Buttons anpassen
+								aendernBestaetigenButton.setVisible(false);
+								neuAnlegenButton.setVisible(true);
+								aendernButton.setVisible(true);
+								loeschenButton.setVisible(true);
+				
+								mitarbeitersichtfenster.auflistungInitialize();
+								
+								mitarbeiterverwaltungsfenster.repaint();
+								
+							} catch (InvalidPersonDataException e1) {
+		
+								JOptionPane.showMessageDialog(mitarbeiterverwaltungsfenster, e1.getMessage());
+								
+								mitarbeiterAnzeigen(mi);
+								
+							} catch (AccessRestrictedException e1) {
+								JOptionPane.showMessageDialog(mitarbeiterverwaltungsfenster, e1.getMessage());
+							}
+			
+					}				
+				}
+				
+			}
+				
+			public class MitarbeiterNeuAnlegenListener implements ActionListener{
+		
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (e.getSource().equals(neuAnlegenButton)){
+						
+						//Kundennummer ausblenden, kann nicht neu angegeben werden
+						//kuNrLabel.setVisible(false);
+						//kuNrField.setVisible(false);
+						
+						//Alle Felder leeren
+						miNrField.setText("");
+						vornameField.setText("");
+						nachnameField.setText("");
+						passwordField.setText("");
+						
+						//Felder editierbar machen
+						vornameField.setEditable(true);
+						nachnameField.setEditable(true);
+						passwordField.setEditable(true);
+						
+						//Buttons anpassen
+						neuAnlegenButton.setVisible(false);
+						aendernButton.setVisible(false);
+						loeschenButton.setVisible(false);
+						neuAnlegenBestaetigenButton.setVisible(true);
+						
+						mitarbeiterverwaltungsfenster.repaint();
+		
+						
+					} else if (e.getSource().equals(neuAnlegenBestaetigenButton)){
+						
+						try {
+							String firstname = vornameField.getText();
+							String lastname = nachnameField.getText();
+							String passwort = passwordField.getText();
+										
+							Mitarbeiter mi = eShop.erstelleMitarbeiter(firstname, lastname, passwort, user);
+							 
+							//Neu erstellten  Mitarbeiter anzeigen
+							mitarbeiterAnzeigen(mi);
+							
+							//Artikelnummer wieder anzeigen
+							//artNrLabel.setVisible(true);
+							//artNrField.setVisible(true);
+							
+							//Felder nicht editierbar machen
+							vornameField.setEditable(false);
+							nachnameField.setEditable(false);
+							passwordField.setEditable(false);
+							
+							//Buttons anpassen
+							neuAnlegenButton.setVisible(true);
+							aendernButton.setVisible(true);
+							loeschenButton.setVisible(true);
+							neuAnlegenBestaetigenButton.setVisible(false);
+							
+							mitarbeitersichtfenster.auflistungInitialize();
+							
+							mitarbeiterverwaltungsfenster.repaint();
+							
+						} catch (InvalidPersonDataException e1){
+							
+							JOptionPane.showMessageDialog(mitarbeiterverwaltungsfenster, e1.getMessage());
+							
+							miNrField.setText("");
+							vornameField.setText("");
+							nachnameField.setText("");
+							passwordField.setText("");
+						} catch (AccessRestrictedException e1) {
+							JOptionPane.showMessageDialog(mitarbeiterverwaltungsfenster, e1.getMessage());
+						} catch (MaxIDsException e1) {
+							JOptionPane.showMessageDialog(mitarbeiterverwaltungsfenster, e1.getMessage());
+						}	
+					}
+				}
+			}
+		
+			public class MitarbeiterLoeschenListener implements ActionListener{
+			
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					try {
+						
+						eShop.mitarbeiterLoeschen(mi, user);
+						
+						miNrField.setText("");
+						vornameField.setText("");
+						nachnameField.setText("");
+						passwordField.setText("");
+						
+						mi = null;
+						
+						mitarbeitersichtfenster.auflistungInitialize();
+						
+					} catch (AccessRestrictedException e1) {
+						JOptionPane.showMessageDialog(mitarbeitersichtfenster, e1.getMessage());
+					}
+				}
+			}
+		}
+
+		
 		class MenuButtonsActionListener implements ActionListener{
 	
 			@Override
