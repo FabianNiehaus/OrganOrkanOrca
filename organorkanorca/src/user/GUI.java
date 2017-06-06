@@ -483,6 +483,22 @@ public class GUI {
 				
 			}
 			
+			class MitarbeiterBearbeitenListener implements ActionListener{
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					try {
+						mitarbeiterverwaltungsfenster.mitarbeiterAnzeigen(eShop.mitarbeiterSuchen((int)auflistung.getValueAt(auflistung.getSelectedRow(),0), user));
+					} catch (ArrayIndexOutOfBoundsException e1){
+						JOptionPane.showMessageDialog(Sichtfenster.this, "Kein Mitarbeiter ausgewählt");
+					} catch (PersonNonexistantException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				
+			}
+			
 			class TabelleFilternListener implements ActionListener{
 
 				@Override
@@ -508,6 +524,8 @@ public class GUI {
 				}
 			}
 		}
+		
+		
 		
 		class Artikelsichtfenster extends Sichtfenster{
 	
@@ -603,6 +621,8 @@ public class GUI {
 			public Mitarbeitersichtfenster(){
 				super();
 				aktion.setText("Bearbeiten");
+				aktion.addActionListener(new MitarbeiterBearbeitenListener());
+				anzahl.setVisible(false);
 			}
 					
 			@Override
@@ -1200,7 +1220,7 @@ public class GUI {
 			JButton neuAnlegenButton = new JButton("Neu");
 			JButton aendernButton = new JButton("Ã„ndern");
 			JButton aendernBestaetigenButton = new JButton("BestÃ¤tigen");
-			JButton loeschenButton = new JButton("LÃ¶schen");
+			JButton loeschenButton = new JButton("Löschen");
 			JButton neuAnlegenBestaetigenButton = new JButton("Anlegen");
 			
 			public Kundenverwaltungsfenster(){
@@ -1263,7 +1283,7 @@ public class GUI {
 				this.ku = ku;
 				
 				kuNrField.setText(String.valueOf(ku.getId()));
-				vornameField.setText(ku.getLastname());
+				vornameField.setText(ku.getFirstname());
 				nachnameField.setText(ku.getLastname());
 				strasseField.setText(ku.getAddress_Street());
 				ortField.setText(ku.getAddress_Town());
@@ -1548,7 +1568,7 @@ public class GUI {
 				this.mi = mi;
 				
 				miNrField.setText(String.valueOf(mi.getId()));
-				vornameField.setText(mi.getLastname());
+				vornameField.setText(mi.getFirstname());
 				nachnameField.setText(mi.getLastname());
 				passwordField.setText("*********");
 				
@@ -1788,6 +1808,8 @@ public class GUI {
 						leftArea.repaint();
 						
 						rightArea.removeAll();
+						mitarbeiterverwaltungsfenster = new Mitarbeiterverwaltungsfenster();
+						rightArea.add(mitarbeiterverwaltungsfenster);
 						
 						mainwindow.pack();
 					

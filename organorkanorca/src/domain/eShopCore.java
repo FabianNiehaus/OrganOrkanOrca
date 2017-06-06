@@ -146,7 +146,7 @@ public class eShopCore {
 	}
 	
 	public Mitarbeiter erstelleMitarbeiter(String firstname, String lastname, String passwort, Person p) throws MaxIDsException, AccessRestrictedException, InvalidPersonDataException{
-			if(istKunde(p) || p == null){
+			if(istMitarbeiter(p) || p == null){
 				return mv.erstelleMitarbeiter(firstname, lastname, passwort);
 			} else {
 				throw new AccessRestrictedException(p, "\"Mitarbeiter anlegen\"");
@@ -374,8 +374,8 @@ public class eShopCore {
 	}
 	
 	public void mitarbeiterLoeschen(Mitarbeiter mi, Person p) throws AccessRestrictedException {
-		if(istKunde(p)){
-			kv.loescheMitarbeiter(mi);
+		if(istMitarbeiter(p)){
+			mv.loescheMitarbeiter(mi);
 		} else {
 			throw new AccessRestrictedException(p, "Mitarbeiter löschen");
 		}
@@ -400,6 +400,9 @@ public class eShopCore {
 	public Kunde kundeSuchen(int id, Person p) throws PersonNonexistantException {
 		return kv.sucheKunde(id);
 	}
-
+	
+	public Mitarbeiter mitarbeiterSuchen(int id, Person p) throws PersonNonexistantException {
+		return mv.suchMitarbeiter(id);
+	}
 	
 }
