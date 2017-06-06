@@ -34,7 +34,9 @@ import net.miginfocom.swing.MigLayout;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Paint;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -651,8 +653,9 @@ public class GUI {
 		class Shopstatistics extends JPanel{
 			
 			public Shopstatistics(){
-	
+				
 			}
+			
 		}
 		
 		class Artikelverwaltungsfenster extends JPanel{
@@ -1489,12 +1492,6 @@ public class GUI {
 
 		class Mitarbeiterverwaltungsfenster extends JPanel{
 
-			
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = -2777127850231235447L;
-
 			Mitarbeiter mi;
 			
 			JPanel detailArea = new JPanel();
@@ -1827,10 +1824,11 @@ public class GUI {
 						leftArea.remove(kundensichtfenster);
 						leftArea.remove(mitarbeitersichtfenster);
 						
-						leftArea.add(shopstatistics,BorderLayout.CENTER);
+						leftArea.add(artikelsichtfenster,BorderLayout.CENTER);
 						
 						//leftArea.revalidate();
 						leftArea.repaint();
+						rightArea.removeAll();
 						
 						mainwindow.pack();
 						
