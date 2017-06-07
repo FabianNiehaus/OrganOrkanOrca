@@ -32,6 +32,7 @@ import domain.exceptions.PersonNonexistantException;
 import net.miginfocom.swing.MigLayout;
 //import user.GUI.MainWindow.eShopTableModel;
 
+import java.awt.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -651,12 +652,27 @@ public class GUI {
 		}
 		
 		class Shopstatistics extends JPanel{
+			Artikel art;
+			
+			JPanel detailArea = new JPanel();
+			
+			
 			
 			public Shopstatistics(){
 				
+				this.setLayout(new MigLayout());
+				detailArea.setLayout(new MigLayout());
+				this.add(new JLabel("Shopstatistics"),"align center, wrap");
+				
+				GraphPlotter test = new GraphPlotter();
+				test.setXScale(15);
+				test.setYScale(15);
+				
+	
 			}
-			
 		}
+			
+		
 		
 		class Artikelverwaltungsfenster extends JPanel{
 			
@@ -670,7 +686,7 @@ public class GUI {
 			JTextField bezeichnungField = new JTextField(15);
 			JLabel preisLabel = new JLabel("Preis:");
 			JTextField preisField = new JTextField(15);
-			JLabel pkggroesseLabel = new JLabel("PackungsgrÃ¶ÃŸe:");
+			JLabel pkggroesseLabel = new JLabel("Packungsgröße:");
 			JTextField pkggroesseField = new JTextField(15);
 			JLabel bestandLabel = new JLabel("Bestand:");
 			JTextField bestandField = new JTextField(15);
@@ -678,9 +694,9 @@ public class GUI {
 			JPanel buttons = new JPanel();
 			
 			JButton neuAnlegenButton = new JButton("Neu");
-			JButton aendernButton = new JButton("Ã„ndern");
-			JButton aendernBestaetigenButton = new JButton("BestÃ¤tigen");
-			JButton loeschenButton = new JButton("LÃ¶schen");
+			JButton aendernButton = new JButton("Ändern");
+			JButton aendernBestaetigenButton = new JButton("Bestätigen");
+			JButton loeschenButton = new JButton("Löschen");
 			JButton neuAnlegenBestaetigenButton = new JButton("Anlegen");
 			
 			public Artikelverwaltungsfenster(){
@@ -1829,6 +1845,9 @@ public class GUI {
 						//leftArea.revalidate();
 						leftArea.repaint();
 						rightArea.removeAll();
+						shopstatistics = new Shopstatistics();
+						rightArea.add(shopstatistics);
+						
 						
 						mainwindow.pack();
 						
