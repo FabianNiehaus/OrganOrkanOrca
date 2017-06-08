@@ -10,6 +10,11 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableRowSorter;
 
 import org.jdesktop.swingx.JXTable;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.xy.XYDataset;
 
 import data_objects.Artikel;
 import data_objects.Kunde;
@@ -33,6 +38,7 @@ import net.miginfocom.swing.MigLayout;
 //import user.GUI.MainWindow.eShopTableModel;
 
 import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -40,6 +46,8 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 import java.util.Vector;
 
@@ -51,14 +59,19 @@ public class GUI {
 	MainWindow mainwindow;
 	
 	public GUI() {
+		
+		loginwindow = new LoginWindow("OrganOrkanOrca eShop");
+		
 		try {
+			
 			eShop = new eShopCore();
 			
-			loginwindow = new LoginWindow("OrganOrkanOrca eShop");
+		} catch (IOException e1) {
 			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(loginwindow, "Fehler beim Lesen der Bestandsdaten!");
+			
+			loginwindow.dispose();
+			
 		}
 	}
 	
@@ -263,7 +276,7 @@ public class GUI {
 		Kundensichtfenster kundensichtfenster;
 		Artikelsichtfenster artikelsichtfenster;
 		Mitarbeitersichtfenster mitarbeitersichtfenster;
-		Shopstatistics shopstatistics;
+		ShopManagement shopManagement;
 		
 		Warenkorbverwaltungsfenster warenkorbverwaltungsfenster;
 		Artikelverwaltungsfenster artikelverwaltungsfenster;
@@ -291,7 +304,7 @@ public class GUI {
 			kundensichtfenster = new Kundensichtfenster();
 			artikelsichtfenster = new Artikelsichtfenster();
 			mitarbeitersichtfenster = new Mitarbeitersichtfenster();
-			shopstatistics = new Shopstatistics();
+			shopManagement = new ShopManagement();
 			
 			leftArea.add(artikelsichtfenster,BorderLayout.CENTER);
 			
@@ -474,8 +487,7 @@ public class GUI {
 					} catch (ArrayIndexOutOfBoundsException e1){
 						JOptionPane.showMessageDialog(Sichtfenster.this, "Kein Artikel ausgewählt");
 					} catch (PersonNonexistantException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
 					}
 				}
 				
@@ -511,16 +523,22 @@ public class GUI {
 	
 			eShopTableModel etm;
 			
+			JButton verlaufAnzeigenButton = new JButton("Verlauf anzeigen");
+			
 			public Artikelsichtfenster(){
 				super();
 				if (user instanceof Kunde){
 					aktion.setText("In Warenkorb");
 					aktion.addActionListener(new ArtikelInWarenkorbListener());
 					anzahl.setVisible(true);
+
 				} else if (user instanceof Mitarbeiter){
 					aktion.setText("Bearbeiten");
 					aktion.addActionListener(new ArtikelBearbeitenListener());
 					anzahl.setVisible(false);
+					
+					verlaufAnzeigenButton.addActionListener(new VerlaufAnzeigenListener());
+					this.add(verlaufAnzeigenButton);
 				}
 			}
 					
@@ -555,6 +573,53 @@ public class GUI {
 				
 				auflistung.setRowSorter(sorter);
 			}
+		
+			class VerlaufAnzeigenListener implements ActionListener {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					
+					try {
+						Artikel art = eShop.artikelSuchen((int)auflistung.getValueAt(auflistung.getSelectedRow(),0), user);
+					
+						DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+						
+						int dateCounter = 0;
+						
+						for (Integer i : art.getBestandsverlauf()){
+		
+						    final Calendar cal = Calendar.getInstance();
+						    cal.add(Calendar.DATE, -dateCounter);
+							
+							String date = String.valueOf(cal.get(Calendar.DAY_OF_MONTH)) + "." +  String.valueOf(cal.get(Calendar.MONTH) + 1) + ".";
+							
+							dataset.addValue(i, "Bestand", date);
+							
+							dateCounter++;
+						}
+						
+						JFreeChart chart = ChartFactory.createLineChart("Bestandsverlauf", "Tag", "Bestand", dataset);
+						
+						ChartFrame chartFrame = new ChartFrame("Bestandsverlauf", chart); 
+						
+						chartFrame.setDefaultCloseOperation(chartFrame.DISPOSE_ON_CLOSE);
+						
+						chartFrame.pack();
+						
+						chartFrame.setVisible(true);
+						
+					} catch (ArticleNonexistantException e1) {
+						JOptionPane.showMessageDialog(artikelsichtfenster, e1.getMessage());
+					} catch (AccessRestrictedException e1) {
+						JOptionPane.showMessageDialog(artikelsichtfenster, e1.getMessage());
+					}
+					
+					
+					
+				}
+				
+			}
+			
 		}
 		
 		class Kundensichtfenster extends Sichtfenster{
@@ -626,10 +691,64 @@ public class GUI {
 			}
 		}
 		
-		class Shopstatistics extends JPanel{
+		class ShopManagement extends JPanel{
 			
-			public Shopstatistics(){
-	
+			JButton speichernButton = new JButton("Bestandsdaten speichern");
+			
+			JButton ladenButton = new JButton("Bestandsdaten importieren");
+			
+			public ShopManagement(){
+				
+				speichernButton.addActionListener(new PersistenceButtonListener());
+				ladenButton.addActionListener(new PersistenceButtonListener());
+				
+				this.add(speichernButton);
+				this.add(ladenButton);
+				
+			}
+			
+			
+			class PersistenceButtonListener implements ActionListener{
+
+				@Override
+				public void actionPerformed(ActionEvent ae) {
+
+					if (ae.getSource().equals(speichernButton)){
+						
+						try {
+							
+							eShop.schreibeDaten();
+							
+							JOptionPane.showMessageDialog(ShopManagement.this, "Daten erfolgreich gespeichert!");
+							
+						} catch (IOException e1) {
+							JOptionPane.showMessageDialog(ShopManagement.this, e1.getMessage());
+						}
+						
+					} else if (ae.getSource().equals(ladenButton)){
+						
+						try {
+							
+							eShop.ladeDaten();
+							
+							artikelsichtfenster = new Artikelsichtfenster();
+							kundensichtfenster = new Kundensichtfenster();
+							mitarbeitersichtfenster = new Mitarbeitersichtfenster();
+							
+							artikelverwaltungsfenster = new Artikelverwaltungsfenster();
+							kundenverwaltungsfenster = new Kundenverwaltungsfenster();
+							// TODO Mitarbeiterverwaltungsfenster
+							
+						} catch (IOException e1) {
+							JOptionPane.showMessageDialog(ShopManagement.this, e1.getMessage());
+						} catch (ArticleNonexistantException e1) {
+							JOptionPane.showMessageDialog(ShopManagement.this, e1.getMessage());
+						} catch (PersonNonexistantException e1) {
+							JOptionPane.showMessageDialog(ShopManagement.this, e1.getMessage());
+						}
+						
+					}
+				}
 			}
 		}
 		
@@ -1472,7 +1591,7 @@ public class GUI {
 
 					leftArea.remove(kundensichtfenster);
 					leftArea.remove(mitarbeitersichtfenster);
-					leftArea.remove(shopstatistics);
+					leftArea.remove(shopManagement);
 					
 					leftArea.add(artikelsichtfenster,BorderLayout.CENTER);
 					
@@ -1499,7 +1618,7 @@ public class GUI {
 						
 						leftArea.remove(artikelsichtfenster);
 						leftArea.remove(mitarbeitersichtfenster);
-						leftArea.remove(shopstatistics);
+						leftArea.remove(shopManagement);
 						
 						leftArea.add(kundensichtfenster,BorderLayout.CENTER);
 						
@@ -1524,7 +1643,7 @@ public class GUI {
 						
 						leftArea.remove(artikelsichtfenster);
 						leftArea.remove(kundensichtfenster);
-						leftArea.remove(shopstatistics);
+						leftArea.remove(shopManagement);
 						
 						leftArea.add(mitarbeitersichtfenster,BorderLayout.CENTER);
 						
@@ -1549,7 +1668,7 @@ public class GUI {
 						leftArea.remove(kundensichtfenster);
 						leftArea.remove(mitarbeitersichtfenster);
 						
-						leftArea.add(shopstatistics,BorderLayout.CENTER);
+						leftArea.add(shopManagement,BorderLayout.CENTER);
 						
 						//leftArea.revalidate();
 						leftArea.repaint();

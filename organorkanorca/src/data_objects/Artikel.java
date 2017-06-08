@@ -1,5 +1,7 @@
 package data_objects;
 
+import java.util.Vector;
+
 public class Artikel {
 	
 	/**
@@ -14,6 +16,10 @@ public class Artikel {
 		this.artikelnummer = artikelnummer;
 		this.bestand = bestand;
 		this.preis = preis;
+		
+		bestandsverlauf = new Vector<>(0);
+		
+		bestandsverlauf.addElement(bestand);
 	}
 	
 	/**
@@ -44,6 +50,8 @@ public class Artikel {
 	private int artikelnummer;
 	private int bestand;
 	private double preis;
+	
+	private Vector<Integer> bestandsverlauf;
 	
 	/* Nocht nicht verwendet
 	private String kategorie;
@@ -107,6 +115,21 @@ public class Artikel {
 	 */
 	public void setPreis(double preis) {
 		this.preis = preis;
+	}
+	
+	public void aktualisiereBestandsverlauf(){
+		
+		if (bestandsverlauf.size() >= 30){
+			bestandsverlauf.remove(0);
+			
+		} 
+		
+		bestandsverlauf.add(bestand);
+		
+	}
+	
+	public Vector<Integer> getBestandsverlauf(){
+		return bestandsverlauf;
 	}
 	
 	/* (non-Javadoc)

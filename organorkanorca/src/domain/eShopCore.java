@@ -50,16 +50,14 @@ public class eShopCore {
 		rv = new Rechnungsverwaltung();
 		ev = new Ereignisverwaltung(kv,mv,av);
 		
-		try{
-			av.liesDaten(dateipfad + "ARTIKEL.txt");
-			kv.liesDaten(dateipfad + "KUNDEN.txt", wv);
-			mv.liesDaten(dateipfad + "MITARBEITER.txt");
-			ev.liesDaten(dateipfad + "EREIGNISSE.txt"); 
+		try {
+			ladeDaten();
 		} catch (ArticleNonexistantException e) {
 			
 		} catch (PersonNonexistantException e) {
 			
 		}
+		
 	}
 
 	/**
@@ -317,6 +315,13 @@ public class eShopCore {
 		kv.schreibeDaten(dateipfad + "KUNDEN.txt");
 		mv.schreibeDaten(dateipfad + "MITARBEITER.txt");
 		ev.schreibeDaten(dateipfad + "EREIGNISSE.txt");
+	}
+	
+	public void ladeDaten() throws IOException, ArticleNonexistantException, PersonNonexistantException {
+		av.liesDaten(dateipfad + "ARTIKEL.txt");
+		kv.liesDaten(dateipfad + "KUNDEN.txt", wv);
+		mv.liesDaten(dateipfad + "MITARBEITER.txt");
+		ev.liesDaten(dateipfad + "EREIGNISSE.txt"); 
 	}
 	
 	/**
