@@ -213,7 +213,7 @@ public class eShopCore {
 	}
 	
 	/**
-	 * Gibt den Warenkorb eines Kunden zurück
+	 * Gibt den Warenkorb eines Kunden zurueck
 	 * @param p Userobjekt
 	 * @return Warenkorb
 	 * @throws AccessRestrictedException 
@@ -284,7 +284,7 @@ public class eShopCore {
 				gesamt += (ent.getValue() * ent.getKey().getPreis());
 			}
 			
-			//Warenkorb für Rechnung erzeugen
+			//Warenkorb fuer Rechnung erzeugen
 			Warenkorb temp = new Warenkorb();
 			temp.copy(wk);
 			
@@ -294,7 +294,7 @@ public class eShopCore {
 			//Warenkorb von Kunde leeren
 			wv.leereWarenkorb(wk);
 			
-			//Rechnungsobjekt an C/GUI zurückgeben
+			//Rechnungsobjekt an C/GUI zurueckgeben
 			return re;
 			
 		} else {

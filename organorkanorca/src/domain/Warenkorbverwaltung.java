@@ -64,9 +64,9 @@ public class Warenkorbverwaltung {
 	}
 	
 	/**
-	 * Fügt einem Warenkorb einen Artikel hinzu
+	 * Fuegt einem Warenkorb einen Artikel hinzu
 	 * @param wk Zu bearbeitender Warenkorb
-	 * @param art Hinzuzufügender Artikel
+	 * @param art Hinzuzufuegender Artikel
 	 * @param anz Anzahl des Artikels
 	 * @throws ArticleStockNotSufficientException 
 	 * @throws ArticleAlreadyInBasketException 
@@ -92,7 +92,7 @@ public class Warenkorbverwaltung {
 	
 	/**
 	 * Gibt den Inhalt eines Warenkorbs aus
-	 * @param wk Gewünschter Warenkorb
+	 * @param wk Gewuenschter Warenkorb
 	 * @return Alle Artikel mit Anzahl
 	 */
 	public Map<Artikel, Integer> getArtikel(Warenkorb wk){

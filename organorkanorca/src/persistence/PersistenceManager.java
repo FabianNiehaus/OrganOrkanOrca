@@ -9,9 +9,9 @@ import domain.exceptions.InvalidPersonDataException;
 /**
  * @author teschke
  *
- * Allgemeine Schnittstelle für den Zugriff auf ein Speichermedium
+ * Allgemeine Schnittstelle fuer den Zugriff auf ein Speichermedium
  * (z.B. Datei oder Datenbank) zum Ablegen von beispielsweise
- * Bücher- oder Kundendaten.
+ * Buecher- oder Kundendaten.
  * 
  * Das Interface muss von Klassen implementiert werden, die eine
  * Persistenz-Schnittstelle realisieren wollen.
@@ -19,14 +19,14 @@ import domain.exceptions.InvalidPersonDataException;
 public interface PersistenceManager {
 
 	/**
-	 * Erstellt neuen Reader für jeweiligen Persistenz-Typ
+	 * Erstellt neuen Reader fuer jeweiligen Persistenz-Typ
 	 * @param datenquelle Datenquelle des Readers
 	 * @throws IOException
 	 */
 	public void openForReading(String datenquelle) throws IOException;
 	
 	/**
-	 * Erstellt neuen Writer für jeweiligen Persistenz-Typ
+	 * Erstellt neuen Writer fuer jeweiligen Persistenz-Typ
 	 * @param datenquelle Datenquelle des Writers
 	 * @throws IOException
 	 */

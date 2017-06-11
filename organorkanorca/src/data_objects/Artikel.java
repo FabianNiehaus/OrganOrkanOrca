@@ -74,7 +74,7 @@ public class Artikel {
 
 	/**
 	 * Setzt die Bezeichnung des Artikel
-	 * @param bezeichnung Gewünschte Artikelbezeichnung
+	 * @param bezeichnung Gewuenschte Artikelbezeichnung
 	 */
 	public void setBezeichnung(String bezeichnung) {
 		this.bezeichnung = bezeichnung;

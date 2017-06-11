@@ -447,7 +447,7 @@ public class GUI {
 						anzahl.setText("");
 						
 					} catch (NumberFormatException e1) {
-						JOptionPane.showMessageDialog(Sichtfenster.this, "Keine gültige Anzahl!");
+						JOptionPane.showMessageDialog(Sichtfenster.this, "Keine gueltige Anzahl!");
 					} catch (ArticleNonexistantException e1) {
 						JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
 					} catch (ArticleStockNotSufficientException e1) {
@@ -617,14 +617,11 @@ public class GUI {
 						JOptionPane.showMessageDialog(artikelsichtfenster, e1.getMessage());
 					} catch (AccessRestrictedException e1) {
 						JOptionPane.showMessageDialog(artikelsichtfenster, e1.getMessage());
+					} catch (ArrayIndexOutOfBoundsException e1) {
+						JOptionPane.showMessageDialog(artikelsichtfenster, "Es muss ein Artikel ausgewählt werden!");
 					}
-					
-					
-					
 				}
-				
 			}
-			
 		}
 		
 		class Kundensichtfenster extends Sichtfenster{
@@ -926,15 +923,15 @@ public class GUI {
 									}
 	
 								} catch(NumberFormatException e1){
-									JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, "Keine gültige Packungsgröße");
+									JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, "Keine gueltige Packungsgröße");
 								}
 								
 							} catch(NumberFormatException e1){
-								JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, "Kein gültiger Preis!");
+								JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, "Kein gueltiger Preis!");
 							}
 							
 						} catch(NumberFormatException e1){
-							JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, "Kein gültiger Bestand!");
+							JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, "Kein gueltiger Bestand!");
 						}
 					}
 				}
@@ -1015,15 +1012,15 @@ public class GUI {
 									}
 									 
 								} catch(NumberFormatException e1){
-									JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, "Keine gültige Packungsgröße");
+									JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, "Keine gueltige Packungsgröße");
 								}
 								
 							} catch(NumberFormatException e1){
-								JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, "Kein gültiger Preis!");
+								JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, "Kein gueltiger Preis!");
 							}
 							
 						} catch(NumberFormatException e1){
-							JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, "Kein gültiger Bestand!");
+							JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, "Kein gueltiger Bestand!");
 						}
 					}
 				}				
@@ -1119,7 +1116,7 @@ public class GUI {
 							
 							if (row != -1) {
 							
-								int anz = Integer.parseInt(JOptionPane.showInputDialog("Bitte gewünschte Anzahl angeben"));
+								int anz = Integer.parseInt(JOptionPane.showInputDialog("Bitte gewuenschte Anzahl angeben"));
 								
 								if (anz > 0){
 	
@@ -1142,7 +1139,7 @@ public class GUI {
 						} catch (AccessRestrictedException e1) {
 							JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
 						} catch (NumberFormatException e1) {
-							JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, "Keine gültige Anzahl!");
+							JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, "Keine gueltige Anzahl!");
 						} catch (InvalidAmountException e1) {
 							JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
 						}
@@ -1198,7 +1195,7 @@ public class GUI {
 						
 						try {
 
-							//Formatierungsvorlage für Datum
+							//Formatierungsvorlage fuer Datum
 							DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 							
 							Rechnung re = eShop.warenkorbKaufen(user);

@@ -12,7 +12,7 @@ public class PersonNonexistantException extends Exception {
 	private static final long serialVersionUID = -4926085803539481775L;
 
 	public PersonNonexistantException(int id){
-		super("Für die ID " + id + " ist keine Person angelegt.");
+		super("Fuer die ID " + id + " ist keine Person angelegt.");
 	}
 	
 	public PersonNonexistantException(String firstname, String lastname){

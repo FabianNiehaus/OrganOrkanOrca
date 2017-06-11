@@ -2,7 +2,7 @@ package data_objects;
 
 /**
  * @author Fabian Niehaus
- * Enumerator-Objekt für die Ereignisspeicherung
+ * Enumerator-Objekt fuer die Ereignisspeicherung
  */
 public enum Typ {
 

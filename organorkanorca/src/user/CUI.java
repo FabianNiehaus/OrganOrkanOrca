@@ -26,7 +26,7 @@ import util.IO;
 
 /**
  * @author Fabian Niehaus
- * Command-Line-Interface für den eShop
+ * Command-Line-Interface fuer den eShop
  */
 
 public class CUI {
@@ -41,7 +41,7 @@ public class CUI {
 	}
 	
 	/**
-	 * Logik für Nutzer-Login
+	 * Logik fuer Nutzer-Login
 	 */
 	public void login(){
 		
@@ -67,7 +67,7 @@ public class CUI {
 	}
 	
 	/**
-	 * Logik für das Suchen eines Artikels
+	 * Logik fuer das Suchen eines Artikels
 	 * @param liste
 	 */
 	private void artikelSuchen(){
@@ -107,7 +107,7 @@ public class CUI {
 		}
 	}
 	
-	/** Logik für die Sortierte Ausgabe der Artikelliste
+	/** Logik fuer die Sortierte Ausgabe der Artikelliste
 	 * @param liste
 	 */
 	private void artikelSortiertAusgeben(Vector<Artikel> artSort){
@@ -141,7 +141,7 @@ public class CUI {
 	}
 	
 	/**
-	 * Logik für das Erstellen eines Artikels
+	 * Logik fuer das Erstellen eines Artikels
 	 */
 	private void artikelErstellen(){
 		
@@ -169,7 +169,7 @@ public class CUI {
 	}
 	
 	/**
-	 * Logik für das Erstellen eines Kunden
+	 * Logik fuer das Erstellen eines Kunden
 	 */
 	private void kundeErstellen(){
 		
@@ -204,7 +204,7 @@ public class CUI {
 	}
 	
 	/**
-	 * Logik für das Erhöhen des Bestands eines Artikels
+	 * Logik fuer das Erhöhen des Bestands eines Artikels
 	 */
 	private void artikelBestandErhoehen(){		
 		IO.print("Artikelnummer:");
@@ -228,7 +228,7 @@ public class CUI {
 	}
 	
 	/**
-	 * Logik für das Hinzufügen eines Artikels zu einem Warenkorb
+	 * Logik fuer das Hinzufuegen eines Artikels zu einem Warenkorb
 	 */
 	private void artikelInWarenkorbLegen(){
 		IO.print("Artikelnummer:");
@@ -254,7 +254,7 @@ public class CUI {
 	}
 	
 	/**
-	 * Logik für das Ausgeben des Warenkorb des Kunden
+	 * Logik fuer das Ausgeben des Warenkorb des Kunden
 	 */
 	private void gibWarenkorbAus(){
 		try{
@@ -266,7 +266,7 @@ public class CUI {
 	}
 	
 	/**
-	 * Logik für die Änderung der Anzahl eines Artikels im Warenkorb des Kunden Warenkorb
+	 * Logik fuer die Änderung der Anzahl eines Artikels im Warenkorb des Kunden Warenkorb
 	 */
 	private void aendereArtiklInWarenkorb(){
 		gibWarenkorbAus();
@@ -295,7 +295,7 @@ public class CUI {
 	 * Logik fpr das Kaufen des Warenkorbs des Kunden
 	 */
 	private void warenkorbKaufen(){
-		//Formatierungsvorlage für Datum
+		//Formatierungsvorlage fuer Datum
 		DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 		
 		try {
@@ -323,7 +323,7 @@ public class CUI {
 	}
 	
 	/**
-	 * Logik für die Anzeige der Warenkorbverwaltung des Kunden
+	 * Logik fuer die Anzeige der Warenkorbverwaltung des Kunden
 	 */
 	private void gibWarenkorbverwaltungAus(){
 		String input = "";
@@ -336,7 +336,7 @@ public class CUI {
 			IO.println("Eingabe \"a\" um Artikel im Warenkorb zu ändern");
 			IO.println("Eingabe \"l\" um Warenkorb zu leeren");
 			IO.println("Eingabe \"b\" um Warenkorb zu bezahlen");
-			IO.println("Eingabe \"q\" um zum Hauptmenü zurückzukehren");
+			IO.println("Eingabe \"q\" um zum Hauptmenue zurueckzukehren");
 			IO.println("---------------------------------------------------------------------");
 			
 			input = IO.readString();
@@ -358,7 +358,7 @@ public class CUI {
 	}
 	
 	/**
-	 * Logik für die Anzeige der Artikelverwaltung 
+	 * Logik fuer die Anzeige der Artikelverwaltung 
 	 */
 	private void gibArtikelverwaltungAus(){
 		String input = "";
@@ -372,15 +372,15 @@ public class CUI {
 			
 			
 			if((user instanceof Kunde)){
-				// Menüeingaben speziell für Kunde
+				// Menueeingaben speziell fuer Kunde
 				IO.println("Eingabe \"k\" um Artikel in Warenkorb zu legen");
 			} else if (user instanceof Mitarbeiter){
-				// Menüeingaben speziel für Mitarbeiter
+				// Menueeingaben speziel fuer Mitarbeiter
 				IO.println("Eingabe \"e\" um Artikel zu erstellen");
 				IO.println("Eingabe \"b\" um den Bestand zu erhöhen");
 			}
 			
-			IO.println("Eingabe \"q\" um zum Hauptmenü zurückzukehren");
+			IO.println("Eingabe \"q\" um zum Hauptmenue zurueckzukehren");
 			IO.println("---------------------------------------------------------------------");
 			
 			input = IO.readString();
@@ -420,7 +420,7 @@ public class CUI {
 			IO.println("Kundenverwaltung");
 			IO.println("Eingabe \"k\" um alle Kunden auszugeben");
 			IO.println("Eingabe \"a\" um neuen Kunden anzulegen");
-			IO.println("Eingabe \"q\" um zum Hauptmenü zurückzukehren");
+			IO.println("Eingabe \"q\" um zum Hauptmenue zurueckzukehren");
 			IO.println("---------------------------------------------------------------------");
 			
 			input = IO.readString();
@@ -440,22 +440,22 @@ public class CUI {
 	}
 	
 	/**
-	 * Logik für die Ausgabe des Hauptmenüs
+	 * Logik fuer die Ausgabe des Hauptmenues
 	 */
 	public void gibMenueAus(){
 		IO.println("");
 		
 		IO.println("eShop Hauptseite");
 		
-		//Menüeingaben für alle
+		//Menueeingaben fuer alle
 		IO.println("Eingabe \"a\" um zur Artikelverwaltung zu gelangen");
 		
 		if((user instanceof Kunde)){
-			// Menüeingaben speziell für Kunde
+			// Menueeingaben speziell fuer Kunde
 			IO.println("Eingabe \"w\" zur Warenkobverwaltung zu gelangen");
 			
 		} else if((user instanceof Mitarbeiter)) {
-			// Menüeingaben speziel für Mitarbeiter
+			// Menueeingaben speziel fuer Mitarbeiter
 			
 			IO.println("Eingabe \"k\" zur Kundenverwaltung zu gelangen");
 			IO.println("Eingabe \"m\" um alle Mitarbeiter auszugeben");
@@ -467,7 +467,7 @@ public class CUI {
 	}
 	
 	/**
-	 * Logik für die Verarbeitung der Nutzereingabe im Hauptmenü
+	 * Logik fuer die Verarbeitung der Nutzereingabe im Hauptmenue
 	 * @param input Nutzereingabe
 	 * @throws IOException
 	 */

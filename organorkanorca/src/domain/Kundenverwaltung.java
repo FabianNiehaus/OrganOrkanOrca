@@ -46,7 +46,7 @@ public class Kundenverwaltung {
 				
 				ku = new Kunde((String) info.elementAt(1), (String) info.elementAt(2), (int) info.elementAt(0), (String) info.elementAt(3), (String) info.elementAt(4), (String) info.elementAt(5), (String) info.elementAt(6), wv.erstelleWarenkorb()); 
 				
-				// Kunden in Kundenliste einfügen
+				// Kunden in Kundenliste einfuegen
 				einfuegen(ku);
 				
 			} while (ku.getId() != 0);
@@ -68,7 +68,7 @@ public class Kundenverwaltung {
 	 * @throws IOException
 	 */
 	public void schreibeDaten(String datei) throws IOException  {
-		// PersistenzManager für Schreibvorgänge öffnen
+		// PersistenzManager fuer Schreibvorgänge öffnen
 		pm.openForWriting(datei);
 
 		if (!kunden.isEmpty()) {
@@ -84,7 +84,7 @@ public class Kundenverwaltung {
 	}
 	
 	/**
-	 * Fügt einen Kunden hinzu
+	 * Fuegt einen Kunden hinzu
 	 * @param ku Kunde
 	 */
 	public void einfuegen(Kunde ku){
@@ -107,9 +107,9 @@ public class Kundenverwaltung {
 	}
 	
 	/**
-	 * Prüft, ob ein bestimmter Kunde in der Kundenverwaltung liegt.
-	 * @param art Zu überprüfender Kunde
-	 * @return Gibt <b>true</b> zurück, wenn zu prüfender Kunde in der HAsMap Kunde gespeichert ist. Sonst <b>false</b>.
+	 * Prueft, ob ein bestimmter Kunde in der Kundenverwaltung liegt.
+	 * @param art Zu ueberpruefender Kunde
+	 * @return Gibt <b>true</b> zurueck, wenn zu pruefender Kunde in der HAsMap Kunde gespeichert ist. Sonst <b>false</b>.
 	 * suche nach ID oder Name 
 	 */
 	public Kunde sucheKunde(String firstname, String lastname) throws PersonNonexistantException {
@@ -139,7 +139,7 @@ public class Kundenverwaltung {
 	}
 	
 	/**
-	 * Erstellt einen neuen Kunden und fügt in zur verwalteten Liste hinzu
+	 * Erstellt einen neuen Kunden und fuegt in zur verwalteten Liste hinzu
 	 * @param firstname Vorname
 	 * @param lastname Nachname
 	 * @param passwort Passwort
@@ -207,7 +207,7 @@ public class Kundenverwaltung {
 	
 	/**
 	 * Gibt den zu einem Kunden zugeordneten Warenkorb aus
-	 * @param ku Gewünschter Kunde
+	 * @param ku Gewuenschter Kunde
 	 * @return Warenkorb des Kunde
 	 */
 	public Warenkorb gibWarenkorbVonKunde(Person ku){

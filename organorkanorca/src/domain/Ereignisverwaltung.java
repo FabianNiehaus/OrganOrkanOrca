@@ -32,7 +32,7 @@ public class Ereignisverwaltung {
 		this.mv = mv;
 	}
 
-	// Persistenz-Schnittstelle, die für die Details des Dateizugriffs verantwortlich ist
+	// Persistenz-Schnittstelle, die fuer die Details des Dateizugriffs verantwortlich ist
 	private PersistenceManager pm = new FilePersistenceManager();
 	
 	private Vector<Ereignis> ereignisse = new Vector<Ereignis>();
@@ -75,7 +75,7 @@ public class Ereignisverwaltung {
 				//Ereignis wird aus dem Vector Elementen erstellt
 				er = new Ereignis((int) info.elementAt(0), p, (Typ) info.elementAt(2), art, (int) info.elementAt(4), date); 
 				
-				// Ereignisse in die Ereignisliste einfügen
+				// Ereignisse in die Ereignisliste einfuegen
 				einfuegen(er);
 				
 			} while (er.getId() != 0);
@@ -89,7 +89,7 @@ public class Ereignisverwaltung {
 	}
 	
 	public void schreibeDaten(String datei) throws IOException {
-		// PersistenzManager für Schreibvorgänge öffnen
+		// PersistenzManager fuer Schreibvorgänge öffnen
 		pm.openForWriting(datei);
 
 		if (!ereignisse.isEmpty()) {
@@ -116,10 +116,10 @@ public class Ereignisverwaltung {
 	
 	/**
 	 * Erstellt und speichert ein neues Ereignis
-	 * @param wer Person, die die Aktion durchgeführt hat
+	 * @param wer Person, die die Aktion durchgefuehrt hat
 	 * @param was Typ der Aktion (EINLAGERUNG, AUSLAGERUNG, KAUF, NEU)
 	 * @param womit Welcher Artikel ist betroffen
-	 * @param wieviel Betroffene Stückzahl
+	 * @param wieviel Betroffene Stueckzahl
 	 */
 	public void ereignisErstellen(Person wer, Typ was, Artikel womit, int wieviel){
 		ereignisse.add(new Ereignis(getNextID(), wer, was, womit, wieviel, new Date()));

@@ -6,7 +6,7 @@ import java.util.Date;
 
 /**
  * @author Fabian Niehaus
- * Dient zur Ereignisspeicherung für den eShop
+ * Dient zur Ereignisspeicherung fuer den eShop
  */
 public class Ereignis {
 
@@ -19,10 +19,10 @@ public class Ereignis {
 
 	
 	/**
-	 * @param wer Person, die die Aktion durchgeführt hat
+	 * @param wer Person, die die Aktion durchgefuehrt hat
 	 * @param was Typ der Aktion (EINLAGERUNG, AUSLAGERUNG, KAUF, NEU)
 	 * @param womit Welcher Artikel ist betroffen
-	 * @param wieviel Betroffene Stückzahl
+	 * @param wieviel Betroffene Stueckzahl
 	 */
 	public Ereignis(int id, Person wer, Typ was, Artikel womit, int wieviel, Date wann) {
 		super();
@@ -87,7 +87,7 @@ public class Ereignis {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
-		//Formatierungsvorlage für Datum
+		//Formatierungsvorlage fuer Datum
 		DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 				
 		return dateFormat.format(wann) + " | " + wer.getId() + ": " + wer.getLastname() + " " + wer.getLastname() + " | " + was + " | " + womit.getArtikelnummer() + ": " + womit.getBezeichnung() + " | " + wieviel; 

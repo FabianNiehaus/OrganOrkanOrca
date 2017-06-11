@@ -26,7 +26,7 @@ public class Mitarbeiterverwaltung {
 			try {
 				mi = pm.ladeMitarbeiter();
 				if (mi!= null) {
-					// Mitarbeiter in Mitarbeiterliste einfügen
+					// Mitarbeiter in Mitarbeiterliste einfuegen
 					einfuegen(mi);
 				}
 			} catch (InvalidPersonDataException e) {
@@ -46,7 +46,7 @@ public class Mitarbeiterverwaltung {
 	 * @throws IOException
 	 */
 	public void schreibeDaten(String datei) throws IOException  {
-		// PersistenzManager für Schreibvorgänge öffnen
+		// PersistenzManager fuer Schreibvorgänge öffnen
 		pm.openForWriting(datei);
 
 		if (!mitarbeiter.isEmpty()) {
@@ -116,7 +116,7 @@ public class Mitarbeiterverwaltung {
 		}
 	
 	/**
-	 * Fügt einen neuen Mitarbeiter hinzu
+	 * Fuegt einen neuen Mitarbeiter hinzu
 	 * @param einMa Neuer Mitarbeiter
 	 */
 	public void erstelleMitarbeiter(Mitarbeiter einMa) {

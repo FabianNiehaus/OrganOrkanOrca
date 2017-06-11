@@ -16,7 +16,7 @@ import persistence.*;
  */
 public class Artikelverwaltung {	
 	
-	// Persistenz-Schnittstelle, die für die Details des Dateizugriffs verantwortlich ist
+	// Persistenz-Schnittstelle, die fuer die Details des Dateizugriffs verantwortlich ist
 	private PersistenceManager pm = new FilePersistenceManager();
 	
 	//Vektor zur Speicherug der Artikel
@@ -29,7 +29,7 @@ public class Artikelverwaltung {
 	 * @throws IOException
 	 */
 	public void liesDaten(String datei) throws IOException {
-		// PersistenzManager für Lesevorgänge öffnen
+		// PersistenzManager fuer Lesevorgänge öffnen
 		pm.openForReading(datei);
 
 		Artikel art;
@@ -38,7 +38,7 @@ public class Artikelverwaltung {
 			art = pm.ladeArtikel();
 			
 			if (art!= null) {
-				// Artikel in Artikelliste einfügen
+				// Artikel in Artikelliste einfuegen
 				einfuegen(art);
 			}
 		} while (art != null);
@@ -54,7 +54,7 @@ public class Artikelverwaltung {
 	 * @throws IOException
 	 */
 	public void schreibeDaten(String datei) throws IOException  {
-		// PersistenzManager für Schreibvorgänge öffnen
+		// PersistenzManager fuer Schreibvorgänge öffnen
 		pm.openForWriting(datei);
 
 		if (!artikel.isEmpty()) {
@@ -70,8 +70,8 @@ public class Artikelverwaltung {
 	}
 	
 	/**
-	 * Artikel in Liste der Verwalteten Artikel einfügen
-	 * @param art Einzufügender Artikel
+	 * Artikel in Liste der Verwalteten Artikel einfuegen
+	 * @param art Einzufuegender Artikel
 	 */
 	public void einfuegen(Artikel art){
 		try{
@@ -82,7 +82,7 @@ public class Artikelverwaltung {
 	}
 	
 	/**
-	 * Gibt alle verwalteten Artikel zurück
+	 * Gibt alle verwalteten Artikel zurueck
 	 * @return Verwatlete Artikel
 	 */
 	public Vector<Artikel> getArtikel() {
@@ -105,7 +105,7 @@ public class Artikelverwaltung {
 	
 	
 	/**
-	 * Erstellt einen neuen Artikel und fügt ihn in die Liste der verwalteten Artikel ein.
+	 * Erstellt einen neuen Artikel und fuegt ihn in die Liste der verwalteten Artikel ein.
 	 * @param bezeichnung Artikelbezeichnung
 	 * @param bestand Artikelbestand
 	 * @param preis Artikelpreis

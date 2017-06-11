@@ -69,7 +69,7 @@ public class FilePersistenceManager implements PersistenceManager {
 
 	/**
 	 * Methode zum Einlesen der Artikeldaten aus einer externen Datenquelle.
-	 * Das Verfügbarkeitsattribut ist in der Datenquelle (Datei) als "t" oder "f"
+	 * Das Verfuegbarkeitsattribut ist in der Datenquelle (Datei) als "t" oder "f"
 	 * codiert abgelegt.
 	 * 
 	 * @return Artikel-Objekt, wenn Einlesen erfolgreich, false null
@@ -134,7 +134,7 @@ public class FilePersistenceManager implements PersistenceManager {
 
 	/**
 	 * Methode zum Schreiben der Artikeldaten in eine externe Datenquelle.
-	 * Das Verfügbarkeitsattribut wird in der Datenquelle (Datei) als "t" oder "f"
+	 * Das Verfuegbarkeitsattribut wird in der Datenquelle (Datei) als "t" oder "f"
 	 * codiert abgelegt.
 	 * 
 	 * @param art Artikel-Objekt, das gespeichert werden soll

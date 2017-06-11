@@ -19,9 +19,9 @@ public class Warenkorb {
 	private Map<Artikel,Integer> artikel = new LinkedHashMap<>();
 	
 	/**
-	 * Prüft, ob ein bestimmter Artikel in diesem Warenkorb liegt.
-	 * @param art Zu überprüfender Artikel
-	 * @return Gibt <b>true</b> zurück, wenn zu prüfender Artikel in der HAsMap artikel gespeichert ist. Sonst <b>false</b>.
+	 * Prueft, ob ein bestimmter Artikel in diesem Warenkorb liegt.
+	 * @param art Zu ueberpruefender Artikel
+	 * @return Gibt <b>true</b> zurueck, wenn zu pruefender Artikel in der HAsMap artikel gespeichert ist. Sonst <b>false</b>.
 	 */
 	public boolean sucheArtikel(Artikel art){
 		if(!artikel.isEmpty()){
@@ -36,7 +36,7 @@ public class Warenkorb {
 	}
 	
 	/**
-	 * Dient zur Änderung der Anzahl eines Artikels im Warenkorb. Der Zugriff erfolgt (nutzerfreundlich) über die Position des Artikels im Warenkorb.
+	 * Dient zur Änderung der Anzahl eines Artikels im Warenkorb. Der Zugriff erfolgt (nutzerfreundlich) ueber die Position des Artikels im Warenkorb.
 	 * @param pos Position des Artikels im Warenkorb
 	 * @param anz Neue Anzahl (muss größer 0 sein)
 	 * @throws Nicht genug Artikel auf Lager
@@ -63,8 +63,8 @@ public class Warenkorb {
 	
 	/**
 	 * Legt einen Artikel im Warenkorb ab
-	 * @param art Gewünschter Artikel
-	 * @param anz Gewünschte Anzahl (muss größer 0 sein)
+	 * @param art Gewuenschter Artikel
+	 * @param anz Gewuenschte Anzahl (muss größer 0 sein)
 	 * @throws ArticleAlreadyInBasketException 
 	 * @throws Nicht genug Artikel auf Lager
 	 */
@@ -110,16 +110,16 @@ public class Warenkorb {
 	}
 	
 	/**
-	 * @return Gibt die LinkedHashMap mit Artikeln und Anzahl zurück
+	 * @return Gibt die LinkedHashMap mit Artikeln und Anzahl zurueck
 	 */
 	public Map<Artikel, Integer> getArtikel(){
 		return artikel;
 	}
 	
 	/**
-	 * Prüft, ob genug Bestand von einem Artikel verfügbar ist 
-	 * @param art Gewünschter Artikel
-	 * @param anz Gewünschte Anzahl
+	 * Prueft, ob genug Bestand von einem Artikel verfuegbar ist 
+	 * @param art Gewuenschter Artikel
+	 * @param anz Gewuenschte Anzahl
 	 */
 	private void pruefeBestand(Artikel art, int anz) throws ArticleStockNotSufficientException{
 		if (art.getBestand() < anz){
