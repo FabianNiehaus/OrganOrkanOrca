@@ -114,11 +114,11 @@ public class Artikelverwaltung {
 	 */
 	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, int packungsgroesse) throws InvalidAmountException{
 		if(packungsgroesse == 1){
-			Artikel art = new Artikel(bezeichnung, getNextID(), bestand, preis);
+			Artikel art = new Artikel(bezeichnung, getNextID(), bestand, preis, null);
 			artikel.add(art);
 			return art;
 		} if(packungsgroesse > 1){
-			Massengutartikel art = new Massengutartikel(bezeichnung, getNextID(), bestand, preis, packungsgroesse);
+			Massengutartikel art = new Massengutartikel(bezeichnung, getNextID(), bestand, preis, packungsgroesse, null);
 			artikel.add(art);
 			return art;
 		} else {

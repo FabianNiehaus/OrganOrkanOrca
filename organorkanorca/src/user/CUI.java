@@ -14,6 +14,7 @@ import data_objects.Mitarbeiter;
 import domain.eShopCore;
 import domain.exceptions.LoginFailedException;
 import domain.exceptions.MaxIDsException;
+import domain.exceptions.PersonNonexistantException;
 import domain.exceptions.AccessRestrictedException;
 import domain.exceptions.ArticleAlreadyInBasketException;
 import domain.exceptions.ArticleNonexistantException;
@@ -33,7 +34,7 @@ public class CUI {
 	private eShopCore eShop;
 	private Person user = null; 
 	
-	public CUI() throws IOException {
+	public CUI() throws IOException, ArticleNonexistantException, PersonNonexistantException {
 
 		eShop = new eShopCore();
 
@@ -532,6 +533,12 @@ public class CUI {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			e.getMessage();
+		} catch (ArticleNonexistantException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (PersonNonexistantException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 	}

@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Vector;
 
 import data_objects.*;
@@ -72,16 +75,13 @@ public class FilePersistenceManager implements PersistenceManager {
 	 * @return Artikel-Objekt, wenn Einlesen erfolgreich, false null
 	 */
 	public Artikel ladeArtikel() throws IOException {
-		/*
-		//Artikel-Header suchen
-		while(!liesZeile().equals("<---ARTIKEL--->"));{}
-		*/
-		
+
 		int artikelnummer = 0;
 		String bezeichnung = "";
 		double preis = 0;
 		int bestand = 0;
 		int packungsgroesse = 0;
+		Map<Integer,Integer> bestandsverlauf = null;
 		
 		//Lies Artikelnummer
 		try{
@@ -102,11 +102,33 @@ public class FilePersistenceManager implements PersistenceManager {
 		
 		//Lies Packungsgröße
 		packungsgroesse = Integer.parseInt(liesZeile());
+		
+		//Lies Bestandshistory
+		try{
+			reader.mark(400);
+			if(liesZeile().equals("---BEGINHISTORY---")){
+				
+				bestandsverlauf = new LinkedHashMap<>();
+				
+				String content = liesZeile();
+				
+				while(!liesZeile().equals("---ENDHISTORY---")){
 
+					String[] contents = content.split("|");
+					
+					bestandsverlauf.put(Integer.parseInt(contents[0]), Integer.parseInt(contents[1]));
+				}
+			} else {
+				reader.reset();
+			}
+		} catch (NullPointerException e) {
+			
+		}
+		
 		if(packungsgroesse == 1){
-			return new Artikel(bezeichnung, artikelnummer, bestand, preis);
+			return new Artikel(bezeichnung, artikelnummer, bestand, preis, bestandsverlauf);
 		} else {
-			return new Massengutartikel(bezeichnung, artikelnummer, bestand, preis, packungsgroesse);
+			return new Massengutartikel(bezeichnung, artikelnummer, bestand, preis, packungsgroesse, bestandsverlauf);
 		}
 	}
 
@@ -119,10 +141,6 @@ public class FilePersistenceManager implements PersistenceManager {
 	 * @return true, wenn Schreibvorgang erfolgreich, false sonst
 	 */
 	public boolean speichereArtikel(Artikel art) throws IOException {
-		/*
-		//Schreibe Artikel-Header
-		schreibeZeile("<---ARTIKEL--->");
-		*/
 		
 		//Schreibe Artikelnummer
 		schreibeZeile(String.valueOf(art.getArtikelnummer()));
@@ -141,11 +159,13 @@ public class FilePersistenceManager implements PersistenceManager {
 		else {
 			schreibeZeile(String.valueOf(1));
 		}
-				
-		/*
-		//Schreibe Artikel-Limiter
-		schreibeZeile("<---END ARTIKEL--->");
-		*/
+		
+		schreibeZeile("---BEGINHISTORY---");
+		//Bestandhistory schreiben
+		for(Entry<Integer, Integer> ent : art.getBestandsverlauf().entrySet()){
+			schreibeZeile(String.valueOf(ent.getKey()) + "|" + String.valueOf(ent.getValue()));
+		}
+		schreibeZeile("---ENDHISTORY---");
 		
 		return true;
 	}

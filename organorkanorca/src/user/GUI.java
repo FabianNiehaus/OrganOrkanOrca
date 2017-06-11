@@ -49,6 +49,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Vector;
 
 public class GUI {
@@ -66,13 +67,15 @@ public class GUI {
 			
 			eShop = new eShopCore();
 			
-		} catch (IOException e1) {
+			loginwindow = new LoginWindow("OrganOrkanOrca eShop");
 			
-			JOptionPane.showMessageDialog(loginwindow, "Fehler beim Lesen der Bestandsdaten!");
+		} catch (IOException | ArticleNonexistantException | PersonNonexistantException e1) {
 			
-			loginwindow.dispose();
+			JOptionPane.showMessageDialog(null, "Fehler beim Lesen der Bestandsdaten!");
 			
 		}
+		
+		
 	}
 	
 	private class LoginButtonListener implements ActionListener{
@@ -586,16 +589,18 @@ public class GUI {
 						
 						int dateCounter = 0;
 						
-						for (Integer i : art.getBestandsverlauf()){
-		
-						    final Calendar cal = Calendar.getInstance();
-						    cal.add(Calendar.DATE, -dateCounter);
+						for (Entry ent : art.getBestandsverlauf().entrySet()){
+
+							int dayOfYear = (int) ent.getKey();
 							
-							String date = String.valueOf(cal.get(Calendar.DAY_OF_MONTH)) + "." +  String.valueOf(cal.get(Calendar.MONTH) + 1) + ".";
+							Calendar calendar = Calendar.getInstance();
 							
-							dataset.addValue(i, "Bestand", date);
+							calendar.set(Calendar.DAY_OF_YEAR, dayOfYear);
 							
-							dateCounter++;
+							String date = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)) + "." +  String.valueOf(calendar.get(Calendar.MONTH) + 1) + ".";
+
+							dataset.addValue((int)ent.getValue(), "Bestand", date);
+							
 						}
 						
 						JFreeChart chart = ChartFactory.createLineChart("Bestandsverlauf", "Tag", "Bestand", dataset);

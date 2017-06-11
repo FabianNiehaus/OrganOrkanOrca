@@ -40,8 +40,10 @@ public class eShopCore {
 	private String dateipfad = "";
 	
 	/**
+	 * @throws PersonNonexistantException 
+	 * @throws ArticleNonexistantException 
 	 */
-	public eShopCore() throws IOException {
+	public eShopCore() throws IOException, ArticleNonexistantException, PersonNonexistantException {
 		super();
 		av = new Artikelverwaltung();
 		kv = new Kundenverwaltung();
@@ -50,14 +52,8 @@ public class eShopCore {
 		rv = new Rechnungsverwaltung();
 		ev = new Ereignisverwaltung(kv,mv,av);
 		
-		try {
-			ladeDaten();
-		} catch (ArticleNonexistantException e) {
-			
-		} catch (PersonNonexistantException e) {
-			
-		}
-		
+		ladeDaten();
+
 	}
 
 	/**

@@ -1,5 +1,8 @@
 package data_objects;
 
+import java.util.Calendar;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Vector;
 
 public class Artikel {
@@ -10,16 +13,18 @@ public class Artikel {
 	 * @param bestand	Aktueller Bestand des Artikels
 	 * @param preis	Preis des Artikels
 	 */
-	public Artikel(String bezeichnung, int artikelnummer, int bestand, double preis) {
+	public Artikel(String bezeichnung, int artikelnummer, int bestand, double preis, Map<Integer,Integer> bestandsverlauf) {
 		super();
 		this.bezeichnung = bezeichnung;
 		this.artikelnummer = artikelnummer;
 		this.bestand = bestand;
 		this.preis = preis;
-		
-		bestandsverlauf = new Vector<>(0);
-		
-		bestandsverlauf.addElement(bestand);
+
+		if(bestandsverlauf != null){
+			this.bestandsverlauf = bestandsverlauf;
+		} 
+		this.bestandsverlauf.put(Calendar.DAY_OF_YEAR,bestand);
+
 	}
 	
 	/**
@@ -51,7 +56,7 @@ public class Artikel {
 	private int bestand;
 	private double preis;
 	
-	private Vector<Integer> bestandsverlauf;
+	private Map<Integer,Integer> bestandsverlauf = new LinkedHashMap<>();
 	
 	/* Nocht nicht verwendet
 	private String kategorie;
@@ -120,15 +125,16 @@ public class Artikel {
 	public void aktualisiereBestandsverlauf(){
 		
 		if (bestandsverlauf.size() >= 30){
+			
 			bestandsverlauf.remove(0);
 			
 		} 
 		
-		bestandsverlauf.add(bestand);
+		bestandsverlauf.put(Calendar.DAY_OF_YEAR,bestand);
 		
 	}
 	
-	public Vector<Integer> getBestandsverlauf(){
+	public Map<Integer,Integer> getBestandsverlauf(){
 		return bestandsverlauf;
 	}
 	
