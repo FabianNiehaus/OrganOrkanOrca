@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Vector;
 
 import data_objects.Artikel;
+import data_objects.Ereignis;
 import data_objects.Kunde;
-import data_objects.Massengutartikel;
 import data_objects.Mitarbeiter;
 import data_objects.Person;
 import data_objects.Rechnung;
@@ -30,7 +30,7 @@ import domain.exceptions.InvalidPersonDataException;
  */
 public class eShopCore {
 
-	private Artikelverwaltung av;
+	Artikelverwaltung av;
 	private Kundenverwaltung kv;
 	private Mitarbeiterverwaltung mv;
 	private Warenkorbverwaltung wv;
@@ -195,23 +195,13 @@ public class eShopCore {
 	public void artikelInWarenkorbLegen(int artikelnummer, int anzahl, Person p) throws ArticleNonexistantException, ArticleStockNotSufficientException, AccessRestrictedException, InvalidAmountException, ArticleAlreadyInBasketException{
 		if(istKunde(p)){
 			Warenkorb wk = kv.gibWarenkorbVonKunde(p);
-	
 			Artikel art = av.sucheArtikel(artikelnummer);
-			if(art instanceof Massengutartikel){
-				Massengutartikel tmp = (Massengutartikel) art;
-				if (anzahl % tmp.getPackungsgroesse() != 0){
-					throw new InvalidAmountException(tmp);
-				} else {
-					wv.legeInWarenkorb(wk, tmp, anzahl);
-				}
-			} else {
-				wv.legeInWarenkorb(wk, art, anzahl);
-			}
+			wv.artikelInWarenkorbLegen(art, anzahl, wk);
 		} else {
 			throw new AccessRestrictedException(p, "\"Artikel in Warenkorb legen\"");
 		}
 	}
-	
+
 	/**
 	 * Gibt den Warenkorb eines Kunden zurueck
 	 * @param p Userobjekt
@@ -278,8 +268,9 @@ public class eShopCore {
 					av.erhoeheBestand(ent.getKey().getArtikelnummer(), -1 * ent.getValue());
 					//Ereignis erstellen
 					ev.ereignisErstellen(p, Typ.KAUF, ent.getKey(), (int) ent.getValue());
+					//TODO Ereigniserstellung in Verwaltungen auslagern
 				} catch (ArticleNonexistantException anne){
-					
+					//TODO
 				}
 				gesamt += (ent.getValue() * ent.getKey().getPreis());
 			}
@@ -385,5 +376,13 @@ public class eShopCore {
 
 	public Kunde kundeSuchen(int id, Person p) throws PersonNonexistantException {
 		return kv.sucheKunde(id);
+	}
+	
+	public Vector<Ereignis> alleEreignisseAusgeben(Person p) throws AccessRestrictedException{
+		if(istMitarbeiter(p)){
+			return ev.getEreignisse();
+		} else {
+			throw new AccessRestrictedException(p, "Kunde löschen");
+		}
 	}
 }

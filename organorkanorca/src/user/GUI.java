@@ -7,6 +7,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 import org.jdesktop.swingx.JXTable;
@@ -17,12 +18,14 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.xy.XYDataset;
 
 import data_objects.Artikel;
+import data_objects.Ereignis;
 import data_objects.Kunde;
 import data_objects.Massengutartikel;
 import data_objects.Mitarbeiter;
 import data_objects.Person;
 import data_objects.Rechnung;
 import data_objects.Warenkorb;
+import domain.Ereignisverwaltung;
 import domain.eShopCore;
 import domain.exceptions.AccessRestrictedException;
 import domain.exceptions.ArticleAlreadyInBasketException;
@@ -61,8 +64,6 @@ public class GUI {
 	
 	public GUI() {
 		
-		loginwindow = new LoginWindow("OrganOrkanOrca eShop");
-		
 		try {
 			
 			eShop = new eShopCore();
@@ -85,7 +86,7 @@ public class GUI {
 			try {
 				user = eShop.anmelden(loginwindow.benutzerIdAuslesen(), loginwindow.passwortAuslesen());
 				mainwindow = new MainWindow("OrganOrkanOrca eShop");
-				loginwindow.dispose();		
+				loginwindow.dispose();
 			} catch (NumberFormatException | LoginFailedException e1) {
 				JOptionPane.showMessageDialog(loginwindow, "Anmeldung fehlgeschlagen");
 			}
@@ -699,16 +700,114 @@ public class GUI {
 			
 			JButton ladenButton = new JButton("Bestandsdaten importieren");
 			
+			EreignisTableModel etm;
+			
+			JXTable auflistung = new JXTable();
+			JScrollPane auflistungContainer = new JScrollPane(auflistung);
+			
 			public ShopManagement(){
 				
-				speichernButton.addActionListener(new PersistenceButtonListener());
-				ladenButton.addActionListener(new PersistenceButtonListener());
-				
-				this.add(speichernButton);
-				this.add(ladenButton);
+				try {
+					
+					speichernButton.addActionListener(new PersistenceButtonListener());
+					ladenButton.addActionListener(new PersistenceButtonListener());
+					
+					this.add(speichernButton);
+					this.add(ladenButton);
+					this.add(auflistungContainer);
+					
+					auflistungInitialize();
+					
+				} catch (AccessRestrictedException e) {
+					//TODO
+				}
 				
 			}
 			
+			public void auflistungInitialize() throws AccessRestrictedException {
+				
+				Vector<Vector<Object>> data = new Vector<>();
+				
+				DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+				
+				for(Ereignis er : eShop.alleEreignisseAusgeben(user) ){
+					
+					Vector<Object> tmp = new Vector<>();
+
+					tmp.addElement(dateFormat.format(er.getWann()));
+					tmp.addElement(er.getId());
+					tmp.addElement(er.getTyp());
+					tmp.addElement(er.getWomit().getArtikelnummer());
+					tmp.addElement(er.getWomit().getBezeichnung());
+					tmp.addElement(er.getWieviel());
+					tmp.addElement(er.getWer().getId());
+					tmp.addElement(er.getWer().getFirstname() + " " + er.getWer().getLastname());
+					
+					
+					data.addElement(tmp);
+				}
+					
+				
+				etm = new EreignisTableModel(data);
+				auflistung.setModel(etm);
+				
+				TableRowSorter<EreignisTableModel> sorter = new TableRowSorter<EreignisTableModel>(etm);
+				
+				auflistung.setRowSorter(sorter);
+				
+				/*
+				int prefferedWidth = 0;
+				
+				for(TableColumn tc)
+				
+				auflistung.setPreferredScrollableViewportSize(auflistung.);
+				*/
+				
+			}
+			
+			class EreignisTableModel extends AbstractTableModel{
+				
+				Vector<String> columnIdentifiers;
+				Vector<Vector<Object>> dataVector;
+				
+				public EreignisTableModel(Vector<Vector<Object>> data) {
+					
+					columnIdentifiers = setColumns(new String[]{"Datum","Id","Aktion","ArtikelNr","Artikel","Anzahl","UserID","Name"});
+					dataVector = data;
+					
+				}
+				
+				public Vector<String> setColumns(String[] columnNames){
+					Vector<String> columns = new Vector<>();
+					
+					for(String str : columnNames){
+						columns.addElement(str);
+					}
+					
+					return columns;
+				}
+		
+				@Override
+				public int getColumnCount() {
+					return columnIdentifiers.size();
+				}
+		
+				@Override
+				public int getRowCount() {
+					return dataVector.size();
+				}
+		
+				@Override
+				public Object getValueAt(int arg0, int arg1) {
+					return dataVector.elementAt(arg0).elementAt(arg1);
+				}
+				
+				@Override
+				public String getColumnName(int column) {
+					  return columnIdentifiers.elementAt(column);
+				}
+				
+			}
 			
 			class PersistenceButtonListener implements ActionListener{
 
@@ -1672,8 +1771,10 @@ public class GUI {
 						
 						leftArea.add(shopManagement,BorderLayout.CENTER);
 						
-						//leftArea.revalidate();
+						leftArea.revalidate();
 						leftArea.repaint();
+						
+						rightArea.removeAll();
 						
 						mainwindow.pack();
 						

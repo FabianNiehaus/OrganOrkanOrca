@@ -75,6 +75,7 @@ public class Warenkorb {
 				artikel.put(art, anz);
 			} 
 		} else {
+			// TODO Stattdessen Anzahl im WK erhöhen
 			throw new ArticleAlreadyInBasketException(art.getBezeichnung());
 		}
 	}

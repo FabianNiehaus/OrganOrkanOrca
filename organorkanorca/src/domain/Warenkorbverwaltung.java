@@ -4,8 +4,10 @@ import java.util.Map;
 import java.util.Vector;
 import data_objects.*;
 import domain.exceptions.ArticleAlreadyInBasketException;
+import domain.exceptions.ArticleNonexistantException;
 import domain.exceptions.ArticleStockNotSufficientException;
 import domain.exceptions.BasketNonexistantException;
+import domain.exceptions.InvalidAmountException;
 
 /**
  * @author Fabian Niehaus
@@ -97,6 +99,21 @@ public class Warenkorbverwaltung {
 	 */
 	public Map<Artikel, Integer> getArtikel(Warenkorb wk){
 		return wk.getArtikel();
+	}
+
+	public void artikelInWarenkorbLegen(Artikel art, int anzahl, Warenkorb wk)
+			throws ArticleNonexistantException, InvalidAmountException, ArticleStockNotSufficientException,
+			ArticleAlreadyInBasketException {
+		if(art instanceof Massengutartikel){
+			Massengutartikel tmp = (Massengutartikel) art;
+			if (anzahl % tmp.getPackungsgroesse() != 0){
+				throw new InvalidAmountException(tmp);
+			} else {
+				legeInWarenkorb(wk, tmp, anzahl);
+			}
+		} else {
+			legeInWarenkorb(wk, art, anzahl);
+		}
 	}
 	
 }

@@ -45,6 +45,15 @@ public class FilePersistenceManager implements PersistenceManager {
 	 */
 	public void openForWriting(String datei) throws IOException {
 		writer = new PrintWriter(new BufferedWriter(new FileWriter(datei)));
+		
+		//Dokument leeren
+		if (writer != null){
+			
+			writer.print("");
+			close();		
+			writer = new PrintWriter(new BufferedWriter(new FileWriter(datei)));
+			
+		}
 	}
 
 	/* (non-Javadoc)
@@ -141,7 +150,7 @@ public class FilePersistenceManager implements PersistenceManager {
 	 * @return true, wenn Schreibvorgang erfolgreich, false sonst
 	 */
 	public boolean speichereArtikel(Artikel art) throws IOException {
-		
+
 		//Schreibe Artikelnummer
 		schreibeZeile(String.valueOf(art.getArtikelnummer()));
 		//Schreibe Artikelbezeichnung
@@ -216,7 +225,7 @@ public class FilePersistenceManager implements PersistenceManager {
 	}
 	
 	public boolean speichereKunde(Kunde ku) throws IOException {
-		
+
 		//Schreibe ID
 		schreibeZeile(String.valueOf(ku.getId()));
 		//Schreibe firstname
@@ -264,7 +273,7 @@ public class FilePersistenceManager implements PersistenceManager {
 	}
 	
 	public boolean speichereMitarbeiter(Mitarbeiter mi) throws IOException {
-		
+
 		//Schreibe ID
 		schreibeZeile(String.valueOf(mi.getId()));
 		//Schreibe firstname
@@ -355,4 +364,5 @@ public class FilePersistenceManager implements PersistenceManager {
 		if (writer != null)
 			writer.println(daten);
 	}
+	
 }

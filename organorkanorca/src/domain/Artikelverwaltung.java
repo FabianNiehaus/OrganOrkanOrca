@@ -56,7 +56,7 @@ public class Artikelverwaltung {
 	public void schreibeDaten(String datei) throws IOException  {
 		// PersistenzManager fuer Schreibvorgänge öffnen
 		pm.openForWriting(datei);
-
+		
 		if (!artikel.isEmpty()) {
 			Iterator<Artikel> iter = artikel.iterator();
 			while (iter.hasNext()) {
