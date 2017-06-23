@@ -24,11 +24,6 @@ import net.miginfocom.swing.MigLayout;
 
 public class LoginWindow extends JFrame {
 	
-	public interface LoginListener {
-		public void userLoggedIn(Person user);
-		public void loginCancelled();
-	}
-	
 	JTabbedPane tabbedPane = new JTabbedPane();
 	
 	JLabel benutzerLabel = new JLabel("Benutzer");
@@ -109,8 +104,6 @@ public class LoginWindow extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			try {
 				Person user = eShop.anmelden(LoginWindow.this.benutzerIdAuslesen(), LoginWindow.this.passwortAuslesen());
-//				mainwindow = new MainWindow("OrganOrkanOrca eShop");
-//				loginwindow.dispose();
 				loginListener.userLoggedIn(user);
 			} catch (NumberFormatException | LoginFailedException e1) {
 				JOptionPane.showMessageDialog(LoginWindow.this, "Anmeldung fehlgeschlagen");
@@ -122,31 +115,25 @@ public class LoginWindow extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-//			try {
-//				user = eShop.anmelden(1001, "test");
-//			} catch (LoginFailedException e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			}
-//			mainwindow = new MainWindow("OrganOrkanOrca eShop");
-//			loginwindow.dispose();
-			
+			try {
+				Person user = eShop.anmelden(1001, "test");
+				loginListener.userLoggedIn(user);
+			} catch (LoginFailedException e1) {
+				e1.printStackTrace();
+			}
 		}
-		
 	}
 	
 	private class LoginMitarbeiterUmgehenListener implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-//			try {
-//				user = eShop.anmelden(9000, "test2");
-//			} catch (LoginFailedException e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			}
-//			mainwindow = new MainWindow("OrganOrkanOrca eShop");
-//			loginwindow.dispose();
+			try {
+				Person user = eShop.anmelden(9000, "test2");
+				loginListener.userLoggedIn(user);
+			} catch (LoginFailedException e1) {
+				e1.printStackTrace();
+			}
 		}
 	}
 	
