@@ -58,11 +58,26 @@ public class Warenkorbverwaltung {
 	 * @param aend Zu bearbeitender Warenkorb
 	 * @param position Position des zu verändernden Artikels
 	 * @param anz Neue Anzahl
+	 * @throws InvalidAmountException 
 	 * @throws Nicht genug Artikel auf Lager
 	 */
-	public void aendereWarenkorb(Warenkorb aend, int position, int anz) throws ArticleStockNotSufficientException, BasketNonexistantException {
-		Warenkorb wk = getWarenkorb(aend);
-		wk.aendereAnzahl(position, anz);
+	public void aendereWarenkorb(Warenkorb wk, Artikel art, int anz) throws ArticleStockNotSufficientException, BasketNonexistantException, InvalidAmountException {
+		
+		if(art instanceof Massengutartikel){
+			Massengutartikel tmp = (Massengutartikel) art;
+			if(anz % tmp.getPackungsgroesse() != 0){
+				throw new InvalidAmountException(tmp);
+			} else {
+				wk.aendereAnzahl(art, wk.getArtikel().get(art) + anz);
+			}
+		} else {
+			wk.aendereAnzahl(art, wk.getArtikel().get(art) + anz);
+		}
+		
+	}
+	
+	public void loescheAusWarenkorn(Warenkorb wk, Artikel art){
+		wk.loescheArtikel(art);
 	}
 	
 	/**

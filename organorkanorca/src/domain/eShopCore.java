@@ -42,8 +42,9 @@ public class eShopCore {
 	/**
 	 * @throws PersonNonexistantException 
 	 * @throws ArticleNonexistantException 
+	 * @throws InvalidPersonDataException 
 	 */
-	public eShopCore() throws IOException, ArticleNonexistantException, PersonNonexistantException {
+	public eShopCore() throws IOException, ArticleNonexistantException, PersonNonexistantException, InvalidPersonDataException {
 		super();
 		av = new Artikelverwaltung();
 		kv = new Kundenverwaltung();
@@ -136,6 +137,21 @@ public class eShopCore {
 			return kv.erstelleKunde(firstname, lastname, passwort, address_Street, address_Zip, address_Town, wv.erstelleWarenkorb());
 		} else {
 			throw new AccessRestrictedException(p, "\"Kunde anlegen\"");
+		}
+	}
+	
+	/**
+	 * Erstellt einen neuen Mitarbeiter mit fortlaufender Kundennummer
+	 * @param firstname Vorname des anzulegenden Kunden
+	 * @param lastname Nachname des anzulegenden Kunden
+	 * @throws AccessRestrictedException 
+	 * @throws InvalidPersonDataException 
+	 */
+	public Mitarbeiter erstelleMitatbeiter(String firstname, String lastname, String passwort, String address_Street, String address_Zip, String address_Town, Person p) throws MaxIDsException, AccessRestrictedException, InvalidPersonDataException{
+		if(istMitarbeiter(p) || p == null){
+			return mv.erstelleMitarbeiter(firstname, lastname, passwort, address_Street, address_Zip, address_Town);
+		} else {
+			throw new AccessRestrictedException(p, "\"Mitarbeiter anlegen\"");
 		}
 	}
 	
@@ -237,13 +253,23 @@ public class eShopCore {
 	 * @param p Userobjekt
 	 * @throws ArticleStockNotSufficientException Artikelbestand nicht ausreichend
 	 * @throws AccessRestrictedException 
+	 * @throws InvalidAmountException 
 	 */
-	public void artikelInWarenkorbAendern(int pos, int anz, Person p) throws ArticleStockNotSufficientException, BasketNonexistantException, AccessRestrictedException{
+	public void artikelInWarenkorbAendern(Artikel art, int anz, Person p) throws ArticleStockNotSufficientException, BasketNonexistantException, AccessRestrictedException, InvalidAmountException{
 		if(istKunde(p)){
 			Warenkorb wk = kv.gibWarenkorbVonKunde(p);
-			wv.aendereWarenkorb(wk, pos, anz);
+			wv.aendereWarenkorb(wk, art, anz);
 		} else {
 			throw new AccessRestrictedException(p, "\"Anzahl Artikel in Warenkorb ändern\"");
+		}
+	}
+	
+	public void artikelAusWarenkorbEntfernen(Artikel art, Person p) throws AccessRestrictedException{
+		if(istKunde(p)){
+			Warenkorb wk = kv.gibWarenkorbVonKunde(p);
+			wv.loescheAusWarenkorn(wk, art);
+		} else {
+			throw new AccessRestrictedException(p, "\"Artikel aus Warenkorb löschen\"");
 		}
 	}
 	
@@ -304,7 +330,7 @@ public class eShopCore {
 		ev.schreibeDaten(dateipfad + "EREIGNISSE.txt");
 	}
 	
-	public void ladeDaten() throws IOException, ArticleNonexistantException, PersonNonexistantException {
+	public void ladeDaten() throws IOException, ArticleNonexistantException, PersonNonexistantException, InvalidPersonDataException {
 		av.liesDaten(dateipfad + "ARTIKEL.txt");
 		kv.liesDaten(dateipfad + "KUNDEN.txt", wv);
 		mv.liesDaten(dateipfad + "MITARBEITER.txt");
@@ -377,6 +403,10 @@ public class eShopCore {
 
 	public Kunde kundeSuchen(int id, Person p) throws PersonNonexistantException {
 		return kv.sucheKunde(id);
+	}
+	
+	public Mitarbeiter mitarbeiterSuchen(int id, Person p) throws PersonNonexistantException {
+		return mv.sucheMitarbeiter(id);
 	}
 	
 	public Vector<Ereignis> alleEreignisseAusgeben(Person p) throws AccessRestrictedException{

@@ -5,6 +5,7 @@ import javax.swing.JOptionPane;
 import data_objects.Person;
 import domain.eShopCore;
 import domain.exceptions.ArticleNonexistantException;
+import domain.exceptions.InvalidPersonDataException;
 import domain.exceptions.PersonNonexistantException;
 
 public class GUI implements LoginListener {
@@ -22,7 +23,7 @@ public class GUI implements LoginListener {
 			
 			loginwindow = new LoginWindow("OrganOrkanOrca eShop", eShop, this);
 			
-		} catch (IOException | ArticleNonexistantException | PersonNonexistantException e1) {
+		} catch (IOException | ArticleNonexistantException | PersonNonexistantException | InvalidPersonDataException e1) {
 			
 			JOptionPane.showMessageDialog(null, "Fehler beim Lesen der Bestandsdaten!");
 			

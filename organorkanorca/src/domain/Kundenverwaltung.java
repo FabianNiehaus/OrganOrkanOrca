@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import data_objects.Kunde;
+import data_objects.Mitarbeiter;
 import data_objects.Person;
 import data_objects.Warenkorb;
 import domain.exceptions.InvalidPersonDataException;
@@ -32,31 +33,22 @@ public class Kundenverwaltung {
 	 * 
 	 * @param datei Datei, die einzulesenden 
 	 * @throws IOException
+	 * @throws InvalidPersonDataException 
 	 */
-	public void liesDaten(String datei, Warenkorbverwaltung wv) throws IOException {
+	public void liesDaten(String datei, Warenkorbverwaltung wv) throws IOException, InvalidPersonDataException {
 		// PersistenzManager f�r Lesevorgänge öffnen
 		pm.openForReading(datei);
 
-		Kunde ku;
-		
-		try{
-			do {
-			
-				Vector<Object> info = pm.ladeKunde();
-				
-				ku = new Kunde((String) info.elementAt(1), (String) info.elementAt(2), (int) info.elementAt(0), (String) info.elementAt(3), (String) info.elementAt(4), (String) info.elementAt(5), (String) info.elementAt(6), wv.erstelleWarenkorb()); 
-				
-				// Kunden in Kundenliste einfuegen
+		Kunde ku = null;
+		do {
+			// Kunde-Objekt einlesen
+			ku = pm.ladeKunde();
+			if (ku!= null) {
+				// Mitarbeiter in Mitarbeiterliste einfuegen
 				einfuegen(ku);
-				
-			} while (ku.getId() != 0);
-		} catch (NullPointerException npe){
+			}
+		} while (ku != null);
 			
-		} catch (InvalidPersonDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 		// Persistenz-Schnittstelle wieder schließen
 		pm.close();
 	}

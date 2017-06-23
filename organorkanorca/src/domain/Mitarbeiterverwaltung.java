@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Vector;
 
+import data_objects.Kunde;
 import data_objects.Mitarbeiter;
+import data_objects.Warenkorb;
 import domain.exceptions.*;
 import persistence.FilePersistenceManager;
 import persistence.PersistenceManager;
@@ -16,23 +18,19 @@ public class Mitarbeiterverwaltung {
 	// Persistenz-Schnittstelle, die f�r die Details des Dateizugriffs verantwortlich ist
 	private PersistenceManager pm = new FilePersistenceManager();
 	
-	public void liesDaten(String datei) throws IOException {
+	public void liesDaten(String datei) throws IOException, InvalidPersonDataException {
 		// PersistenzManager f�r Lesevorgänge öffnen
 		pm.openForReading(datei);
 
 		Mitarbeiter mi = null;
 		do {
 			// Mitarbeiter-Objekt einlesen
-			try {
-				mi = pm.ladeMitarbeiter();
-				if (mi!= null) {
-					// Mitarbeiter in Mitarbeiterliste einfuegen
-					einfuegen(mi);
-				}
-			} catch (InvalidPersonDataException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			mi = pm.ladeMitarbeiter();
+			if (mi!= null) {
+				// Mitarbeiter in Mitarbeiterliste einfuegen
+				einfuegen(mi);
 			}
+
 		} while (mi != null);
 
 		// Persistenz-Schnittstelle wieder schließen
@@ -106,14 +104,32 @@ public class Mitarbeiterverwaltung {
 	 * @return Gesuchter Mitarbeiter
 	 * @throws VectorIsEmptyException Mitarbeiterliste leer
 	 */
-	public Mitarbeiter suchMitarbeiter(int id) throws PersonNonexistantException{
+	public Mitarbeiter sucheMitarbeiter(int id) throws PersonNonexistantException{
 		for(Mitarbeiter ma : mitarbeiter){
 			if(ma.getId() == id){
 				return ma;
 				}
 			}
-			throw new PersonNonexistantException(id);
-		}
+		throw new PersonNonexistantException(id);
+	}
+	
+	/**
+	 * Erstellt einen neuen Mitarbeiter und fuegt in zur verwalteten Liste hinzu
+	 * @param firstname Vorname
+	 * @param lastname Nachname
+	 * @param passwort Passwort
+	 * @param address_Street Straße + Hausnummer
+	 * @param address_Zip Postleitzahl
+	 * @param address_Town Stadt
+	 * @return
+	 * @throws MaxIDsException
+	 * @throws InvalidPersonData 
+	 */
+	public Mitarbeiter erstelleMitarbeiter(String firstname, String lastname, String passwort, String address_Street, String address_Zip, String address_Town) throws MaxIDsException, InvalidPersonDataException {
+		Mitarbeiter mi = new Mitarbeiter(firstname, lastname, getNextID(), passwort, address_Street, address_Zip, address_Town);
+		mitarbeiter.add(mi);
+		return mi;
+	}
 	
 	/**
 	 * Fuegt einen neuen Mitarbeiter hinzu

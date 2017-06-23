@@ -181,9 +181,9 @@ public class FilePersistenceManager implements PersistenceManager {
 	
 	/**
 	 * @author Mathis M�hlenkamp
+	 * @throws InvalidPersonDataException 
 	 */
-	public Vector<Object> ladeKunde() throws IOException {
-		Vector<Object> ret = new Vector<Object>(7);
+	public Kunde ladeKunde() throws IOException, InvalidPersonDataException {
 		
 		int id = 0;
 		String firstname = "";
@@ -213,15 +213,7 @@ public class FilePersistenceManager implements PersistenceManager {
 		address_Zip = liesZeile();
 		address_Town = liesZeile();		
 		
-		ret.add(id);
-		ret.add(firstname);
-		ret.add(lastname);
-		ret.add(passwort);
-		ret.add(address_Street);
-		ret.add(address_Zip);
-		ret.add(address_Town);		
-		
-		return ret;
+		return new Kunde(firstname, lastname, id, passwort, address_Street, address_Zip, address_Town);
 	}
 	
 	public boolean speichereKunde(Kunde ku) throws IOException {

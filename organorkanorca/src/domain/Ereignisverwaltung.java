@@ -56,7 +56,7 @@ public class Ereignisverwaltung {
 					p = kv.sucheKunde(personennummer);
 				//wenn Person ein Mitarbeiter ist				
 				} else if (personennummer >= 9000 && personennummer < 10000 ) {
-					p = mv.suchMitarbeiter(personennummer);
+					p = mv.sucheMitarbeiter(personennummer);
 				} else {
 					throw new PersonNonexistantException(personennummer);
 				}

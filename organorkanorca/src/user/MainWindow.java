@@ -85,7 +85,8 @@ public class MainWindow extends JFrame {
 	
 	Warenkorbverwaltungsfenster warenkorbverwaltungsfenster;
 	Artikelverwaltungsfenster artikelverwaltungsfenster;
-	Personenverwaltungsfenster personenverwaltungsfenster;
+	Personenverwaltungsfenster kundenverwaltungsfenster;
+	Personenverwaltungsfenster mitarbeiterverwaltungsfenster;
 		
 	public void initialize() {
 		
@@ -282,21 +283,6 @@ public class MainWindow extends JFrame {
 			
 		}
 		
-		class KundeBearbeitenListener implements ActionListener{
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					personenverwaltungsfenster.personAnzeigen(eShop.kundeSuchen((int)auflistung.getValueAt(auflistung.getSelectedRow(),0), user));
-				} catch (ArrayIndexOutOfBoundsException e1){
-					JOptionPane.showMessageDialog(Sichtfenster.this, "Kein Artikel ausgewählt");
-				} catch (PersonNonexistantException e1) {
-					JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
-				}
-			}
-			
-		}
-		
 		class TabelleFilternListener implements ActionListener{
 
 			@Override
@@ -466,7 +452,22 @@ public class MainWindow extends JFrame {
 			TableColumnAdjuster tca = new TableColumnAdjuster(auflistung, 30);
 			tca.adjustColumns(JLabel.CENTER);
 
-		}		
+		}	
+		
+		class KundeBearbeitenListener implements ActionListener{
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					kundenverwaltungsfenster.personAnzeigen(eShop.kundeSuchen((int)auflistung.getValueAt(auflistung.getSelectedRow(),0), user));
+				} catch (ArrayIndexOutOfBoundsException e1){
+					JOptionPane.showMessageDialog(Kundensichtfenster.this, "Kein Kunde ausgewählt");
+				} catch (PersonNonexistantException e1) {
+					JOptionPane.showMessageDialog(Kundensichtfenster.this, e1.getMessage());
+				}
+			}
+			
+		}
 	}
 	
 	class Mitarbeitersichtfenster extends Sichtfenster{
@@ -503,6 +504,21 @@ public class MainWindow extends JFrame {
 			tca.adjustColumns(JLabel.CENTER);
 	
 		}
+		
+		class KundeBearbeitenListener implements ActionListener{
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					mitarbeiterverwaltungsfenster.personAnzeigen(eShop.mitarbeiterSuchen((int)auflistung.getValueAt(auflistung.getSelectedRow(),0), user));
+				} catch (ArrayIndexOutOfBoundsException e1){
+					JOptionPane.showMessageDialog(Mitarbeitersichtfenster.this, "Kein Mitarbeiter ausgewählt");
+				} catch (PersonNonexistantException e1) {
+					JOptionPane.showMessageDialog(Mitarbeitersichtfenster.this, e1.getMessage());
+				}
+			}
+			
+		}
 	}
 	
 	class ShopManagement extends JPanel{
@@ -534,7 +550,8 @@ public class MainWindow extends JFrame {
 				auflistungInitialize();
 				
 			} catch (AccessRestrictedException e) {
-				//TODO
+				removeAll();
+				add(new JLabel(e.getMessage()));
 			}
 		}
 		
@@ -646,14 +663,18 @@ public class MainWindow extends JFrame {
 						mitarbeitersichtfenster = new Mitarbeitersichtfenster();
 						
 						artikelverwaltungsfenster = new Artikelverwaltungsfenster();
-						personenverwaltungsfenster = new Personenverwaltungsfenster();
-						// TODO Mitarbeiterverwaltungsfenster
+						kundenverwaltungsfenster = new Personenverwaltungsfenster("Kundenverwaltung", "Kunde");
+						mitarbeiterverwaltungsfenster = new Personenverwaltungsfenster("Mitarbeiterverwaltung", "Mitarbeiter");
 						
 					} catch (IOException e1) {
 						JOptionPane.showMessageDialog(ShopManagement.this, e1.getMessage());
 					} catch (ArticleNonexistantException e1) {
 						JOptionPane.showMessageDialog(ShopManagement.this, e1.getMessage());
 					} catch (PersonNonexistantException e1) {
+						JOptionPane.showMessageDialog(ShopManagement.this, e1.getMessage());
+					} catch (InvalidPersonDataException e1) {
+						JOptionPane.showMessageDialog(ShopManagement.this, e1.getMessage());
+					} catch (Exception e1) {
 						JOptionPane.showMessageDialog(ShopManagement.this, e1.getMessage());
 					}
 					
@@ -891,7 +912,7 @@ public class MainWindow extends JFrame {
 									Artikel art = eShop.artikelSuchen(Integer.parseInt(artNrField.getText()), user);
 									
 									art.setBezeichnung(bezeichnung);
-									art.setBestand(bestand);
+									eShop.erhoeheArtikelBestand(art.getArtikelnummer(), bestand, user);
 									art.setPreis(preis);
 									if(packungsgroesse > 1){
 										eShop.artikelLoeschen(art, user);
@@ -1023,12 +1044,14 @@ public class MainWindow extends JFrame {
 						int row = warenkorbAuflistung.getSelectedRow();
 						
 						if (row != -1) {
+														
+							Artikel art = eShop.artikelSuchen(((int)warenkorbAuflistung.getValueAt(row,0)), user);
 						
 							int anz = Integer.parseInt(JOptionPane.showInputDialog("Bitte gewuenschte Anzahl angeben"));
 							
 							if (anz > 0){
 
-								eShop.artikelInWarenkorbAendern(row, anz, user);
+								eShop.artikelInWarenkorbAendern(art, anz, user);
 								
 							} else {
 								throw new InvalidAmountException();
@@ -1050,6 +1073,8 @@ public class MainWindow extends JFrame {
 						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, "Keine gueltige Anzahl!");
 					} catch (InvalidAmountException e1) {
 						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
+					} catch (ArticleNonexistantException e1) {
+						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
 					}
 				
 				//Artikel aus Warenkorb entfernen
@@ -1060,10 +1085,11 @@ public class MainWindow extends JFrame {
 						int row = warenkorbAuflistung.getSelectedRow();
 						
 						if (row != -1) {
+							
+							Artikel art = eShop.artikelSuchen(((int)warenkorbAuflistung.getValueAt(row,0)), user);
+							
 						
-							int anz = 0;
-
-							eShop.artikelInWarenkorbAendern(row, anz, user);
+							eShop.artikelAusWarenkorbEntfernen(art, user);
 							
 							wk = eShop.warenkorbAusgeben(user);
 							
@@ -1071,11 +1097,9 @@ public class MainWindow extends JFrame {
 							
 						}
 						
-					} catch (ArticleStockNotSufficientException e1) {
-						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
-					} catch (BasketNonexistantException e1) {
-						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
 					} catch (AccessRestrictedException e1) {
+						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
+					} catch (ArticleNonexistantException e1) {
 						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
 					}
 					
@@ -1229,13 +1253,14 @@ public class MainWindow extends JFrame {
 		JButton loeschenButton = new JButton("Löschen");
 		JButton neuAnlegenBestaetigenButton = new JButton("Anlegen");
 		
-		public Personenverwaltungsfenster(){
+		public Personenverwaltungsfenster(String titel, String personenTyp) throws Exception{
+			
 			
 			this.setLayout(new MigLayout());
 			
 			detailArea.setLayout(new MigLayout());
 			
-			this.add(new JLabel("Kundenverwaltung"), "span 2, align center, wrap");
+			this.add(new JLabel(titel), "span 2, align center, wrap");
 			
 			detailArea.add(persNrLabel);
 			detailArea.add(persNrField, "wrap");
@@ -1263,12 +1288,12 @@ public class MainWindow extends JFrame {
 			aendernBestaetigenButton.setVisible(false);
 			neuAnlegenBestaetigenButton.setVisible(false);
 			
-			aendernButton.addActionListener(new PersonBearbeitenListener());
-			aendernBestaetigenButton.addActionListener(new PersonBearbeitenListener());
+			aendernButton.addActionListener(new PersonBearbeitenListener(personenTyp));
+			aendernBestaetigenButton.addActionListener(new PersonBearbeitenListener(personenTyp));
 			
 			
-			neuAnlegenButton.addActionListener(new PersonNeuAnlegenListener());
-			neuAnlegenBestaetigenButton.addActionListener(new PersonNeuAnlegenListener());
+			neuAnlegenButton.addActionListener(new PersonNeuAnlegenListener(personenTyp));
+			neuAnlegenBestaetigenButton.addActionListener(new PersonNeuAnlegenListener(personenTyp));
 			
 			loeschenButton.addActionListener(new PersonLoeschenListener());
 			
@@ -1305,6 +1330,22 @@ public class MainWindow extends JFrame {
 		}
 		
 		public class PersonBearbeitenListener implements ActionListener{
+			
+			Personenverwaltungsfenster verwaltungsfenster = null;
+			Sichtfenster sichtfenster = null;
+			
+			public PersonBearbeitenListener(String personenTyp) throws Exception {
+				if (personenTyp.equals("Kunde")){
+					this.verwaltungsfenster = kundenverwaltungsfenster;
+					this.sichtfenster = kundensichtfenster;
+				} else if (personenTyp.equals("Mitarbeiter")){
+					this.verwaltungsfenster = mitarbeiterverwaltungsfenster;
+					this.sichtfenster = mitarbeitersichtfenster;
+				}
+				else {
+					throw new Exception("Error: PersonManagementWindows not properly conffigured!");
+				}
+			}
 		
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -1326,7 +1367,7 @@ public class MainWindow extends JFrame {
 							loeschenButton.setVisible(false);
 							aendernBestaetigenButton.setVisible(true);
 							
-							artikelverwaltungsfenster.repaint();
+							sichtfenster.repaint();
 							
 						}
 		
@@ -1339,6 +1380,8 @@ public class MainWindow extends JFrame {
 							String address_Zip = zipField.getText();
 							String passwort = passwordField.getText();
 			
+							//TODO Keine leeren / sinnfreien Einträge
+							
 							p.setFirstname(firstname);
 							p.setLastname(lastname);
 							p.setAddress_Street(address_Street);
@@ -1354,18 +1397,18 @@ public class MainWindow extends JFrame {
 							aendernButton.setVisible(true);
 							loeschenButton.setVisible(true);
 			
-							kundensichtfenster.auflistungInitialize();
+							sichtfenster.auflistungInitialize();
 							
-							personenverwaltungsfenster.repaint();
+							verwaltungsfenster.repaint();
 							
 						} catch (InvalidPersonDataException e1) {
 	
-							JOptionPane.showMessageDialog(personenverwaltungsfenster, e1.getMessage());
+							JOptionPane.showMessageDialog(verwaltungsfenster, e1.getMessage());
 							
 							personAnzeigen(p);
 							
 						} catch (AccessRestrictedException e1) {
-							JOptionPane.showMessageDialog(personenverwaltungsfenster, e1.getMessage());
+							JOptionPane.showMessageDialog(verwaltungsfenster, e1.getMessage());
 						}
 		
 				}				
@@ -1375,8 +1418,27 @@ public class MainWindow extends JFrame {
 			
 		public class PersonNeuAnlegenListener implements ActionListener{
 	
+			Personenverwaltungsfenster verwaltungsfenster = null;
+			Sichtfenster sichtfenster = null;
+			String personenTyp = "";
+			
+			public PersonNeuAnlegenListener(String personenTyp) throws Exception {
+				if (personenTyp.equals("Kunde")){
+					this.verwaltungsfenster = kundenverwaltungsfenster;
+					this.sichtfenster = kundensichtfenster;
+					this.personenTyp = personenTyp;
+				} else if (personenTyp.equals("Mitarbeiter")){
+					this.verwaltungsfenster = mitarbeiterverwaltungsfenster;
+					this.sichtfenster = mitarbeitersichtfenster;
+					this.personenTyp = personenTyp;
+				}			
+				else {
+					throw new Exception("Error: PersonManagementWindows not properly conffigured!");
+				}
+			}
+			
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e){
 				if (e.getSource().equals(neuAnlegenButton)){
 					
 					//Kundennummer ausblenden, kann nicht neu angegeben werden
@@ -1406,7 +1468,7 @@ public class MainWindow extends JFrame {
 					loeschenButton.setVisible(false);
 					neuAnlegenBestaetigenButton.setVisible(true);
 					
-					personenverwaltungsfenster.repaint();
+					verwaltungsfenster.repaint();
 	
 					
 				} else if (e.getSource().equals(neuAnlegenBestaetigenButton)){
@@ -1418,15 +1480,16 @@ public class MainWindow extends JFrame {
 						String address_Town = ortField.getText();
 						String address_Zip = zipField.getText();
 						String passwort = passwordField.getText();
-									
-						Kunde p = eShop.erstelleKunde(firstname, lastname, passwort, address_Street, address_Zip, address_Town, user);
-						 
-						//Neu erstellten  Artikel anzeigen
-						personAnzeigen(p);
 						
-						//Artikelnummer wieder anzeigen
-						//artNrLabel.setVisible(true);
-						//artNrField.setVisible(true);
+						if(personenTyp.equals("Kunde")){
+							Kunde p = eShop.erstelleKunde(firstname, lastname, passwort, address_Street, address_Zip, address_Town, user);
+						} else if (personenTyp.equals("Mitarbeiter")){
+							Mitarbeiter p = eShop.erstelleMitatbeiter(firstname, lastname, passwort, address_Street, address_Zip, address_Town, user);
+						}
+						
+						 
+						//Neu erstellte  Person anzeigen
+						personAnzeigen(p);
 						
 						//Felder nicht editierbar machen
 						vornameField.setEditable(false);
@@ -1442,13 +1505,13 @@ public class MainWindow extends JFrame {
 						loeschenButton.setVisible(true);
 						neuAnlegenBestaetigenButton.setVisible(false);
 						
-						kundensichtfenster.auflistungInitialize();
+						sichtfenster.auflistungInitialize();
 						
-						personenverwaltungsfenster.repaint();
+						verwaltungsfenster.repaint();
 						
 					} catch (InvalidPersonDataException e1){
 						
-						JOptionPane.showMessageDialog(personenverwaltungsfenster, e1.getMessage());
+						JOptionPane.showMessageDialog(verwaltungsfenster, e1.getMessage());
 						
 						persNrField.setText("");
 						vornameField.setText("");
@@ -1458,9 +1521,9 @@ public class MainWindow extends JFrame {
 						zipField.setText("");
 						passwordField.setText("");
 					} catch (AccessRestrictedException e1) {
-						JOptionPane.showMessageDialog(personenverwaltungsfenster, e1.getMessage());
+						JOptionPane.showMessageDialog(verwaltungsfenster, e1.getMessage());
 					} catch (MaxIDsException e1) {
-						JOptionPane.showMessageDialog(personenverwaltungsfenster, e1.getMessage());
+						JOptionPane.showMessageDialog(verwaltungsfenster, e1.getMessage());
 					}	
 				}
 			}
@@ -1504,8 +1567,7 @@ public class MainWindow extends JFrame {
 				leftArea.remove(shopManagement);
 				
 				leftArea.add(artikelsichtfenster,BorderLayout.CENTER);
-				
-				//leftArea.revalidate();					
+								
 				leftArea.repaint();
 				
 				rightArea.removeAll();
@@ -1517,7 +1579,6 @@ public class MainWindow extends JFrame {
 					rightArea.add(artikelverwaltungsfenster);
 				}
 				
-				//rightArea.revalidate();
 				rightArea.repaint();
 				
 				MainWindow.this.pack();
@@ -1532,12 +1593,15 @@ public class MainWindow extends JFrame {
 					
 					leftArea.add(kundensichtfenster,BorderLayout.CENTER);
 					
-					//leftArea.revalidate();
 					leftArea.repaint();
 					
 					rightArea.removeAll();
-					personenverwaltungsfenster = new Personenverwaltungsfenster();
-					rightArea.add(personenverwaltungsfenster);
+					try {
+						kundenverwaltungsfenster = new Personenverwaltungsfenster("Kundenverwaltung", "Kunde");
+						rightArea.add(kundenverwaltungsfenster);
+					} catch (Exception e) {
+						JOptionPane.showMessageDialog(MainWindow.this, e.getMessage());
+					}
 					
 					MainWindow.this.pack();
 					
@@ -1557,10 +1621,15 @@ public class MainWindow extends JFrame {
 					
 					leftArea.add(mitarbeitersichtfenster,BorderLayout.CENTER);
 					
-					//leftArea.revalidate();
 					leftArea.repaint();
 					
 					rightArea.removeAll();
+					try {
+						mitarbeiterverwaltungsfenster = new Personenverwaltungsfenster("Mitarbeiterverwaltung","Mitarbeiter");
+						rightArea.add(mitarbeiterverwaltungsfenster);
+					} catch (Exception e) {
+						JOptionPane.showMessageDialog(MainWindow.this, e.getMessage());
+					}
 					
 					MainWindow.this.pack();
 				

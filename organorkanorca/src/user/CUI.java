@@ -34,7 +34,7 @@ public class CUI {
 	private eShopCore eShop;
 	private Person user = null; 
 	
-	public CUI() throws IOException, ArticleNonexistantException, PersonNonexistantException {
+	public CUI() throws IOException, ArticleNonexistantException, PersonNonexistantException, InvalidPersonDataException {
 
 		eShop = new eShopCore();
 
@@ -272,23 +272,21 @@ public class CUI {
 		gibWarenkorbAus();
 		
 		IO.println("Artikel anpassen");
-		IO.print("Position eingeben:");
+		IO.print("Artikelnummer eingeben:");
 		
-		int pos = IO.readInt();
+		int artikelnummer = IO.readInt();
 		
 		IO.print("Anzahl eingeben:");
 		
 		int anz = IO.readInt();
-		try{
-			eShop.artikelInWarenkorbAendern(pos, anz, user);
+		
+		try {
+			eShop.artikelInWarenkorbAendern(eShop.artikelSuchen(artikelnummer, user), anz, user);
 			gibWarenkorbAus();
-		} catch (ArticleStockNotSufficientException asnse){
-			asnse.getMessage();
-		} catch(BasketNonexistantException bne){
-			bne.getMessage();
-		} catch (AccessRestrictedException are){
-			IO.println(are.getMessage());
-		}
+		} catch (ArticleStockNotSufficientException | BasketNonexistantException | AccessRestrictedException
+				| InvalidAmountException | ArticleNonexistantException e) {
+			IO.println(e.getMessage());
+		}		
 	}
 	
 	/**
@@ -537,6 +535,9 @@ public class CUI {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (PersonNonexistantException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidPersonDataException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

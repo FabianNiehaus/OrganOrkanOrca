@@ -59,9 +59,10 @@ public interface PersistenceManager {
 	 * Methode zum Einlesen der Kundendaten aus einer externen Datenqulle.
 	 * 
 	 * @return Kunden-Objekt, wenn Einlesen erfolgreich, false null
+	 * @throws InvalidPersonDataException 
 	 * 
 	 */
-	public Vector<Object> ladeKunde() throws IOException;
+	public Kunde ladeKunde() throws IOException, InvalidPersonDataException;
 	
 	/**
 	 * Methode zum Schreiben der Kundendaten in eine externe Datenquelle.

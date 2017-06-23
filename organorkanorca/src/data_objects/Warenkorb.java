@@ -41,24 +41,10 @@ public class Warenkorb {
 	 * @param anz Neue Anzahl (muss größer 0 sein)
 	 * @throws Nicht genug Artikel auf Lager
 	 */
-	public void aendereAnzahl(int pos, int anz) throws ArticleStockNotSufficientException{
-		int i = 0;
+	public void aendereAnzahl(Artikel art, int anz) throws ArticleStockNotSufficientException{
 		
-		for(Map.Entry<Artikel, Integer> ent : artikel.entrySet()){
-			
-			if(i == pos){
-				Artikel art = ent.getKey();
-				artikel.remove(ent.getKey());
-				if (anz > 0){
-					pruefeBestand(art, anz);
-					artikel.put(art, anz);
-				}
-				
-				break;
-			}
-			
-			i++;
-		}
+		artikel.replace(art,anz);
+		
 	}
 	
 	/**

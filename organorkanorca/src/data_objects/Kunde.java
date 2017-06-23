@@ -14,6 +14,22 @@ public class Kunde extends Person {
 	private Warenkorb wk;
 	
 	/**
+	 * Extra-Konstruktor für Laden aus Persistenz
+	 * @param firstname Vorname
+	 * @param lastname Nachmane
+	 * @param id Eindeutige ID
+	 * @param passwort Passwort
+	 * @param address_Street Adresse + Hausnummer
+	 * @param address_Zip Postleitzahl
+	 * @param address_Town Stadt
+	 * @throws InvalidPersonDataException 
+	 */
+	public Kunde(String firstname, String lastname, int id, String passwort, String address_Street, String address_Zip, String address_Town) throws InvalidPersonDataException {
+		super(firstname, lastname, id, passwort, address_Town, address_Town, address_Town);
+	}
+	
+	/**
+	 * Standard-Konstruktor
 	 * @param firstname Vorname
 	 * @param lastname Nachmane
 	 * @param id Eindeutige ID
