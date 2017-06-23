@@ -1421,8 +1421,6 @@ public class MainWindow extends JFrame {
 			
 							sichtfenster.auflistungInitialize();
 							
-							verwaltungsfenster.repaint();
-							
 						} catch (InvalidPersonDataException e1) {
 	
 							JOptionPane.showMessageDialog(verwaltungsfenster, e1.getMessage());

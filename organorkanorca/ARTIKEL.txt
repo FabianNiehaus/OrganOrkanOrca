@@ -6,7 +6,7 @@ Orkan
 3
 Orca
 5729.45
-100
+97
 1
 1
 Organ
@@ -18,7 +18,3 @@ Pringles
 2.79
 499
 1
----BEGINHISTORY---
-160|30
-161|500
----ENDHISTORY---

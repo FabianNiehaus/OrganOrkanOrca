@@ -23,7 +23,7 @@ public class Artikel {
 		if(bestandsverlauf != null){
 			this.bestandsverlauf = bestandsverlauf;
 		} 
-		this.bestandsverlauf.put(Calendar.DAY_OF_YEAR,bestand);
+		this.aktualisiereBestandsverlauf();
 
 	}
 	
@@ -129,8 +129,9 @@ public class Artikel {
 			bestandsverlauf.remove(0);
 			
 		} 
-		
-		bestandsverlauf.put(Calendar.DAY_OF_YEAR,bestand);
+					
+		int dayOfYear = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+		bestandsverlauf.put(dayOfYear, bestand);
 		
 	}
 	
