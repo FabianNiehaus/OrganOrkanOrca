@@ -349,9 +349,10 @@ public class eShopCore {
 		}
 	}
 	
-	public void kundeLoeschen(Kunde ku, Person p) throws AccessRestrictedException {
+	public void personLoeschen(Person loeschen, Person p) throws AccessRestrictedException {
 		if(istMitarbeiter(p)){
-			kv.loescheKunde(ku);
+			if(kv.loescheKunde((Kunde)loeschen)){}
+			else if (mv.loescheMitarbeiter((Mitarbeiter)loeschen));
 		} else {
 			throw new AccessRestrictedException(p, "Kunde löschen");
 		}

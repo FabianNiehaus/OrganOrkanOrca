@@ -161,8 +161,8 @@ public class Kundenverwaltung {
 	 * Löscht einen Kunden aus der verwalteten Liste
 	 * @param einKunde Zu löschender Kunde
 	 */
-	public void loescheKunde(Kunde einKunde) {
-		kunden.remove(einKunde);
+	public boolean loescheKunde(Kunde einKunde) {
+		return kunden.remove(einKunde);
 	}
 	
 	/* Nicht verwendet

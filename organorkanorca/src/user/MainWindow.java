@@ -1,7 +1,6 @@
 package user;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,14 +19,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 import org.jdesktop.swingx.JXTable;
@@ -89,7 +85,7 @@ public class MainWindow extends JFrame {
 	
 	Warenkorbverwaltungsfenster warenkorbverwaltungsfenster;
 	Artikelverwaltungsfenster artikelverwaltungsfenster;
-	Kundenverwaltungsfenster kundenverwaltungsfenster;
+	Personenverwaltungsfenster personenverwaltungsfenster;
 		
 	public void initialize() {
 		
@@ -291,7 +287,7 @@ public class MainWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					kundenverwaltungsfenster.kundeAnzeigen(eShop.kundeSuchen((int)auflistung.getValueAt(auflistung.getSelectedRow(),0), user));
+					personenverwaltungsfenster.personAnzeigen(eShop.kundeSuchen((int)auflistung.getValueAt(auflistung.getSelectedRow(),0), user));
 				} catch (ArrayIndexOutOfBoundsException e1){
 					JOptionPane.showMessageDialog(Sichtfenster.this, "Kein Artikel ausgewählt");
 				} catch (PersonNonexistantException e1) {
@@ -449,16 +445,16 @@ public class MainWindow extends JFrame {
 				
 			Vector<Vector<Object>> data = new Vector<>();
 			
-			for(Kunde ku : eShop.alleKundenAusgeben(user)){
+			for(Kunde p : eShop.alleKundenAusgeben(user)){
 				
 				Vector<Object> tmp = new Vector<>();
 				
-				tmp.addElement(ku.getId());
-				tmp.addElement(ku.getFirstname());
-				tmp.addElement(ku.getLastname());
-				tmp.addElement(ku.getAddress_Street());
-				tmp.addElement(ku.getAddress_Zip());
-				tmp.addElement(ku.getAddress_Town());
+				tmp.addElement(p.getId());
+				tmp.addElement(p.getFirstname());
+				tmp.addElement(p.getLastname());
+				tmp.addElement(p.getAddress_Street());
+				tmp.addElement(p.getAddress_Zip());
+				tmp.addElement(p.getAddress_Town());
 				
 				data.addElement(tmp);
 			}
@@ -576,27 +572,6 @@ public class MainWindow extends JFrame {
 			TableColumnAdjuster tca = new TableColumnAdjuster(auflistung, 30);
 			tca.adjustColumns(JLabel.CENTER);
 
-//			int totalColumnWidth = 0;
-//			TableCellRenderer headRenderer = auflistung.getTableHeader().getDefaultRenderer();
-//			
-//		    for (int column = 0; column < auflistung.getColumnCount(); column++) {
-//		        int width = 30; // Min width
-//		        
-//		        headRenderer.
-//	            
-//		        for (int row = 0; row < auflistung.getRowCount(); row++) {
-//		            TableCellRenderer rowRenderer = auflistung.getCellRenderer(row, column);
-//		            Component comp = auflistung.prepareRenderer(rowRenderer, row, column);
-//		            width = Math.max(comp.getPreferredSize().width + 30 , width);
-//		        }
-//		        if(width > 300) width=300;
-//		        auflistung.getColumn(column).setPreferredWidth(width);
-//		        totalColumnWidth += width;
-//		    }
-		    
-//		    auflistung.setPreferredScrollableViewportSize(new Dimension(totalColumnWidth,500));
-//		    auflistung.setPreferredSize(auflistung.getPreferredScrollableViewportSize());
-
 		}
 		
 		class EreignisTableModel extends AbstractTableModel{
@@ -671,7 +646,7 @@ public class MainWindow extends JFrame {
 						mitarbeitersichtfenster = new Mitarbeitersichtfenster();
 						
 						artikelverwaltungsfenster = new Artikelverwaltungsfenster();
-						kundenverwaltungsfenster = new Kundenverwaltungsfenster();
+						personenverwaltungsfenster = new Personenverwaltungsfenster();
 						// TODO Mitarbeiterverwaltungsfenster
 						
 					} catch (IOException e1) {
@@ -1225,14 +1200,14 @@ public class MainWindow extends JFrame {
 		
 	}
 	
-	class Kundenverwaltungsfenster extends JPanel{
+	class Personenverwaltungsfenster extends JPanel{
 		
-		Kunde ku;
+		Person p;
 		
 		JPanel detailArea = new JPanel();
 
-		JLabel kuNrLabel = new JLabel("Kundennummer:");
-		JTextField kuNrField = new JTextField(15);
+		JLabel persNrLabel = new JLabel("ID:");
+		JTextField persNrField = new JTextField(15);
 		JLabel vornameLabel = new JLabel("Vorname:");
 		JTextField vornameField = new JTextField(15);
 		JLabel nachnameLabel = new JLabel("Nachname:");
@@ -1254,7 +1229,7 @@ public class MainWindow extends JFrame {
 		JButton loeschenButton = new JButton("Löschen");
 		JButton neuAnlegenBestaetigenButton = new JButton("Anlegen");
 		
-		public Kundenverwaltungsfenster(){
+		public Personenverwaltungsfenster(){
 			
 			this.setLayout(new MigLayout());
 			
@@ -1262,8 +1237,8 @@ public class MainWindow extends JFrame {
 			
 			this.add(new JLabel("Kundenverwaltung"), "span 2, align center, wrap");
 			
-			detailArea.add(kuNrLabel);
-			detailArea.add(kuNrField, "wrap");
+			detailArea.add(persNrLabel);
+			detailArea.add(persNrField, "wrap");
 			detailArea.add(vornameLabel);
 			detailArea.add(vornameField, "wrap");
 			detailArea.add(nachnameLabel);
@@ -1288,18 +1263,18 @@ public class MainWindow extends JFrame {
 			aendernBestaetigenButton.setVisible(false);
 			neuAnlegenBestaetigenButton.setVisible(false);
 			
-			aendernButton.addActionListener(new KundeBearbeitenListener());
-			aendernBestaetigenButton.addActionListener(new KundeBearbeitenListener());
+			aendernButton.addActionListener(new PersonBearbeitenListener());
+			aendernBestaetigenButton.addActionListener(new PersonBearbeitenListener());
 			
 			
-			neuAnlegenButton.addActionListener(new KundeNeuAnlegenListener());
-			neuAnlegenBestaetigenButton.addActionListener(new KundeNeuAnlegenListener());
+			neuAnlegenButton.addActionListener(new PersonNeuAnlegenListener());
+			neuAnlegenBestaetigenButton.addActionListener(new PersonNeuAnlegenListener());
 			
-			loeschenButton.addActionListener(new KundeLoeschenListener());
+			loeschenButton.addActionListener(new PersonLoeschenListener());
 			
 			this.add(buttons, "align center");
 			
-			kuNrField.setEditable(false);
+			persNrField.setEditable(false);
 			vornameField.setEditable(false);
 			nachnameField.setEditable(false);
 			strasseField.setEditable(false);
@@ -1310,15 +1285,15 @@ public class MainWindow extends JFrame {
 			this.setVisible(true);
 		}
 		
-		public void kundeAnzeigen(Kunde ku){
-			this.ku = ku;
+		public void personAnzeigen(Person p){
+			this.p = p;
 			
-			kuNrField.setText(String.valueOf(ku.getId()));
-			vornameField.setText(ku.getLastname());
-			nachnameField.setText(ku.getLastname());
-			strasseField.setText(ku.getAddress_Street());
-			ortField.setText(ku.getAddress_Town());
-			zipField.setText(ku.getAddress_Zip());
+			persNrField.setText(String.valueOf(p.getId()));
+			vornameField.setText(p.getLastname());
+			nachnameField.setText(p.getLastname());
+			strasseField.setText(p.getAddress_Street());
+			ortField.setText(p.getAddress_Town());
+			zipField.setText(p.getAddress_Zip());
 			passwordField.setText("*********");
 			
 			vornameField.setEditable(false);
@@ -1329,13 +1304,13 @@ public class MainWindow extends JFrame {
 			passwordField.setEditable(false);
 		}
 		
-		public class KundeBearbeitenListener implements ActionListener{
+		public class PersonBearbeitenListener implements ActionListener{
 		
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					if (e.getSource().equals(aendernButton)){
 						
-						if(!kuNrField.getText().equals("")){
+						if(!persNrField.getText().equals("")){
 							
 							//Felder editierbar machen
 							vornameField.setEditable(true);
@@ -1364,14 +1339,14 @@ public class MainWindow extends JFrame {
 							String address_Zip = zipField.getText();
 							String passwort = passwordField.getText();
 			
-							ku.setFirstname(firstname);
-							ku.setLastname(lastname);
-							ku.setAddress_Street(address_Street);
-							ku.setAddress_Town(address_Town);
-							ku.setAddress_Zip(address_Zip);
+							p.setFirstname(firstname);
+							p.setLastname(lastname);
+							p.setAddress_Street(address_Street);
+							p.setAddress_Town(address_Town);
+							p.setAddress_Zip(address_Zip);
 						
 							//Bearbeiteten Kunden anzeigen
-							kundeAnzeigen(ku);
+							personAnzeigen(p);
 							
 							//Buttons anpassen
 							aendernBestaetigenButton.setVisible(false);
@@ -1381,16 +1356,16 @@ public class MainWindow extends JFrame {
 			
 							kundensichtfenster.auflistungInitialize();
 							
-							kundenverwaltungsfenster.repaint();
+							personenverwaltungsfenster.repaint();
 							
 						} catch (InvalidPersonDataException e1) {
 	
-							JOptionPane.showMessageDialog(kundenverwaltungsfenster, e1.getMessage());
+							JOptionPane.showMessageDialog(personenverwaltungsfenster, e1.getMessage());
 							
-							kundeAnzeigen(ku);
+							personAnzeigen(p);
 							
 						} catch (AccessRestrictedException e1) {
-							JOptionPane.showMessageDialog(kundenverwaltungsfenster, e1.getMessage());
+							JOptionPane.showMessageDialog(personenverwaltungsfenster, e1.getMessage());
 						}
 		
 				}				
@@ -1398,7 +1373,7 @@ public class MainWindow extends JFrame {
 			
 		}
 			
-		public class KundeNeuAnlegenListener implements ActionListener{
+		public class PersonNeuAnlegenListener implements ActionListener{
 	
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -1406,10 +1381,10 @@ public class MainWindow extends JFrame {
 					
 					//Kundennummer ausblenden, kann nicht neu angegeben werden
 					//kuNrLabel.setVisible(false);
-					//kuNrField.setVisible(false);
+					//persNrField.setVisible(false);
 					
 					//Alle Felder leeren
-					kuNrField.setText("");
+					persNrField.setText("");
 					vornameField.setText("");
 					nachnameField.setText("");
 					strasseField.setText("");
@@ -1431,7 +1406,7 @@ public class MainWindow extends JFrame {
 					loeschenButton.setVisible(false);
 					neuAnlegenBestaetigenButton.setVisible(true);
 					
-					kundenverwaltungsfenster.repaint();
+					personenverwaltungsfenster.repaint();
 	
 					
 				} else if (e.getSource().equals(neuAnlegenBestaetigenButton)){
@@ -1444,10 +1419,10 @@ public class MainWindow extends JFrame {
 						String address_Zip = zipField.getText();
 						String passwort = passwordField.getText();
 									
-						Kunde ku = eShop.erstelleKunde(firstname, lastname, passwort, address_Street, address_Zip, address_Town, user);
+						Kunde p = eShop.erstelleKunde(firstname, lastname, passwort, address_Street, address_Zip, address_Town, user);
 						 
 						//Neu erstellten  Artikel anzeigen
-						kundeAnzeigen(ku);
+						personAnzeigen(p);
 						
 						//Artikelnummer wieder anzeigen
 						//artNrLabel.setVisible(true);
@@ -1469,13 +1444,13 @@ public class MainWindow extends JFrame {
 						
 						kundensichtfenster.auflistungInitialize();
 						
-						kundenverwaltungsfenster.repaint();
+						personenverwaltungsfenster.repaint();
 						
 					} catch (InvalidPersonDataException e1){
 						
-						JOptionPane.showMessageDialog(kundenverwaltungsfenster, e1.getMessage());
+						JOptionPane.showMessageDialog(personenverwaltungsfenster, e1.getMessage());
 						
-						kuNrField.setText("");
+						persNrField.setText("");
 						vornameField.setText("");
 						nachnameField.setText("");
 						strasseField.setText("");
@@ -1483,23 +1458,23 @@ public class MainWindow extends JFrame {
 						zipField.setText("");
 						passwordField.setText("");
 					} catch (AccessRestrictedException e1) {
-						JOptionPane.showMessageDialog(kundenverwaltungsfenster, e1.getMessage());
+						JOptionPane.showMessageDialog(personenverwaltungsfenster, e1.getMessage());
 					} catch (MaxIDsException e1) {
-						JOptionPane.showMessageDialog(kundenverwaltungsfenster, e1.getMessage());
+						JOptionPane.showMessageDialog(personenverwaltungsfenster, e1.getMessage());
 					}	
 				}
 			}
 		}
 	
-		public class KundeLoeschenListener implements ActionListener{
+		public class PersonLoeschenListener implements ActionListener{
 		
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					
-					eShop.kundeLoeschen(ku, user);
+					eShop.personLoeschen(p, user);
 					
-					kuNrField.setText("");
+					persNrField.setText("");
 					vornameField.setText("");
 					nachnameField.setText("");
 					strasseField.setText("");
@@ -1507,7 +1482,7 @@ public class MainWindow extends JFrame {
 					zipField.setText("");
 					passwordField.setText("");
 					
-					ku = null;
+					p = null;
 					
 					kundensichtfenster.auflistungInitialize();
 					
@@ -1561,8 +1536,8 @@ public class MainWindow extends JFrame {
 					leftArea.repaint();
 					
 					rightArea.removeAll();
-					kundenverwaltungsfenster = new Kundenverwaltungsfenster();
-					rightArea.add(kundenverwaltungsfenster);
+					personenverwaltungsfenster = new Personenverwaltungsfenster();
+					rightArea.add(personenverwaltungsfenster);
 					
 					MainWindow.this.pack();
 					

@@ -253,6 +253,9 @@ public class FilePersistenceManager implements PersistenceManager {
 		String firstname = "";
 		String lastname = "";
 		String passwort = "";
+		String address_Street = "";
+		String address_Zip = "";
+		String address_Town = "";
 		
 		//Lies ID
 		try{
@@ -268,8 +271,13 @@ public class FilePersistenceManager implements PersistenceManager {
 		
 		//Lies passwort
 		passwort = liesZeile();
+		
+		//Lies Adresse
+		address_Street = liesZeile();
+		address_Zip = liesZeile();
+		address_Town = liesZeile();
 
-		return new Mitarbeiter(firstname, lastname, id, passwort);
+		return new Mitarbeiter(firstname, lastname, id, passwort, address_Street, address_Zip, address_Town);
 	}
 	
 	public boolean speichereMitarbeiter(Mitarbeiter mi) throws IOException {

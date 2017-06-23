@@ -126,9 +126,10 @@ public class Mitarbeiterverwaltung {
 	/**
 	 * Entfernt einen Mitarbeiter
 	 * @param einMa Zu entfernender Mitarbeiter
+	 * @return 
 	 */
-	public void loescheMitarbeiter(Mitarbeiter einMa) {
-		mitarbeiter.remove(einMa);
+	public boolean loescheMitarbeiter(Mitarbeiter einMa) {
+		return mitarbeiter.remove(einMa);
 	}
 	
 	/**

@@ -10,10 +10,16 @@ import domain.exceptions.InvalidPersonDataException;
  *
  */
 public abstract class Person {
+	protected int id;
+	protected String passwort;
+	
 	protected String firstname;
 	protected String lastname;
-	protected int id;
-	private String passwort;
+	
+	protected String address_Street;
+	protected String address_Zip;
+	protected String address_Town;
+	
 	
 	/**
 	 * Erzeugt eine Persion
@@ -22,12 +28,16 @@ public abstract class Person {
 	 * @param id Eindeutige Identifikationsnummer
 	 * @throws InvalidPersonDataException 
 	 */
-	public Person(String firstname, String lastname, int id, String passwort) throws InvalidPersonDataException {
+	public Person(String firstname, String lastname, int id, String passwort, String address_Street, String address_Zip, String address_Town) throws InvalidPersonDataException {
 		super();
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.id = id;
 		this.setPasswort(passwort);
+		
+		this.address_Street = address_Street;
+		this.address_Zip = address_Zip;
+		this.address_Town = address_Town;
 	}
 
 	/**
@@ -81,6 +91,64 @@ public abstract class Person {
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	/**
+	 * @return
+	 */
+	public String getAddress_Street() {
+		return address_Street;
+	}
+
+	/**
+	 * @param address_Street
+	 * @throws InvalidPersonDataException 
+	 */
+	public void setAddress_Street(String address_Street) throws InvalidPersonDataException {
+		if (!address_Street.equals("")){
+			this.address_Street = address_Street;
+		} else {
+			throw new InvalidPersonDataException(2, address_Street);
+		}
+	}
+
+	/**
+	 * @return
+	 */
+	public String getAddress_Zip() {
+		return address_Zip;
+	}
+
+	/**
+	 * @param address_Zip
+	 * @throws InvalidPersonDataException 
+	 */
+	public void setAddress_Zip(String address_Zip) throws InvalidPersonDataException {
+		if(!address_Zip.equals("")){
+			this.address_Zip = address_Zip;
+		} else {
+			throw new InvalidPersonDataException(5, address_Zip);
+		}
+
+	}
+
+	/**
+	 * @return
+	 */
+	public String getAddress_Town() {
+		return address_Town;
+	}
+
+	/**
+	 * @param address_Town
+	 * @throws InvalidPersonDataException 
+	 */
+	public void setAddress_Town(String address_Town) throws InvalidPersonDataException {
+		if(!address_Town.equals("")){
+			this.address_Town = address_Town;
+		} else {
+			throw new InvalidPersonDataException(4, address_Town);
+		}
+	}
 
 	/**
 	 * @return
@@ -88,6 +156,8 @@ public abstract class Person {
 	public String getPasswort() {
 		return passwort;
 	}
+	
+	
 
 	/**
 	 * @param passwort
