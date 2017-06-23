@@ -208,11 +208,17 @@ public class eShopCore {
 	 * @throws InvalidAmountException 
 	 * @throws ArticleAlreadyInBasketException 
 	 */
-	public void artikelInWarenkorbLegen(int artikelnummer, int anzahl, Person p) throws ArticleNonexistantException, ArticleStockNotSufficientException, AccessRestrictedException, InvalidAmountException, ArticleAlreadyInBasketException{
+	public void artikelInWarenkorbLegen(int artikelnummer, int anz, Person p) throws ArticleNonexistantException, ArticleStockNotSufficientException, AccessRestrictedException, InvalidAmountException, ArticleAlreadyInBasketException{
 		if(istKunde(p)){
 			Warenkorb wk = kv.gibWarenkorbVonKunde(p);
+			
+			if(wk == null){
+				wk = wv.erstelleWarenkorb(); 
+				kv.weiseWarenkorbzu((Kunde)p, wk);
+			}
+			
 			Artikel art = av.sucheArtikel(artikelnummer);
-			wv.artikelInWarenkorbLegen(art, anzahl, wk);
+			wv.legeInWarenkorb(wk, art, anz);
 		} else {
 			throw new AccessRestrictedException(p, "\"Artikel in Warenkorb legen\"");
 		}

@@ -63,15 +63,20 @@ public class Warenkorbverwaltung {
 	 */
 	public void aendereWarenkorb(Warenkorb wk, Artikel art, int anz) throws ArticleStockNotSufficientException, BasketNonexistantException, InvalidAmountException {
 		
-		if(art instanceof Massengutartikel){
-			Massengutartikel tmp = (Massengutartikel) art;
-			if(anz % tmp.getPackungsgroesse() != 0){
-				throw new InvalidAmountException(tmp);
+		if(art.getBestand() >= anz){
+		
+			if(art instanceof Massengutartikel){
+				Massengutartikel tmp = (Massengutartikel) art;
+				if(anz % tmp.getPackungsgroesse() != 0){
+					throw new InvalidAmountException(tmp);
+				} else {
+					wk.aendereAnzahl(art, anz);
+				}
 			} else {
-				wk.aendereAnzahl(art, wk.getArtikel().get(art) + anz);
+				wk.aendereAnzahl(art, anz);
 			}
 		} else {
-			wk.aendereAnzahl(art, wk.getArtikel().get(art) + anz);
+			throw new ArticleStockNotSufficientException(art, anz);
 		}
 		
 	}
@@ -87,9 +92,21 @@ public class Warenkorbverwaltung {
 	 * @param anz Anzahl des Artikels
 	 * @throws ArticleStockNotSufficientException 
 	 * @throws ArticleAlreadyInBasketException 
+	 * @throws InvalidAmountException 
 	 */
-	public void legeInWarenkorb(Warenkorb wk, Artikel art, int anz) throws ArticleStockNotSufficientException, ArticleAlreadyInBasketException{
-		wk.speichereArtikel(art, anz);
+	public void legeInWarenkorb(Warenkorb wk, Artikel art, int anz) throws ArticleStockNotSufficientException, ArticleAlreadyInBasketException, InvalidAmountException{
+		
+		if(art instanceof Massengutartikel){
+			Massengutartikel tmp = (Massengutartikel) art;
+			if (anz % tmp.getPackungsgroesse() != 0){
+				throw new InvalidAmountException(tmp);
+			} else {
+				wk.speichereArtikel(tmp, anz);
+			}
+		} else {
+			wk.speichereArtikel(art, anz);
+		}
+		
 	}
 	
 	/**
@@ -115,20 +132,4 @@ public class Warenkorbverwaltung {
 	public Map<Artikel, Integer> getArtikel(Warenkorb wk){
 		return wk.getArtikel();
 	}
-
-	public void artikelInWarenkorbLegen(Artikel art, int anzahl, Warenkorb wk)
-			throws ArticleNonexistantException, InvalidAmountException, ArticleStockNotSufficientException,
-			ArticleAlreadyInBasketException {
-		if(art instanceof Massengutartikel){
-			Massengutartikel tmp = (Massengutartikel) art;
-			if (anzahl % tmp.getPackungsgroesse() != 0){
-				throw new InvalidAmountException(tmp);
-			} else {
-				legeInWarenkorb(wk, tmp, anzahl);
-			}
-		} else {
-			legeInWarenkorb(wk, art, anzahl);
-		}
-	}
-	
 }

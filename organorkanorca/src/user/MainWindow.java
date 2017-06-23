@@ -68,8 +68,8 @@ public class MainWindow extends JFrame {
 	LoginListener loginListener;
 	
 	JPanel main = (JPanel) this.getContentPane();
-	JPanel leftArea = new JPanel();
-	JPanel rightArea = new JPanel();
+	JPanel leftArea = new JPanel(new MigLayout());
+	JPanel rightArea = new JPanel(new MigLayout());
 	
 	JPanel moduleButtons = new JPanel();
 	JButton artikelButton = new JButton("Artikel");
@@ -87,8 +87,14 @@ public class MainWindow extends JFrame {
 	Artikelverwaltungsfenster artikelverwaltungsfenster;
 	Personenverwaltungsfenster kundenverwaltungsfenster;
 	Personenverwaltungsfenster mitarbeiterverwaltungsfenster;
+	
+	double prefWidth = 0;
+	double maxWidthLeft = 0;
+	double maxWidthRight = 0;
 		
 	public void initialize() {
+		
+		this.setLayout(new MigLayout("","30[]30[]30","30[]30"));
 		
 		artikelButton.addActionListener(new MenuButtonsActionListener());
 		moduleButtons.add(artikelButton);
@@ -101,38 +107,60 @@ public class MainWindow extends JFrame {
 		logoutButton.addActionListener(new MenuButtonsActionListener());
 		moduleButtons.add(logoutButton);
 		
-		leftArea.setLayout(new BorderLayout());
-		
-		leftArea.add(moduleButtons,BorderLayout.NORTH);
+		leftArea.add(moduleButtons, "wrap, dock center");
 		
 		kundensichtfenster = new Kundensichtfenster();
 		artikelsichtfenster = new Artikelsichtfenster();
 		mitarbeitersichtfenster = new Mitarbeitersichtfenster();
 		shopManagement = new ShopManagement();
 		
-		leftArea.add(artikelsichtfenster,BorderLayout.CENTER);
-		
-		leftArea.add(new JPanel(),BorderLayout.WEST);
-		
+		leftArea.add(artikelsichtfenster, "dock center");
+				
 		if(user instanceof Kunde){
 			warenkorbverwaltungsfenster = new Warenkorbverwaltungsfenster();
-			rightArea.add(warenkorbverwaltungsfenster);
+			rightArea.add(warenkorbverwaltungsfenster, "dock center");
 		} else {
 			artikelverwaltungsfenster = new Artikelverwaltungsfenster();
-			rightArea.add(artikelverwaltungsfenster);
+			rightArea.add(artikelverwaltungsfenster, "dock center");
 		}
-
 		
-		main.setLayout(new BorderLayout());
-		main.add(leftArea,BorderLayout.WEST);
-		main.add(rightArea,BorderLayout.EAST);
+		main.add(leftArea);
+		main.add(rightArea);
 
+		setWindowSize();
+		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		this.pack();
 		
 		this.setVisible(true);
 	}
+	
+	
+	/**
+	 * 
+	 */
+	public void setWindowSize(){
+		
+		if (artikelsichtfenster != null) maxWidthLeft = Math.max(maxWidthLeft, artikelsichtfenster.getPreferredSize().getWidth() + 15);
+		if (kundensichtfenster != null) maxWidthLeft = Math.max(maxWidthLeft, kundensichtfenster.getPreferredSize().getWidth() + 15);
+		if (mitarbeitersichtfenster != null) maxWidthLeft = Math.max(maxWidthLeft, mitarbeitersichtfenster.getPreferredSize().getWidth() + 15);
+		//if (shopManagement != null) maxWidthLeft = Math.max(maxWidthLeft, shopManagement.getPreferredSize().getWidth() + 15);
+		if (warenkorbverwaltungsfenster != null) maxWidthRight = Math.max(maxWidthRight, warenkorbverwaltungsfenster.getPreferredSize().getWidth() + 15);
+		if (artikelverwaltungsfenster != null) maxWidthRight = Math.max(maxWidthRight, artikelverwaltungsfenster.getPreferredSize().getWidth() + 15);
+		if (kundenverwaltungsfenster != null) maxWidthRight = Math.max(maxWidthRight, kundenverwaltungsfenster.getPreferredSize().getWidth() + 15);
+		if (mitarbeiterverwaltungsfenster != null) maxWidthRight = Math.max(maxWidthRight, mitarbeiterverwaltungsfenster.getPreferredSize().getWidth() + 15);
+		
+		leftArea.setPreferredSize(new Dimension((int)maxWidthLeft,(int)leftArea.getPreferredSize().getHeight()));
+		//leftArea.setMinimumSize(leftArea.getPreferredSize());
+		rightArea.setPreferredSize(new Dimension((int)maxWidthRight,(int)rightArea.getPreferredSize().getHeight()));
+		//rightArea.setMinimumSize(rightArea.getPreferredSize());
+		
+		prefWidth = maxWidthLeft + maxWidthRight + 60;
+		this.setPreferredSize(new Dimension((int)prefWidth,(int)this.getPreferredSize().getHeight()));
+	
+	}
+	
 	
 	class eShopTableModel extends AbstractTableModel{
 		
@@ -219,11 +247,9 @@ public class MainWindow extends JFrame {
 			try {
 				
 				auflistungInitialize();
-
-				//auflistung.setAutoResizeMode(JXTable.AUTO_RESIZE_OFF);
-				//auflistung.packAll();
 				
-				//auflistungContainer.
+				TableColumnAdjuster tca = new TableColumnAdjuster(auflistung, 30);
+				tca.adjustColumns(JLabel.CENTER);
 				
 			} catch (AccessRestrictedException e) {
 				removeAll();
@@ -328,7 +354,7 @@ public class MainWindow extends JFrame {
 				anzahl.setVisible(false);
 				
 				verlaufAnzeigenButton.addActionListener(new VerlaufAnzeigenListener());
-				this.add(verlaufAnzeigenButton);
+				leftAreaActionField.add(verlaufAnzeigenButton);
 			}
 		}
 				
@@ -362,9 +388,6 @@ public class MainWindow extends JFrame {
 			TableRowSorter<eShopTableModel> sorter = new TableRowSorter<eShopTableModel>(etm);
 			
 			auflistung.setRowSorter(sorter);
-			
-			TableColumnAdjuster tca = new TableColumnAdjuster(auflistung, 30);
-			tca.adjustColumns(JLabel.CENTER);
 		}
 	
 		class VerlaufAnzeigenListener implements ActionListener {
@@ -431,16 +454,16 @@ public class MainWindow extends JFrame {
 				
 			Vector<Vector<Object>> data = new Vector<>();
 			
-			for(Kunde p : eShop.alleKundenAusgeben(user)){
+			for(Kunde ku : eShop.alleKundenAusgeben(user)){
 				
 				Vector<Object> tmp = new Vector<>();
 				
-				tmp.addElement(p.getId());
-				tmp.addElement(p.getFirstname());
-				tmp.addElement(p.getLastname());
-				tmp.addElement(p.getAddress_Street());
-				tmp.addElement(p.getAddress_Zip());
-				tmp.addElement(p.getAddress_Town());
+				tmp.addElement(ku.getId());
+				tmp.addElement(ku.getFirstname());
+				tmp.addElement(ku.getLastname());
+				tmp.addElement(ku.getAddress_Street());
+				tmp.addElement(ku.getAddress_Zip());
+				tmp.addElement(ku.getAddress_Town());
 				
 				data.addElement(tmp);
 			}
@@ -449,9 +472,6 @@ public class MainWindow extends JFrame {
 			etm = new eShopTableModel(data, new String[]{"Kundennummer","Vorname","Nachname","Straße","PLZ","Ort"});
 			auflistung.setModel(etm);
 			
-			TableColumnAdjuster tca = new TableColumnAdjuster(auflistung, 30);
-			tca.adjustColumns(JLabel.CENTER);
-
 		}	
 		
 		class KundeBearbeitenListener implements ActionListener{
@@ -477,6 +497,7 @@ public class MainWindow extends JFrame {
 		public Mitarbeitersichtfenster(){
 			super();
 			aktion.setText("Bearbeiten");
+			anzahl.setVisible(false);
 		}
 				
 		@Override
@@ -492,16 +513,16 @@ public class MainWindow extends JFrame {
 				tmp.addElement(mi.getId());
 				tmp.addElement(mi.getFirstname());
 				tmp.addElement(mi.getLastname());
+				tmp.addElement(mi.getAddress_Street());
+				tmp.addElement(mi.getAddress_Zip());
+				tmp.addElement(mi.getAddress_Town());
 				
 				data.addElement(tmp);
 			}
 				
 			
-			etm = new eShopTableModel(data, new String[]{"Mitarbeiternummer","Vorname","Nachname"});
+			etm = new eShopTableModel(data, new String[]{"Kundennummer","Vorname","Nachname","Straße","PLZ","Ort"});
 			auflistung.setModel(etm);
-			
-			TableColumnAdjuster tca = new TableColumnAdjuster(auflistung, 30);
-			tca.adjustColumns(JLabel.CENTER);
 	
 		}
 		
@@ -1165,7 +1186,7 @@ public class MainWindow extends JFrame {
 		
 		class WarenkorbTableModel extends AbstractTableModel{
 			
-			String[] columns = {"Artikel","Preis","Menge","Gesamt"};
+			String[] columns = {"Artikelnummer","Artikel","Preis","Menge","Gesamt"};
 			
 			Vector<Vector<Object>> dataVector = new Vector<>(0);
 			Vector<String> columnIdentifiers = new Vector<>(0);
@@ -1177,6 +1198,7 @@ public class MainWindow extends JFrame {
 				for(Map.Entry<Artikel, Integer> ent : inhalt.entrySet()){
 					Vector<Object> tmp = new Vector<>(0);
 					
+					tmp.addElement(ent.getKey().getArtikelnummer());
 					tmp.addElement(ent.getKey().getBezeichnung());
 					tmp.addElement(ent.getKey().getPreis());
 					tmp.addElement(ent.getValue());
@@ -1440,11 +1462,7 @@ public class MainWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if (e.getSource().equals(neuAnlegenButton)){
-					
-					//Kundennummer ausblenden, kann nicht neu angegeben werden
-					//kuNrLabel.setVisible(false);
-					//persNrField.setVisible(false);
-					
+										
 					//Alle Felder leeren
 					persNrField.setText("");
 					vornameField.setText("");
@@ -1470,10 +1488,11 @@ public class MainWindow extends JFrame {
 					
 					verwaltungsfenster.repaint();
 	
-					
 				} else if (e.getSource().equals(neuAnlegenBestaetigenButton)){
 					
 					try {
+						Person p = null;
+						
 						String firstname = vornameField.getText();
 						String lastname = nachnameField.getText();
 						String address_Street = strasseField.getText();
@@ -1482,11 +1501,10 @@ public class MainWindow extends JFrame {
 						String passwort = passwordField.getText();
 						
 						if(personenTyp.equals("Kunde")){
-							Kunde p = eShop.erstelleKunde(firstname, lastname, passwort, address_Street, address_Zip, address_Town, user);
+							p = eShop.erstelleKunde(firstname, lastname, passwort, address_Street, address_Zip, address_Town, user);
 						} else if (personenTyp.equals("Mitarbeiter")){
-							Mitarbeiter p = eShop.erstelleMitatbeiter(firstname, lastname, passwort, address_Street, address_Zip, address_Town, user);
+							p = eShop.erstelleMitatbeiter(firstname, lastname, passwort, address_Street, address_Zip, address_Town, user);
 						}
-						
 						 
 						//Neu erstellte  Person anzeigen
 						personAnzeigen(p);
@@ -1520,6 +1538,7 @@ public class MainWindow extends JFrame {
 						ortField.setText("");
 						zipField.setText("");
 						passwordField.setText("");
+						
 					} catch (AccessRestrictedException e1) {
 						JOptionPane.showMessageDialog(verwaltungsfenster, e1.getMessage());
 					} catch (MaxIDsException e1) {
@@ -1665,8 +1684,6 @@ public class MainWindow extends JFrame {
 			} else if(ae.getSource().equals(logoutButton)){
 				loginListener.logout();
 			}
-			
 		}
-		
 	}
 }

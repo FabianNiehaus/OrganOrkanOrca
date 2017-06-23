@@ -41,7 +41,7 @@ public class Warenkorb {
 	 * @param anz Neue Anzahl (muss größer 0 sein)
 	 * @throws Nicht genug Artikel auf Lager
 	 */
-	public void aendereAnzahl(Artikel art, int anz) throws ArticleStockNotSufficientException{
+	public void aendereAnzahl(Artikel art, int anz){
 		
 		artikel.replace(art,anz);
 		
@@ -61,8 +61,9 @@ public class Warenkorb {
 				artikel.put(art, anz);
 			} 
 		} else {
-			// TODO Stattdessen Anzahl im WK erhöhen
-			throw new ArticleAlreadyInBasketException(art.getBezeichnung());
+			anz = anz + artikel.get(art);
+			pruefeBestand(art, anz);
+			artikel.put(art, anz);
 		}
 	}
 	

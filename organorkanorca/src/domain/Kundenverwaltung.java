@@ -205,6 +205,9 @@ public class Kundenverwaltung {
 	public Warenkorb gibWarenkorbVonKunde(Person ku){
 		return ((Kunde) ku).getWarenkorb();
 	}
-
+	
+	public void weiseWarenkorbzu(Kunde ku, Warenkorb wk){
+		ku.setWarenkorb(wk);
+	};
 	
 }
