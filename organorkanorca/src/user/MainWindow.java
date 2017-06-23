@@ -27,6 +27,7 @@ import javax.swing.RowFilter;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 import org.jdesktop.swingx.JXTable;
@@ -54,6 +55,7 @@ import domain.exceptions.InvalidPersonDataException;
 import domain.exceptions.MaxIDsException;
 import domain.exceptions.PersonNonexistantException;
 import net.miginfocom.swing.MigLayout;
+import util.TableColumnAdjuster;
 
 public class MainWindow extends JFrame {
 	
@@ -378,6 +380,9 @@ public class MainWindow extends JFrame {
 			TableRowSorter<eShopTableModel> sorter = new TableRowSorter<eShopTableModel>(etm);
 			
 			auflistung.setRowSorter(sorter);
+			
+			TableColumnAdjuster tca = new TableColumnAdjuster(auflistung, 30);
+			tca.adjustColumns(JLabel.CENTER);
 		}
 	
 		class VerlaufAnzeigenListener implements ActionListener {
@@ -461,6 +466,10 @@ public class MainWindow extends JFrame {
 			
 			etm = new eShopTableModel(data, new String[]{"Kundennummer","Vorname","Nachname","Straße","PLZ","Ort"});
 			auflistung.setModel(etm);
+			
+			TableColumnAdjuster tca = new TableColumnAdjuster(auflistung, 30);
+			tca.adjustColumns(JLabel.CENTER);
+
 		}		
 	}
 	
@@ -493,6 +502,10 @@ public class MainWindow extends JFrame {
 			
 			etm = new eShopTableModel(data, new String[]{"Mitarbeiternummer","Vorname","Nachname"});
 			auflistung.setModel(etm);
+			
+			TableColumnAdjuster tca = new TableColumnAdjuster(auflistung, 30);
+			tca.adjustColumns(JLabel.CENTER);
+	
 		}
 	}
 	
@@ -509,16 +522,18 @@ public class MainWindow extends JFrame {
 		
 		public ShopManagement(){
 			
+			this.setLayout(new MigLayout());
+			
 			try {
 				
 				speichernButton.addActionListener(new PersistenceButtonListener());
 				ladenButton.addActionListener(new PersistenceButtonListener());
 				
-				this.add(speichernButton);
-				this.add(ladenButton);
-				this.add(auflistungContainer);
+				this.add(speichernButton, "dock center");
+				this.add(ladenButton, "wrap, dock center");
+				this.add(auflistungContainer, "span");
 				
-				auflistung.setAutoResizeMode(JXTable.AUTO_RESIZE_ALL_COLUMNS);
+				auflistung.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 				
 				auflistungInitialize();
 				
@@ -558,26 +573,29 @@ public class MainWindow extends JFrame {
 			
 			auflistung.setRowSorter(sorter);
 			
-			int totalColumnWidth = 0;
-			TableCellRenderer headRenderer = auflistung.getTableHeader().getDefaultRenderer();
-			
-		    for (int column = 0; column < auflistung.getColumnCount(); column++) {
-		        int width = 30; // Min width
-		        
-		        headRenderer.
-	            
-		        for (int row = 0; row < auflistung.getRowCount(); row++) {
-		            TableCellRenderer rowRenderer = auflistung.getCellRenderer(row, column);
-		            Component comp = auflistung.prepareRenderer(rowRenderer, row, column);
-		            width = Math.max(comp.getPreferredSize().width + 30 , width);
-		        }
-		        if(width > 300) width=300;
-		        auflistung.getColumn(column).setPreferredWidth(width);
-		        totalColumnWidth += width;
-		    }
+			TableColumnAdjuster tca = new TableColumnAdjuster(auflistung, 30);
+			tca.adjustColumns(JLabel.CENTER);
+
+//			int totalColumnWidth = 0;
+//			TableCellRenderer headRenderer = auflistung.getTableHeader().getDefaultRenderer();
+//			
+//		    for (int column = 0; column < auflistung.getColumnCount(); column++) {
+//		        int width = 30; // Min width
+//		        
+//		        headRenderer.
+//	            
+//		        for (int row = 0; row < auflistung.getRowCount(); row++) {
+//		            TableCellRenderer rowRenderer = auflistung.getCellRenderer(row, column);
+//		            Component comp = auflistung.prepareRenderer(rowRenderer, row, column);
+//		            width = Math.max(comp.getPreferredSize().width + 30 , width);
+//		        }
+//		        if(width > 300) width=300;
+//		        auflistung.getColumn(column).setPreferredWidth(width);
+//		        totalColumnWidth += width;
+//		    }
 		    
-		    auflistung.setPreferredScrollableViewportSize(new Dimension(totalColumnWidth,500));
-		    auflistung.setPreferredSize(auflistung.getPreferredScrollableViewportSize());
+//		    auflistung.setPreferredScrollableViewportSize(new Dimension(totalColumnWidth,500));
+//		    auflistung.setPreferredSize(auflistung.getPreferredScrollableViewportSize());
 
 		}
 		
