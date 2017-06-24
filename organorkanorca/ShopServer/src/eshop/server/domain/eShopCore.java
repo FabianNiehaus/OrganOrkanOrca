@@ -1,6 +1,7 @@
 package eshop.server.domain;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -80,9 +81,9 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 			
 			LocateRegistry.createRegistry(1099);
 			
-			Naming.rebind("//Realm1:1099/" + serviceName, eShop);
+			Naming.rebind("//" + InetAddress.getLocalHost().getHostName() + ":1099/" + serviceName, eShop);
 			
-			IO.println("Shop erfolgreich gestartet");
+			IO.println("Shop erfolgreich gestartet. Bindung an " + "//" + InetAddress.getLocalHost().getHostAddress() + ":1099/");
 			IO.println("Zum Beenden \"exit\" eingeben");
 			
 			while (!IO.readString().equals("exit")){
