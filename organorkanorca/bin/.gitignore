@@ -1,7 +1,6 @@
-/user/
 /util/
+/components/
 /data_objects/
-/domain/
 /persistence/
 /net/
-/ShopServer/
+/domain/

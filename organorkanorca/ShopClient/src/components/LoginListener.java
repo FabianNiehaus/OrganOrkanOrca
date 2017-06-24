@@ -1,4 +1,4 @@
-package user;
+package components;
 
 import data_objects.Person;
 

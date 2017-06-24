@@ -1,4 +1,4 @@
-package user;
+package components;
 
 import java.io.IOException;
 import java.text.DateFormat;
