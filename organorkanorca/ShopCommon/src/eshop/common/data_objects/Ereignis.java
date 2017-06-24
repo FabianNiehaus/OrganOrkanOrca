@@ -1,5 +1,6 @@
 package eshop.common.data_objects;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -8,8 +9,12 @@ import java.util.Date;
  * @author Fabian Niehaus
  * Dient zur Ereignisspeicherung fuer den eShop
  */
-public class Ereignis {
+public class Ereignis implements Serializable  {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1817043294145890221L;
 	private int id;
 	private Person wer;
 	private Date wann;

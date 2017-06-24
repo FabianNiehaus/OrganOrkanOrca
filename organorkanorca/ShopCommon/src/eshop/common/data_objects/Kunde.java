@@ -3,14 +3,20 @@
  */
 package eshop.common.data_objects;
 
+import java.io.Serializable;
+
 import eshop.common.exceptions.InvalidPersonDataException;
 
 /**
  * @author Fabian Niehaus
  *
  */
-public class Kunde extends Person {
+public class Kunde extends Person implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1133891813422452141L;
 	private Warenkorb wk;
 	
 	/**

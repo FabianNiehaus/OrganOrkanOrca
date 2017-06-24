@@ -1,5 +1,6 @@
 package eshop.common.data_objects;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -10,8 +11,13 @@ import eshop.common.exceptions.ArticleStockNotSufficientException;
  * @author FabianNiehaus
  *
  */
-public class Warenkorb {
+public class Warenkorb implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1864639903738496743L;
+
 	public Warenkorb() {
 		super();
 	}

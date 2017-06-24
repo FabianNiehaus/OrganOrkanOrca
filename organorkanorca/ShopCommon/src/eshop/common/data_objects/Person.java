@@ -3,13 +3,19 @@
  */
 package eshop.common.data_objects;
 
+import java.io.Serializable;
+
 import eshop.common.exceptions.InvalidPersonDataException;
 
 /**
  * @author Fabian Niehaus
  *
  */
-public abstract class Person {
+public abstract class Person implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5177564072380459834L;
 	protected int id;
 	protected String passwort;
 	

@@ -3,6 +3,7 @@
  */
 package eshop.common.data_objects;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -13,7 +14,12 @@ import java.util.Date;
  * @author Manic
  *
  */
-public class Rechnung {
+public class Rechnung implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6681009839157213957L;
 
 	/**
 	 * @param ku Zugehöriger Kunde

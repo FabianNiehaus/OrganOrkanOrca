@@ -1,11 +1,17 @@
 package eshop.common.data_objects;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class Artikel {
+public class Artikel implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8273031240889790935L;
+
 	/**
 	 * @param bezeichnung	Bezeichnung / Name des Artikels
 	 * @param artikelnummer	Eindeutige Artikelnummer

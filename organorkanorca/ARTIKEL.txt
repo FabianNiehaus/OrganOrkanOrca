@@ -10,7 +10,7 @@ Orkan
 3
 Orca
 5729.45
-97
+195
 1
 ---BEGINHISTORY---
 174:97
