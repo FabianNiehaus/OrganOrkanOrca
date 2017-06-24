@@ -51,8 +51,8 @@ import eshop.common.exceptions.InvalidAmountException;
 import eshop.common.exceptions.InvalidPersonDataException;
 import eshop.common.exceptions.MaxIDsException;
 import eshop.common.exceptions.PersonNonexistantException;
-import eshop.common.net.miginfocom.swing.MigLayout;
 import eshop.server.domain.eShopCore;
+import net.miginfocom.swing.MigLayout;
 
 public class MainWindow extends JFrame {
 	
