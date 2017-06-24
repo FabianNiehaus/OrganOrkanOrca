@@ -51,12 +51,13 @@ import eshop.common.exceptions.InvalidAmountException;
 import eshop.common.exceptions.InvalidPersonDataException;
 import eshop.common.exceptions.MaxIDsException;
 import eshop.common.exceptions.PersonNonexistantException;
+import eshop.common.net.ShopRemote;
 import eshop.server.domain.eShopCore;
 import net.miginfocom.swing.MigLayout;
 
 public class MainWindow extends JFrame {
 	
-	public MainWindow(String titel, Person user, eShopCore server, LoginListener loginListener){
+	public MainWindow(String titel, Person user, ShopRemote server, LoginListener loginListener){
 		super(titel);
 		this.user = user;
 		this.server = server;
@@ -65,7 +66,7 @@ public class MainWindow extends JFrame {
 	}
 	
 	Person user;
-	eShopCore server;
+	ShopRemote server;
 	LoginListener loginListener;
 	
 	JPanel main = (JPanel) this.getContentPane();

@@ -19,7 +19,9 @@ import eshop.common.exceptions.AccessRestrictedException;
 import eshop.common.exceptions.InvalidPersonDataException;
 import eshop.common.exceptions.LoginFailedException;
 import eshop.common.exceptions.MaxIDsException;
+import eshop.common.net.ShopRemote;
 import eshop.server.domain.eShopCore;
+
 import net.miginfocom.swing.MigLayout;
 
 
@@ -38,13 +40,13 @@ public class LoginWindow extends JFrame {
 	JButton anmeldenButton = new JButton("Login");
 	JButton registrierenButton = new JButton("Registrieren");
 	
-	private eShopCore eShop = null;
+	private ShopRemote server = null;
 	private LoginListener loginListener = null;
 	
-	public LoginWindow(String titel, eShopCore eShop, LoginListener listener){
+	public LoginWindow(String titel, ShopRemote server, LoginListener listener){
 		super(titel);
 	
-		this.eShop = eShop;
+		this.server = server;
 		this.loginListener = listener;
 		
 		JPanel form = new JPanel();
@@ -104,7 +106,7 @@ public class LoginWindow extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				Person user = eShop.anmelden(LoginWindow.this.benutzerIdAuslesen(), LoginWindow.this.passwortAuslesen());
+				Person user = server.anmelden(LoginWindow.this.benutzerIdAuslesen(), LoginWindow.this.passwortAuslesen());
 				loginListener.userLoggedIn(user);
 			} catch (NumberFormatException | LoginFailedException e1) {
 				JOptionPane.showMessageDialog(LoginWindow.this, "Anmeldung fehlgeschlagen");
@@ -119,7 +121,7 @@ public class LoginWindow extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				Person user = eShop.anmelden(1001, "test");
+				Person user = server.anmelden(1001, "test");
 				loginListener.userLoggedIn(user);
 			} catch (LoginFailedException | RemoteException e1) {
 				e1.printStackTrace();
@@ -132,7 +134,7 @@ public class LoginWindow extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				Person user = eShop.anmelden(9000, "test2");
+				Person user = server.anmelden(9000, "test2");
 				loginListener.userLoggedIn(user);
 			} catch (LoginFailedException | RemoteException e1) {
 				JOptionPane.showMessageDialog(LoginWindow.this, e1.getMessage());
@@ -171,7 +173,7 @@ public class LoginWindow extends JFrame {
 								   if (!passwordField.getText().equals("")){
 									   try {
 										   
-											Kunde ku = eShop.erstelleKunde(firstnameField.getText(), 
+											Kunde ku = server.erstelleKunde(firstnameField.getText(), 
 														   lastnameField.getText(), 
 														   passwordField.getText(), 
 														   addressStreetField.getText(), 

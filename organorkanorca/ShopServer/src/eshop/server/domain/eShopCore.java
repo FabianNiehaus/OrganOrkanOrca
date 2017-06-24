@@ -1,7 +1,10 @@
 package eshop.server.domain;
 
 import java.io.IOException;
+import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Date;
 import java.util.Map;
@@ -28,6 +31,9 @@ import eshop.common.exceptions.PersonNonexistantException;
 import eshop.common.net.ShopEventListener;
 import eshop.common.net.ShopRemote;
 import eshop.common.util.IO;
+
+import java.rmi.server.*;
+
 
 /**
  * @author Fabian Niehaus Zentrales Modul des eShop
@@ -63,8 +69,18 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 	}
 	
 	public static void main(String[] args){
-		 try {
-			eShopCore eShop = new eShopCore();
+		
+		String serviceName = "eShopServer";
+		
+		try {
+			 
+			ShopRemote eShop = new eShopCore();
+						
+			
+			
+			LocateRegistry.createRegistry(1099);
+			
+			Naming.rebind("//Realm1:1099/" + serviceName, eShop);
 			
 			IO.println("Shop erfolgreich gestartet");
 			IO.println("Zum Beenden \"exit\" eingeben");
@@ -74,7 +90,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 			}
 			
 			IO.println("eShop wird beendet");
-			
+	
 			System.exit(0);
 			
 		} catch (IOException | ArticleNonexistantException | PersonNonexistantException
