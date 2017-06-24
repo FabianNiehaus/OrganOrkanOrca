@@ -8,7 +8,8 @@ import eshop.common.data_objects.Artikel;
 import eshop.common.data_objects.Massengutartikel;
 import eshop.common.exceptions.ArticleNonexistantException;
 import eshop.common.exceptions.InvalidAmountException;
-import eshop.server.persistence.*;
+import eshop.server.persistence.FilePersistenceManager;
+import eshop.server.persistence.PersistenceManager;
 
 /**
  * @author Fabian Niehaus

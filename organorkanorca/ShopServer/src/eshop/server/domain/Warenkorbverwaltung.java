@@ -3,9 +3,10 @@ package eshop.server.domain;
 import java.util.Map;
 import java.util.Vector;
 
-import eshop.common.data_objects.*;
+import eshop.common.data_objects.Artikel;
+import eshop.common.data_objects.Massengutartikel;
+import eshop.common.data_objects.Warenkorb;
 import eshop.common.exceptions.ArticleAlreadyInBasketException;
-import eshop.common.exceptions.ArticleNonexistantException;
 import eshop.common.exceptions.ArticleStockNotSufficientException;
 import eshop.common.exceptions.BasketNonexistantException;
 import eshop.common.exceptions.InvalidAmountException;

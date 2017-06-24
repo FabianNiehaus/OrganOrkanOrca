@@ -14,7 +14,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
-import eshop.common.data_objects.*;
+import eshop.common.data_objects.Artikel;
+import eshop.common.data_objects.Ereignis;
+import eshop.common.data_objects.Kunde;
+import eshop.common.data_objects.Massengutartikel;
+import eshop.common.data_objects.Mitarbeiter;
+import eshop.common.data_objects.Typ;
 import eshop.common.exceptions.InvalidPersonDataException;
 
 /**

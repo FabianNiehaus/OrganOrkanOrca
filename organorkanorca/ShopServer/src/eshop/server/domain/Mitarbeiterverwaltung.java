@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Vector;
 
-import eshop.common.data_objects.Kunde;
 import eshop.common.data_objects.Mitarbeiter;
-import eshop.common.data_objects.Warenkorb;
-import eshop.common.exceptions.*;
+import eshop.common.exceptions.InvalidPersonDataException;
+import eshop.common.exceptions.LoginFailedException;
+import eshop.common.exceptions.MaxIDsException;
+import eshop.common.exceptions.PersonNonexistantException;
+import eshop.common.exceptions.VectorIsEmptyException;
 import eshop.server.persistence.FilePersistenceManager;
 import eshop.server.persistence.PersistenceManager;
 

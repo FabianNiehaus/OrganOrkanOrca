@@ -3,7 +3,6 @@ package eshop.common.data_objects;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Vector;
 
 public class Artikel {
 	

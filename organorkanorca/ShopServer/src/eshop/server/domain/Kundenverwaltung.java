@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import eshop.common.data_objects.Kunde;
-import eshop.common.data_objects.Mitarbeiter;
 import eshop.common.data_objects.Person;
 import eshop.common.data_objects.Warenkorb;
 import eshop.common.exceptions.InvalidPersonDataException;

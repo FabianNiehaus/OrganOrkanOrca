@@ -1,9 +1,8 @@
 package eshop.common.net;
 
+import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-
-import java.io.IOException;
 import java.util.Vector;
 
 import eshop.common.data_objects.Artikel;

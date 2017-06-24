@@ -3,7 +3,10 @@ package eshop.server.persistence;
 import java.io.IOException;
 import java.util.Vector;
 
-import eshop.common.data_objects.*;
+import eshop.common.data_objects.Artikel;
+import eshop.common.data_objects.Ereignis;
+import eshop.common.data_objects.Kunde;
+import eshop.common.data_objects.Mitarbeiter;
 import eshop.common.exceptions.InvalidPersonDataException;
 
 /**

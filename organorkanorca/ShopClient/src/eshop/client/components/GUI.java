@@ -10,6 +10,9 @@ import java.rmi.server.UnicastRemoteObject;
 import javax.swing.JOptionPane;
 
 import eshop.common.data_objects.Person;
+import eshop.common.exceptions.ArticleNonexistantException;
+import eshop.common.exceptions.InvalidPersonDataException;
+import eshop.common.exceptions.PersonNonexistantException;
 import eshop.common.net.ShopEventListener;
 import eshop.common.net.ShopRemote;
 import eshop.server.domain.eShopCore;
