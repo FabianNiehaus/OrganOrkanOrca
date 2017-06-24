@@ -2,6 +2,7 @@ package user;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -107,6 +108,8 @@ public class LoginWindow extends JFrame {
 				loginListener.userLoggedIn(user);
 			} catch (NumberFormatException | LoginFailedException e1) {
 				JOptionPane.showMessageDialog(LoginWindow.this, "Anmeldung fehlgeschlagen");
+			} catch (RemoteException e1) {
+				JOptionPane.showMessageDialog(LoginWindow.this, e1.getMessage());
 			}
 		}
 	}
@@ -118,7 +121,7 @@ public class LoginWindow extends JFrame {
 			try {
 				Person user = eShop.anmelden(1001, "test");
 				loginListener.userLoggedIn(user);
-			} catch (LoginFailedException e1) {
+			} catch (LoginFailedException | RemoteException e1) {
 				e1.printStackTrace();
 			}
 		}
@@ -131,8 +134,8 @@ public class LoginWindow extends JFrame {
 			try {
 				Person user = eShop.anmelden(9000, "test2");
 				loginListener.userLoggedIn(user);
-			} catch (LoginFailedException e1) {
-				e1.printStackTrace();
+			} catch (LoginFailedException | RemoteException e1) {
+				JOptionPane.showMessageDialog(LoginWindow.this, e1.getMessage());
 			}
 		}
 	}
@@ -183,6 +186,8 @@ public class LoginWindow extends JFrame {
 										} catch (AccessRestrictedException e1) {
 											JOptionPane.showMessageDialog(LoginWindow.this, e1.getMessage());
 										} catch (InvalidPersonDataException e1) {
+											JOptionPane.showMessageDialog(LoginWindow.this, e1.getMessage());
+										} catch (RemoteException e1) {
 											JOptionPane.showMessageDialog(LoginWindow.this, e1.getMessage());
 										}
 								   }

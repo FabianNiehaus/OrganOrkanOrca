@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -55,16 +56,16 @@ import util.TableColumnAdjuster;
 
 public class MainWindow extends JFrame {
 	
-	public MainWindow(String titel, Person user, eShopCore eShop, LoginListener loginListener){
+	public MainWindow(String titel, Person user, eShopCore server, LoginListener loginListener){
 		super(titel);
 		this.user = user;
-		this.eShop = eShop;
+		this.server = server;
 		this.loginListener = loginListener;
 		initialize();
 	}
 	
 	Person user;
-	eShopCore eShop;
+	eShopCore server;
 	LoginListener loginListener;
 	
 	JPanel main = (JPanel) this.getContentPane();
@@ -254,11 +255,13 @@ public class MainWindow extends JFrame {
 			} catch (AccessRestrictedException e) {
 				removeAll();
 				add(new JLabel(e.getMessage()));
+			} catch (RemoteException e) {
+				JOptionPane.showMessageDialog(Sichtfenster.this, e.getMessage());
 			}
 
 		}
 		
-		public abstract void auflistungInitialize() throws AccessRestrictedException;
+		public abstract void auflistungInitialize() throws AccessRestrictedException, RemoteException;
 		
 		class ArtikelInWarenkorbListener implements ActionListener{
 
@@ -266,9 +269,9 @@ public class MainWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 
 				try {
-					Artikel art = eShop.artikelSuchen((int)auflistung.getValueAt(auflistung.getSelectedRow(),0), user);
+					Artikel art = server.artikelSuchen((int)auflistung.getValueAt(auflistung.getSelectedRow(),0), user);
 					
-					eShop.artikelInWarenkorbLegen(art.getArtikelnummer(),Integer.parseInt(anzahl.getText()), user);
+					server.artikelInWarenkorbLegen(art.getArtikelnummer(),Integer.parseInt(anzahl.getText()), user);
 					
 					warenkorbverwaltungsfenster.warenkorbAufrufen();
 					
@@ -288,6 +291,8 @@ public class MainWindow extends JFrame {
 					JOptionPane.showMessageDialog(Sichtfenster.this, "Kein Artikel ausgewählt");
 				} catch (ArticleAlreadyInBasketException e1){
 					JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
+				} catch (RemoteException e1) {
+					JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
 				}
 			}
 		}
@@ -297,13 +302,15 @@ public class MainWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					artikelverwaltungsfenster.artikelAnzeigen(eShop.artikelSuchen((int)auflistung.getValueAt(auflistung.getSelectedRow(),0), user));
+					artikelverwaltungsfenster.artikelAnzeigen(server.artikelSuchen((int)auflistung.getValueAt(auflistung.getSelectedRow(),0), user));
 				} catch (ArticleNonexistantException e1) {
 					JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
 				} catch (AccessRestrictedException e1) {
 					JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
 				} catch (ArrayIndexOutOfBoundsException e1){
 					JOptionPane.showMessageDialog(Sichtfenster.this, "Kein Artikel ausgewählt");
+				} catch (RemoteException e1) {
+					JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
 				}
 			}
 			
@@ -329,6 +336,8 @@ public class MainWindow extends JFrame {
 				try {
 					auflistungInitialize();
 				} catch (AccessRestrictedException e1) {
+					JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
+				} catch (RemoteException e1) {
 					JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
 				}
 			}
@@ -359,12 +368,12 @@ public class MainWindow extends JFrame {
 		}
 				
 		@Override
-		public void auflistungInitialize() throws AccessRestrictedException {
+		public void auflistungInitialize() throws AccessRestrictedException, RemoteException {
 			
 				
 			Vector<Vector<Object>> data = new Vector<>();
 			
-			for(Artikel art : eShop.alleArtikelAusgeben(user)){
+			for(Artikel art : server.alleArtikelAusgeben(user)){
 				
 				Vector<Object> tmp = new Vector<>();
 				
@@ -396,7 +405,7 @@ public class MainWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				try {
-					Artikel art = eShop.artikelSuchen((int)auflistung.getValueAt(auflistung.getSelectedRow(),0), user);
+					Artikel art = server.artikelSuchen((int)auflistung.getValueAt(auflistung.getSelectedRow(),0), user);
 				
 					DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 					
@@ -432,6 +441,8 @@ public class MainWindow extends JFrame {
 					JOptionPane.showMessageDialog(artikelsichtfenster, e1.getMessage());
 				} catch (ArrayIndexOutOfBoundsException e1) {
 					JOptionPane.showMessageDialog(artikelsichtfenster, "Es muss ein Artikel ausgewählt werden!");
+				} catch (RemoteException e1) {
+					JOptionPane.showMessageDialog(artikelsichtfenster, e1.getMessage());
 				}
 			}
 		}
@@ -449,12 +460,12 @@ public class MainWindow extends JFrame {
 		}
 				
 		@Override
-		public void auflistungInitialize() throws AccessRestrictedException {
+		public void auflistungInitialize() throws AccessRestrictedException, RemoteException {
 			
 				
 			Vector<Vector<Object>> data = new Vector<>();
 			
-			for(Kunde ku : eShop.alleKundenAusgeben(user)){
+			for(Kunde ku : server.alleKundenAusgeben(user)){
 				
 				Vector<Object> tmp = new Vector<>();
 				
@@ -479,10 +490,12 @@ public class MainWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					kundenverwaltungsfenster.personAnzeigen(eShop.kundeSuchen((int)auflistung.getValueAt(auflistung.getSelectedRow(),0), user));
+					kundenverwaltungsfenster.personAnzeigen(server.kundeSuchen((int)auflistung.getValueAt(auflistung.getSelectedRow(),0), user));
 				} catch (ArrayIndexOutOfBoundsException e1){
 					JOptionPane.showMessageDialog(Kundensichtfenster.this, "Kein Kunde ausgewählt");
 				} catch (PersonNonexistantException e1) {
+					JOptionPane.showMessageDialog(Kundensichtfenster.this, e1.getMessage());
+				} catch (RemoteException e1) {
 					JOptionPane.showMessageDialog(Kundensichtfenster.this, e1.getMessage());
 				}
 			}
@@ -501,12 +514,12 @@ public class MainWindow extends JFrame {
 		}
 				
 		@Override
-		public void auflistungInitialize() throws AccessRestrictedException {
+		public void auflistungInitialize() throws AccessRestrictedException, RemoteException {
 			
 				
 			Vector<Vector<Object>> data = new Vector<>();
 			
-			for(Mitarbeiter mi : eShop.alleMitarbeiterAusgeben(user)){
+			for(Mitarbeiter mi : server.alleMitarbeiterAusgeben(user)){
 				
 				Vector<Object> tmp = new Vector<>();
 				
@@ -531,10 +544,12 @@ public class MainWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					mitarbeiterverwaltungsfenster.personAnzeigen(eShop.mitarbeiterSuchen((int)auflistung.getValueAt(auflistung.getSelectedRow(),0), user));
+					mitarbeiterverwaltungsfenster.personAnzeigen(server.mitarbeiterSuchen((int)auflistung.getValueAt(auflistung.getSelectedRow(),0), user));
 				} catch (ArrayIndexOutOfBoundsException e1){
 					JOptionPane.showMessageDialog(Mitarbeitersichtfenster.this, "Kein Mitarbeiter ausgewählt");
 				} catch (PersonNonexistantException e1) {
+					JOptionPane.showMessageDialog(Mitarbeitersichtfenster.this, e1.getMessage());
+				} catch (RemoteException e1) {
 					JOptionPane.showMessageDialog(Mitarbeitersichtfenster.this, e1.getMessage());
 				}
 			}
@@ -573,16 +588,18 @@ public class MainWindow extends JFrame {
 			} catch (AccessRestrictedException e) {
 				removeAll();
 				add(new JLabel(e.getMessage()));
+			} catch (RemoteException e) {
+				JOptionPane.showMessageDialog(this, e.getMessage());
 			}
 		}
 		
-		public void auflistungInitialize() throws AccessRestrictedException {
+		public void auflistungInitialize() throws AccessRestrictedException, RemoteException {
 			
 			Vector<Vector<Object>> data = new Vector<>();
 			
 			DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 			
-			for(Ereignis er : eShop.alleEreignisseAusgeben(user) ){
+			for(Ereignis er : server.alleEreignisseAusgeben(user) ){
 				
 				Vector<Object> tmp = new Vector<>();
 
@@ -665,7 +682,7 @@ public class MainWindow extends JFrame {
 					
 					try {
 						
-						eShop.schreibeDaten();
+						server.schreibeDaten();
 						
 						JOptionPane.showMessageDialog(ShopManagement.this, "Daten erfolgreich gespeichert!");
 						
@@ -677,7 +694,7 @@ public class MainWindow extends JFrame {
 					
 					try {
 						
-						eShop.ladeDaten();
+						server.ladeDaten();
 						
 						artikelsichtfenster = new Artikelsichtfenster();
 						kundensichtfenster = new Kundensichtfenster();
@@ -841,7 +858,7 @@ public class MainWindow extends JFrame {
 								
 								try {
 									
-									Artikel art = eShop.erstelleArtikel(bezeichnung, bestand, preis, packungsgroesse, user);
+									Artikel art = server.erstelleArtikel(bezeichnung, bestand, preis, packungsgroesse, user);
 									 
 									//Neu erstellten  Artikel anzeigen
 									artikelAnzeigen(art);
@@ -869,6 +886,8 @@ public class MainWindow extends JFrame {
 								} catch (AccessRestrictedException e1) {
 									JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
 								} catch (InvalidAmountException e1) {
+									JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
+								} catch (RemoteException e1) {
 									JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
 								}
 
@@ -930,14 +949,14 @@ public class MainWindow extends JFrame {
 								
 									
 								try {
-									Artikel art = eShop.artikelSuchen(Integer.parseInt(artNrField.getText()), user);
+									Artikel art = server.artikelSuchen(Integer.parseInt(artNrField.getText()), user);
 									
 									art.setBezeichnung(bezeichnung);
-									eShop.erhoeheArtikelBestand(art.getArtikelnummer(), bestand, user);
+									server.erhoeheArtikelBestand(art.getArtikelnummer(), bestand, user);
 									art.setPreis(preis);
 									if(packungsgroesse > 1){
-										eShop.artikelLoeschen(art, user);
-										art = eShop.erstelleArtikel(bezeichnung, bestand, preis, packungsgroesse, user);
+										server.artikelLoeschen(art, user);
+										art = server.erstelleArtikel(bezeichnung, bestand, preis, packungsgroesse, user);
 									}
 									
 									//Neu erstellten  Artikel anzeigen
@@ -958,6 +977,8 @@ public class MainWindow extends JFrame {
 								} catch (AccessRestrictedException e1) {
 									JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
 								} catch (InvalidAmountException e1) {
+									JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
+								} catch (RemoteException e1) {
 									JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
 								}
 								 
@@ -982,7 +1003,7 @@ public class MainWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					
-					eShop.artikelLoeschen(art, user);
+					server.artikelLoeschen(art, user);
 					
 					artNrField.setText("");
 					bezeichnungField.setText("");
@@ -995,6 +1016,8 @@ public class MainWindow extends JFrame {
 					artikelsichtfenster.auflistungInitialize();
 					
 				} catch (AccessRestrictedException e1) {
+					JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
+				} catch (RemoteException e1) {
 					JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
 				}
 			}
@@ -1046,8 +1069,8 @@ public class MainWindow extends JFrame {
 			this.setVisible(true);
 		}
 		
-		public void warenkorbAufrufen() throws AccessRestrictedException{
-			Warenkorb wk = eShop.warenkorbAusgeben(user);
+		public void warenkorbAufrufen() throws AccessRestrictedException, RemoteException{
+			Warenkorb wk = server.warenkorbAusgeben(user);
 			Map<Artikel,Integer> inhalt = wk.getArtikel();
 			warenkorbAuflistung.setModel(new WarenkorbTableModel(inhalt));
 		}
@@ -1066,19 +1089,19 @@ public class MainWindow extends JFrame {
 						
 						if (row != -1) {
 														
-							Artikel art = eShop.artikelSuchen(((int)warenkorbAuflistung.getValueAt(row,0)), user);
+							Artikel art = server.artikelSuchen(((int)warenkorbAuflistung.getValueAt(row,0)), user);
 						
 							int anz = Integer.parseInt(JOptionPane.showInputDialog("Bitte gewuenschte Anzahl angeben"));
 							
 							if (anz > 0){
 
-								eShop.artikelInWarenkorbAendern(art, anz, user);
+								server.artikelInWarenkorbAendern(art, anz, user);
 								
 							} else {
 								throw new InvalidAmountException();
 							}
 							
-							wk = eShop.warenkorbAusgeben(user);
+							wk = server.warenkorbAusgeben(user);
 							
 							warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
 							
@@ -1096,6 +1119,8 @@ public class MainWindow extends JFrame {
 						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
 					} catch (ArticleNonexistantException e1) {
 						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
+					} catch (RemoteException e1) {
+						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
 					}
 				
 				//Artikel aus Warenkorb entfernen
@@ -1107,12 +1132,12 @@ public class MainWindow extends JFrame {
 						
 						if (row != -1) {
 							
-							Artikel art = eShop.artikelSuchen(((int)warenkorbAuflistung.getValueAt(row,0)), user);
+							Artikel art = server.artikelSuchen(((int)warenkorbAuflistung.getValueAt(row,0)), user);
 							
 						
-							eShop.artikelAusWarenkorbEntfernen(art, user);
+							server.artikelAusWarenkorbEntfernen(art, user);
 							
-							wk = eShop.warenkorbAusgeben(user);
+							wk = server.warenkorbAusgeben(user);
 							
 							warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
 							
@@ -1122,6 +1147,8 @@ public class MainWindow extends JFrame {
 						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
 					} catch (ArticleNonexistantException e1) {
 						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
+					} catch (RemoteException e1) {
+						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
 					}
 					
 					
@@ -1130,13 +1157,15 @@ public class MainWindow extends JFrame {
 					
 					try {
 						
-						eShop.warenkorbLeeren(user);
+						server.warenkorbLeeren(user);
 						
-						wk = eShop.warenkorbAusgeben(user);
+						wk = server.warenkorbAusgeben(user);
 						
 						warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
 						
 					} catch (AccessRestrictedException e1) {
+						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
+					} catch (RemoteException e1) {
 						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
 					}
 					
@@ -1151,7 +1180,7 @@ public class MainWindow extends JFrame {
 						//Formatierungsvorlage fuer Datum
 						DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 						
-						Rechnung re = eShop.warenkorbKaufen(user);
+						Rechnung re = server.warenkorbKaufen(user);
 						
 						artikelsichtfenster.auflistungInitialize();
 						
@@ -1169,13 +1198,15 @@ public class MainWindow extends JFrame {
 						
 						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, rechnungsString);
 						
-						wk = eShop.warenkorbAusgeben(user);
+						wk = server.warenkorbAusgeben(user);
 						
 						warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
 						
 					} catch (AccessRestrictedException e1) {
 						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
 					} catch (InvalidAmountException e1) {
+						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
+					} catch (RemoteException e1) {
 						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
 					}
 				}
@@ -1429,6 +1460,8 @@ public class MainWindow extends JFrame {
 							
 						} catch (AccessRestrictedException e1) {
 							JOptionPane.showMessageDialog(verwaltungsfenster, e1.getMessage());
+						} catch (RemoteException e1) {
+							JOptionPane.showMessageDialog(verwaltungsfenster, e1.getMessage());
 						}
 		
 				}				
@@ -1499,9 +1532,9 @@ public class MainWindow extends JFrame {
 						String passwort = passwordField.getText();
 						
 						if(personenTyp.equals("Kunde")){
-							p = eShop.erstelleKunde(firstname, lastname, passwort, address_Street, address_Zip, address_Town, user);
+							p = server.erstelleKunde(firstname, lastname, passwort, address_Street, address_Zip, address_Town, user);
 						} else if (personenTyp.equals("Mitarbeiter")){
-							p = eShop.erstelleMitatbeiter(firstname, lastname, passwort, address_Street, address_Zip, address_Town, user);
+							p = server.erstelleMitatbeiter(firstname, lastname, passwort, address_Street, address_Zip, address_Town, user);
 						}
 						 
 						//Neu erstellte  Person anzeigen
@@ -1541,6 +1574,8 @@ public class MainWindow extends JFrame {
 						JOptionPane.showMessageDialog(verwaltungsfenster, e1.getMessage());
 					} catch (MaxIDsException e1) {
 						JOptionPane.showMessageDialog(verwaltungsfenster, e1.getMessage());
+					} catch (RemoteException e1) {
+						JOptionPane.showMessageDialog(verwaltungsfenster, e1.getMessage());
 					}	
 				}
 			}
@@ -1552,7 +1587,7 @@ public class MainWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					
-					eShop.personLoeschen(p, user);
+					server.personLoeschen(p, user);
 					
 					persNrField.setText("");
 					vornameField.setText("");
@@ -1567,6 +1602,8 @@ public class MainWindow extends JFrame {
 					kundensichtfenster.auflistungInitialize();
 					
 				} catch (AccessRestrictedException e1) {
+					JOptionPane.showMessageDialog(kundensichtfenster, e1.getMessage());
+				} catch (RemoteException e1) {
 					JOptionPane.showMessageDialog(kundensichtfenster, e1.getMessage());
 				}
 			}

@@ -1,6 +1,8 @@
 package domain;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Date;
 import java.util.Map;
 import java.util.Vector;
@@ -16,6 +18,9 @@ import data_objects.Warenkorb;
 import domain.exceptions.LoginFailedException;
 import domain.exceptions.MaxIDsException;
 import domain.exceptions.PersonNonexistantException;
+import net.ShopEventListener;
+import net.ShopRemote;
+import util.IO;
 import domain.exceptions.AccessRestrictedException;
 import domain.exceptions.ArticleAlreadyInBasketException;
 import domain.exceptions.ArticleNonexistantException;
@@ -25,198 +30,227 @@ import domain.exceptions.InvalidAmountException;
 import domain.exceptions.InvalidPersonDataException;
 
 /**
- * @author Fabian Niehaus
- * Zentrales Modul des eShop
+ * @author Fabian Niehaus Zentrales Modul des eShop
  */
-public class eShopCore {
+public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 
-	Artikelverwaltung av;
+	private Artikelverwaltung av;
 	private Kundenverwaltung kv;
 	private Mitarbeiterverwaltung mv;
 	private Warenkorbverwaltung wv;
 	private Rechnungsverwaltung rv;
 	private Ereignisverwaltung ev;
-	
+
 	private String dateipfad = "";
-	
+
 	/**
-	 * @throws PersonNonexistantException 
-	 * @throws ArticleNonexistantException 
-	 * @throws InvalidPersonDataException 
+	 * @throws PersonNonexistantException
+	 * @throws ArticleNonexistantException
+	 * @throws InvalidPersonDataException
 	 */
-	public eShopCore() throws IOException, ArticleNonexistantException, PersonNonexistantException, InvalidPersonDataException {
+	public eShopCore()
+			throws IOException, ArticleNonexistantException, PersonNonexistantException, InvalidPersonDataException {
 		super();
 		av = new Artikelverwaltung();
 		kv = new Kundenverwaltung();
 		mv = new Mitarbeiterverwaltung();
 		wv = new Warenkorbverwaltung();
 		rv = new Rechnungsverwaltung();
-		ev = new Ereignisverwaltung(kv,mv,av);
-		
+		ev = new Ereignisverwaltung(kv, mv, av);
+
 		ladeDaten();
 
 	}
+	
+	public static void main(String[] args){
+		 try {
+			eShopCore eShop = new eShopCore();
+			
+			IO.println("Shop erfolgreich gestartet");
+			IO.println("Zum Beenden \"exit\" eingeben");
+			
+			while (!IO.readString().equals("exit")){
+				
+			}
+			
+			IO.println("eShop wird beendet");
+			
+			System.exit(0);
+			
+		} catch (IOException | ArticleNonexistantException | PersonNonexistantException
+				| InvalidPersonDataException e) {
+			e.printStackTrace();
+		}
+	}
 
-	/**
-	 * Anmelden des Nutzers
-	 * Kunden-ID 1000 - 8999, Mitarbeiter-ID 9000 - 9999
-	 * @param id Nutzer-ID
-	 * @param passwort Nutzer-Passwort
-	 * @return Objekt des Nutzers der Klasse Kunde oder Mitarbeiter
-	 * @throws LoginFailedException Anmeldung fehlgeschlagen
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see domain.ShopRemote#anmelden(int, java.lang.String)
 	 */
-	public Person anmelden(int id, String passwort) throws LoginFailedException {
+	@Override
+	public Person anmelden(int id, String passwort) throws LoginFailedException, RemoteException {
 
-		if (id >= 1000 && id < 9000){
+		if (id >= 1000 && id < 9000) {
 			return kv.anmelden(id, passwort);
-		} else if (id >= 9000 && id < 10000){
+		} else if (id >= 9000 && id < 10000) {
 			return mv.anmelden(id, passwort);
 		} else {
 			throw new LoginFailedException();
 		}
 	}
-	
-	/**
-	 * @return Alle in der Artikelverwaltung gespeicherten Artikel
-	 * @throws AccessRestrictedException 
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see domain.ShopRemote#alleArtikelAusgeben(data_objects.Person)
 	 */
-	public Vector<Artikel> alleArtikelAusgeben(Person p) throws AccessRestrictedException{
-		if(istKunde(p) || istMitarbeiter(p)){
+	@Override
+	public Vector<Artikel> alleArtikelAusgeben(Person p) throws AccessRestrictedException, RemoteException {
+		if (istKunde(p) || istMitarbeiter(p)) {
 			return av.getArtikel();
 		} else {
 			throw new AccessRestrictedException(p, "\"Alle Artikel ausgeben\"");
 		}
 	}
 
-	/**
-	 * @return Alle in der Kundenverwaltung gespeicherten Kunden
-	 * @throws AccessRestrictedException
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see domain.ShopRemote#alleKundenAusgeben(data_objects.Person)
 	 */
-	public Vector<Kunde> alleKundenAusgeben(Person p) throws AccessRestrictedException{
-		if(istMitarbeiter(p)){
+	@Override
+	public Vector<Kunde> alleKundenAusgeben(Person p) throws AccessRestrictedException, RemoteException {
+		if (istMitarbeiter(p)) {
 			return kv.getKunden();
 		} else {
 			throw new AccessRestrictedException(p, "Kundenverwaltung");
 		}
 	}
-	
-	/**
-	 * @return Alle in der Mitarbeiterverwaltung gespeicherten Mitarbeiter
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see domain.ShopRemote#alleMitarbeiterAusgeben(data_objects.Person)
 	 */
-	public Vector<Mitarbeiter> alleMitarbeiterAusgeben(Person p) throws AccessRestrictedException{
-		if(istMitarbeiter(p)){
+	@Override
+	public Vector<Mitarbeiter> alleMitarbeiterAusgeben(Person p) throws AccessRestrictedException, RemoteException {
+		if (istMitarbeiter(p)) {
 			return mv.getMitarbeiter();
 		} else {
 			throw new AccessRestrictedException(p, "Mitarbeiterverwaltung");
 		}
 	}
-	
-	/**
-	 * @return Alle in der Warenkorbverwaltung gespeicherten Warenkörbe
-	 * @throws AccessRestrictedException 
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see domain.ShopRemote#alleWarenkoerbeAusgeben(data_objects.Person)
 	 */
-	public void alleWarenkoerbeAusgeben(Person p) throws AccessRestrictedException{
-		if(istMitarbeiter(p)){
-			for (Warenkorb w : wv.getWarenkoerbe()){
+	@Override
+	public void alleWarenkoerbeAusgeben(Person p) throws AccessRestrictedException, RemoteException {
+		if (istMitarbeiter(p)) {
+			for (Warenkorb w : wv.getWarenkoerbe()) {
 				w.toString();
 			}
 		} else {
 			throw new AccessRestrictedException(p, "\"Alle Warenkörbe ausgeben\"");
 		}
 	}
-	
-	/**
-	 * Erstellt einen neuen Kunden mit fortlaufender Kundennummer
-	 * @param firstname Vorname des anzulegenden Kunden
-	 * @param lastname Nachname des anzulegenden Kunden
-	 * @throws AccessRestrictedException 
-	 * @throws InvalidPersonDataException 
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see domain.ShopRemote#erstelleKunde(java.lang.String, java.lang.String,
+	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String,
+	 * data_objects.Person)
 	 */
-	public Kunde erstelleKunde(String firstname, String lastname, String passwort, String address_Street, String address_Zip, String address_Town, Person p) throws MaxIDsException, AccessRestrictedException, InvalidPersonDataException{
-		if(istMitarbeiter(p) || p == null){
-			return kv.erstelleKunde(firstname, lastname, passwort, address_Street, address_Zip, address_Town, wv.erstelleWarenkorb());
+	@Override
+	public Kunde erstelleKunde(String firstname, String lastname, String passwort, String address_Street,
+			String address_Zip, String address_Town, Person p)
+			throws MaxIDsException, AccessRestrictedException, InvalidPersonDataException, RemoteException {
+		if (istMitarbeiter(p) || p == null) {
+			return kv.erstelleKunde(firstname, lastname, passwort, address_Street, address_Zip, address_Town,
+					wv.erstelleWarenkorb());
 		} else {
 			throw new AccessRestrictedException(p, "\"Kunde anlegen\"");
 		}
 	}
-	
-	/**
-	 * Erstellt einen neuen Mitarbeiter mit fortlaufender Kundennummer
-	 * @param firstname Vorname des anzulegenden Kunden
-	 * @param lastname Nachname des anzulegenden Kunden
-	 * @throws AccessRestrictedException 
-	 * @throws InvalidPersonDataException 
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see domain.ShopRemote#erstelleMitatbeiter(java.lang.String,
+	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String,
+	 * java.lang.String, data_objects.Person)
 	 */
-	public Mitarbeiter erstelleMitatbeiter(String firstname, String lastname, String passwort, String address_Street, String address_Zip, String address_Town, Person p) throws MaxIDsException, AccessRestrictedException, InvalidPersonDataException{
-		if(istMitarbeiter(p) || p == null){
+	@Override
+	public Mitarbeiter erstelleMitatbeiter(String firstname, String lastname, String passwort, String address_Street,
+			String address_Zip, String address_Town, Person p)
+			throws MaxIDsException, AccessRestrictedException, InvalidPersonDataException, RemoteException {
+		if (istMitarbeiter(p) || p == null) {
 			return mv.erstelleMitarbeiter(firstname, lastname, passwort, address_Street, address_Zip, address_Town);
 		} else {
 			throw new AccessRestrictedException(p, "\"Mitarbeiter anlegen\"");
 		}
 	}
-	
-	/**
-	 * Erstellt einen neuen Artikel
-	 * @param bezeichnung Artikelbezeichnung
-	 * @param bestand Artikelbestamd
-	 * @param preis Artikelpreis
-	 * @param p Userobjekt
-	 * @return Erstellten Artikel
-	 * @throws AccessRestrictedException 
-	 * @throws InvalidAmountException 
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see domain.ShopRemote#erstelleArtikel(java.lang.String, int, double,
+	 * int, data_objects.Person)
 	 */
-	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, int packungsgroesse, Person p) throws AccessRestrictedException, InvalidAmountException{
-		if(istMitarbeiter(p)){
+	@Override
+	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, int packungsgroesse, Person p)
+			throws AccessRestrictedException, InvalidAmountException, RemoteException {
+		if (istMitarbeiter(p)) {
 			Artikel art = av.erstelleArtikel(bezeichnung, bestand, preis, packungsgroesse);
-			//Ereignis erzeugen
+			// Ereignis erzeugen
 			ev.ereignisErstellen(p, Typ.NEU, art, bestand);
 			return art;
 		} else {
 			throw new AccessRestrictedException(p, "\"Artikel anlegen\"");
 		}
 	}
-	
-	/**
-	 * Erhöht den Bestand eines Artikels
-	 * @param artikelnummer Artikelnummer des zu bearbeitenden Artikels
-	 * @param bestand Neuer Bestand
-	 * @param p Userobjekt
-	 * @return Bearbeiteten Artikel
-	 * @throws ArticleNonexistantException Artikelnummer existiert nicht
-	 * @throws AccessRestrictedException 
-	 * @throws InvalidAmountException 
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see domain.ShopRemote#erhoeheArtikelBestand(int, int,
+	 * data_objects.Person)
 	 */
-	public Artikel erhoeheArtikelBestand(int artikelnummer, int bestand, Person p) throws ArticleNonexistantException, AccessRestrictedException, InvalidAmountException{
-		if(istMitarbeiter(p)){
+	@Override
+	public Artikel erhoeheArtikelBestand(int artikelnummer, int bestand, Person p)
+			throws ArticleNonexistantException, AccessRestrictedException, InvalidAmountException, RemoteException {
+		if (istMitarbeiter(p)) {
 			Artikel art = av.erhoeheBestand(artikelnummer, bestand);
-			//Ereignis erzeugen
+			// Ereignis erzeugen
 			ev.ereignisErstellen(p, Typ.EINLAGERUNG, art, bestand);
 			return art;
 		} else {
 			throw new AccessRestrictedException(p, "\"Bestand erhöhen\"");
 		}
 	}
-	
-	/**
-	 * Legt einen Artikel in den Warenkorb
-	 * @param artikelnummer Auszuwählender Artikel
-	 * @param anzahl Auszuwählende Anzahl
-	 * @param p Userobjekt
-	 * @throws ArticleNonexistantException Artikelnummer existiert nicht
-	 * @throws ArticleStockNotSufficientException Artikelbestand nicht ausreichend
-	 * @throws AccessRestrictedException 
-	 * @throws InvalidAmountException 
-	 * @throws ArticleAlreadyInBasketException 
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see domain.ShopRemote#artikelInWarenkorbLegen(int, int,
+	 * data_objects.Person)
 	 */
-	public void artikelInWarenkorbLegen(int artikelnummer, int anz, Person p) throws ArticleNonexistantException, ArticleStockNotSufficientException, AccessRestrictedException, InvalidAmountException, ArticleAlreadyInBasketException{
-		if(istKunde(p)){
+	@Override
+	public void artikelInWarenkorbLegen(int artikelnummer, int anz, Person p)
+			throws ArticleNonexistantException, ArticleStockNotSufficientException, AccessRestrictedException,
+			InvalidAmountException, ArticleAlreadyInBasketException, RemoteException {
+		if (istKunde(p)) {
 			Warenkorb wk = kv.gibWarenkorbVonKunde(p);
-			
-			if(wk == null){
-				wk = wv.erstelleWarenkorb(); 
-				kv.weiseWarenkorbzu((Kunde)p, wk);
+
+			if (wk == null) {
+				wk = wv.erstelleWarenkorb();
+				kv.weiseWarenkorbzu((Kunde) p, wk);
 			}
-			
+
 			Artikel art = av.sucheArtikel(artikelnummer);
 			wv.legeInWarenkorb(wk, art, anz);
 		} else {
@@ -224,182 +258,215 @@ public class eShopCore {
 		}
 	}
 
-	/**
-	 * Gibt den Warenkorb eines Kunden zurueck
-	 * @param p Userobjekt
-	 * @return Warenkorb
-	 * @throws AccessRestrictedException 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see domain.ShopRemote#warenkorbAusgeben(data_objects.Person)
 	 */
-	public Warenkorb warenkorbAusgeben(Person p) throws AccessRestrictedException{
-		if(istKunde(p)){
+	@Override
+	public Warenkorb warenkorbAusgeben(Person p) throws AccessRestrictedException, RemoteException {
+		if (istKunde(p)) {
 			return kv.gibWarenkorbVonKunde(p);
 		} else {
 			throw new AccessRestrictedException(p, "\"Warenkorb anzeigen\"");
 		}
 	}
-	
-	/**
-	 * Leert den Warenkorb eines Kunden
-	 * @param p Userobjekt
-	 * @throws AccessRestrictedException 
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see domain.ShopRemote#warenkorbLeeren(data_objects.Person)
 	 */
-	public void warenkorbLeeren(Person p) throws AccessRestrictedException{
-		if(istKunde(p)){
+	@Override
+	public void warenkorbLeeren(Person p) throws AccessRestrictedException, RemoteException {
+		if (istKunde(p)) {
 			Warenkorb wk = kv.gibWarenkorbVonKunde(p);
 			wv.leereWarenkorb(wk);
 		} else {
 			throw new AccessRestrictedException(p, "\"Warenkorb leeren\"");
 		}
 	}
-	
-	/**
-	 * Verändert die Anzahl eines Artikels im Warenkorb eines Kunden
-	 * @param pos Position des Artikels
-	 * @param anz Neue Anzahl
-	 * @param p Userobjekt
-	 * @throws ArticleStockNotSufficientException Artikelbestand nicht ausreichend
-	 * @throws AccessRestrictedException 
-	 * @throws InvalidAmountException 
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see domain.ShopRemote#artikelInWarenkorbAendern(data_objects.Artikel,
+	 * int, data_objects.Person)
 	 */
-	public void artikelInWarenkorbAendern(Artikel art, int anz, Person p) throws ArticleStockNotSufficientException, BasketNonexistantException, AccessRestrictedException, InvalidAmountException{
-		if(istKunde(p)){
+	@Override
+	public void artikelInWarenkorbAendern(Artikel art, int anz, Person p) throws ArticleStockNotSufficientException,
+			BasketNonexistantException, AccessRestrictedException, InvalidAmountException, RemoteException {
+		if (istKunde(p)) {
 			Warenkorb wk = kv.gibWarenkorbVonKunde(p);
 			wv.aendereWarenkorb(wk, art, anz);
 		} else {
 			throw new AccessRestrictedException(p, "\"Anzahl Artikel in Warenkorb ändern\"");
 		}
 	}
-	
-	public void artikelAusWarenkorbEntfernen(Artikel art, Person p) throws AccessRestrictedException{
-		if(istKunde(p)){
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see domain.ShopRemote#artikelAusWarenkorbEntfernen(data_objects.Artikel,
+	 * data_objects.Person)
+	 */
+	@Override
+	public void artikelAusWarenkorbEntfernen(Artikel art, Person p) throws AccessRestrictedException, RemoteException {
+		if (istKunde(p)) {
 			Warenkorb wk = kv.gibWarenkorbVonKunde(p);
 			wv.loescheAusWarenkorn(wk, art);
 		} else {
 			throw new AccessRestrictedException(p, "\"Artikel aus Warenkorb löschen\"");
 		}
 	}
-	
-	/**
-	 * Warenkorb kaufen und Rechnung erstellen
-	 * @param p Userobjekt
-	 * @return Erstellte Rechnung
-	 * @throws AccessRestrictedException 
-	 * @throws InvalidAmountException 
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see domain.ShopRemote#warenkorbKaufen(data_objects.Person)
 	 */
-	public Rechnung warenkorbKaufen(Person p) throws AccessRestrictedException, InvalidAmountException{
-		if(istKunde(p)){
-		
-			//Warenkorb des Benutzers abfragen
+	@Override
+	public Rechnung warenkorbKaufen(Person p)
+			throws AccessRestrictedException, InvalidAmountException, RemoteException {
+		if (istKunde(p)) {
+
+			// Warenkorb des Benutzers abfragen
 			Warenkorb wk = kv.gibWarenkorbVonKunde(p);
-			
-			//Bestand der Artikel im Warenkorb reduzieren und Gesamtpreis errechnen
+
+			// Bestand der Artikel im Warenkorb reduzieren und Gesamtpreis
+			// errechnen
 			int gesamt = 0;
-			Map<Artikel,Integer> inhalt = wk.getArtikel();
-			for(Map.Entry<Artikel, Integer> ent : inhalt.entrySet()){
-				try{
+			Map<Artikel, Integer> inhalt = wk.getArtikel();
+			for (Map.Entry<Artikel, Integer> ent : inhalt.entrySet()) {
+				try {
 					av.erhoeheBestand(ent.getKey().getArtikelnummer(), -1 * ent.getValue());
-					//Ereignis erstellen
-					ev.ereignisErstellen(p, Typ.KAUF, ent.getKey(), (int) ent.getValue());
-					//TODO Ereigniserstellung in Verwaltungen auslagern
-				} catch (ArticleNonexistantException anne){
-					//TODO
+					// Ereignis erstellen
+					ev.ereignisErstellen(p, Typ.KAUF, ent.getKey(), ent.getValue());
+					// TODO Ereigniserstellung in Verwaltungen auslagern
+				} catch (ArticleNonexistantException anne) {
+					// TODO
 				}
 				gesamt += (ent.getValue() * ent.getKey().getPreis());
 			}
-			
-			//Warenkorb fuer Rechnung erzeugen
+
+			// Warenkorb fuer Rechnung erzeugen
 			Warenkorb temp = new Warenkorb();
 			temp.copy(wk);
-			
-			//Rechnung erzeugen
+
+			// Rechnung erzeugen
 			Rechnung re = rv.rechnungErzeugen((Kunde) p, new Date(), temp, gesamt);
-			
-			//Warenkorb von Kunde leeren
+
+			// Warenkorb von Kunde leeren
 			wv.leereWarenkorb(wk);
-			
-			//Rechnungsobjekt an C/GUI zurueckgeben
+
+			// Rechnungsobjekt an C/GUI zurueckgeben
 			return re;
-			
+
 		} else {
 			throw new AccessRestrictedException(p, "\"Warenkorb bezahlen\"");
 		}
-	}	
-	
-	/**
-	 * Schreibt die Daten der Verwaltungen in die Persistenz
-	 * @throws IOException
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see domain.ShopRemote#schreibeDaten()
 	 */
-	public void schreibeDaten() throws IOException{
-		av.schreibeDaten(dateipfad + "ARTIKEL.txt"); 
+	@Override
+	public void schreibeDaten() throws IOException {
+		av.schreibeDaten(dateipfad + "ARTIKEL.txt");
 		kv.schreibeDaten(dateipfad + "KUNDEN.txt");
 		mv.schreibeDaten(dateipfad + "MITARBEITER.txt");
 		ev.schreibeDaten(dateipfad + "EREIGNISSE.txt");
 	}
-	
-	public void ladeDaten() throws IOException, ArticleNonexistantException, PersonNonexistantException, InvalidPersonDataException {
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see domain.ShopRemote#ladeDaten()
+	 */
+	@Override
+	public void ladeDaten() throws IOException, ArticleNonexistantException, PersonNonexistantException,
+			InvalidPersonDataException, RemoteException {
 		av.liesDaten(dateipfad + "ARTIKEL.txt");
 		kv.liesDaten(dateipfad + "KUNDEN.txt", wv);
 		mv.liesDaten(dateipfad + "MITARBEITER.txt");
-		ev.liesDaten(dateipfad + "EREIGNISSE.txt"); 
+		ev.liesDaten(dateipfad + "EREIGNISSE.txt");
 	}
-	
-	/**
-	 * Erlaubt die Suche nach einer Artikelnummer
-	 * @param artikelnummer Artikelnumemr von geuschtem Artikel
-	 * @return Gesuchter Artikel
-	 * @throws ArticleNonexistantException
-	 * @throws AccessRestrictedException 
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see domain.ShopRemote#artikelSuchen(int, data_objects.Person)
 	 */
-	public Artikel artikelSuchen(int artikelnummer, Person p) throws ArticleNonexistantException, AccessRestrictedException{
-		if(istMitarbeiter(p) || istKunde(p)){
+	@Override
+	public Artikel artikelSuchen(int artikelnummer, Person p)
+			throws ArticleNonexistantException, AccessRestrictedException, RemoteException {
+		if (istMitarbeiter(p) || istKunde(p)) {
 			return av.sucheArtikel(artikelnummer);
 		} else {
 			throw new AccessRestrictedException(p, "\"Artikel suchen (Artikelnummer)\"");
 		}
 	}
-	
-	/**
-	 * Erlaubt die Suche nach einer Artikelbezeichnung
-	 * @param bezeichnung (Teil-)Bezeichnung des gesuchten Artikels
-	 * @return Liste der zur Bezeichnung passenden Artikel
-	 * @throws ArticleNonexistantException Keine Artikel gefunden
-	 * @throws AccessRestrictedException 
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see domain.ShopRemote#artikelSuchen(java.lang.String,
+	 * data_objects.Person)
 	 */
-	public Vector<Artikel> artikelSuchen(String bezeichnung, Person p) throws ArticleNonexistantException, AccessRestrictedException{
-		if(istMitarbeiter(p) || istKunde(p)){
+	@Override
+	public Vector<Artikel> artikelSuchen(String bezeichnung, Person p)
+			throws ArticleNonexistantException, AccessRestrictedException, RemoteException {
+		if (istMitarbeiter(p) || istKunde(p)) {
 			return av.sucheArtikel(bezeichnung);
 		} else {
 			throw new AccessRestrictedException(p, "\"Artikel suchen (Bezeichnung)\"");
 		}
 	}
-	
-	public void artikelLoeschen(Artikel art, Person p) throws AccessRestrictedException{
-		if(istMitarbeiter(p)){
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see domain.ShopRemote#artikelLoeschen(data_objects.Artikel,
+	 * data_objects.Person)
+	 */
+	@Override
+	public void artikelLoeschen(Artikel art, Person p) throws AccessRestrictedException, RemoteException {
+		if (istMitarbeiter(p)) {
 			av.loeschen(art);
 		} else {
 			throw new AccessRestrictedException(p, "\"Artikel suchen (Artikelnummer)\"");
 		}
 	}
-	
-	public void personLoeschen(Person loeschen, Person p) throws AccessRestrictedException {
-		if(istMitarbeiter(p)){
-			if(kv.loescheKunde((Kunde)loeschen)){}
-			else if (mv.loescheMitarbeiter((Mitarbeiter)loeschen));
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see domain.ShopRemote#personLoeschen(data_objects.Person,
+	 * data_objects.Person)
+	 */
+	@Override
+	public void personLoeschen(Person loeschen, Person p) throws AccessRestrictedException, RemoteException {
+		if (istMitarbeiter(p)) {
+			if (kv.loescheKunde((Kunde) loeschen)) {
+			} else if (mv.loescheMitarbeiter((Mitarbeiter) loeschen))
+				;
 		} else {
 			throw new AccessRestrictedException(p, "Kunde löschen");
 		}
 	}
-	
-	public boolean istMitarbeiter(Person p){
-		if(p instanceof Mitarbeiter){
+
+	private boolean istMitarbeiter(Person p) {
+		if (p instanceof Mitarbeiter) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
-	public boolean istKunde(Person p){
-		if(p instanceof Kunde){
+
+	private boolean istKunde(Person p) {
+		if (p instanceof Kunde) {
 			return true;
 		} else {
 			return false;
@@ -407,19 +474,50 @@ public class eShopCore {
 
 	}
 
-	public Kunde kundeSuchen(int id, Person p) throws PersonNonexistantException {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see domain.ShopRemote#kundeSuchen(int, data_objects.Person)
+	 */
+	@Override
+	public Kunde kundeSuchen(int id, Person p) throws PersonNonexistantException, RemoteException {
 		return kv.sucheKunde(id);
 	}
-	
-	public Mitarbeiter mitarbeiterSuchen(int id, Person p) throws PersonNonexistantException {
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see domain.ShopRemote#mitarbeiterSuchen(int, data_objects.Person)
+	 */
+	@Override
+	public Mitarbeiter mitarbeiterSuchen(int id, Person p) throws PersonNonexistantException, RemoteException {
 		return mv.sucheMitarbeiter(id);
 	}
-	
-	public Vector<Ereignis> alleEreignisseAusgeben(Person p) throws AccessRestrictedException{
-		if(istMitarbeiter(p)){
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see domain.ShopRemote#alleEreignisseAusgeben(data_objects.Person)
+	 */
+	@Override
+	public Vector<Ereignis> alleEreignisseAusgeben(Person p) throws AccessRestrictedException, RemoteException {
+		if (istMitarbeiter(p)) {
 			return ev.getEreignisse();
 		} else {
 			throw new AccessRestrictedException(p, "Kunde löschen");
 		}
 	}
+
+	@Override
+	public void addShopEventListener(ShopEventListener listener) throws RemoteException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeShopEventListener(ShopEventListener listener) throws RemoteException {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
