@@ -68,8 +68,8 @@ public class MainWindow extends JFrame {
 	LoginListener loginListener;
 	
 	JPanel main = (JPanel) this.getContentPane();
-	JPanel leftArea = new JPanel(new MigLayout());
-	JPanel rightArea = new JPanel(new MigLayout());
+	JPanel upperArea = new JPanel(new MigLayout());
+	JPanel lowerArea = new JPanel(new MigLayout());
 	
 	JPanel moduleButtons = new JPanel();
 	JButton artikelButton = new JButton("Artikel");
@@ -107,25 +107,25 @@ public class MainWindow extends JFrame {
 		logoutButton.addActionListener(new MenuButtonsActionListener());
 		moduleButtons.add(logoutButton);
 		
-		leftArea.add(moduleButtons, "wrap, dock center");
+		upperArea.add(moduleButtons, "wrap, dock center");
 		
 		kundensichtfenster = new Kundensichtfenster();
 		artikelsichtfenster = new Artikelsichtfenster();
 		mitarbeitersichtfenster = new Mitarbeitersichtfenster();
 		shopManagement = new ShopManagement();
 		
-		leftArea.add(artikelsichtfenster, "dock center");
+		upperArea.add(artikelsichtfenster, "dock center");
 				
 		if(user instanceof Kunde){
 			warenkorbverwaltungsfenster = new Warenkorbverwaltungsfenster();
-			rightArea.add(warenkorbverwaltungsfenster, "dock center");
+			lowerArea.add(warenkorbverwaltungsfenster, "dock center");
 		} else {
 			artikelverwaltungsfenster = new Artikelverwaltungsfenster();
-			rightArea.add(artikelverwaltungsfenster, "dock center");
+			lowerArea.add(artikelverwaltungsfenster, "dock center");
 		}
 		
-		main.add(leftArea);
-		main.add(rightArea);
+		main.add(upperArea, "wrap");
+		main.add(lowerArea);
 
 		setWindowSize();
 		
@@ -145,18 +145,18 @@ public class MainWindow extends JFrame {
 		if (artikelsichtfenster != null) maxWidthLeft = Math.max(maxWidthLeft, artikelsichtfenster.getPreferredSize().getWidth() + 15);
 		if (kundensichtfenster != null) maxWidthLeft = Math.max(maxWidthLeft, kundensichtfenster.getPreferredSize().getWidth() + 15);
 		if (mitarbeitersichtfenster != null) maxWidthLeft = Math.max(maxWidthLeft, mitarbeitersichtfenster.getPreferredSize().getWidth() + 15);
-		//if (shopManagement != null) maxWidthLeft = Math.max(maxWidthLeft, shopManagement.getPreferredSize().getWidth() + 15);
+		if (shopManagement != null) maxWidthLeft = Math.max(maxWidthLeft, shopManagement.getPreferredSize().getWidth() + 15);
 		if (warenkorbverwaltungsfenster != null) maxWidthRight = Math.max(maxWidthRight, warenkorbverwaltungsfenster.getPreferredSize().getWidth() + 15);
 		if (artikelverwaltungsfenster != null) maxWidthRight = Math.max(maxWidthRight, artikelverwaltungsfenster.getPreferredSize().getWidth() + 15);
 		if (kundenverwaltungsfenster != null) maxWidthRight = Math.max(maxWidthRight, kundenverwaltungsfenster.getPreferredSize().getWidth() + 15);
 		if (mitarbeiterverwaltungsfenster != null) maxWidthRight = Math.max(maxWidthRight, mitarbeiterverwaltungsfenster.getPreferredSize().getWidth() + 15);
 		
-		leftArea.setPreferredSize(new Dimension((int)maxWidthLeft,(int)leftArea.getPreferredSize().getHeight()));
-		//leftArea.setMinimumSize(leftArea.getPreferredSize());
-		rightArea.setPreferredSize(new Dimension((int)maxWidthRight,(int)rightArea.getPreferredSize().getHeight()));
-		//rightArea.setMinimumSize(rightArea.getPreferredSize());
+		upperArea.setPreferredSize(new Dimension((int)maxWidthLeft,(int)upperArea.getPreferredSize().getHeight()));
+		//upperArea.setMinimumSize(upperArea.getPreferredSize());
+		lowerArea.setPreferredSize(new Dimension((int)maxWidthRight,(int)lowerArea.getPreferredSize().getHeight()));
+		//lowerArea.setMinimumSize(lowerArea.getPreferredSize());
 		
-		prefWidth = maxWidthLeft + maxWidthRight + 60;
+		prefWidth = maxWidthLeft + maxWidthRight;
 		this.setPreferredSize(new Dimension((int)prefWidth,(int)this.getPreferredSize().getHeight()));
 	
 	}
@@ -1579,24 +1579,24 @@ public class MainWindow extends JFrame {
 		public void actionPerformed(ActionEvent ae) {
 			if (ae.getSource().equals(artikelButton)){
 
-				leftArea.remove(kundensichtfenster);
-				leftArea.remove(mitarbeitersichtfenster);
-				leftArea.remove(shopManagement);
+				upperArea.remove(kundensichtfenster);
+				upperArea.remove(mitarbeitersichtfenster);
+				upperArea.remove(shopManagement);
 				
-				leftArea.add(artikelsichtfenster,BorderLayout.CENTER);
+				upperArea.add(artikelsichtfenster,BorderLayout.CENTER);
 								
-				leftArea.repaint();
+				upperArea.repaint();
 				
-				rightArea.removeAll();
+				lowerArea.removeAll();
 				
 				if(user instanceof Kunde){
-					rightArea.add(warenkorbverwaltungsfenster);
+					lowerArea.add(warenkorbverwaltungsfenster);
 				} else {
 					artikelverwaltungsfenster = new Artikelverwaltungsfenster();
-					rightArea.add(artikelverwaltungsfenster);
+					lowerArea.add(artikelverwaltungsfenster);
 				}
 				
-				rightArea.repaint();
+				lowerArea.repaint();
 				
 				MainWindow.this.pack();
 				
@@ -1604,18 +1604,18 @@ public class MainWindow extends JFrame {
 				
 				if (user instanceof Mitarbeiter) {
 					
-					leftArea.remove(artikelsichtfenster);
-					leftArea.remove(mitarbeitersichtfenster);
-					leftArea.remove(shopManagement);
+					upperArea.remove(artikelsichtfenster);
+					upperArea.remove(mitarbeitersichtfenster);
+					upperArea.remove(shopManagement);
 					
-					leftArea.add(kundensichtfenster,BorderLayout.CENTER);
+					upperArea.add(kundensichtfenster,BorderLayout.CENTER);
 					
-					leftArea.repaint();
+					upperArea.repaint();
 					
-					rightArea.removeAll();
+					lowerArea.removeAll();
 					try {
 						kundenverwaltungsfenster = new Personenverwaltungsfenster("Kundenverwaltung", "Kunde");
-						rightArea.add(kundenverwaltungsfenster);
+						lowerArea.add(kundenverwaltungsfenster);
 					} catch (Exception e) {
 						JOptionPane.showMessageDialog(MainWindow.this, e.getMessage());
 					}
@@ -1632,18 +1632,18 @@ public class MainWindow extends JFrame {
 				
 				if (user instanceof Mitarbeiter) {
 					
-					leftArea.remove(artikelsichtfenster);
-					leftArea.remove(kundensichtfenster);
-					leftArea.remove(shopManagement);
+					upperArea.remove(artikelsichtfenster);
+					upperArea.remove(kundensichtfenster);
+					upperArea.remove(shopManagement);
 					
-					leftArea.add(mitarbeitersichtfenster,BorderLayout.CENTER);
+					upperArea.add(mitarbeitersichtfenster,BorderLayout.CENTER);
 					
-					leftArea.repaint();
+					upperArea.repaint();
 					
-					rightArea.removeAll();
+					lowerArea.removeAll();
 					try {
 						mitarbeiterverwaltungsfenster = new Personenverwaltungsfenster("Mitarbeiterverwaltung","Mitarbeiter");
-						rightArea.add(mitarbeiterverwaltungsfenster);
+						lowerArea.add(mitarbeiterverwaltungsfenster);
 					} catch (Exception e) {
 						JOptionPane.showMessageDialog(MainWindow.this, e.getMessage());
 					}
@@ -1660,16 +1660,16 @@ public class MainWindow extends JFrame {
 				
 				if (user instanceof Mitarbeiter) {
 				
-					leftArea.remove(artikelsichtfenster);
-					leftArea.remove(kundensichtfenster);
-					leftArea.remove(mitarbeitersichtfenster);
+					upperArea.remove(artikelsichtfenster);
+					upperArea.remove(kundensichtfenster);
+					upperArea.remove(mitarbeitersichtfenster);
 					
-					leftArea.add(shopManagement,BorderLayout.CENTER);
+					upperArea.add(shopManagement,BorderLayout.CENTER);
 					
-					leftArea.revalidate();
-					leftArea.repaint();
+					upperArea.revalidate();
+					upperArea.repaint();
 					
-					rightArea.removeAll();
+					lowerArea.removeAll();
 					
 					MainWindow.this.pack();
 					

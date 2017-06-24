@@ -123,7 +123,7 @@ public class FilePersistenceManager implements PersistenceManager {
 				
 				while(!liesZeile().equals("---ENDHISTORY---")){
 
-					String[] contents = content.split("|");
+					String[] contents = content.split(":");
 					
 					bestandsverlauf.put(Integer.parseInt(contents[0]), Integer.parseInt(contents[1]));
 				}
@@ -172,7 +172,7 @@ public class FilePersistenceManager implements PersistenceManager {
 		schreibeZeile("---BEGINHISTORY---");
 		//Bestandhistory schreiben
 		for(Entry<Integer, Integer> ent : art.getBestandsverlauf().entrySet()){
-			schreibeZeile(String.valueOf(ent.getKey()) + "|" + String.valueOf(ent.getValue()));
+			schreibeZeile(String.valueOf(ent.getKey()) + ":" + String.valueOf(ent.getValue()));
 		}
 		schreibeZeile("---ENDHISTORY---");
 		

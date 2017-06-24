@@ -180,7 +180,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
         }
 		
 		table.setPreferredSize(new Dimension(totalColumnWidth, 500));
-		table.setPreferredScrollableViewportSize(table.getPreferredSize());
+		table.setPreferredScrollableViewportSize(new Dimension((int)table.getPreferredSize().getWidth()+35,(int)table.getPreferredSize().getWidth()));
 	}
 
 	/*
