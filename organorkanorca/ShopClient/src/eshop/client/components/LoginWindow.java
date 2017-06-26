@@ -65,7 +65,7 @@ public class LoginWindow extends JFrame {
 	this.getContentPane().add(tabbedPane);
 	anmeldenButton.addActionListener(new LoginButtonListener());
 	registrierenButton.addActionListener(new LoginNeuerNutzerAnlegenListener());
-	this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	this.setLocationRelativeTo(null);
 	this.pack();
 	this.setVisible(true);

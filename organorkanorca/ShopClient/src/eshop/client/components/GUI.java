@@ -21,19 +21,17 @@ import eshop.server.domain.eShopCore;
 public class GUI extends UnicastRemoteObject {
 
     private Person	     user;
-    LoginWindow		     loginwindow;
-    MainWindow		     mainwindow;
+    static LoginWindow	     loginwindow;
+    static MainWindow	     mainwindow;
     private ListenerForLogin listenerForLogin = new ListenerForLogin();
     // Shop server
     private ShopRemote	     server;
 
     public GUI() throws RemoteException {
 	try {
-	    // Connect to server server
 	    String serviceName = "eShopServer";
 	    Registry registry = LocateRegistry.getRegistry();
 	    server = (ShopRemote) registry.lookup(serviceName);
-	    // Register for game events
 	    server.addShopEventListener(mainwindow);
 	    loginwindow = new LoginWindow("OrganOrkanOrca server", server, listenerForLogin);
 	} catch(RemoteException e) {

@@ -1434,12 +1434,12 @@ public class MainWindow extends JFrame implements ShopEventListener {
 	    JOptionPane.showMessageDialog(artikelsichtfenster, e.getMessage());
 	}
 	if (user instanceof Kunde) {
-	    if (server.artikelInWarenkorb(art, user)) {
-		try {
+	    try {
+		if (server.artikelInWarenkorb(art, user)) {
 		    warenkorbverwaltungsfenster.warenkorbAufrufen();
-		} catch(RemoteException | AccessRestrictedException e) {
-		    JOptionPane.showMessageDialog(artikelsichtfenster, e.getMessage());
 		}
+	    } catch(RemoteException | AccessRestrictedException e) {
+		JOptionPane.showMessageDialog(artikelsichtfenster, e.getMessage());
 	    }
 	} else if (user instanceof Mitarbeiter) {
 	    artikelverwaltungsfenster = new Artikelverwaltungsfenster();

@@ -239,7 +239,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
     /* (non-Javadoc)
      * @see eshop.common.net.ShopRemote#artikelInWarenkorb(eshop.common.data_objects.Artikel, eshop.common.data_objects.Person)
      */
-    public boolean artikelInWarenkorb(Artikel art, Person p){
+    public boolean artikelInWarenkorb(Artikel art, Person p) throws RemoteException{
 	if(istKunde(p)) return ((Kunde)p).getWarenkorb().sucheArtikel(art);
 	else return false;
     }

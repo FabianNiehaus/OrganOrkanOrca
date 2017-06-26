@@ -134,7 +134,7 @@ public interface ShopRemote extends Remote {
      * @param p
      * @return
      */
-    public boolean artikelInWarenkorb(Artikel art, Person p);
+    public boolean artikelInWarenkorb(Artikel art, Person p) throws RemoteException;
     
     /**
      * Legt einen Artikel in den Warenkorb
