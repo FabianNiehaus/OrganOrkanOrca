@@ -2,10 +2,6 @@ package eshop.common.exceptions;
 
 public class InvalidPersonDataException extends Exception {
 
-    public InvalidPersonDataException(int id, String object) {
-	super(determineOutput(id, object));
-    }
-
     private static String determineOutput(int id, String object) {
 
 	switch (id) {
@@ -26,5 +22,9 @@ public class InvalidPersonDataException extends Exception {
 	    default:
 		return "";
 	}
+    }
+
+    public InvalidPersonDataException(int id, String object) {
+	super(determineOutput(id, object));
     }
 }

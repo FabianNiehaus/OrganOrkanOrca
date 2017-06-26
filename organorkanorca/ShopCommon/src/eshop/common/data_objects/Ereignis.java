@@ -41,29 +41,9 @@ public class Ereignis implements Serializable {
 	this.wann = wann;
     }
 
-    public void setId(int id) {
-
-	this.id = id;
-    }
-
     public int getId() {
 
 	return id;
-    }
-
-    public void setWer(Person wer) {
-
-	this.wer = wer;
-    }
-
-    public Person getWer() {
-
-	return wer;
-    }
-
-    public void setWas(Typ was) {
-
-	this.was = was;
     }
 
     public Typ getTyp() {
@@ -71,19 +51,14 @@ public class Ereignis implements Serializable {
 	return was;
     }
 
-    public void setWomit(Artikel womit) {
+    public Date getWann() {
 
-	this.womit = womit;
+	return wann;
     }
 
-    public Artikel getWomit() {
+    public Person getWer() {
 
-	return womit;
-    }
-
-    public void setWieviel(int wieviel) {
-
-	this.wieviel = wieviel;
+	return wer;
     }
 
     public int getWieviel() {
@@ -91,20 +66,46 @@ public class Ereignis implements Serializable {
 	return wieviel;
     }
 
+    public Artikel getWomit() {
+
+	return womit;
+    }
+
+    public void setId(int id) {
+
+	this.id = id;
+    }
+
     public void setWann(Date wann) {
 
 	this.wann = wann;
     }
 
-    public Date getWann() {
+    public void setWas(Typ was) {
 
-	return wann;
+	this.was = was;
+    }
+
+    public void setWer(Person wer) {
+
+	this.wer = wer;
+    }
+
+    public void setWieviel(int wieviel) {
+
+	this.wieviel = wieviel;
+    }
+
+    public void setWomit(Artikel womit) {
+
+	this.womit = womit;
     }
 
     /*
      * (non-Javadoc)
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
 
 	// Formatierungsvorlage fuer Datum

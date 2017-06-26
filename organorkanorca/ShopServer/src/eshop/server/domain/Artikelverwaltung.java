@@ -23,52 +23,6 @@ public class Artikelverwaltung {
     private Vector<Artikel>    artikel = new Vector<Artikel>(0);
 
     /**
-     * Methode zum Einlesen von Artikeln aus einer Datei.
-     * 
-     * @param datei
-     *            Datei, die einzulesenden Artikelbestand enthält
-     * @throws IOException
-     */
-    public void liesDaten(String datei) throws IOException {
-
-	// PersistenzManager fuer Lesevorgänge öffnen
-	pm.openForReading(datei);
-	Artikel art;
-	do {
-	    // Artikel-Objekt einlesen
-	    art = pm.ladeArtikel();
-	    if (art != null) {
-		// Artikel in Artikelliste einfuegen
-		einfuegen(art);
-	    }
-	} while (art != null);
-	// Persistenz-Schnittstelle wieder schließen
-	pm.close();
-    }
-
-    /**
-     * Methode zum Schreiben der Artikeldaten in eine Datei.
-     * 
-     * @param datei
-     *            Datei, in die der Artikelbestand geschrieben werden soll
-     * @throws IOException
-     */
-    public void schreibeDaten(String datei) throws IOException {
-
-	// PersistenzManager fuer Schreibvorgänge öffnen
-	pm.openForWriting(datei);
-	if (!artikel.isEmpty()) {
-	    Iterator<Artikel> iter = artikel.iterator();
-	    while (iter.hasNext()) {
-		Artikel art = (Artikel) iter.next();
-		pm.speichereArtikel(art);
-	    }
-	}
-	// Persistenz-Schnittstelle wieder schließen
-	pm.close();
-    }
-
-    /**
      * Artikel in Liste der Verwalteten Artikel einfuegen
      * 
      * @param art
@@ -84,29 +38,36 @@ public class Artikelverwaltung {
     }
 
     /**
-     * Gibt alle verwalteten Artikel zurueck
+     * Erhöht den Bestand eines Artikels anhand der Artikelnummer
      * 
-     * @return Verwatlete Artikel
+     * @param artikelnummer
+     *            Artikelnummer des gesuchten Artikels
+     * @param bestand
+     *            Neuer Bestand
+     * @return Gesuchter Artikel
+     * @throws ArticleNonexistantException
+     *             Artikelnummer nicht vorhanden
+     * @throws InvalidAmountException
      */
-    public Vector<Artikel> getArtikel() {
+    public Artikel erhoeheBestand(int artikelnummer, int bestand)
+	    throws ArticleNonexistantException, InvalidAmountException {
 
-	return artikel;
-    }
-
-    /**
-     * Erzeugt die nächste zu verwendende Artikelnummer
-     * 
-     * @return Nächste Artikelnummer
-     */
-    public int getNextID() {
-
-	int hoechsteID = 0;
-	for (Artikel art : artikel) {
-	    if (art.getArtikelnummer() > hoechsteID) {
-		hoechsteID = art.getArtikelnummer();
+	try {
+	    Artikel art = sucheArtikel(artikelnummer);
+	    if (art instanceof Massengutartikel) {
+		Massengutartikel tmp = (Massengutartikel) art;
+		if (bestand % tmp.getPackungsgroesse() != 0) {
+		    throw new InvalidAmountException(tmp);
+		} else {
+		    tmp.setBestand(tmp.getBestand() + bestand);
+		}
+	    } else {
+		art.setBestand(art.getBestand() + bestand);
 	    }
+	    return art;
+	} catch(ArticleNonexistantException anne) {
+	    throw new ArticleNonexistantException(artikelnummer);
 	}
-	return hoechsteID + 1;
     }
 
     /**
@@ -138,6 +99,83 @@ public class Artikelverwaltung {
 	} else {
 	    throw new InvalidAmountException();
 	}
+    }
+
+    /**
+     * Gibt alle verwalteten Artikel zurueck
+     * 
+     * @return Verwatlete Artikel
+     */
+    public Vector<Artikel> getArtikel() {
+
+	return artikel;
+    }
+
+    /**
+     * Erzeugt die nächste zu verwendende Artikelnummer
+     * 
+     * @return Nächste Artikelnummer
+     */
+    public int getNextID() {
+
+	int hoechsteID = 0;
+	for (Artikel art : artikel) {
+	    if (art.getArtikelnummer() > hoechsteID) {
+		hoechsteID = art.getArtikelnummer();
+	    }
+	}
+	return hoechsteID + 1;
+    }
+
+    /**
+     * Methode zum Einlesen von Artikeln aus einer Datei.
+     * 
+     * @param datei
+     *            Datei, die einzulesenden Artikelbestand enthält
+     * @throws IOException
+     */
+    public void liesDaten(String datei) throws IOException {
+
+	// PersistenzManager fuer Lesevorgänge öffnen
+	pm.openForReading(datei);
+	Artikel art;
+	do {
+	    // Artikel-Objekt einlesen
+	    art = pm.ladeArtikel();
+	    if (art != null) {
+		// Artikel in Artikelliste einfuegen
+		einfuegen(art);
+	    }
+	} while (art != null);
+	// Persistenz-Schnittstelle wieder schließen
+	pm.close();
+    }
+
+    public void loeschen(Artikel art) {
+
+	artikel.remove(art);
+    }
+
+    /**
+     * Methode zum Schreiben der Artikeldaten in eine Datei.
+     * 
+     * @param datei
+     *            Datei, in die der Artikelbestand geschrieben werden soll
+     * @throws IOException
+     */
+    public void schreibeDaten(String datei) throws IOException {
+
+	// PersistenzManager fuer Schreibvorgänge öffnen
+	pm.openForWriting(datei);
+	if (!artikel.isEmpty()) {
+	    Iterator<Artikel> iter = artikel.iterator();
+	    while (iter.hasNext()) {
+		Artikel art = iter.next();
+		pm.speichereArtikel(art);
+	    }
+	}
+	// Persistenz-Schnittstelle wieder schließen
+	pm.close();
     }
 
     /**
@@ -182,43 +220,5 @@ public class Artikelverwaltung {
 	} else {
 	    return liste;
 	}
-    }
-
-    /**
-     * Erhöht den Bestand eines Artikels anhand der Artikelnummer
-     * 
-     * @param artikelnummer
-     *            Artikelnummer des gesuchten Artikels
-     * @param bestand
-     *            Neuer Bestand
-     * @return Gesuchter Artikel
-     * @throws ArticleNonexistantException
-     *             Artikelnummer nicht vorhanden
-     * @throws InvalidAmountException
-     */
-    public Artikel erhoeheBestand(int artikelnummer, int bestand)
-	    throws ArticleNonexistantException, InvalidAmountException {
-
-	try {
-	    Artikel art = sucheArtikel(artikelnummer);
-	    if (art instanceof Massengutartikel) {
-		Massengutartikel tmp = (Massengutartikel) art;
-		if (bestand % tmp.getPackungsgroesse() != 0) {
-		    throw new InvalidAmountException(tmp);
-		} else {
-		    tmp.setBestand(tmp.getBestand() + bestand);
-		}
-	    } else {
-		art.setBestand(art.getBestand() + bestand);
-	    }
-	    return art;
-	} catch(ArticleNonexistantException anne) {
-	    throw new ArticleNonexistantException(artikelnummer);
-	}
-    }
-
-    public void loeschen(Artikel art) {
-
-	artikel.remove(art);
     }
 }

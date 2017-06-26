@@ -20,6 +20,10 @@ public class Rechnung implements Serializable {
      * 
      */
     private static final long serialVersionUID = 6681009839157213957L;
+    private Kunde	      ku;
+    private Date	      datum;
+    private Warenkorb	      wk;
+    private double	      gesamt;
 
     /**
      * @param ku
@@ -39,10 +43,21 @@ public class Rechnung implements Serializable {
 	this.gesamt = gesamt;
     }
 
-    private Kunde     ku;
-    private Date      datum;
-    private Warenkorb wk;
-    private double    gesamt;
+    /**
+     * @return
+     */
+    public Date getDatum() {
+
+	return datum;
+    }
+
+    /**
+     * @return
+     */
+    public double getGesamt() {
+
+	return gesamt;
+    }
 
     /**
      * @return
@@ -55,24 +70,8 @@ public class Rechnung implements Serializable {
     /**
      * @return
      */
-    public Date getDatum() {
-
-	return datum;
-    }
-
-    /**
-     * @return
-     */
     public Warenkorb getWk() {
 
 	return wk;
-    }
-
-    /**
-     * @return
-     */
-    public double getGesamt() {
-
-	return gesamt;
     }
 }

@@ -22,9 +22,13 @@ import eshop.server.persistence.PersistenceManager;
  */
 public class Ereignisverwaltung {
 
-    Kundenverwaltung	  kv;
-    Mitarbeiterverwaltung mv;
-    Artikelverwaltung	  av;
+    Kundenverwaltung	       kv;
+    Mitarbeiterverwaltung      mv;
+    Artikelverwaltung	       av;
+    // Persistenz-Schnittstelle, die fuer die Details des Dateizugriffs
+    // verantwortlich ist
+    private PersistenceManager pm	  = new FilePersistenceManager();
+    private Vector<Ereignis>   ereignisse = new Vector<Ereignis>();
 
     public Ereignisverwaltung(Kundenverwaltung kv, Mitarbeiterverwaltung mv, Artikelverwaltung av) {
 	this.kv = kv;
@@ -32,10 +36,48 @@ public class Ereignisverwaltung {
 	this.mv = mv;
     }
 
-    // Persistenz-Schnittstelle, die fuer die Details des Dateizugriffs
-    // verantwortlich ist
-    private PersistenceManager pm	  = new FilePersistenceManager();
-    private Vector<Ereignis>   ereignisse = new Vector<Ereignis>();
+    public void einfuegen(Ereignis er) {
+
+	ereignisse.add(er);
+    }
+
+    /**
+     * Erstellt und speichert ein neues Ereignis
+     * 
+     * @param wer
+     *            Person, die die Aktion durchgefuehrt hat
+     * @param was
+     *            Typ der Aktion (EINLAGERUNG, AUSLAGERUNG, KAUF, NEU)
+     * @param womit
+     *            Welcher Artikel ist betroffen
+     * @param wieviel
+     *            Betroffene Stueckzahl
+     */
+    public void ereignisErstellen(Person wer, Typ was, Artikel womit, int wieviel) {
+
+	ereignisse.add(new Ereignis(getNextID(), wer, was, womit, wieviel, new Date()));
+    }
+
+    /**
+     * Gibt alle gespeicherten Ereignisse aus
+     * 
+     * @return Ereignisse
+     */
+    public Vector<Ereignis> getEreignisse() {
+
+	return ereignisse;
+    }
+
+    public int getNextID() {
+
+	int hoechsteID = 0;
+	for (Ereignis er : ereignisse) {
+	    if (er.getId() > hoechsteID) {
+		hoechsteID = er.getId();
+	    }
+	}
+	return hoechsteID + 1;
+    }
 
     public void liesDaten(String datei) throws IOException, ArticleNonexistantException, PersonNonexistantException {
 
@@ -87,54 +129,11 @@ public class Ereignisverwaltung {
 	if (!ereignisse.isEmpty()) {
 	    Iterator<Ereignis> iter = ereignisse.iterator();
 	    while (iter.hasNext()) {
-		Ereignis er = (Ereignis) iter.next();
+		Ereignis er = iter.next();
 		pm.speichereEreignis(er);
 	    }
 	}
 	// Persistenz-Schnittstelle wieder schließen
 	pm.close();
-    }
-
-    public void einfuegen(Ereignis er) {
-
-	ereignisse.add(er);
-    }
-
-    /**
-     * Gibt alle gespeicherten Ereignisse aus
-     * 
-     * @return Ereignisse
-     */
-    public Vector<Ereignis> getEreignisse() {
-
-	return ereignisse;
-    }
-
-    /**
-     * Erstellt und speichert ein neues Ereignis
-     * 
-     * @param wer
-     *            Person, die die Aktion durchgefuehrt hat
-     * @param was
-     *            Typ der Aktion (EINLAGERUNG, AUSLAGERUNG, KAUF, NEU)
-     * @param womit
-     *            Welcher Artikel ist betroffen
-     * @param wieviel
-     *            Betroffene Stueckzahl
-     */
-    public void ereignisErstellen(Person wer, Typ was, Artikel womit, int wieviel) {
-
-	ereignisse.add(new Ereignis(getNextID(), wer, was, womit, wieviel, new Date()));
-    }
-
-    public int getNextID() {
-
-	int hoechsteID = 0;
-	for (Ereignis er : ereignisse) {
-	    if (er.getId() > hoechsteID) {
-		hoechsteID = er.getId();
-	    }
-	}
-	return hoechsteID + 1;
     }
 }

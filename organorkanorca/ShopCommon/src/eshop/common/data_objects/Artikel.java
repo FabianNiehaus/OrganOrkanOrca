@@ -10,8 +10,17 @@ public class Artikel implements Serializable {
     /**
      * 
      */
-    private static final long serialVersionUID = 8273031240889790935L;
+    private static final long	  serialVersionUID = 8273031240889790935L;
+    private String		  bezeichnung;
+    private int			  artikelnummer;
+    private int			  bestand;
+    private double		  preis;
+    private Map<Integer, Integer> bestandsverlauf  = new LinkedHashMap<>();
 
+    /*
+     * Nocht nicht verwendet private String kategorie; private boolean angebot;
+     * private int bewertung;
+     */
     /**
      * @param bezeichnung
      *            Bezeichnung / Name des Artikels
@@ -64,15 +73,35 @@ public class Artikel implements Serializable {
 	 */
     }
 
-    private String		  bezeichnung;
-    private int			  artikelnummer;
-    private int			  bestand;
-    private double		  preis;
-    private Map<Integer, Integer> bestandsverlauf = new LinkedHashMap<>();
-    /*
-     * Nocht nicht verwendet private String kategorie; private boolean angebot;
-     * private int bewertung;
+    public void aktualisiereBestandsverlauf() {
+
+	if (bestandsverlauf.size() >= 30) {
+	    bestandsverlauf.remove(0);
+	}
+	int dayOfYear = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+	bestandsverlauf.put(dayOfYear, bestand);
+    }
+
+    /**
+     * @return
      */
+    public int getArtikelnummer() {
+
+	return artikelnummer;
+    }
+
+    /**
+     * @return
+     */
+    public int getBestand() {
+
+	return bestand;
+    }
+
+    public Map<Integer, Integer> getBestandsverlauf() {
+
+	return bestandsverlauf;
+    }
 
     /**
      * @return Gibt die Bezeichnung des Artikels aus
@@ -80,6 +109,30 @@ public class Artikel implements Serializable {
     public String getBezeichnung() {
 
 	return bezeichnung;
+    }
+
+    /**
+     * @return
+     */
+    public double getPreis() {
+
+	return preis;
+    }
+
+    /**
+     * @param artikelnummer
+     */
+    public void setArtikelnummer(int artikelnummer) {
+
+	this.artikelnummer = artikelnummer;
+    }
+
+    /**
+     * @param bestand
+     */
+    public void setBestand(int bestand) {
+
+	this.bestand = bestand;
     }
 
     /**
@@ -94,46 +147,6 @@ public class Artikel implements Serializable {
     }
 
     /**
-     * @return
-     */
-    public int getArtikelnummer() {
-
-	return artikelnummer;
-    }
-
-    /**
-     * @param artikelnummer
-     */
-    public void setArtikelnummer(int artikelnummer) {
-
-	this.artikelnummer = artikelnummer;
-    }
-
-    /**
-     * @return
-     */
-    public int getBestand() {
-
-	return bestand;
-    }
-
-    /**
-     * @param bestand
-     */
-    public void setBestand(int bestand) {
-
-	this.bestand = bestand;
-    }
-
-    /**
-     * @return
-     */
-    public double getPreis() {
-
-	return preis;
-    }
-
-    /**
      * @param preis
      */
     public void setPreis(double preis) {
@@ -141,24 +154,11 @@ public class Artikel implements Serializable {
 	this.preis = preis;
     }
 
-    public void aktualisiereBestandsverlauf() {
-
-	if (bestandsverlauf.size() >= 30) {
-	    bestandsverlauf.remove(0);
-	}
-	int dayOfYear = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
-	bestandsverlauf.put(dayOfYear, bestand);
-    }
-
-    public Map<Integer, Integer> getBestandsverlauf() {
-
-	return bestandsverlauf;
-    }
-
     /*
      * (non-Javadoc)
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
 
 	return artikelnummer + " | " + bezeichnung + " | " + preis + " | " + bestand;

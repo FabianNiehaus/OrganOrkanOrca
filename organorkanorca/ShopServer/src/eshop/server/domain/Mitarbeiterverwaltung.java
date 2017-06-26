@@ -20,50 +20,6 @@ public class Mitarbeiterverwaltung {
     // verantwortlich ist
     private PersistenceManager	pm	    = new FilePersistenceManager();
 
-    public void liesDaten(String datei) throws IOException, InvalidPersonDataException {
-
-	// PersistenzManager f�r Lesevorgänge öffnen
-	pm.openForReading(datei);
-	Mitarbeiter mi = null;
-	do {
-	    // Mitarbeiter-Objekt einlesen
-	    mi = pm.ladeMitarbeiter();
-	    if (mi != null) {
-		// Mitarbeiter in Mitarbeiterliste einfuegen
-		einfuegen(mi);
-	    }
-	} while (mi != null);
-	// Persistenz-Schnittstelle wieder schließen
-	pm.close();
-    }
-
-    /**
-     * Methode zum Schreiben der Kundendaten in eine Datei.
-     * 
-     * @param datei
-     *            Datei, in die der...
-     * @throws IOException
-     */
-    public void schreibeDaten(String datei) throws IOException {
-
-	// PersistenzManager fuer Schreibvorgänge öffnen
-	pm.openForWriting(datei);
-	if (!mitarbeiter.isEmpty()) {
-	    Iterator<Mitarbeiter> iter = mitarbeiter.iterator();
-	    while (iter.hasNext()) {
-		Mitarbeiter mi = (Mitarbeiter) iter.next();
-		pm.speichereMitarbeiter(mi);
-	    }
-	}
-	// Persistenz-Schnittstelle wieder schließen
-	pm.close();
-    }
-
-    public void einfuegen(Mitarbeiter mi) {
-
-	mitarbeiter.add(mi);
-    }
-
     /**
      * Logik zur Anmeldung
      * 
@@ -85,46 +41,20 @@ public class Mitarbeiterverwaltung {
 	throw new LoginFailedException(id);
     }
 
-    /**
-     * Sucht einen Mitarbeiter anhand Vor- und Nachname
-     * 
-     * @param firstname
-     *            Vorname
-     * @param lastname
-     *            Nachname
-     * @return Gesuchter Mitarbeiter
-     * @throws VectorIsEmptyException
-     *             Mitarbeiterliste leer
-     */
-    public Mitarbeiter sucheMitarbeiter(String firstname, String lastname) throws PersonNonexistantException {
+    public void einfuegen(Mitarbeiter mi) {
 
-	if (mitarbeiter.size() > 0) {
-	    for (Mitarbeiter ma : mitarbeiter) {
-		if (ma.getFirstname().equals(firstname) && ma.getLastname().equals(lastname)) {
-		    return ma;
-		}
-	    }
-	}
-	throw new PersonNonexistantException(firstname, lastname);
+	mitarbeiter.add(mi);
     }
 
     /**
-     * Sucht einen Mitarbeiter anhand seiner ID
+     * Fuegt einen neuen Mitarbeiter hinzu
      * 
-     * @param id
-     *            Gesuchte ID
-     * @return Gesuchter Mitarbeiter
-     * @throws VectorIsEmptyException
-     *             Mitarbeiterliste leer
+     * @param einMa
+     *            Neuer Mitarbeiter
      */
-    public Mitarbeiter sucheMitarbeiter(int id) throws PersonNonexistantException {
+    public void erstelleMitarbeiter(Mitarbeiter einMa) {
 
-	for (Mitarbeiter ma : mitarbeiter) {
-	    if (ma.getId() == id) {
-		return ma;
-	    }
-	}
-	throw new PersonNonexistantException(id);
+	mitarbeiter.add(einMa);
     }
 
     /**
@@ -156,26 +86,11 @@ public class Mitarbeiterverwaltung {
     }
 
     /**
-     * Fuegt einen neuen Mitarbeiter hinzu
-     * 
-     * @param einMa
-     *            Neuer Mitarbeiter
+     * @return Alle Mitarbeiter
      */
-    public void erstelleMitarbeiter(Mitarbeiter einMa) {
+    public Vector<Mitarbeiter> getMitarbeiter() {
 
-	mitarbeiter.add(einMa);
-    }
-
-    /**
-     * Entfernt einen Mitarbeiter
-     * 
-     * @param einMa
-     *            Zu entfernender Mitarbeiter
-     * @return
-     */
-    public boolean loescheMitarbeiter(Mitarbeiter einMa) {
-
-	return mitarbeiter.remove(einMa);
+	return mitarbeiter;
     }
 
     /**
@@ -199,11 +114,96 @@ public class Mitarbeiterverwaltung {
 	}
     }
 
-    /**
-     * @return Alle Mitarbeiter
-     */
-    public Vector<Mitarbeiter> getMitarbeiter() {
+    public void liesDaten(String datei) throws IOException, InvalidPersonDataException {
 
-	return mitarbeiter;
+	// PersistenzManager f�r Lesevorgänge öffnen
+	pm.openForReading(datei);
+	Mitarbeiter mi = null;
+	do {
+	    // Mitarbeiter-Objekt einlesen
+	    mi = pm.ladeMitarbeiter();
+	    if (mi != null) {
+		// Mitarbeiter in Mitarbeiterliste einfuegen
+		einfuegen(mi);
+	    }
+	} while (mi != null);
+	// Persistenz-Schnittstelle wieder schließen
+	pm.close();
+    }
+
+    /**
+     * Entfernt einen Mitarbeiter
+     * 
+     * @param einMa
+     *            Zu entfernender Mitarbeiter
+     * @return
+     */
+    public boolean loescheMitarbeiter(Mitarbeiter einMa) {
+
+	return mitarbeiter.remove(einMa);
+    }
+
+    /**
+     * Methode zum Schreiben der Kundendaten in eine Datei.
+     * 
+     * @param datei
+     *            Datei, in die der...
+     * @throws IOException
+     */
+    public void schreibeDaten(String datei) throws IOException {
+
+	// PersistenzManager fuer Schreibvorgänge öffnen
+	pm.openForWriting(datei);
+	if (!mitarbeiter.isEmpty()) {
+	    Iterator<Mitarbeiter> iter = mitarbeiter.iterator();
+	    while (iter.hasNext()) {
+		Mitarbeiter mi = iter.next();
+		pm.speichereMitarbeiter(mi);
+	    }
+	}
+	// Persistenz-Schnittstelle wieder schließen
+	pm.close();
+    }
+
+    /**
+     * Sucht einen Mitarbeiter anhand seiner ID
+     * 
+     * @param id
+     *            Gesuchte ID
+     * @return Gesuchter Mitarbeiter
+     * @throws VectorIsEmptyException
+     *             Mitarbeiterliste leer
+     */
+    public Mitarbeiter sucheMitarbeiter(int id) throws PersonNonexistantException {
+
+	for (Mitarbeiter ma : mitarbeiter) {
+	    if (ma.getId() == id) {
+		return ma;
+	    }
+	}
+	throw new PersonNonexistantException(id);
+    }
+
+    /**
+     * Sucht einen Mitarbeiter anhand Vor- und Nachname
+     * 
+     * @param firstname
+     *            Vorname
+     * @param lastname
+     *            Nachname
+     * @return Gesuchter Mitarbeiter
+     * @throws VectorIsEmptyException
+     *             Mitarbeiterliste leer
+     */
+    public Mitarbeiter sucheMitarbeiter(String firstname, String lastname) throws PersonNonexistantException {
+
+	if (mitarbeiter.size() > 0) {
+	    for (Mitarbeiter ma : mitarbeiter) {
+		if (ma.getFirstname().equals(firstname) && ma.getLastname().equals(lastname)) {
+		    return ma;
+		}
+	    }
+	}
+	throw new PersonNonexistantException(firstname, lastname);
     }
 }

@@ -4,12 +4,74 @@ package eshop.common.util;
  * durch Verdecken des Exception-Handlings
 */
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 public class IO {
 
     public static BufferedReader input	 = new BufferedReader(new InputStreamReader(System.in));
     public static String	 eingabe = "";
+
+    public static void print(char s) {
+
+	System.out.print(s);
+    }
+
+    public static void print(double s) {
+
+	System.out.print(s);
+    }
+
+    public static void print(float s) {
+
+	System.out.print(s);
+    }
+
+    public static void print(int s) {
+
+	System.out.print(s);
+    }
+
+    public static void print(long s) {
+
+	System.out.print(s);
+    }
+
+    public static void print(String s) {
+
+	System.out.print(s);
+    }
+
+    public static void println(char s) {
+
+	System.out.println(s);
+    }
+
+    public static void println(double s) {
+
+	System.out.println(s);
+    }
+
+    public static void println(float s) {
+
+	System.out.println(s);
+    }
+
+    public static void println(int s) {
+
+	System.out.println(s);
+    }
+
+    public static void println(long s) {
+
+	System.out.println(s);
+    }
+
+    // Ausgabe
+    public static void println(String s) {
+
+	System.out.println(s);
+    }
 
     // Einlesen eines char
     public static char readChar() {
@@ -22,15 +84,27 @@ public class IO {
 	}
     }
 
-    // Einlesen eines short
-    public static short readShort() {
+    // Einlesen eines double
+    public static double readDouble() {
 
 	try {
 	    eingabe = input.readLine();
-	    Integer string_to_short = new Integer(eingabe);
-	    return (short) string_to_short.intValue();
+	    Double string_to_double = new Double(eingabe);
+	    return string_to_double.doubleValue();
 	} catch(Exception e) {
-	    return 0;
+	    return 0.0;
+	}
+    }
+
+    // Einlesen eines float
+    public static float readFloat() {
+
+	try {
+	    eingabe = input.readLine();
+	    Float string_to_float = new Float(eingabe);
+	    return string_to_float.floatValue();
+	} catch(Exception e) {
+	    return 0.0F;
 	}
     }
 
@@ -58,27 +132,15 @@ public class IO {
 	}
     }
 
-    // Einlesen eines float
-    public static float readFloat() {
+    // Einlesen eines short
+    public static short readShort() {
 
 	try {
 	    eingabe = input.readLine();
-	    Float string_to_float = new Float(eingabe);
-	    return string_to_float.floatValue();
+	    Integer string_to_short = new Integer(eingabe);
+	    return (short) string_to_short.intValue();
 	} catch(Exception e) {
-	    return 0.0F;
-	}
-    }
-
-    // Einlesen eines double
-    public static double readDouble() {
-
-	try {
-	    eingabe = input.readLine();
-	    Double string_to_double = new Double(eingabe);
-	    return string_to_double.doubleValue();
-	} catch(Exception e) {
-	    return 0.0;
+	    return 0;
 	}
     }
 
@@ -90,66 +152,5 @@ public class IO {
 	} catch(Exception e) {
 	    return "";
 	}
-    }
-
-    // Ausgabe
-    public static void println(String s) {
-
-	System.out.println(s);
-    }
-
-    public static void print(String s) {
-
-	System.out.print(s);
-    }
-
-    public static void println(int s) {
-
-	System.out.println(s);
-    }
-
-    public static void print(int s) {
-
-	System.out.print(s);
-    }
-
-    public static void println(long s) {
-
-	System.out.println(s);
-    }
-
-    public static void print(long s) {
-
-	System.out.print(s);
-    }
-
-    public static void println(double s) {
-
-	System.out.println(s);
-    }
-
-    public static void print(double s) {
-
-	System.out.print(s);
-    }
-
-    public static void println(float s) {
-
-	System.out.println(s);
-    }
-
-    public static void print(float s) {
-
-	System.out.print(s);
-    }
-
-    public static void println(char s) {
-
-	System.out.println(s);
-    }
-
-    public static void print(char s) {
-
-	System.out.print(s);
     }
 }

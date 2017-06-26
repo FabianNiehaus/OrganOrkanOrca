@@ -25,65 +25,6 @@ public class Kundenverwaltung {
     private Vector<Kunde>      kunden = new Vector<Kunde>();
 
     /**
-     * @author Mathis M�hlenkamp Methode zum Einlesen von Kunden aus einer
-     *         Datei.
-     * 
-     * @param datei
-     *            Datei, die einzulesenden
-     * @throws IOException
-     * @throws InvalidPersonDataException
-     */
-    public void liesDaten(String datei, Warenkorbverwaltung wv) throws IOException, InvalidPersonDataException {
-
-	// PersistenzManager f�r Lesevorgänge öffnen
-	pm.openForReading(datei);
-	Kunde ku = null;
-	do {
-	    // Kunde-Objekt einlesen
-	    ku = pm.ladeKunde();
-	    if (ku != null) {
-		// Mitarbeiter in Mitarbeiterliste einfuegen
-		einfuegen(ku);
-	    }
-	} while (ku != null);
-	// Persistenz-Schnittstelle wieder schließen
-	pm.close();
-    }
-
-    /**
-     * Methode zum Schreiben der Kundendaten in eine Datei.
-     * 
-     * @param datei
-     *            Datei, in die der...
-     * @throws IOException
-     */
-    public void schreibeDaten(String datei) throws IOException {
-
-	// PersistenzManager fuer Schreibvorgänge öffnen
-	pm.openForWriting(datei);
-	if (!kunden.isEmpty()) {
-	    Iterator<Kunde> iter = kunden.iterator();
-	    while (iter.hasNext()) {
-		Kunde ku = (Kunde) iter.next();
-		pm.speichereKunde(ku);
-	    }
-	}
-	// Persistenz-Schnittstelle wieder schließen
-	pm.close();
-    }
-
-    /**
-     * Fuegt einen Kunden hinzu
-     * 
-     * @param ku
-     *            Kunde
-     */
-    public void einfuegen(Kunde ku) {
-
-	kunden.add(ku);
-    }
-
-    /**
      * Logik zur Anmeldung
      * 
      * @param id
@@ -105,39 +46,14 @@ public class Kundenverwaltung {
     }
 
     /**
-     * Prueft, ob ein bestimmter Kunde in der Kundenverwaltung liegt.
+     * Fuegt einen Kunden hinzu
      * 
-     * @param art
-     *            Zu ueberpruefender Kunde
-     * @return Gibt <b>true</b> zurueck, wenn zu pruefender Kunde in der HAsMap
-     *         Kunde gespeichert ist. Sonst <b>false</b>. suche nach ID oder
-     *         Name
+     * @param ku
+     *            Kunde
      */
-    public Kunde sucheKunde(String firstname, String lastname) throws PersonNonexistantException {
+    public void einfuegen(Kunde ku) {
 
-	for (Kunde ku : kunden) {
-	    if (ku.getFirstname().equals(firstname) && ku.getLastname().equals(lastname)) {
-		return ku;
-	    }
-	}
-	throw new PersonNonexistantException(firstname, lastname);
-    }
-
-    /**
-     * Sucht einen Kunden anhand seiner ID
-     * 
-     * @param id
-     *            Kundenid
-     * @return Gesuchter Kunde
-     */
-    public Kunde sucheKunde(int id) throws PersonNonexistantException {
-
-	for (Kunde ku : kunden) {
-	    if (ku.getId() == id) {
-		return ku;
-	    }
-	}
-	throw new PersonNonexistantException(id);
+	kunden.add(ku);
     }
 
     /**
@@ -170,21 +86,12 @@ public class Kundenverwaltung {
     }
 
     /**
-     * Löscht einen Kunden aus der verwalteten Liste
-     * 
-     * @param einKunde
-     *            Zu löschender Kunde
+     * @return Liste der verwalteten Kunden
      */
-    public boolean loescheKunde(Kunde einKunde) {
+    public Vector<Kunde> getKunden() {
 
-	return kunden.remove(einKunde);
+	return kunden;
     }
-    /*
-     * Nicht verwendet public void aendereKunde(Kunde einKunde) { }
-     */
-    /*
-     * Nicht verwendet public void pruefeDublikate() { }
-     */
 
     /**
      * Erzeugt die nächste zu verwendende Kundennummer
@@ -208,14 +115,6 @@ public class Kundenverwaltung {
     }
 
     /**
-     * @return Liste der verwalteten Kunden
-     */
-    public Vector<Kunde> getKunden() {
-
-	return kunden;
-    }
-
-    /**
      * Gibt den zu einem Kunden zugeordneten Warenkorb aus
      * 
      * @param ku
@@ -225,6 +124,107 @@ public class Kundenverwaltung {
     public Warenkorb gibWarenkorbVonKunde(Person ku) {
 
 	return ((Kunde) ku).getWarenkorb();
+    }
+
+    /**
+     * @author Mathis M�hlenkamp Methode zum Einlesen von Kunden aus einer
+     *         Datei.
+     * 
+     * @param datei
+     *            Datei, die einzulesenden
+     * @throws IOException
+     * @throws InvalidPersonDataException
+     */
+    public void liesDaten(String datei, Warenkorbverwaltung wv) throws IOException, InvalidPersonDataException {
+
+	// PersistenzManager f�r Lesevorgänge öffnen
+	pm.openForReading(datei);
+	Kunde ku = null;
+	do {
+	    // Kunde-Objekt einlesen
+	    ku = pm.ladeKunde();
+	    if (ku != null) {
+		// Mitarbeiter in Mitarbeiterliste einfuegen
+		einfuegen(ku);
+	    }
+	} while (ku != null);
+	// Persistenz-Schnittstelle wieder schließen
+	pm.close();
+    }
+
+    /**
+     * Löscht einen Kunden aus der verwalteten Liste
+     * 
+     * @param einKunde
+     *            Zu löschender Kunde
+     */
+    public boolean loescheKunde(Kunde einKunde) {
+
+	return kunden.remove(einKunde);
+    }
+    /*
+     * Nicht verwendet public void aendereKunde(Kunde einKunde) { }
+     */
+    /*
+     * Nicht verwendet public void pruefeDublikate() { }
+     */
+
+    /**
+     * Methode zum Schreiben der Kundendaten in eine Datei.
+     * 
+     * @param datei
+     *            Datei, in die der...
+     * @throws IOException
+     */
+    public void schreibeDaten(String datei) throws IOException {
+
+	// PersistenzManager fuer Schreibvorgänge öffnen
+	pm.openForWriting(datei);
+	if (!kunden.isEmpty()) {
+	    Iterator<Kunde> iter = kunden.iterator();
+	    while (iter.hasNext()) {
+		Kunde ku = iter.next();
+		pm.speichereKunde(ku);
+	    }
+	}
+	// Persistenz-Schnittstelle wieder schließen
+	pm.close();
+    }
+
+    /**
+     * Sucht einen Kunden anhand seiner ID
+     * 
+     * @param id
+     *            Kundenid
+     * @return Gesuchter Kunde
+     */
+    public Kunde sucheKunde(int id) throws PersonNonexistantException {
+
+	for (Kunde ku : kunden) {
+	    if (ku.getId() == id) {
+		return ku;
+	    }
+	}
+	throw new PersonNonexistantException(id);
+    }
+
+    /**
+     * Prueft, ob ein bestimmter Kunde in der Kundenverwaltung liegt.
+     * 
+     * @param art
+     *            Zu ueberpruefender Kunde
+     * @return Gibt <b>true</b> zurueck, wenn zu pruefender Kunde in der HAsMap
+     *         Kunde gespeichert ist. Sonst <b>false</b>. suche nach ID oder
+     *         Name
+     */
+    public Kunde sucheKunde(String firstname, String lastname) throws PersonNonexistantException {
+
+	for (Kunde ku : kunden) {
+	    if (ku.getFirstname().equals(firstname) && ku.getLastname().equals(lastname)) {
+		return ku;
+	    }
+	}
+	throw new PersonNonexistantException(firstname, lastname);
     }
 
     public void weiseWarenkorbzu(Kunde ku, Warenkorb wk) {

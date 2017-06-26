@@ -36,36 +36,9 @@ public class FilePersistenceManager implements PersistenceManager {
 
     /*
      * (non-Javadoc)
-     * @see persistence.PersistenceManager#openForReading(java.lang.String)
-     */
-    public void openForReading(String datei) throws FileNotFoundException {
-
-	try {
-	    reader = new BufferedReader(new FileReader(datei));
-	} catch(FileNotFoundException fnfe) {
-	    throw new FileNotFoundException(datei);
-	}
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see persistence.PersistenceManager#openForWriting(java.lang.String)
-     */
-    public void openForWriting(String datei) throws IOException {
-
-	writer = new PrintWriter(new BufferedWriter(new FileWriter(datei)));
-	// Dokument leeren
-	if (writer != null) {
-	    writer.print("");
-	    close();
-	    writer = new PrintWriter(new BufferedWriter(new FileWriter(datei)));
-	}
-    }
-
-    /*
-     * (non-Javadoc)
      * @see persistence.PersistenceManager#close()
      */
+    @Override
     public boolean close() {
 
 	if (writer != null) writer.close();
@@ -87,6 +60,7 @@ public class FilePersistenceManager implements PersistenceManager {
      * 
      * @return Artikel-Objekt, wenn Einlesen erfolgreich, false null
      */
+    @Override
     public Artikel ladeArtikel() throws IOException {
 
 	int artikelnummer = 0;
@@ -132,136 +106,7 @@ public class FilePersistenceManager implements PersistenceManager {
 	}
     }
 
-    /**
-     * Methode zum Schreiben der Artikeldaten in eine externe Datenquelle. Das
-     * Verfuegbarkeitsattribut wird in der Datenquelle (Datei) als "t" oder "f"
-     * codiert abgelegt.
-     * 
-     * @param art
-     *            Artikel-Objekt, das gespeichert werden soll
-     * @return true, wenn Schreibvorgang erfolgreich, false sonst
-     */
-    public boolean speichereArtikel(Artikel art) throws IOException {
-
-	// Schreibe Artikelnummer
-	schreibeZeile(String.valueOf(art.getArtikelnummer()));
-	// Schreibe Artikelbezeichnung
-	schreibeZeile(art.getBezeichnung());
-	// Schreibe Preis
-	schreibeZeile(String.valueOf(art.getPreis()));
-	// Schreibe Bestand
-	schreibeZeile(String.valueOf(art.getBestand()));
-	// wenn Artikel ein Massengutartikel ist, wird die Packungsgr��e
-	// geschrieben, ansonsten "0"
-	if (art instanceof Massengutartikel) {
-	    Massengutartikel tmp = (Massengutartikel) art;
-	    schreibeZeile(String.valueOf(tmp.getPackungsgroesse()));
-	} else {
-	    schreibeZeile(String.valueOf(1));
-	}
-	schreibeZeile("---BEGINHISTORY---");
-	// Bestandhistory schreiben
-	for (Entry<Integer, Integer> ent : art.getBestandsverlauf().entrySet()) {
-	    schreibeZeile(String.valueOf(ent.getKey()) + ":" + String.valueOf(ent.getValue()));
-	}
-	schreibeZeile("---ENDHISTORY---");
-	return true;
-    }
-
-    /**
-     * @author Mathis M�hlenkamp
-     * @throws InvalidPersonDataException
-     */
-    public Kunde ladeKunde() throws IOException, InvalidPersonDataException {
-
-	int id = 0;
-	String firstname = "";
-	String lastname = "";
-	String passwort = "";
-	String address_Street = "";
-	String address_Zip = "";
-	String address_Town = "";
-	// Lies ID
-	try {
-	    id = Integer.parseInt(liesZeile());
-	} catch(NumberFormatException nfe) {
-	    // Abbruch wenn Leerzeile -> keine Kunden mehr vorhanden
-	    return null;
-	}
-	// Lies firstname & lastname
-	firstname = liesZeile();
-	lastname = liesZeile();
-	// Lies passwort
-	passwort = liesZeile();
-	// Lies Adresse
-	address_Street = liesZeile();
-	address_Zip = liesZeile();
-	address_Town = liesZeile();
-	return new Kunde(firstname, lastname, id, passwort, address_Street, address_Zip, address_Town);
-    }
-
-    public boolean speichereKunde(Kunde ku) throws IOException {
-
-	// Schreibe ID
-	schreibeZeile(String.valueOf(ku.getId()));
-	// Schreibe firstname
-	schreibeZeile(ku.getFirstname());
-	// Schreibe lastname
-	schreibeZeile(ku.getLastname());
-	// Schreibe passwort
-	schreibeZeile(ku.getPasswort());
-	// Schreibe Adresse
-	schreibeZeile(ku.getAddress_Street());
-	schreibeZeile(ku.getAddress_Zip());
-	schreibeZeile(ku.getAddress_Town());
-	return true;
-    }
-
-    /**
-     * @author Mathis M�hlenkamp
-     * @throws InvalidPersonData
-     */
-    public Mitarbeiter ladeMitarbeiter() throws IOException, InvalidPersonDataException {
-
-	int id = 0;
-	String firstname = "";
-	String lastname = "";
-	String passwort = "";
-	String address_Street = "";
-	String address_Zip = "";
-	String address_Town = "";
-	// Lies ID
-	try {
-	    id = Integer.parseInt(liesZeile());
-	} catch(NumberFormatException nfe) {
-	    // Abbruch wenn Leerzeile -> keine Kunden mehr vorhanden
-	    return null;
-	}
-	// Lies firstname & lastname
-	firstname = liesZeile();
-	lastname = liesZeile();
-	// Lies passwort
-	passwort = liesZeile();
-	// Lies Adresse
-	address_Street = liesZeile();
-	address_Zip = liesZeile();
-	address_Town = liesZeile();
-	return new Mitarbeiter(firstname, lastname, id, passwort, address_Street, address_Zip, address_Town);
-    }
-
-    public boolean speichereMitarbeiter(Mitarbeiter mi) throws IOException {
-
-	// Schreibe ID
-	schreibeZeile(String.valueOf(mi.getId()));
-	// Schreibe firstname
-	schreibeZeile(mi.getFirstname());
-	// Schreibe lastname
-	schreibeZeile(mi.getLastname());
-	// Schreibe passwort
-	schreibeZeile(mi.getPasswort());
-	return true;
-    }
-
+    @Override
     public Vector<Object> ladeEreignis() throws IOException {
 
 	Vector<Object> ret = new Vector<Object>(6);
@@ -291,18 +136,70 @@ public class FilePersistenceManager implements PersistenceManager {
 	return ret;
     }
 
-    public boolean speichereEreignis(Ereignis er) throws IOException {
+    /**
+     * @author Mathis M�hlenkamp
+     * @throws InvalidPersonDataException
+     */
+    @Override
+    public Kunde ladeKunde() throws IOException, InvalidPersonDataException {
 
-	// Schreibe
-	schreibeZeile(String.valueOf(er.getId()));
-	schreibeZeile(String.valueOf(er.getWer().getId()));
-	schreibeZeile(String.valueOf(er.getTyp()));
-	schreibeZeile(String.valueOf(er.getWomit().getArtikelnummer()));
-	schreibeZeile(String.valueOf(er.getWieviel()));
-	// Datum wird richtig formatiert
-	DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-	schreibeZeile(String.valueOf(dateFormat.format(er.getWann())));
-	return true;
+	int id = 0;
+	String firstname = "";
+	String lastname = "";
+	String passwort = "";
+	String address_Street = "";
+	String address_Zip = "";
+	String address_Town = "";
+	// Lies ID
+	try {
+	    id = Integer.parseInt(liesZeile());
+	} catch(NumberFormatException nfe) {
+	    // Abbruch wenn Leerzeile -> keine Kunden mehr vorhanden
+	    return null;
+	}
+	// Lies firstname & lastname
+	firstname = liesZeile();
+	lastname = liesZeile();
+	// Lies passwort
+	passwort = liesZeile();
+	// Lies Adresse
+	address_Street = liesZeile();
+	address_Zip = liesZeile();
+	address_Town = liesZeile();
+	return new Kunde(firstname, lastname, id, passwort, address_Street, address_Zip, address_Town);
+    }
+
+    /**
+     * @author Mathis M�hlenkamp
+     * @throws InvalidPersonData
+     */
+    @Override
+    public Mitarbeiter ladeMitarbeiter() throws IOException, InvalidPersonDataException {
+
+	int id = 0;
+	String firstname = "";
+	String lastname = "";
+	String passwort = "";
+	String address_Street = "";
+	String address_Zip = "";
+	String address_Town = "";
+	// Lies ID
+	try {
+	    id = Integer.parseInt(liesZeile());
+	} catch(NumberFormatException nfe) {
+	    // Abbruch wenn Leerzeile -> keine Kunden mehr vorhanden
+	    return null;
+	}
+	// Lies firstname & lastname
+	firstname = liesZeile();
+	lastname = liesZeile();
+	// Lies passwort
+	passwort = liesZeile();
+	// Lies Adresse
+	address_Street = liesZeile();
+	address_Zip = liesZeile();
+	address_Town = liesZeile();
+	return new Mitarbeiter(firstname, lastname, id, passwort, address_Street, address_Zip, address_Town);
     }
 
     /**
@@ -321,6 +218,36 @@ public class FilePersistenceManager implements PersistenceManager {
 	else return "";
     }
 
+    /*
+     * (non-Javadoc)
+     * @see persistence.PersistenceManager#openForReading(java.lang.String)
+     */
+    @Override
+    public void openForReading(String datei) throws FileNotFoundException {
+
+	try {
+	    reader = new BufferedReader(new FileReader(datei));
+	} catch(FileNotFoundException fnfe) {
+	    throw new FileNotFoundException(datei);
+	}
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see persistence.PersistenceManager#openForWriting(java.lang.String)
+     */
+    @Override
+    public void openForWriting(String datei) throws IOException {
+
+	writer = new PrintWriter(new BufferedWriter(new FileWriter(datei)));
+	// Dokument leeren
+	if (writer != null) {
+	    writer.print("");
+	    close();
+	    writer = new PrintWriter(new BufferedWriter(new FileWriter(datei)));
+	}
+    }
+
     /**
      * Schreibt eine Zeile
      * 
@@ -330,5 +257,89 @@ public class FilePersistenceManager implements PersistenceManager {
     private void schreibeZeile(String daten) {
 
 	if (writer != null) writer.println(daten);
+    }
+
+    /**
+     * Methode zum Schreiben der Artikeldaten in eine externe Datenquelle. Das
+     * Verfuegbarkeitsattribut wird in der Datenquelle (Datei) als "t" oder "f"
+     * codiert abgelegt.
+     * 
+     * @param art
+     *            Artikel-Objekt, das gespeichert werden soll
+     * @return true, wenn Schreibvorgang erfolgreich, false sonst
+     */
+    @Override
+    public boolean speichereArtikel(Artikel art) throws IOException {
+
+	// Schreibe Artikelnummer
+	schreibeZeile(String.valueOf(art.getArtikelnummer()));
+	// Schreibe Artikelbezeichnung
+	schreibeZeile(art.getBezeichnung());
+	// Schreibe Preis
+	schreibeZeile(String.valueOf(art.getPreis()));
+	// Schreibe Bestand
+	schreibeZeile(String.valueOf(art.getBestand()));
+	// wenn Artikel ein Massengutartikel ist, wird die Packungsgr��e
+	// geschrieben, ansonsten "0"
+	if (art instanceof Massengutartikel) {
+	    Massengutartikel tmp = (Massengutartikel) art;
+	    schreibeZeile(String.valueOf(tmp.getPackungsgroesse()));
+	} else {
+	    schreibeZeile(String.valueOf(1));
+	}
+	schreibeZeile("---BEGINHISTORY---");
+	// Bestandhistory schreiben
+	for (Entry<Integer, Integer> ent : art.getBestandsverlauf().entrySet()) {
+	    schreibeZeile(String.valueOf(ent.getKey()) + ":" + String.valueOf(ent.getValue()));
+	}
+	schreibeZeile("---ENDHISTORY---");
+	return true;
+    }
+
+    @Override
+    public boolean speichereEreignis(Ereignis er) throws IOException {
+
+	// Schreibe
+	schreibeZeile(String.valueOf(er.getId()));
+	schreibeZeile(String.valueOf(er.getWer().getId()));
+	schreibeZeile(String.valueOf(er.getTyp()));
+	schreibeZeile(String.valueOf(er.getWomit().getArtikelnummer()));
+	schreibeZeile(String.valueOf(er.getWieviel()));
+	// Datum wird richtig formatiert
+	DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+	schreibeZeile(String.valueOf(dateFormat.format(er.getWann())));
+	return true;
+    }
+
+    @Override
+    public boolean speichereKunde(Kunde ku) throws IOException {
+
+	// Schreibe ID
+	schreibeZeile(String.valueOf(ku.getId()));
+	// Schreibe firstname
+	schreibeZeile(ku.getFirstname());
+	// Schreibe lastname
+	schreibeZeile(ku.getLastname());
+	// Schreibe passwort
+	schreibeZeile(ku.getPasswort());
+	// Schreibe Adresse
+	schreibeZeile(ku.getAddress_Street());
+	schreibeZeile(ku.getAddress_Zip());
+	schreibeZeile(ku.getAddress_Town());
+	return true;
+    }
+
+    @Override
+    public boolean speichereMitarbeiter(Mitarbeiter mi) throws IOException {
+
+	// Schreibe ID
+	schreibeZeile(String.valueOf(mi.getId()));
+	// Schreibe firstname
+	schreibeZeile(mi.getFirstname());
+	// Schreibe lastname
+	schreibeZeile(mi.getLastname());
+	// Schreibe passwort
+	schreibeZeile(mi.getPasswort());
+	return true;
     }
 }

@@ -86,6 +86,7 @@ public class Kunde extends Person implements Serializable {
 	this.wk = warenkorb;
     }
 
+    @Override
     public String toString() {
 
 	return id + ": " + firstname + " " + lastname + " | " + address_Street + " ," + address_Zip + " "

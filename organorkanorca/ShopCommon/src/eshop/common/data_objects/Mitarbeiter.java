@@ -31,6 +31,7 @@ public class Mitarbeiter extends Person implements Serializable {
 	super(firstname, lastname, id, passwort, address_Town, address_Town, address_Town);
     }
 
+    @Override
     public String toString() {
 
 	return id + ": " + firstname + " " + lastname;

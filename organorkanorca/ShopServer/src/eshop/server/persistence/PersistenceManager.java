@@ -22,6 +22,46 @@ import eshop.common.exceptions.InvalidPersonDataException;
 public interface PersistenceManager {
 
     /**
+     * Schließt / 'löscht' den Writer & Writer
+     * 
+     * @return <b>true</b>, wenn Schließen erfolgreich, sonst <b>false</b>
+     */
+    public boolean close();
+
+    /**
+     * Methode zum Einlesen der Artikeldaten aus einer externen Datenquelle.
+     * 
+     * @return Artikel-Objekt, wenn Einlesen erfolgreich, false null
+     */
+    public Artikel ladeArtikel() throws IOException;
+
+    public Vector<Object> ladeEreignis() throws IOException;
+
+    /**
+     * @author Mathis M�hlenkamp
+     * 
+     *         Methode zum Einlesen der Kundendaten aus einer externen
+     *         Datenqulle.
+     * 
+     * @return Kunden-Objekt, wenn Einlesen erfolgreich, false null
+     * @throws InvalidPersonDataException
+     * 
+     */
+    public Kunde ladeKunde() throws IOException, InvalidPersonDataException;
+
+    /**
+     * @author Mathis M�hlenkamp
+     * 
+     *         Methode zum Einlesen der Mitarbeiterdaten aus einer externen
+     *         Datenqulle.
+     * 
+     * @return Mitarbeiter-Objekt, wenn Einlesen erfolgreich, false null
+     * @throws InvalidPersonData
+     * 
+     */
+    public Mitarbeiter ladeMitarbeiter() throws IOException, InvalidPersonDataException;
+
+    /**
      * Erstellt neuen Reader fuer jeweiligen Persistenz-Typ
      * 
      * @param datenquelle
@@ -40,20 +80,6 @@ public interface PersistenceManager {
     public void openForWriting(String datenquelle) throws IOException;
 
     /**
-     * Schließt / 'löscht' den Writer & Writer
-     * 
-     * @return <b>true</b>, wenn Schließen erfolgreich, sonst <b>false</b>
-     */
-    public boolean close();
-
-    /**
-     * Methode zum Einlesen der Artikeldaten aus einer externen Datenquelle.
-     * 
-     * @return Artikel-Objekt, wenn Einlesen erfolgreich, false null
-     */
-    public Artikel ladeArtikel() throws IOException;
-
-    /**
      * Methode zum Schreiben der Artikeldaten in eine externe Datenquelle.
      * 
      * @param b
@@ -62,17 +88,7 @@ public interface PersistenceManager {
      */
     public boolean speichereArtikel(Artikel art) throws IOException;
 
-    /**
-     * @author Mathis M�hlenkamp
-     * 
-     *         Methode zum Einlesen der Kundendaten aus einer externen
-     *         Datenqulle.
-     * 
-     * @return Kunden-Objekt, wenn Einlesen erfolgreich, false null
-     * @throws InvalidPersonDataException
-     * 
-     */
-    public Kunde ladeKunde() throws IOException, InvalidPersonDataException;
+    public boolean speichereEreignis(Ereignis er) throws IOException;
 
     /**
      * Methode zum Schreiben der Kundendaten in eine externe Datenquelle.
@@ -84,18 +100,6 @@ public interface PersistenceManager {
     public boolean speichereKunde(Kunde art) throws IOException;
 
     /**
-     * @author Mathis M�hlenkamp
-     * 
-     *         Methode zum Einlesen der Mitarbeiterdaten aus einer externen
-     *         Datenqulle.
-     * 
-     * @return Mitarbeiter-Objekt, wenn Einlesen erfolgreich, false null
-     * @throws InvalidPersonData
-     * 
-     */
-    public Mitarbeiter ladeMitarbeiter() throws IOException, InvalidPersonDataException;
-
-    /**
      * Methode zum Schreiben der Mitarbeiterdaten in eine externe Datenquelle.
      * 
      * @param b
@@ -103,8 +107,4 @@ public interface PersistenceManager {
      * @return true, wenn Schreibvorgang erfolgreich, false sonst
      */
     public boolean speichereMitarbeiter(Mitarbeiter mi) throws IOException;
-
-    public Vector<Object> ladeEreignis() throws IOException;
-
-    public boolean speichereEreignis(Ereignis er) throws IOException;
 }

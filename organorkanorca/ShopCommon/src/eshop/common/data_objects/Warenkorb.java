@@ -16,32 +16,11 @@ public class Warenkorb implements Serializable {
     /**
      * 
      */
-    private static final long serialVersionUID = 1864639903738496743L;
+    private static final long	  serialVersionUID = 1864639903738496743L;
+    private Map<Artikel, Integer> artikel	   = new LinkedHashMap<>();
 
     public Warenkorb() {
 	super();
-    }
-
-    private Map<Artikel, Integer> artikel = new LinkedHashMap<>();
-
-    /**
-     * Prueft, ob ein bestimmter Artikel in diesem Warenkorb liegt.
-     * 
-     * @param art
-     *            Zu ueberpruefender Artikel
-     * @return Gibt <b>true</b> zurueck, wenn zu pruefender Artikel in der
-     *         HAsMap artikel gespeichert ist. Sonst <b>false</b>.
-     */
-    public boolean sucheArtikel(Artikel art) {
-
-	if (!artikel.isEmpty()) {
-	    if (artikel.containsKey(art)) {
-		return true;
-	    } else {
-		return false;
-	    }
-	}
-	return false;
     }
 
     /**
@@ -58,6 +37,62 @@ public class Warenkorb implements Serializable {
     public void aendereAnzahl(Artikel art, int anz) {
 
 	artikel.replace(art, anz);
+    }
+
+    public void copy(Warenkorb wk) {
+
+	artikel.putAll(wk.getArtikel());
+    }
+
+    /**
+     * @return Gibt die LinkedHashMap mit Artikeln und Anzahl zurueck
+     */
+    public Map<Artikel, Integer> getArtikel() {
+
+	return artikel;
+    }
+
+    /**
+     * Leert Warenkorb, indem Artikelliste verworfen wird
+     */
+    public void leereWarkenkorb() {
+
+	artikel.clear();
+    }
+
+    /**
+     * Entfernt einen Artikel aus dem Warenkorb
+     * 
+     * @param art
+     */
+    public void loescheArtikel(Artikel art) {
+
+	if (sucheArtikel(art)) {
+	    artikel.remove(art, artikel.get(art));
+	}
+    }
+
+    /**
+     * Prueft, ob genug Bestand von einem Artikel verfuegbar ist
+     * 
+     * @param art
+     *            Gewuenschter Artikel
+     * @param anz
+     *            Gewuenschte Anzahl
+     */
+    private void pruefeBestand(Artikel art, int anz) throws ArticleStockNotSufficientException {
+
+	if (art.getBestand() < anz) {
+	    throw new ArticleStockNotSufficientException(art, anz);
+	}
+    }
+
+    public void setArtikel(Map<Artikel, Integer> map) {
+
+	for (Map.Entry<Artikel, Integer> ent : map.entrySet()) {
+	    artikel.clear();
+	    artikel.put(ent.getKey(), ent.getValue());
+	}
     }
 
     /**
@@ -87,29 +122,30 @@ public class Warenkorb implements Serializable {
     }
 
     /**
-     * Entfernt einen Artikel aus dem Warenkorb
+     * Prueft, ob ein bestimmter Artikel in diesem Warenkorb liegt.
      * 
      * @param art
+     *            Zu ueberpruefender Artikel
+     * @return Gibt <b>true</b> zurueck, wenn zu pruefender Artikel in der
+     *         HAsMap artikel gespeichert ist. Sonst <b>false</b>.
      */
-    public void loescheArtikel(Artikel art) {
+    public boolean sucheArtikel(Artikel art) {
 
-	if (sucheArtikel(art)) {
-	    artikel.remove(art, artikel.get(art));
+	if (!artikel.isEmpty()) {
+	    if (artikel.containsKey(art)) {
+		return true;
+	    } else {
+		return false;
+	    }
 	}
-    }
-
-    /**
-     * Leert Warenkorb, indem Artikelliste verworfen wird
-     */
-    public void leereWarkenkorb() {
-
-	artikel.clear();
+	return false;
     }
 
     /*
      * (non-Javadoc)
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
 
 	String retStr = "";
@@ -120,41 +156,5 @@ public class Warenkorb implements Serializable {
 	    pos++;
 	}
 	return retStr;
-    }
-
-    /**
-     * @return Gibt die LinkedHashMap mit Artikeln und Anzahl zurueck
-     */
-    public Map<Artikel, Integer> getArtikel() {
-
-	return artikel;
-    }
-
-    /**
-     * Prueft, ob genug Bestand von einem Artikel verfuegbar ist
-     * 
-     * @param art
-     *            Gewuenschter Artikel
-     * @param anz
-     *            Gewuenschte Anzahl
-     */
-    private void pruefeBestand(Artikel art, int anz) throws ArticleStockNotSufficientException {
-
-	if (art.getBestand() < anz) {
-	    throw new ArticleStockNotSufficientException(art, anz);
-	}
-    }
-
-    public void setArtikel(Map<Artikel, Integer> map) {
-
-	for (Map.Entry<Artikel, Integer> ent : map.entrySet()) {
-	    artikel.clear();
-	    artikel.put(ent.getKey(), ent.getValue());
-	}
-    }
-
-    public void copy(Warenkorb wk) {
-
-	artikel.putAll(wk.getArtikel());
     }
 }

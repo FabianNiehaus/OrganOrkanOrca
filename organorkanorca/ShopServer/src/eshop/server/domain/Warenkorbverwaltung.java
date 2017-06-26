@@ -19,50 +19,6 @@ public class Warenkorbverwaltung {
     private Vector<Warenkorb> warenkoerbe = new Vector<>();
 
     /**
-     * Gibt einen Warenkorb aus, sofern dieser in der Verwaltung exisitert
-     * 
-     * @param wk
-     *            Gesuchter Warenkorb
-     * @return Gesuchter Warenkorb
-     */
-    public Warenkorb getWarenkorb(Warenkorb wk) throws BasketNonexistantException {
-
-	for (Warenkorb ret : warenkoerbe) {
-	    if (ret.equals(wk)) {
-		return ret;
-	    }
-	}
-	throw new BasketNonexistantException();
-    }
-
-    /**
-     * Erzeugt einen neuen (leeren) Warenkorb
-     * 
-     * @return Erzeugter Warenkorb
-     */
-    public Warenkorb erstelleWarenkorb() {
-
-	Warenkorb wk = new Warenkorb();
-	warenkoerbe.addElement(wk);
-	return wk;
-    }
-
-    /**
-     * Löscht einen Warenkorb
-     * 
-     * @param wk
-     *            Zu löschender Warenkorb
-     */
-    public void loescheWarenkorb(Warenkorb wk) {
-
-	for (Warenkorb del : warenkoerbe) {
-	    if (del.equals(wk)) {
-		warenkoerbe.remove(del);
-	    }
-	}
-    }
-
-    /**
      * Ändert die Anzahl eines Artikels in einem Warenkorb. Die Artikelauswahl
      * erfolgt nach Position.
      * 
@@ -95,9 +51,64 @@ public class Warenkorbverwaltung {
 	}
     }
 
-    public void loescheAusWarenkorn(Warenkorb wk, Artikel art) {
+    /**
+     * Erzeugt einen neuen (leeren) Warenkorb
+     * 
+     * @return Erzeugter Warenkorb
+     */
+    public Warenkorb erstelleWarenkorb() {
 
-	wk.loescheArtikel(art);
+	Warenkorb wk = new Warenkorb();
+	warenkoerbe.addElement(wk);
+	return wk;
+    }
+
+    /**
+     * Gibt den Inhalt eines Warenkorbs aus
+     * 
+     * @param wk
+     *            Gewuenschter Warenkorb
+     * @return Alle Artikel mit Anzahl
+     */
+    public Map<Artikel, Integer> getArtikel(Warenkorb wk) {
+
+	return wk.getArtikel();
+    }
+
+    /**
+     * @return Alle Warenkörbe
+     */
+    public Vector<Warenkorb> getWarenkoerbe() {
+
+	return warenkoerbe;
+    }
+
+    /**
+     * Gibt einen Warenkorb aus, sofern dieser in der Verwaltung exisitert
+     * 
+     * @param wk
+     *            Gesuchter Warenkorb
+     * @return Gesuchter Warenkorb
+     */
+    public Warenkorb getWarenkorb(Warenkorb wk) throws BasketNonexistantException {
+
+	for (Warenkorb ret : warenkoerbe) {
+	    if (ret.equals(wk)) {
+		return ret;
+	    }
+	}
+	throw new BasketNonexistantException();
+    }
+
+    /**
+     * Leert einen Warenkorb
+     * 
+     * @param wk
+     *            Zu leerender Warenkorb
+     */
+    public void leereWarenkorb(Warenkorb wk) {
+
+	wk.leereWarkenkorb();
     }
 
     /**
@@ -128,34 +139,23 @@ public class Warenkorbverwaltung {
 	}
     }
 
-    /**
-     * @return Alle Warenkörbe
-     */
-    public Vector<Warenkorb> getWarenkoerbe() {
+    public void loescheAusWarenkorn(Warenkorb wk, Artikel art) {
 
-	return warenkoerbe;
+	wk.loescheArtikel(art);
     }
 
     /**
-     * Leert einen Warenkorb
+     * Löscht einen Warenkorb
      * 
      * @param wk
-     *            Zu leerender Warenkorb
+     *            Zu löschender Warenkorb
      */
-    public void leereWarenkorb(Warenkorb wk) {
+    public void loescheWarenkorb(Warenkorb wk) {
 
-	wk.leereWarkenkorb();
-    }
-
-    /**
-     * Gibt den Inhalt eines Warenkorbs aus
-     * 
-     * @param wk
-     *            Gewuenschter Warenkorb
-     * @return Alle Artikel mit Anzahl
-     */
-    public Map<Artikel, Integer> getArtikel(Warenkorb wk) {
-
-	return wk.getArtikel();
+	for (Warenkorb del : warenkoerbe) {
+	    if (del.equals(wk)) {
+		warenkoerbe.remove(del);
+	    }
+	}
     }
 }

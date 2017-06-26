@@ -51,43 +51,33 @@ public abstract class Person implements Serializable {
     /**
      * @return
      */
-    public String getFirstname() {
+    public String getAddress_Street() {
 
-	return firstname;
-    }
-
-    /**
-     * @param firstname
-     * @throws InvalidPersonDataException
-     */
-    public void setFirstname(String firstname) throws InvalidPersonDataException {
-
-	if (!firstname.equals("")) {
-	    this.firstname = firstname;
-	} else {
-	    throw new InvalidPersonDataException(0, firstname);
-	}
+	return address_Street;
     }
 
     /**
      * @return
      */
-    public String getLastname() {
+    public String getAddress_Town() {
 
-	return lastname;
+	return address_Town;
     }
 
     /**
-     * @param lastname
-     * @throws InvalidPersonDataException
+     * @return
      */
-    public void setLastname(String lastname) throws InvalidPersonDataException {
+    public String getAddress_Zip() {
 
-	if (!lastname.equals("")) {
-	    this.lastname = lastname;
-	} else {
-	    throw new InvalidPersonDataException(1, firstname);
-	}
+	return address_Zip;
+    }
+
+    /**
+     * @return
+     */
+    public String getFirstname() {
+
+	return firstname;
     }
 
     /**
@@ -99,19 +89,19 @@ public abstract class Person implements Serializable {
     }
 
     /**
-     * @param id
+     * @return
      */
-    public void setId(int id) {
+    public String getLastname() {
 
-	this.id = id;
+	return lastname;
     }
 
     /**
      * @return
      */
-    public String getAddress_Street() {
+    public String getPasswort() {
 
-	return address_Street;
+	return passwort;
     }
 
     /**
@@ -128,11 +118,16 @@ public abstract class Person implements Serializable {
     }
 
     /**
-     * @return
+     * @param address_Town
+     * @throws InvalidPersonDataException
      */
-    public String getAddress_Zip() {
+    public void setAddress_Town(String address_Town) throws InvalidPersonDataException {
 
-	return address_Zip;
+	if (!address_Town.equals("")) {
+	    this.address_Town = address_Town;
+	} else {
+	    throw new InvalidPersonDataException(4, address_Town);
+	}
     }
 
     /**
@@ -149,32 +144,37 @@ public abstract class Person implements Serializable {
     }
 
     /**
-     * @return
-     */
-    public String getAddress_Town() {
-
-	return address_Town;
-    }
-
-    /**
-     * @param address_Town
+     * @param firstname
      * @throws InvalidPersonDataException
      */
-    public void setAddress_Town(String address_Town) throws InvalidPersonDataException {
+    public void setFirstname(String firstname) throws InvalidPersonDataException {
 
-	if (!address_Town.equals("")) {
-	    this.address_Town = address_Town;
+	if (!firstname.equals("")) {
+	    this.firstname = firstname;
 	} else {
-	    throw new InvalidPersonDataException(4, address_Town);
+	    throw new InvalidPersonDataException(0, firstname);
 	}
     }
 
     /**
-     * @return
+     * @param id
      */
-    public String getPasswort() {
+    public void setId(int id) {
 
-	return passwort;
+	this.id = id;
+    }
+
+    /**
+     * @param lastname
+     * @throws InvalidPersonDataException
+     */
+    public void setLastname(String lastname) throws InvalidPersonDataException {
+
+	if (!lastname.equals("")) {
+	    this.lastname = lastname;
+	} else {
+	    throw new InvalidPersonDataException(1, firstname);
+	}
     }
 
     /**
