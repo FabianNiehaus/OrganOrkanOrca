@@ -24,6 +24,63 @@ import net.miginfocom.swing.MigLayout;
 
 public class LoginWindow extends JFrame {
 
+    JTabbedPane		  tabbedPane	     = new JTabbedPane();
+    JLabel		  benutzerLabel	     = new JLabel("Benutzer");
+    JLabel		  passwortLabel	     = new JLabel("Passwort");
+    JTextField		  benutzerField	     = new JTextField(10);
+    JPasswordField	  passwortField	     = new JPasswordField(10);
+    JLabel		  headerLabel	     = new JLabel("Willkommen bei OrganOrkanOrca");
+    JButton		  anmeldenButton     = new JButton("Login");
+    JButton		  registrierenButton = new JButton("Registrieren");
+    private ShopRemote	  server	     = null;
+    private LoginListener loginListener	     = null;
+
+    public LoginWindow(String titel, ShopRemote server, LoginListener listener) {
+	super(titel);
+	this.server = server;
+	this.loginListener = listener;
+	JPanel form = new JPanel();
+	form.setLayout(new MigLayout());
+	form.add(headerLabel, "span 2, wrap");
+	form.add(benutzerLabel);
+	form.add(benutzerField, "wrap");
+	form.add(passwortLabel);
+	form.add(passwortField, "wrap");
+	form.add(anmeldenButton);
+	form.add(registrierenButton);
+	JPanel pU = new JPanel();
+	JButton bU = new JButton("Als User anmelden");
+	bU.addActionListener(new LoginUserUmgehenListener());
+	pU.add(bU);
+	JPanel pM = new JPanel();
+	JButton bM = new JButton("Als Mitarbeiter anmelden");
+	bM.addActionListener(new LoginMitarbeiterUmgehenListener());
+	pM.add(bM);
+	tabbedPane.addTab("Anmelden", null, form, "Anmeldung");
+	tabbedPane.addTab("User", null, pU, "Shortcut User");
+	tabbedPane.addTab("Mitarbeiter", null, pM, "Shortcut Mitarbeiter");
+	tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+	this.getContentPane().add(tabbedPane);
+	anmeldenButton.addActionListener(new LoginButtonListener());
+	registrierenButton.addActionListener(new LoginNeuerNutzerAnlegenListener());
+	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	this.setLocationRelativeTo(null);
+	this.pack();
+	this.setVisible(true);
+    }
+
+    public int benutzerIdAuslesen() throws NumberFormatException {
+
+	return Integer.parseInt(benutzerField.getText());
+    }
+
+    public String passwortAuslesen() {
+
+	char[] pw = passwortField.getPassword();
+	passwortField.setText("");
+	return new String(pw);
+    }
+
     private class LoginButtonListener implements ActionListener {
 
 	@Override
@@ -118,62 +175,5 @@ public class LoginWindow extends JFrame {
 		e1.printStackTrace();
 	    }
 	}
-    }
-
-    JTabbedPane		  tabbedPane	     = new JTabbedPane();
-    JLabel		  benutzerLabel	     = new JLabel("Benutzer");
-    JLabel		  passwortLabel	     = new JLabel("Passwort");
-    JTextField		  benutzerField	     = new JTextField(10);
-    JPasswordField	  passwortField	     = new JPasswordField(10);
-    JLabel		  headerLabel	     = new JLabel("Willkommen bei OrganOrkanOrca");
-    JButton		  anmeldenButton     = new JButton("Login");
-    JButton		  registrierenButton = new JButton("Registrieren");
-    private ShopRemote	  server	     = null;
-    private LoginListener loginListener	     = null;
-
-    public LoginWindow(String titel, ShopRemote server, LoginListener listener) {
-	super(titel);
-	this.server = server;
-	this.loginListener = listener;
-	JPanel form = new JPanel();
-	form.setLayout(new MigLayout());
-	form.add(headerLabel, "span 2, wrap");
-	form.add(benutzerLabel);
-	form.add(benutzerField, "wrap");
-	form.add(passwortLabel);
-	form.add(passwortField, "wrap");
-	form.add(anmeldenButton);
-	form.add(registrierenButton);
-	JPanel pU = new JPanel();
-	JButton bU = new JButton("Als User anmelden");
-	bU.addActionListener(new LoginUserUmgehenListener());
-	pU.add(bU);
-	JPanel pM = new JPanel();
-	JButton bM = new JButton("Als Mitarbeiter anmelden");
-	bM.addActionListener(new LoginMitarbeiterUmgehenListener());
-	pM.add(bM);
-	tabbedPane.addTab("Anmelden", null, form, "Anmeldung");
-	tabbedPane.addTab("User", null, pU, "Shortcut User");
-	tabbedPane.addTab("Mitarbeiter", null, pM, "Shortcut Mitarbeiter");
-	tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-	this.getContentPane().add(tabbedPane);
-	anmeldenButton.addActionListener(new LoginButtonListener());
-	registrierenButton.addActionListener(new LoginNeuerNutzerAnlegenListener());
-	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	this.setLocationRelativeTo(null);
-	this.pack();
-	this.setVisible(true);
-    }
-
-    public int benutzerIdAuslesen() throws NumberFormatException {
-
-	return Integer.parseInt(benutzerField.getText());
-    }
-
-    public String passwortAuslesen() {
-
-	char[] pw = passwortField.getPassword();
-	passwortField.setText("");
-	return new String(pw);
     }
 }

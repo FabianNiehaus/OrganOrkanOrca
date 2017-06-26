@@ -37,64 +37,6 @@ import javax.swing.table.TableModel;
  */
 public class TableColumnAdjuster implements PropertyChangeListener, TableModelListener {
 
-    /*
-     * Action to adjust or restore the width of a single column or all columns
-     */
-    class ColumnAction extends AbstractAction {
-
-	private boolean	isSelectedColumn;
-	private boolean	isAdjust;
-
-	public ColumnAction(boolean isSelectedColumn, boolean isAdjust) {
-	    this.isSelectedColumn = isSelectedColumn;
-	    this.isAdjust = isAdjust;
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-
-	    // Handle selected column(s) width change actions
-	    if (isSelectedColumn) {
-		int[] columns = table.getSelectedColumns();
-		for (int i = 0; i < columns.length; i++) {
-		    if (isAdjust) adjustColumn(columns[i]);
-		    else restoreColumn(columns[i]);
-		}
-	    } else {
-		if (isAdjust) adjustColumns();
-		else restoreColumns();
-	    }
-	}
-    }
-
-    /*
-     * Toggle properties of the TableColumnAdjuster so the user can customize
-     * the functionality to their preferences
-     */
-    class ToggleAction extends AbstractAction {
-
-	private boolean	isToggleDynamic;
-	private boolean	isToggleLarger;
-
-	public ToggleAction(boolean isToggleDynamic, boolean isToggleLarger) {
-	    this.isToggleDynamic = isToggleDynamic;
-	    this.isToggleLarger = isToggleLarger;
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-
-	    if (isToggleDynamic) {
-		setDynamicAdjustment(!isDynamicAdjustment);
-		return;
-	    }
-	    if (isToggleLarger) {
-		setOnlyAdjustLarger(!isOnlyAdjustLarger);
-		return;
-	    }
-	}
-    }
-
     private JTable		      table;
     private int			      spacing;
     private boolean		      isColumnHeaderIncluded;
@@ -406,5 +348,63 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 	columnSizes.put(tableColumn, new Integer(tableColumn.getWidth()));
 	table.getTableHeader().setResizingColumn(tableColumn);
 	tableColumn.setWidth(width);
+    }
+
+    /*
+     * Action to adjust or restore the width of a single column or all columns
+     */
+    class ColumnAction extends AbstractAction {
+
+	private boolean	isSelectedColumn;
+	private boolean	isAdjust;
+
+	public ColumnAction(boolean isSelectedColumn, boolean isAdjust) {
+	    this.isSelectedColumn = isSelectedColumn;
+	    this.isAdjust = isAdjust;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+	    // Handle selected column(s) width change actions
+	    if (isSelectedColumn) {
+		int[] columns = table.getSelectedColumns();
+		for (int i = 0; i < columns.length; i++) {
+		    if (isAdjust) adjustColumn(columns[i]);
+		    else restoreColumn(columns[i]);
+		}
+	    } else {
+		if (isAdjust) adjustColumns();
+		else restoreColumns();
+	    }
+	}
+    }
+
+    /*
+     * Toggle properties of the TableColumnAdjuster so the user can customize
+     * the functionality to their preferences
+     */
+    class ToggleAction extends AbstractAction {
+
+	private boolean	isToggleDynamic;
+	private boolean	isToggleLarger;
+
+	public ToggleAction(boolean isToggleDynamic, boolean isToggleLarger) {
+	    this.isToggleDynamic = isToggleDynamic;
+	    this.isToggleLarger = isToggleLarger;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+	    if (isToggleDynamic) {
+		setDynamicAdjustment(!isDynamicAdjustment);
+		return;
+	    }
+	    if (isToggleLarger) {
+		setOnlyAdjustLarger(!isOnlyAdjustLarger);
+		return;
+	    }
+	}
     }
 }

@@ -37,25 +37,6 @@ import eshop.common.util.IO;
  */
 public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 
-    public static void main(String[] args) {
-
-	String serviceName = "eShopServer";
-	try {
-	    ShopRemote eShop = new eShopCore();
-	    LocateRegistry.createRegistry(1099);
-	    Naming.rebind("//" + InetAddress.getLocalHost().getHostName() + ":1099/" + serviceName, eShop);
-	    IO.println("Shop erfolgreich gestartet. Bindung an " + "//" + InetAddress.getLocalHost().getHostAddress()
-		    + ":1099/");
-	    IO.println("Zum Beenden \"exit\" eingeben");
-	    while (!IO.readString().equals("exit")) {
-	    }
-	    IO.println("eShop wird beendet");
-	    System.exit(0);
-	} catch(IOException | ArticleNonexistantException | PersonNonexistantException | InvalidPersonDataException e) {
-	    e.printStackTrace();
-	}
-    }
-
     private Artikelverwaltung	  av;
     private Kundenverwaltung	  kv;
     private Mitarbeiterverwaltung mv;
@@ -82,6 +63,25 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 	rv = new Rechnungsverwaltung();
 	ev = new Ereignisverwaltung(kv, mv, av);
 	ladeDaten();
+    }
+
+    public static void main(String[] args) {
+
+	String serviceName = "eShopServer";
+	try {
+	    ShopRemote eShop = new eShopCore();
+	    LocateRegistry.createRegistry(1099);
+	    Naming.rebind("//" + InetAddress.getLocalHost().getHostName() + ":1099/" + serviceName, eShop);
+	    IO.println("Shop erfolgreich gestartet. Bindung an " + "//" + InetAddress.getLocalHost().getHostAddress()
+		    + ":1099/");
+	    IO.println("Zum Beenden \"exit\" eingeben");
+	    while (!IO.readString().equals("exit")) {
+	    }
+	    IO.println("eShop wird beendet");
+	    System.exit(0);
+	} catch(IOException | ArticleNonexistantException | PersonNonexistantException | InvalidPersonDataException e) {
+	    e.printStackTrace();
+	}
     }
 
     @Override

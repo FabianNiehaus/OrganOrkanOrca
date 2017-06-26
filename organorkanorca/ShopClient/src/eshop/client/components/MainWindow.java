@@ -59,42 +59,139 @@ import net.miginfocom.swing.MigLayout;
 
 public class MainWindow extends JFrame implements ShopEventListener {
 
-    class Artikelsichtfenster extends Sichtfenster {
+    Person			user;
+    ShopRemote			server;
+    LoginListener		loginListener;
+    JPanel			main		  = (JPanel) this.getContentPane();
+    JPanel			leftArea	  = new JPanel(new MigLayout());
+    JPanel			rightArea	  = new JPanel(new MigLayout());
+    JPanel			moduleButtons	  = new JPanel();
+    JButton			artikelButton	  = new JButton("Artikel");
+    JButton			kundenButton	  = new JButton("Kunden");
+    JButton			mitarbeiterButton = new JButton("Mitarbeiter");
+    JButton			shopButton	  = new JButton("Shop");
+    JButton			logoutButton	  = new JButton("Logout");
+    Kundensichtfenster		kundensichtfenster;
+    Artikelsichtfenster		artikelsichtfenster;
+    Mitarbeitersichtfenster	mitarbeitersichtfenster;
+    ShopManagement		shopManagement;
+    Warenkorbverwaltungsfenster	warenkorbverwaltungsfenster;
+    Artikelverwaltungsfenster	artikelverwaltungsfenster;
+    Personenverwaltungsfenster	kundenverwaltungsfenster;
+    Personenverwaltungsfenster	mitarbeiterverwaltungsfenster;
+    double			prefWidth	  = 0;
+    double			maxWidthLeft	  = 0;
+    double			maxWidthRight	  = 0;
 
-	class VerlaufAnzeigenListener implements ActionListener {
+    public MainWindow(String titel, Person user, ShopRemote server, LoginListener loginListener) {
+	super(titel);
+	this.user = user;
+	this.server = server;
+	this.loginListener = loginListener;
+	initialize();
+    }
 
-	    @Override
-	    public void actionPerformed(ActionEvent e) {
+    @Override
+    public void handleArticleChanged(Artikel art) {
 
-		try {
-		    Artikel art = server.artikelSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0),
-			    user);
-		    DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		    int dateCounter = 0;
-		    for (Entry ent : art.getBestandsverlauf().entrySet()) {
-			int dayOfYear = (int) ent.getKey();
-			Calendar calendar = Calendar.getInstance();
-			calendar.set(Calendar.DAY_OF_YEAR, dayOfYear);
-			String date = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)) + "."
-				+ String.valueOf(calendar.get(Calendar.MONTH) + 1) + ".";
-			dataset.addValue((int) ent.getValue(), "Bestand", date);
-		    }
-		    JFreeChart chart = ChartFactory.createLineChart("Bestandsverlauf", "Tag", "Bestand", dataset);
-		    ChartFrame chartFrame = new ChartFrame("Bestandsverlauf", chart);
-		    chartFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		    chartFrame.pack();
-		    chartFrame.setVisible(true);
-		} catch(ArticleNonexistantException e1) {
-		    JOptionPane.showMessageDialog(artikelsichtfenster, e1.getMessage());
-		} catch(AccessRestrictedException e1) {
-		    JOptionPane.showMessageDialog(artikelsichtfenster, e1.getMessage());
-		} catch(ArrayIndexOutOfBoundsException e1) {
-		    JOptionPane.showMessageDialog(artikelsichtfenster, "Es muss ein Artikel ausgewählt werden!");
-		} catch(RemoteException e1) {
-		    JOptionPane.showMessageDialog(artikelsichtfenster, e1.getMessage());
-		}
-	    }
+	try {
+	    artikelsichtfenster.auflistungInitialize();
+	    artikelsichtfenster.adjustColumns();
+	} catch(AccessRestrictedException e) {
+	    removeAll();
+	    add(new JLabel(e.getMessage()));
+	} catch(RemoteException e) {
+	    JOptionPane.showMessageDialog(artikelsichtfenster, e.getMessage());
 	}
+	if (user instanceof Kunde) {
+	    try {
+		if (server.artikelInWarenkorb(art, user)) {
+		    warenkorbverwaltungsfenster.warenkorbAufrufen();
+		}
+	    } catch(RemoteException | AccessRestrictedException e) {
+		JOptionPane.showMessageDialog(artikelsichtfenster, e.getMessage());
+	    }
+	} else if (user instanceof Mitarbeiter) {
+	    artikelverwaltungsfenster = new Artikelverwaltungsfenster();
+	}
+    }
+
+    @Override
+    public void handleEventChanged() {
+	// TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void handleUserChanged() {
+	// TODO Auto-generated method stub
+
+    }
+
+    public void initialize() {
+
+	this.setLayout(new MigLayout("", "30[]30[]30", "30[]30"));
+	artikelButton.addActionListener(new MenuButtonsActionListener());
+	moduleButtons.add(artikelButton);
+	kundenButton.addActionListener(new MenuButtonsActionListener());
+	moduleButtons.add(kundenButton);
+	mitarbeiterButton.addActionListener(new MenuButtonsActionListener());
+	moduleButtons.add(mitarbeiterButton);
+	shopButton.addActionListener(new MenuButtonsActionListener());
+	moduleButtons.add(shopButton);
+	logoutButton.addActionListener(new MenuButtonsActionListener());
+	moduleButtons.add(logoutButton);
+	leftArea.add(moduleButtons, "wrap, dock center");
+	kundensichtfenster = new Kundensichtfenster();
+	artikelsichtfenster = new Artikelsichtfenster();
+	mitarbeitersichtfenster = new Mitarbeitersichtfenster();
+	shopManagement = new ShopManagement();
+	leftArea.add(artikelsichtfenster, "dock center");
+	if (user instanceof Kunde) {
+	    warenkorbverwaltungsfenster = new Warenkorbverwaltungsfenster();
+	    rightArea.add(warenkorbverwaltungsfenster, "dock center");
+	} else {
+	    artikelverwaltungsfenster = new Artikelverwaltungsfenster();
+	    rightArea.add(artikelverwaltungsfenster, "dock center");
+	}
+	main.add(leftArea);
+	main.add(rightArea);
+	setWindowSize();
+	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	this.pack();
+	this.setVisible(true);
+    }
+
+    /**
+     * 
+     */
+    public void setWindowSize() {
+
+	if (artikelsichtfenster != null)
+	    maxWidthLeft = Math.max(maxWidthLeft, artikelsichtfenster.getPreferredSize().getWidth() + 15);
+	if (kundensichtfenster != null)
+	    maxWidthLeft = Math.max(maxWidthLeft, kundensichtfenster.getPreferredSize().getWidth() + 15);
+	if (mitarbeitersichtfenster != null)
+	    maxWidthLeft = Math.max(maxWidthLeft, mitarbeitersichtfenster.getPreferredSize().getWidth() + 15);
+	if (shopManagement != null)
+	    maxWidthLeft = Math.max(maxWidthLeft, shopManagement.getPreferredSize().getWidth() + 15);
+	if (warenkorbverwaltungsfenster != null)
+	    maxWidthRight = Math.max(maxWidthRight, warenkorbverwaltungsfenster.getPreferredSize().getWidth() + 15);
+	if (artikelverwaltungsfenster != null)
+	    maxWidthRight = Math.max(maxWidthRight, artikelverwaltungsfenster.getPreferredSize().getWidth() + 15);
+	if (kundenverwaltungsfenster != null)
+	    maxWidthRight = Math.max(maxWidthRight, kundenverwaltungsfenster.getPreferredSize().getWidth() + 15);
+	if (mitarbeiterverwaltungsfenster != null)
+	    maxWidthRight = Math.max(maxWidthRight, mitarbeiterverwaltungsfenster.getPreferredSize().getWidth() + 15);
+	leftArea.setPreferredSize(new Dimension((int) maxWidthLeft, (int) leftArea.getPreferredSize().getHeight()));
+	// leftArea.setMinimumSize(leftArea.getPreferredSize());
+	rightArea.setPreferredSize(new Dimension((int) maxWidthRight, (int) rightArea.getPreferredSize().getHeight()));
+	// rightArea.setMinimumSize(rightArea.getPreferredSize());
+	prefWidth = maxWidthLeft + maxWidthRight;
+	this.setPreferredSize(new Dimension((int) prefWidth, (int) this.getPreferredSize().getHeight()));
+    }
+
+    class Artikelsichtfenster extends Sichtfenster {
 
 	eShopTableModel	etm;
 	JButton		verlaufAnzeigenButton = new JButton("Verlauf anzeigen");
@@ -136,9 +233,113 @@ public class MainWindow extends JFrame implements ShopEventListener {
 	    TableRowSorter<eShopTableModel> sorter = new TableRowSorter<eShopTableModel>(etm);
 	    auflistung.setRowSorter(sorter);
 	}
+
+	class VerlaufAnzeigenListener implements ActionListener {
+
+	    @Override
+	    public void actionPerformed(ActionEvent e) {
+
+		try {
+		    Artikel art = server.artikelSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0),
+			    user);
+		    DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+		    int dateCounter = 0;
+		    for (Entry ent : art.getBestandsverlauf().entrySet()) {
+			int dayOfYear = (int) ent.getKey();
+			Calendar calendar = Calendar.getInstance();
+			calendar.set(Calendar.DAY_OF_YEAR, dayOfYear);
+			String date = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)) + "."
+				+ String.valueOf(calendar.get(Calendar.MONTH) + 1) + ".";
+			dataset.addValue((int) ent.getValue(), "Bestand", date);
+		    }
+		    JFreeChart chart = ChartFactory.createLineChart("Bestandsverlauf", "Tag", "Bestand", dataset);
+		    ChartFrame chartFrame = new ChartFrame("Bestandsverlauf", chart);
+		    chartFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		    chartFrame.pack();
+		    chartFrame.setVisible(true);
+		} catch(ArticleNonexistantException e1) {
+		    JOptionPane.showMessageDialog(artikelsichtfenster, e1.getMessage());
+		} catch(AccessRestrictedException e1) {
+		    JOptionPane.showMessageDialog(artikelsichtfenster, e1.getMessage());
+		} catch(ArrayIndexOutOfBoundsException e1) {
+		    JOptionPane.showMessageDialog(artikelsichtfenster, "Es muss ein Artikel ausgewählt werden!");
+		} catch(RemoteException e1) {
+		    JOptionPane.showMessageDialog(artikelsichtfenster, e1.getMessage());
+		}
+	    }
+	}
     }
 
     class Artikelverwaltungsfenster extends JPanel {
+
+	Artikel	   art;
+	JPanel	   detailArea		       = new JPanel();
+	JLabel	   artNrLabel		       = new JLabel("Artikelnummer:");
+	JTextField artNrField		       = new JTextField(15);
+	JLabel	   bezeichnungLabel	       = new JLabel("Bezeichnung:");
+	JTextField bezeichnungField	       = new JTextField(15);
+	JLabel	   preisLabel		       = new JLabel("Preis:");
+	JTextField preisField		       = new JTextField(15);
+	JLabel	   pkggroesseLabel	       = new JLabel("Packungsgröße:");
+	JTextField pkggroesseField	       = new JTextField(15);
+	JLabel	   bestandLabel		       = new JLabel("Bestand:");
+	JTextField bestandField		       = new JTextField(15);
+	JPanel	   buttons		       = new JPanel();
+	JButton	   neuAnlegenButton	       = new JButton("Neu");
+	JButton	   aendernButton	       = new JButton("Ändern");
+	JButton	   aendernBestaetigenButton    = new JButton("Bestätigen");
+	JButton	   loeschenButton	       = new JButton("Löschen");
+	JButton	   neuAnlegenBestaetigenButton = new JButton("Anlegen");
+
+	public Artikelverwaltungsfenster() {
+	    this.setLayout(new MigLayout());
+	    detailArea.setLayout(new MigLayout());
+	    this.add(new JLabel("Artikelverwaltung"), "align center, wrap");
+	    detailArea.add(artNrLabel);
+	    detailArea.add(artNrField, "wrap");
+	    detailArea.add(bezeichnungLabel);
+	    detailArea.add(bezeichnungField, "wrap");
+	    detailArea.add(preisLabel);
+	    detailArea.add(preisField, "wrap");
+	    detailArea.add(pkggroesseLabel);
+	    detailArea.add(pkggroesseField, "wrap");
+	    detailArea.add(bestandLabel);
+	    detailArea.add(bestandField, "wrap");
+	    this.add(detailArea, "wrap");
+	    buttons.add(neuAnlegenButton);
+	    buttons.add(aendernButton);
+	    buttons.add(aendernBestaetigenButton);
+	    buttons.add(loeschenButton);
+	    buttons.add(neuAnlegenBestaetigenButton);
+	    aendernBestaetigenButton.setVisible(false);
+	    neuAnlegenBestaetigenButton.setVisible(false);
+	    aendernButton.addActionListener(new ArtikelBearbeitenListener());
+	    aendernBestaetigenButton.addActionListener(new ArtikelBearbeitenListener());
+	    neuAnlegenButton.addActionListener(new ArtikelNeuAnlegenListener());
+	    neuAnlegenBestaetigenButton.addActionListener(new ArtikelNeuAnlegenListener());
+	    loeschenButton.addActionListener(new ArtikelLoeschenListener());
+	    this.add(buttons, "align center, wrap");
+	    artNrField.setEditable(false);
+	    bezeichnungField.setEditable(false);
+	    preisField.setEditable(false);
+	    pkggroesseField.setEditable(false);
+	    bestandField.setEditable(false);
+	    this.setVisible(true);
+	}
+
+	public void artikelAnzeigen(Artikel art) {
+
+	    this.art = art;
+	    artNrField.setText(String.valueOf(art.getArtikelnummer()));
+	    bezeichnungField.setText(art.getBezeichnung());
+	    preisField.setText(String.valueOf(art.getPreis()));
+	    if (art instanceof Massengutartikel) {
+		pkggroesseField.setText(String.valueOf(((Massengutartikel) art).getPackungsgroesse()));
+	    } else {
+		pkggroesseField.setText("1");
+	    }
+	    bestandField.setText(String.valueOf(art.getBestand()));
+	}
 
 	public class ArtikelBearbeitenListener implements ActionListener {
 
@@ -304,75 +505,6 @@ public class MainWindow extends JFrame implements ShopEventListener {
 		}
 	    }
 	}
-
-	Artikel	   art;
-	JPanel	   detailArea		       = new JPanel();
-	JLabel	   artNrLabel		       = new JLabel("Artikelnummer:");
-	JTextField artNrField		       = new JTextField(15);
-	JLabel	   bezeichnungLabel	       = new JLabel("Bezeichnung:");
-	JTextField bezeichnungField	       = new JTextField(15);
-	JLabel	   preisLabel		       = new JLabel("Preis:");
-	JTextField preisField		       = new JTextField(15);
-	JLabel	   pkggroesseLabel	       = new JLabel("Packungsgröße:");
-	JTextField pkggroesseField	       = new JTextField(15);
-	JLabel	   bestandLabel		       = new JLabel("Bestand:");
-	JTextField bestandField		       = new JTextField(15);
-	JPanel	   buttons		       = new JPanel();
-	JButton	   neuAnlegenButton	       = new JButton("Neu");
-	JButton	   aendernButton	       = new JButton("Ändern");
-	JButton	   aendernBestaetigenButton    = new JButton("Bestätigen");
-	JButton	   loeschenButton	       = new JButton("Löschen");
-	JButton	   neuAnlegenBestaetigenButton = new JButton("Anlegen");
-
-	public Artikelverwaltungsfenster() {
-	    this.setLayout(new MigLayout());
-	    detailArea.setLayout(new MigLayout());
-	    this.add(new JLabel("Artikelverwaltung"), "align center, wrap");
-	    detailArea.add(artNrLabel);
-	    detailArea.add(artNrField, "wrap");
-	    detailArea.add(bezeichnungLabel);
-	    detailArea.add(bezeichnungField, "wrap");
-	    detailArea.add(preisLabel);
-	    detailArea.add(preisField, "wrap");
-	    detailArea.add(pkggroesseLabel);
-	    detailArea.add(pkggroesseField, "wrap");
-	    detailArea.add(bestandLabel);
-	    detailArea.add(bestandField, "wrap");
-	    this.add(detailArea, "wrap");
-	    buttons.add(neuAnlegenButton);
-	    buttons.add(aendernButton);
-	    buttons.add(aendernBestaetigenButton);
-	    buttons.add(loeschenButton);
-	    buttons.add(neuAnlegenBestaetigenButton);
-	    aendernBestaetigenButton.setVisible(false);
-	    neuAnlegenBestaetigenButton.setVisible(false);
-	    aendernButton.addActionListener(new ArtikelBearbeitenListener());
-	    aendernBestaetigenButton.addActionListener(new ArtikelBearbeitenListener());
-	    neuAnlegenButton.addActionListener(new ArtikelNeuAnlegenListener());
-	    neuAnlegenBestaetigenButton.addActionListener(new ArtikelNeuAnlegenListener());
-	    loeschenButton.addActionListener(new ArtikelLoeschenListener());
-	    this.add(buttons, "align center, wrap");
-	    artNrField.setEditable(false);
-	    bezeichnungField.setEditable(false);
-	    preisField.setEditable(false);
-	    pkggroesseField.setEditable(false);
-	    bestandField.setEditable(false);
-	    this.setVisible(true);
-	}
-
-	public void artikelAnzeigen(Artikel art) {
-
-	    this.art = art;
-	    artNrField.setText(String.valueOf(art.getArtikelnummer()));
-	    bezeichnungField.setText(art.getBezeichnung());
-	    preisField.setText(String.valueOf(art.getPreis()));
-	    if (art instanceof Massengutartikel) {
-		pkggroesseField.setText(String.valueOf(((Massengutartikel) art).getPackungsgroesse()));
-	    } else {
-		pkggroesseField.setText("1");
-	    }
-	    bestandField.setText(String.valueOf(art.getBestand()));
-	}
     }
 
     class eShopTableModel extends AbstractTableModel {
@@ -421,24 +553,6 @@ public class MainWindow extends JFrame implements ShopEventListener {
 
     class Kundensichtfenster extends Sichtfenster {
 
-	class KundeBearbeitenListener implements ActionListener {
-
-	    @Override
-	    public void actionPerformed(ActionEvent e) {
-
-		try {
-		    kundenverwaltungsfenster.personAnzeigen(
-			    server.kundeSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user));
-		} catch(ArrayIndexOutOfBoundsException e1) {
-		    JOptionPane.showMessageDialog(Kundensichtfenster.this, "Kein Kunde ausgewählt");
-		} catch(PersonNonexistantException e1) {
-		    JOptionPane.showMessageDialog(Kundensichtfenster.this, e1.getMessage());
-		} catch(RemoteException e1) {
-		    JOptionPane.showMessageDialog(Kundensichtfenster.this, e1.getMessage());
-		}
-	    }
-	}
-
 	eShopTableModel etm;
 
 	public Kundensichtfenster() {
@@ -465,6 +579,24 @@ public class MainWindow extends JFrame implements ShopEventListener {
 	    etm = new eShopTableModel(data,
 		    new String[] { "Kundennummer", "Vorname", "Nachname", "Straße", "PLZ", "Ort" });
 	    auflistung.setModel(etm);
+	}
+
+	class KundeBearbeitenListener implements ActionListener {
+
+	    @Override
+	    public void actionPerformed(ActionEvent e) {
+
+		try {
+		    kundenverwaltungsfenster.personAnzeigen(
+			    server.kundeSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user));
+		} catch(ArrayIndexOutOfBoundsException e1) {
+		    JOptionPane.showMessageDialog(Kundensichtfenster.this, "Kein Kunde ausgewählt");
+		} catch(PersonNonexistantException e1) {
+		    JOptionPane.showMessageDialog(Kundensichtfenster.this, e1.getMessage());
+		} catch(RemoteException e1) {
+		    JOptionPane.showMessageDialog(Kundensichtfenster.this, e1.getMessage());
+		}
+	    }
 	}
     }
 
@@ -546,24 +678,6 @@ public class MainWindow extends JFrame implements ShopEventListener {
 
     class Mitarbeitersichtfenster extends Sichtfenster {
 
-	class KundeBearbeitenListener implements ActionListener {
-
-	    @Override
-	    public void actionPerformed(ActionEvent e) {
-
-		try {
-		    mitarbeiterverwaltungsfenster.personAnzeigen(server
-			    .mitarbeiterSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user));
-		} catch(ArrayIndexOutOfBoundsException e1) {
-		    JOptionPane.showMessageDialog(Mitarbeitersichtfenster.this, "Kein Mitarbeiter ausgewählt");
-		} catch(PersonNonexistantException e1) {
-		    JOptionPane.showMessageDialog(Mitarbeitersichtfenster.this, e1.getMessage());
-		} catch(RemoteException e1) {
-		    JOptionPane.showMessageDialog(Mitarbeitersichtfenster.this, e1.getMessage());
-		}
-	    }
-	}
-
 	eShopTableModel etm;
 
 	public Mitarbeitersichtfenster() {
@@ -590,9 +704,110 @@ public class MainWindow extends JFrame implements ShopEventListener {
 		    new String[] { "Kundennummer", "Vorname", "Nachname", "Straße", "PLZ", "Ort" });
 	    auflistung.setModel(etm);
 	}
+
+	class KundeBearbeitenListener implements ActionListener {
+
+	    @Override
+	    public void actionPerformed(ActionEvent e) {
+
+		try {
+		    mitarbeiterverwaltungsfenster.personAnzeigen(server
+			    .mitarbeiterSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user));
+		} catch(ArrayIndexOutOfBoundsException e1) {
+		    JOptionPane.showMessageDialog(Mitarbeitersichtfenster.this, "Kein Mitarbeiter ausgewählt");
+		} catch(PersonNonexistantException e1) {
+		    JOptionPane.showMessageDialog(Mitarbeitersichtfenster.this, e1.getMessage());
+		} catch(RemoteException e1) {
+		    JOptionPane.showMessageDialog(Mitarbeitersichtfenster.this, e1.getMessage());
+		}
+	    }
+	}
     }
 
     class Personenverwaltungsfenster extends JPanel {
+
+	Person	   p;
+	JPanel	   detailArea		       = new JPanel();
+	JLabel	   persNrLabel		       = new JLabel("ID:");
+	JTextField persNrField		       = new JTextField(15);
+	JLabel	   vornameLabel		       = new JLabel("Vorname:");
+	JTextField vornameField		       = new JTextField(15);
+	JLabel	   nachnameLabel	       = new JLabel("Nachname:");
+	JTextField nachnameField	       = new JTextField(15);
+	JLabel	   strasseLabel		       = new JLabel("Straße:");
+	JTextField strasseField		       = new JTextField(15);
+	JLabel	   ortLabel		       = new JLabel("Stadt");
+	JTextField ortField		       = new JTextField(15);
+	JLabel	   zipLabel		       = new JLabel("PLZ:");
+	JTextField zipField		       = new JTextField(15);
+	JLabel	   passwordLabel	       = new JLabel("Passwort:");
+	JTextField passwordField	       = new JTextField("*********", 15);
+	JPanel	   buttons		       = new JPanel();
+	JButton	   neuAnlegenButton	       = new JButton("Neu");
+	JButton	   aendernButton	       = new JButton("Ändern");
+	JButton	   aendernBestaetigenButton    = new JButton("Bestätigen");
+	JButton	   loeschenButton	       = new JButton("Löschen");
+	JButton	   neuAnlegenBestaetigenButton = new JButton("Anlegen");
+
+	public Personenverwaltungsfenster(String titel, String personenTyp) throws Exception {
+	    this.setLayout(new MigLayout());
+	    detailArea.setLayout(new MigLayout());
+	    this.add(new JLabel(titel), "span 2, align center, wrap");
+	    detailArea.add(persNrLabel);
+	    detailArea.add(persNrField, "wrap");
+	    detailArea.add(vornameLabel);
+	    detailArea.add(vornameField, "wrap");
+	    detailArea.add(nachnameLabel);
+	    detailArea.add(nachnameField, "wrap");
+	    detailArea.add(strasseLabel);
+	    detailArea.add(strasseField, "wrap");
+	    detailArea.add(ortLabel);
+	    detailArea.add(ortField, "wrap");
+	    detailArea.add(zipLabel);
+	    detailArea.add(zipField, "wrap");
+	    detailArea.add(passwordLabel);
+	    detailArea.add(passwordField);
+	    this.add(detailArea, "wrap");
+	    buttons.add(neuAnlegenButton);
+	    buttons.add(aendernButton);
+	    buttons.add(aendernBestaetigenButton);
+	    buttons.add(loeschenButton);
+	    buttons.add(neuAnlegenBestaetigenButton);
+	    aendernBestaetigenButton.setVisible(false);
+	    neuAnlegenBestaetigenButton.setVisible(false);
+	    aendernButton.addActionListener(new PersonBearbeitenListener(personenTyp));
+	    aendernBestaetigenButton.addActionListener(new PersonBearbeitenListener(personenTyp));
+	    neuAnlegenButton.addActionListener(new PersonNeuAnlegenListener(personenTyp));
+	    neuAnlegenBestaetigenButton.addActionListener(new PersonNeuAnlegenListener(personenTyp));
+	    loeschenButton.addActionListener(new PersonLoeschenListener());
+	    this.add(buttons, "align center");
+	    persNrField.setEditable(false);
+	    vornameField.setEditable(false);
+	    nachnameField.setEditable(false);
+	    strasseField.setEditable(false);
+	    ortField.setEditable(false);
+	    zipField.setEditable(false);
+	    passwordField.setEditable(false);
+	    this.setVisible(true);
+	}
+
+	public void personAnzeigen(Person p) {
+
+	    this.p = p;
+	    persNrField.setText(String.valueOf(p.getId()));
+	    vornameField.setText(p.getLastname());
+	    nachnameField.setText(p.getLastname());
+	    strasseField.setText(p.getAddress_Street());
+	    ortField.setText(p.getAddress_Town());
+	    zipField.setText(p.getAddress_Zip());
+	    passwordField.setText("*********");
+	    vornameField.setEditable(false);
+	    nachnameField.setEditable(false);
+	    strasseField.setEditable(false);
+	    ortField.setEditable(false);
+	    zipField.setEditable(false);
+	    passwordField.setEditable(false);
+	}
 
 	public class PersonBearbeitenListener implements ActionListener {
 
@@ -784,92 +999,57 @@ public class MainWindow extends JFrame implements ShopEventListener {
 		}
 	    }
 	}
-
-	Person	   p;
-	JPanel	   detailArea		       = new JPanel();
-	JLabel	   persNrLabel		       = new JLabel("ID:");
-	JTextField persNrField		       = new JTextField(15);
-	JLabel	   vornameLabel		       = new JLabel("Vorname:");
-	JTextField vornameField		       = new JTextField(15);
-	JLabel	   nachnameLabel	       = new JLabel("Nachname:");
-	JTextField nachnameField	       = new JTextField(15);
-	JLabel	   strasseLabel		       = new JLabel("Straße:");
-	JTextField strasseField		       = new JTextField(15);
-	JLabel	   ortLabel		       = new JLabel("Stadt");
-	JTextField ortField		       = new JTextField(15);
-	JLabel	   zipLabel		       = new JLabel("PLZ:");
-	JTextField zipField		       = new JTextField(15);
-	JLabel	   passwordLabel	       = new JLabel("Passwort:");
-	JTextField passwordField	       = new JTextField("*********", 15);
-	JPanel	   buttons		       = new JPanel();
-	JButton	   neuAnlegenButton	       = new JButton("Neu");
-	JButton	   aendernButton	       = new JButton("Ändern");
-	JButton	   aendernBestaetigenButton    = new JButton("Bestätigen");
-	JButton	   loeschenButton	       = new JButton("Löschen");
-	JButton	   neuAnlegenBestaetigenButton = new JButton("Anlegen");
-
-	public Personenverwaltungsfenster(String titel, String personenTyp) throws Exception {
-	    this.setLayout(new MigLayout());
-	    detailArea.setLayout(new MigLayout());
-	    this.add(new JLabel(titel), "span 2, align center, wrap");
-	    detailArea.add(persNrLabel);
-	    detailArea.add(persNrField, "wrap");
-	    detailArea.add(vornameLabel);
-	    detailArea.add(vornameField, "wrap");
-	    detailArea.add(nachnameLabel);
-	    detailArea.add(nachnameField, "wrap");
-	    detailArea.add(strasseLabel);
-	    detailArea.add(strasseField, "wrap");
-	    detailArea.add(ortLabel);
-	    detailArea.add(ortField, "wrap");
-	    detailArea.add(zipLabel);
-	    detailArea.add(zipField, "wrap");
-	    detailArea.add(passwordLabel);
-	    detailArea.add(passwordField);
-	    this.add(detailArea, "wrap");
-	    buttons.add(neuAnlegenButton);
-	    buttons.add(aendernButton);
-	    buttons.add(aendernBestaetigenButton);
-	    buttons.add(loeschenButton);
-	    buttons.add(neuAnlegenBestaetigenButton);
-	    aendernBestaetigenButton.setVisible(false);
-	    neuAnlegenBestaetigenButton.setVisible(false);
-	    aendernButton.addActionListener(new PersonBearbeitenListener(personenTyp));
-	    aendernBestaetigenButton.addActionListener(new PersonBearbeitenListener(personenTyp));
-	    neuAnlegenButton.addActionListener(new PersonNeuAnlegenListener(personenTyp));
-	    neuAnlegenBestaetigenButton.addActionListener(new PersonNeuAnlegenListener(personenTyp));
-	    loeschenButton.addActionListener(new PersonLoeschenListener());
-	    this.add(buttons, "align center");
-	    persNrField.setEditable(false);
-	    vornameField.setEditable(false);
-	    nachnameField.setEditable(false);
-	    strasseField.setEditable(false);
-	    ortField.setEditable(false);
-	    zipField.setEditable(false);
-	    passwordField.setEditable(false);
-	    this.setVisible(true);
-	}
-
-	public void personAnzeigen(Person p) {
-
-	    this.p = p;
-	    persNrField.setText(String.valueOf(p.getId()));
-	    vornameField.setText(p.getLastname());
-	    nachnameField.setText(p.getLastname());
-	    strasseField.setText(p.getAddress_Street());
-	    ortField.setText(p.getAddress_Town());
-	    zipField.setText(p.getAddress_Zip());
-	    passwordField.setText("*********");
-	    vornameField.setEditable(false);
-	    nachnameField.setEditable(false);
-	    strasseField.setEditable(false);
-	    ortField.setEditable(false);
-	    zipField.setEditable(false);
-	    passwordField.setEditable(false);
-	}
     }
 
     class ShopManagement extends JPanel {
+
+	JButton		   speichernButton     = new JButton("Bestandsdaten speichern");
+	JButton		   ladenButton	       = new JButton("Bestandsdaten importieren");
+	EreignisTableModel etm;
+	JXTable		   auflistung	       = new JXTable();
+	JScrollPane	   auflistungContainer = new JScrollPane(auflistung);
+
+	public ShopManagement() {
+	    this.setLayout(new MigLayout());
+	    try {
+		speichernButton.addActionListener(new PersistenceButtonListener());
+		ladenButton.addActionListener(new PersistenceButtonListener());
+		this.add(speichernButton, "dock center");
+		this.add(ladenButton, "wrap, dock center");
+		this.add(auflistungContainer, "span");
+		auflistung.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		auflistungInitialize();
+	    } catch(AccessRestrictedException e) {
+		removeAll();
+		add(new JLabel(e.getMessage()));
+	    } catch(RemoteException e) {
+		JOptionPane.showMessageDialog(this, e.getMessage());
+	    }
+	}
+
+	public void auflistungInitialize() throws AccessRestrictedException, RemoteException {
+
+	    Vector<Vector<Object>> data = new Vector<>();
+	    DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+	    for (Ereignis er : server.alleEreignisseAusgeben(user)) {
+		Vector<Object> tmp = new Vector<>();
+		tmp.addElement(dateFormat.format(er.getWann()));
+		tmp.addElement(er.getId());
+		tmp.addElement(er.getTyp());
+		tmp.addElement(er.getWomit().getArtikelnummer());
+		tmp.addElement(er.getWomit().getBezeichnung());
+		tmp.addElement(er.getWieviel());
+		tmp.addElement(er.getWer().getId());
+		tmp.addElement(er.getWer().getFirstname() + " " + er.getWer().getLastname());
+		data.addElement(tmp);
+	    }
+	    etm = new EreignisTableModel(data);
+	    auflistung.setModel(etm);
+	    TableRowSorter<EreignisTableModel> sorter = new TableRowSorter<EreignisTableModel>(etm);
+	    auflistung.setRowSorter(sorter);
+	    TableColumnAdjuster tca = new TableColumnAdjuster(auflistung, 30);
+	    tca.adjustColumns(SwingConstants.CENTER);
+	}
 
 	class EreignisTableModel extends AbstractTableModel {
 
@@ -952,57 +1132,56 @@ public class MainWindow extends JFrame implements ShopEventListener {
 		}
 	    }
 	}
+    }
 
-	JButton		   speichernButton     = new JButton("Bestandsdaten speichern");
-	JButton		   ladenButton	       = new JButton("Bestandsdaten importieren");
-	EreignisTableModel etm;
-	JXTable		   auflistung	       = new JXTable();
-	JScrollPane	   auflistungContainer = new JScrollPane(auflistung);
+    abstract class Sichtfenster extends JPanel {
 
-	public ShopManagement() {
-	    this.setLayout(new MigLayout());
+	JPanel	    overviewButtons	= new JPanel();
+	JButton	    alleButton		= new JButton("Alle");
+	JButton	    sucheButton		= new JButton("Suche");
+	JTextField  sucheField		= new JTextField();
+	JPanel	    leftAreaActionField	= new JPanel();
+	JXTable	    auflistung		= new JXTable();
+	JScrollPane auflistungContainer	= new JScrollPane(auflistung);
+	JButton	    aktion		= new JButton();
+	JTextField  anzahl		= new JTextField(5);
+
+	public Sichtfenster() {
+	    this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+	    overviewButtons.setMaximumSize(new Dimension(1024, 40));
+	    this.add(overviewButtons);
+	    this.add(auflistungContainer);
+	    this.add(leftAreaActionField);
+	    overviewButtons.setLayout(new BoxLayout(overviewButtons, BoxLayout.X_AXIS));
+	    alleButton.addActionListener(new TabelleAlleAnzeigenListener());
+	    overviewButtons.add(alleButton);
+	    overviewButtons.add(sucheField);
+	    sucheButton.addActionListener(new TabelleFilternListener());
+	    overviewButtons.add(sucheButton);
+	    overviewButtons.setVisible(true);
+	    JTableHeader header = auflistung.getTableHeader();
+	    header.setUpdateTableInRealTime(true);
+	    header.setReorderingAllowed(false);
+	    leftAreaActionField.add(aktion);
+	    leftAreaActionField.add(anzahl);
 	    try {
-		speichernButton.addActionListener(new PersistenceButtonListener());
-		ladenButton.addActionListener(new PersistenceButtonListener());
-		this.add(speichernButton, "dock center");
-		this.add(ladenButton, "wrap, dock center");
-		this.add(auflistungContainer, "span");
-		auflistung.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		auflistungInitialize();
+		adjustColumns();
 	    } catch(AccessRestrictedException e) {
 		removeAll();
 		add(new JLabel(e.getMessage()));
 	    } catch(RemoteException e) {
-		JOptionPane.showMessageDialog(this, e.getMessage());
+		JOptionPane.showMessageDialog(Sichtfenster.this, e.getMessage());
 	    }
 	}
 
-	public void auflistungInitialize() throws AccessRestrictedException, RemoteException {
+	public void adjustColumns() {
 
-	    Vector<Vector<Object>> data = new Vector<>();
-	    DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-	    for (Ereignis er : server.alleEreignisseAusgeben(user)) {
-		Vector<Object> tmp = new Vector<>();
-		tmp.addElement(dateFormat.format(er.getWann()));
-		tmp.addElement(er.getId());
-		tmp.addElement(er.getTyp());
-		tmp.addElement(er.getWomit().getArtikelnummer());
-		tmp.addElement(er.getWomit().getBezeichnung());
-		tmp.addElement(er.getWieviel());
-		tmp.addElement(er.getWer().getId());
-		tmp.addElement(er.getWer().getFirstname() + " " + er.getWer().getLastname());
-		data.addElement(tmp);
-	    }
-	    etm = new EreignisTableModel(data);
-	    auflistung.setModel(etm);
-	    TableRowSorter<EreignisTableModel> sorter = new TableRowSorter<EreignisTableModel>(etm);
-	    auflistung.setRowSorter(sorter);
 	    TableColumnAdjuster tca = new TableColumnAdjuster(auflistung, 30);
 	    tca.adjustColumns(SwingConstants.CENTER);
 	}
-    }
 
-    abstract class Sichtfenster extends JPanel {
+	public abstract void auflistungInitialize() throws AccessRestrictedException, RemoteException;
 
 	class ArtikelBearbeitenListener implements ActionListener {
 
@@ -1080,56 +1259,46 @@ public class MainWindow extends JFrame implements ShopEventListener {
 		sorter.setSortsOnUpdates(true);
 	    }
 	}
-
-	JPanel	    overviewButtons	= new JPanel();
-	JButton	    alleButton		= new JButton("Alle");
-	JButton	    sucheButton		= new JButton("Suche");
-	JTextField  sucheField		= new JTextField();
-	JPanel	    leftAreaActionField	= new JPanel();
-	JXTable	    auflistung		= new JXTable();
-	JScrollPane auflistungContainer	= new JScrollPane(auflistung);
-	JButton	    aktion		= new JButton();
-	JTextField  anzahl		= new JTextField(5);
-
-	public Sichtfenster() {
-	    this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-	    overviewButtons.setMaximumSize(new Dimension(1024, 40));
-	    this.add(overviewButtons);
-	    this.add(auflistungContainer);
-	    this.add(leftAreaActionField);
-	    overviewButtons.setLayout(new BoxLayout(overviewButtons, BoxLayout.X_AXIS));
-	    alleButton.addActionListener(new TabelleAlleAnzeigenListener());
-	    overviewButtons.add(alleButton);
-	    overviewButtons.add(sucheField);
-	    sucheButton.addActionListener(new TabelleFilternListener());
-	    overviewButtons.add(sucheButton);
-	    overviewButtons.setVisible(true);
-	    JTableHeader header = auflistung.getTableHeader();
-	    header.setUpdateTableInRealTime(true);
-	    header.setReorderingAllowed(false);
-	    leftAreaActionField.add(aktion);
-	    leftAreaActionField.add(anzahl);
-	    try {
-		auflistungInitialize();
-		adjustColumns();
-	    } catch(AccessRestrictedException e) {
-		removeAll();
-		add(new JLabel(e.getMessage()));
-	    } catch(RemoteException e) {
-		JOptionPane.showMessageDialog(Sichtfenster.this, e.getMessage());
-	    }
-	}
-
-	public void adjustColumns() {
-
-	    TableColumnAdjuster tca = new TableColumnAdjuster(auflistung, 30);
-	    tca.adjustColumns(SwingConstants.CENTER);
-	}
-
-	public abstract void auflistungInitialize() throws AccessRestrictedException, RemoteException;
     }
 
     class Warenkorbverwaltungsfenster extends JPanel {
+
+	Warenkorb   wk;
+	JPanel	    buttons			 = new JPanel();
+	JTable	    warenkorbAuflistung		 = new JTable();
+	JScrollPane warenkorbAuflistungContainer = new JScrollPane(warenkorbAuflistung);
+	JButton	    aendernButton		 = new JButton("Anzahl ändern");
+	JButton	    artikelEntfernenButton	 = new JButton("Entfernen");
+	JButton	    leerenButton		 = new JButton("Leeren");
+	JButton	    kaufenButton		 = new JButton("Kaufen");
+
+	public Warenkorbverwaltungsfenster() {
+	    this.setLayout(new MigLayout());
+	    this.add(new JLabel("Warenkorbverwaltung"), "align center, wrap");
+	    this.add(warenkorbAuflistungContainer, "wrap");
+	    aendernButton.addActionListener(new WarenkorbActionListener());
+	    artikelEntfernenButton.addActionListener(new WarenkorbActionListener());
+	    leerenButton.addActionListener(new WarenkorbActionListener());
+	    kaufenButton.addActionListener(new WarenkorbActionListener());
+	    buttons.add(aendernButton);
+	    buttons.add(artikelEntfernenButton);
+	    buttons.add(leerenButton);
+	    buttons.add(kaufenButton);
+	    this.add(buttons, "align center, wrap");
+	    JTableHeader header = warenkorbAuflistung.getTableHeader();
+	    header.setUpdateTableInRealTime(true);
+	    header.setReorderingAllowed(false);
+	    warenkorbAuflistung.setAutoCreateRowSorter(true);
+	    warenkorbAuflistung.setModel(new WarenkorbTableModel());
+	    this.setVisible(true);
+	}
+
+	public void warenkorbAufrufen() throws AccessRestrictedException, RemoteException {
+
+	    Warenkorb wk = server.warenkorbAusgeben(user);
+	    Map<Artikel, Integer> inhalt = wk.getArtikel();
+	    warenkorbAuflistung.setModel(new WarenkorbTableModel(inhalt));
+	}
 
 	class WarenkorbActionListener implements ActionListener {
 
@@ -1282,174 +1451,5 @@ public class MainWindow extends JFrame implements ShopEventListener {
 		return columns;
 	    }
 	}
-
-	Warenkorb   wk;
-	JPanel	    buttons			 = new JPanel();
-	JTable	    warenkorbAuflistung		 = new JTable();
-	JScrollPane warenkorbAuflistungContainer = new JScrollPane(warenkorbAuflistung);
-	JButton	    aendernButton		 = new JButton("Anzahl ändern");
-	JButton	    artikelEntfernenButton	 = new JButton("Entfernen");
-	JButton	    leerenButton		 = new JButton("Leeren");
-	JButton	    kaufenButton		 = new JButton("Kaufen");
-
-	public Warenkorbverwaltungsfenster() {
-	    this.setLayout(new MigLayout());
-	    this.add(new JLabel("Warenkorbverwaltung"), "align center, wrap");
-	    this.add(warenkorbAuflistungContainer, "wrap");
-	    aendernButton.addActionListener(new WarenkorbActionListener());
-	    artikelEntfernenButton.addActionListener(new WarenkorbActionListener());
-	    leerenButton.addActionListener(new WarenkorbActionListener());
-	    kaufenButton.addActionListener(new WarenkorbActionListener());
-	    buttons.add(aendernButton);
-	    buttons.add(artikelEntfernenButton);
-	    buttons.add(leerenButton);
-	    buttons.add(kaufenButton);
-	    this.add(buttons, "align center, wrap");
-	    JTableHeader header = warenkorbAuflistung.getTableHeader();
-	    header.setUpdateTableInRealTime(true);
-	    header.setReorderingAllowed(false);
-	    warenkorbAuflistung.setAutoCreateRowSorter(true);
-	    warenkorbAuflistung.setModel(new WarenkorbTableModel());
-	    this.setVisible(true);
-	}
-
-	public void warenkorbAufrufen() throws AccessRestrictedException, RemoteException {
-
-	    Warenkorb wk = server.warenkorbAusgeben(user);
-	    Map<Artikel, Integer> inhalt = wk.getArtikel();
-	    warenkorbAuflistung.setModel(new WarenkorbTableModel(inhalt));
-	}
-    }
-
-    Person			user;
-    ShopRemote			server;
-    LoginListener		loginListener;
-    JPanel			main		  = (JPanel) this.getContentPane();
-    JPanel			leftArea	  = new JPanel(new MigLayout());
-    JPanel			rightArea	  = new JPanel(new MigLayout());
-    JPanel			moduleButtons	  = new JPanel();
-    JButton			artikelButton	  = new JButton("Artikel");
-    JButton			kundenButton	  = new JButton("Kunden");
-    JButton			mitarbeiterButton = new JButton("Mitarbeiter");
-    JButton			shopButton	  = new JButton("Shop");
-    JButton			logoutButton	  = new JButton("Logout");
-    Kundensichtfenster		kundensichtfenster;
-    Artikelsichtfenster		artikelsichtfenster;
-    Mitarbeitersichtfenster	mitarbeitersichtfenster;
-    ShopManagement		shopManagement;
-    Warenkorbverwaltungsfenster	warenkorbverwaltungsfenster;
-    Artikelverwaltungsfenster	artikelverwaltungsfenster;
-    Personenverwaltungsfenster	kundenverwaltungsfenster;
-    Personenverwaltungsfenster	mitarbeiterverwaltungsfenster;
-    double			prefWidth	  = 0;
-    double			maxWidthLeft	  = 0;
-    double			maxWidthRight	  = 0;
-
-    public MainWindow(String titel, Person user, ShopRemote server, LoginListener loginListener) {
-	super(titel);
-	this.user = user;
-	this.server = server;
-	this.loginListener = loginListener;
-	initialize();
-    }
-
-    @Override
-    public void handleArticleChanged(Artikel art) {
-
-	try {
-	    artikelsichtfenster.auflistungInitialize();
-	    artikelsichtfenster.adjustColumns();
-	} catch(AccessRestrictedException e) {
-	    removeAll();
-	    add(new JLabel(e.getMessage()));
-	} catch(RemoteException e) {
-	    JOptionPane.showMessageDialog(artikelsichtfenster, e.getMessage());
-	}
-	if (user instanceof Kunde) {
-	    try {
-		if (server.artikelInWarenkorb(art, user)) {
-		    warenkorbverwaltungsfenster.warenkorbAufrufen();
-		}
-	    } catch(RemoteException | AccessRestrictedException e) {
-		JOptionPane.showMessageDialog(artikelsichtfenster, e.getMessage());
-	    }
-	} else if (user instanceof Mitarbeiter) {
-	    artikelverwaltungsfenster = new Artikelverwaltungsfenster();
-	}
-    }
-
-    @Override
-    public void handleEventChanged() {
-	// TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void handleUserChanged() {
-	// TODO Auto-generated method stub
-
-    }
-
-    public void initialize() {
-
-	this.setLayout(new MigLayout("", "30[]30[]30", "30[]30"));
-	artikelButton.addActionListener(new MenuButtonsActionListener());
-	moduleButtons.add(artikelButton);
-	kundenButton.addActionListener(new MenuButtonsActionListener());
-	moduleButtons.add(kundenButton);
-	mitarbeiterButton.addActionListener(new MenuButtonsActionListener());
-	moduleButtons.add(mitarbeiterButton);
-	shopButton.addActionListener(new MenuButtonsActionListener());
-	moduleButtons.add(shopButton);
-	logoutButton.addActionListener(new MenuButtonsActionListener());
-	moduleButtons.add(logoutButton);
-	leftArea.add(moduleButtons, "wrap, dock center");
-	kundensichtfenster = new Kundensichtfenster();
-	artikelsichtfenster = new Artikelsichtfenster();
-	mitarbeitersichtfenster = new Mitarbeitersichtfenster();
-	shopManagement = new ShopManagement();
-	leftArea.add(artikelsichtfenster, "dock center");
-	if (user instanceof Kunde) {
-	    warenkorbverwaltungsfenster = new Warenkorbverwaltungsfenster();
-	    rightArea.add(warenkorbverwaltungsfenster, "dock center");
-	} else {
-	    artikelverwaltungsfenster = new Artikelverwaltungsfenster();
-	    rightArea.add(artikelverwaltungsfenster, "dock center");
-	}
-	main.add(leftArea);
-	main.add(rightArea);
-	setWindowSize();
-	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	this.pack();
-	this.setVisible(true);
-    }
-
-    /**
-     * 
-     */
-    public void setWindowSize() {
-
-	if (artikelsichtfenster != null)
-	    maxWidthLeft = Math.max(maxWidthLeft, artikelsichtfenster.getPreferredSize().getWidth() + 15);
-	if (kundensichtfenster != null)
-	    maxWidthLeft = Math.max(maxWidthLeft, kundensichtfenster.getPreferredSize().getWidth() + 15);
-	if (mitarbeitersichtfenster != null)
-	    maxWidthLeft = Math.max(maxWidthLeft, mitarbeitersichtfenster.getPreferredSize().getWidth() + 15);
-	if (shopManagement != null)
-	    maxWidthLeft = Math.max(maxWidthLeft, shopManagement.getPreferredSize().getWidth() + 15);
-	if (warenkorbverwaltungsfenster != null)
-	    maxWidthRight = Math.max(maxWidthRight, warenkorbverwaltungsfenster.getPreferredSize().getWidth() + 15);
-	if (artikelverwaltungsfenster != null)
-	    maxWidthRight = Math.max(maxWidthRight, artikelverwaltungsfenster.getPreferredSize().getWidth() + 15);
-	if (kundenverwaltungsfenster != null)
-	    maxWidthRight = Math.max(maxWidthRight, kundenverwaltungsfenster.getPreferredSize().getWidth() + 15);
-	if (mitarbeiterverwaltungsfenster != null)
-	    maxWidthRight = Math.max(maxWidthRight, mitarbeiterverwaltungsfenster.getPreferredSize().getWidth() + 15);
-	leftArea.setPreferredSize(new Dimension((int) maxWidthLeft, (int) leftArea.getPreferredSize().getHeight()));
-	// leftArea.setMinimumSize(leftArea.getPreferredSize());
-	rightArea.setPreferredSize(new Dimension((int) maxWidthRight, (int) rightArea.getPreferredSize().getHeight()));
-	// rightArea.setMinimumSize(rightArea.getPreferredSize());
-	prefWidth = maxWidthLeft + maxWidthRight;
-	this.setPreferredSize(new Dimension((int) prefWidth, (int) this.getPreferredSize().getHeight()));
     }
 }
