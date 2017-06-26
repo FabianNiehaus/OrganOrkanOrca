@@ -128,7 +128,14 @@ public interface ShopRemote extends Remote {
      */
     Artikel erhoeheArtikelBestand(int artikelnummer, int bestand, Person p)
 	    throws ArticleNonexistantException, AccessRestrictedException, InvalidAmountException, RemoteException;
-
+    
+    /**
+     * @param art
+     * @param p
+     * @return
+     */
+    public boolean artikelInWarenkorb(Artikel art, Person p);
+    
     /**
      * Legt einen Artikel in den Warenkorb
      * 

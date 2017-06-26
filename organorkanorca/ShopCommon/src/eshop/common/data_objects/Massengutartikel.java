@@ -9,7 +9,7 @@ public class Massengutartikel extends Artikel implements Serializable {
      * 
      */
     private static final long serialVersionUID = 5298586861209608292L;
-    private int packungsgroesse;
+    private int		      packungsgroesse;
 
     public Massengutartikel(String bezeichnung, int artikelnummer, int bestand, double preis, int packungsgroesse,
 	    Map<Integer, Integer> bestandsverlauf) {
@@ -19,10 +19,12 @@ public class Massengutartikel extends Artikel implements Serializable {
     }
 
     public int getPackungsgroesse() {
+
 	return packungsgroesse;
     }
 
     public void setPackungsgroesse(int packungsgroesse) {
+
 	this.packungsgroesse = packungsgroesse;
     }
 }

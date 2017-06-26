@@ -14,12 +14,12 @@ public class Ereignis implements Serializable {
      * 
      */
     private static final long serialVersionUID = -1817043294145890221L;
-    private int id;
-    private Person wer;
-    private Date wann;
-    private Typ was;
-    private Artikel womit;
-    private int wieviel;
+    private int		      id;
+    private Person	      wer;
+    private Date	      wann;
+    private Typ		      was;
+    private Artikel	      womit;
+    private int		      wieviel;
 
     /**
      * @param wer
@@ -42,50 +42,62 @@ public class Ereignis implements Serializable {
     }
 
     public void setId(int id) {
+
 	this.id = id;
     }
 
     public int getId() {
+
 	return id;
     }
 
     public void setWer(Person wer) {
+
 	this.wer = wer;
     }
 
     public Person getWer() {
+
 	return wer;
     }
 
     public void setWas(Typ was) {
+
 	this.was = was;
     }
 
     public Typ getTyp() {
+
 	return was;
     }
 
     public void setWomit(Artikel womit) {
+
 	this.womit = womit;
     }
 
     public Artikel getWomit() {
+
 	return womit;
     }
 
     public void setWieviel(int wieviel) {
+
 	this.wieviel = wieviel;
     }
 
     public int getWieviel() {
+
 	return wieviel;
     }
 
     public void setWann(Date wann) {
+
 	this.wann = wann;
     }
 
     public Date getWann() {
+
 	return wann;
     }
 
@@ -94,6 +106,7 @@ public class Ereignis implements Serializable {
      * @see java.lang.Object#toString()
      */
     public String toString() {
+
 	// Formatierungsvorlage fuer Datum
 	DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 	return dateFormat.format(wann) + " | " + wer.getId() + ": " + wer.getLastname() + " " + wer.getLastname()

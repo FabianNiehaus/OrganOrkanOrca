@@ -26,6 +26,7 @@ public class Warenkorbverwaltung {
      * @return Gesuchter Warenkorb
      */
     public Warenkorb getWarenkorb(Warenkorb wk) throws BasketNonexistantException {
+
 	for (Warenkorb ret : warenkoerbe) {
 	    if (ret.equals(wk)) {
 		return ret;
@@ -40,6 +41,7 @@ public class Warenkorbverwaltung {
      * @return Erzeugter Warenkorb
      */
     public Warenkorb erstelleWarenkorb() {
+
 	Warenkorb wk = new Warenkorb();
 	warenkoerbe.addElement(wk);
 	return wk;
@@ -52,6 +54,7 @@ public class Warenkorbverwaltung {
      *            Zu löschender Warenkorb
      */
     public void loescheWarenkorb(Warenkorb wk) {
+
 	for (Warenkorb del : warenkoerbe) {
 	    if (del.equals(wk)) {
 		warenkoerbe.remove(del);
@@ -75,6 +78,7 @@ public class Warenkorbverwaltung {
      */
     public void aendereWarenkorb(Warenkorb wk, Artikel art, int anz)
 	    throws ArticleStockNotSufficientException, BasketNonexistantException, InvalidAmountException {
+
 	if (art.getBestand() >= anz) {
 	    if (art instanceof Massengutartikel) {
 		Massengutartikel tmp = (Massengutartikel) art;
@@ -92,6 +96,7 @@ public class Warenkorbverwaltung {
     }
 
     public void loescheAusWarenkorn(Warenkorb wk, Artikel art) {
+
 	wk.loescheArtikel(art);
     }
 
@@ -110,6 +115,7 @@ public class Warenkorbverwaltung {
      */
     public void legeInWarenkorb(Warenkorb wk, Artikel art, int anz)
 	    throws ArticleStockNotSufficientException, ArticleAlreadyInBasketException, InvalidAmountException {
+
 	if (art instanceof Massengutartikel) {
 	    Massengutartikel tmp = (Massengutartikel) art;
 	    if (anz % tmp.getPackungsgroesse() != 0) {
@@ -126,6 +132,7 @@ public class Warenkorbverwaltung {
      * @return Alle Warenkörbe
      */
     public Vector<Warenkorb> getWarenkoerbe() {
+
 	return warenkoerbe;
     }
 
@@ -136,6 +143,7 @@ public class Warenkorbverwaltung {
      *            Zu leerender Warenkorb
      */
     public void leereWarenkorb(Warenkorb wk) {
+
 	wk.leereWarkenkorb();
     }
 
@@ -147,6 +155,7 @@ public class Warenkorbverwaltung {
      * @return Alle Artikel mit Anzahl
      */
     public Map<Artikel, Integer> getArtikel(Warenkorb wk) {
+
 	return wk.getArtikel();
     }
 }

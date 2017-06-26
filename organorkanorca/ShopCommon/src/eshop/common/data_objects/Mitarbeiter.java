@@ -32,6 +32,7 @@ public class Mitarbeiter extends Person implements Serializable {
     }
 
     public String toString() {
+
 	return id + ": " + firstname + " " + lastname;
     }
 }

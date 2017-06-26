@@ -15,12 +15,13 @@ import eshop.server.persistence.PersistenceManager;
 
 public class Mitarbeiterverwaltung {
 
-    private Vector<Mitarbeiter> mitarbeiter = new Vector<Mitarbeiter>();
+    private Vector<Mitarbeiter>	mitarbeiter = new Vector<Mitarbeiter>();
     // Persistenz-Schnittstelle, die f�r die Details des Dateizugriffs
     // verantwortlich ist
-    private PersistenceManager pm = new FilePersistenceManager();
+    private PersistenceManager	pm	    = new FilePersistenceManager();
 
     public void liesDaten(String datei) throws IOException, InvalidPersonDataException {
+
 	// PersistenzManager f�r Lesevorgänge öffnen
 	pm.openForReading(datei);
 	Mitarbeiter mi = null;
@@ -44,6 +45,7 @@ public class Mitarbeiterverwaltung {
      * @throws IOException
      */
     public void schreibeDaten(String datei) throws IOException {
+
 	// PersistenzManager fuer Schreibvorgänge öffnen
 	pm.openForWriting(datei);
 	if (!mitarbeiter.isEmpty()) {
@@ -58,6 +60,7 @@ public class Mitarbeiterverwaltung {
     }
 
     public void einfuegen(Mitarbeiter mi) {
+
 	mitarbeiter.add(mi);
     }
 
@@ -73,6 +76,7 @@ public class Mitarbeiterverwaltung {
      *             Login fehlgeschlagen
      */
     public Mitarbeiter anmelden(int id, String passwort) throws LoginFailedException {
+
 	for (Mitarbeiter m : mitarbeiter) {
 	    if (m.getId() == id && m.getPasswort().equals(passwort)) {
 		return m;
@@ -93,6 +97,7 @@ public class Mitarbeiterverwaltung {
      *             Mitarbeiterliste leer
      */
     public Mitarbeiter sucheMitarbeiter(String firstname, String lastname) throws PersonNonexistantException {
+
 	if (mitarbeiter.size() > 0) {
 	    for (Mitarbeiter ma : mitarbeiter) {
 		if (ma.getFirstname().equals(firstname) && ma.getLastname().equals(lastname)) {
@@ -113,6 +118,7 @@ public class Mitarbeiterverwaltung {
      *             Mitarbeiterliste leer
      */
     public Mitarbeiter sucheMitarbeiter(int id) throws PersonNonexistantException {
+
 	for (Mitarbeiter ma : mitarbeiter) {
 	    if (ma.getId() == id) {
 		return ma;
@@ -142,6 +148,7 @@ public class Mitarbeiterverwaltung {
      */
     public Mitarbeiter erstelleMitarbeiter(String firstname, String lastname, String passwort, String address_Street,
 	    String address_Zip, String address_Town) throws MaxIDsException, InvalidPersonDataException {
+
 	Mitarbeiter mi = new Mitarbeiter(firstname, lastname, getNextID(), passwort, address_Street, address_Zip,
 		address_Town);
 	mitarbeiter.add(mi);
@@ -155,6 +162,7 @@ public class Mitarbeiterverwaltung {
      *            Neuer Mitarbeiter
      */
     public void erstelleMitarbeiter(Mitarbeiter einMa) {
+
 	mitarbeiter.add(einMa);
     }
 
@@ -166,6 +174,7 @@ public class Mitarbeiterverwaltung {
      * @return
      */
     public boolean loescheMitarbeiter(Mitarbeiter einMa) {
+
 	return mitarbeiter.remove(einMa);
     }
 
@@ -176,6 +185,7 @@ public class Mitarbeiterverwaltung {
      * @throws MaxIDsException
      */
     public int getNextID() throws MaxIDsException {
+
 	int hoechsteID = 9000;
 	for (Mitarbeiter ma : mitarbeiter) {
 	    if (ma.getId() > hoechsteID) {
@@ -193,6 +203,7 @@ public class Mitarbeiterverwaltung {
      * @return Alle Mitarbeiter
      */
     public Vector<Mitarbeiter> getMitarbeiter() {
+
 	return mitarbeiter;
     }
 }

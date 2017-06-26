@@ -2,7 +2,14 @@ package eshop.common.net;
 
 import java.rmi.Remote;
 
-import eshop.client.components.LoginListener;
+import eshop.common.data_objects.Artikel;
 
 public interface ShopEventListener extends Remote {
+
+    public void handleUserChanged();
+
+    public void handleArticleChanged(Artikel art);
+
+    public void handleEventChanged();
+    // public void handleServerStatusChange();
 }

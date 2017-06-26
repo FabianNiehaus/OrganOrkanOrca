@@ -21,8 +21,8 @@ public class Kundenverwaltung {
 
     // Persistenz-Schnittstelle, die f�r die Details des Dateizugriffs
     // verantwortlich ist
-    private PersistenceManager pm = new FilePersistenceManager();
-    private Vector<Kunde> kunden = new Vector<Kunde>();
+    private PersistenceManager pm     = new FilePersistenceManager();
+    private Vector<Kunde>      kunden = new Vector<Kunde>();
 
     /**
      * @author Mathis M�hlenkamp Methode zum Einlesen von Kunden aus einer
@@ -34,6 +34,7 @@ public class Kundenverwaltung {
      * @throws InvalidPersonDataException
      */
     public void liesDaten(String datei, Warenkorbverwaltung wv) throws IOException, InvalidPersonDataException {
+
 	// PersistenzManager f�r Lesevorgänge öffnen
 	pm.openForReading(datei);
 	Kunde ku = null;
@@ -57,6 +58,7 @@ public class Kundenverwaltung {
      * @throws IOException
      */
     public void schreibeDaten(String datei) throws IOException {
+
 	// PersistenzManager fuer Schreibvorgänge öffnen
 	pm.openForWriting(datei);
 	if (!kunden.isEmpty()) {
@@ -77,6 +79,7 @@ public class Kundenverwaltung {
      *            Kunde
      */
     public void einfuegen(Kunde ku) {
+
 	kunden.add(ku);
     }
 
@@ -92,6 +95,7 @@ public class Kundenverwaltung {
      *             Anmeldung fehlgeschlagen
      */
     public Kunde anmelden(int id, String passwort) throws LoginFailedException {
+
 	for (Kunde k : kunden) {
 	    if (k.getId() == id && k.getPasswort().equals(passwort)) {
 		return k;
@@ -110,6 +114,7 @@ public class Kundenverwaltung {
      *         Name
      */
     public Kunde sucheKunde(String firstname, String lastname) throws PersonNonexistantException {
+
 	for (Kunde ku : kunden) {
 	    if (ku.getFirstname().equals(firstname) && ku.getLastname().equals(lastname)) {
 		return ku;
@@ -126,6 +131,7 @@ public class Kundenverwaltung {
      * @return Gesuchter Kunde
      */
     public Kunde sucheKunde(int id) throws PersonNonexistantException {
+
 	for (Kunde ku : kunden) {
 	    if (ku.getId() == id) {
 		return ku;
@@ -157,6 +163,7 @@ public class Kundenverwaltung {
      */
     public Kunde erstelleKunde(String firstname, String lastname, String passwort, String address_Street,
 	    String address_Zip, String address_Town, Warenkorb wk) throws MaxIDsException, InvalidPersonDataException {
+
 	Kunde ku = new Kunde(firstname, lastname, getNextID(), passwort, address_Street, address_Zip, address_Town, wk);
 	kunden.add(ku);
 	return ku;
@@ -169,6 +176,7 @@ public class Kundenverwaltung {
      *            Zu löschender Kunde
      */
     public boolean loescheKunde(Kunde einKunde) {
+
 	return kunden.remove(einKunde);
     }
     /*
@@ -185,6 +193,7 @@ public class Kundenverwaltung {
      * @throws MaxIDsException
      */
     public int getNextID() throws MaxIDsException {
+
 	int hoechsteID = 1000;
 	for (Kunde ku : kunden) {
 	    if (ku.getId() > hoechsteID) {
@@ -202,6 +211,7 @@ public class Kundenverwaltung {
      * @return Liste der verwalteten Kunden
      */
     public Vector<Kunde> getKunden() {
+
 	return kunden;
     }
 
@@ -213,10 +223,12 @@ public class Kundenverwaltung {
      * @return Warenkorb des Kunde
      */
     public Warenkorb gibWarenkorbVonKunde(Person ku) {
+
 	return ((Kunde) ku).getWarenkorb();
     }
 
     public void weiseWarenkorbzu(Kunde ku, Warenkorb wk) {
+
 	ku.setWarenkorb(wk);
     };
 }

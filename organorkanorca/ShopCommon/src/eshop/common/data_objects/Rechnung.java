@@ -39,15 +39,16 @@ public class Rechnung implements Serializable {
 	this.gesamt = gesamt;
     }
 
-    private Kunde ku;
-    private Date datum;
+    private Kunde     ku;
+    private Date      datum;
     private Warenkorb wk;
-    private double gesamt;
+    private double    gesamt;
 
     /**
      * @return
      */
     public Kunde getKu() {
+
 	return ku;
     }
 
@@ -55,6 +56,7 @@ public class Rechnung implements Serializable {
      * @return
      */
     public Date getDatum() {
+
 	return datum;
     }
 
@@ -62,6 +64,7 @@ public class Rechnung implements Serializable {
      * @return
      */
     public Warenkorb getWk() {
+
 	return wk;
     }
 
@@ -69,6 +72,7 @@ public class Rechnung implements Serializable {
      * @return
      */
     public double getGesamt() {
+
 	return gesamt;
     }
 }

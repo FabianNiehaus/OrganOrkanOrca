@@ -33,6 +33,7 @@ public class Warenkorb implements Serializable {
      *         HAsMap artikel gespeichert ist. Sonst <b>false</b>.
      */
     public boolean sucheArtikel(Artikel art) {
+
 	if (!artikel.isEmpty()) {
 	    if (artikel.containsKey(art)) {
 		return true;
@@ -55,6 +56,7 @@ public class Warenkorb implements Serializable {
      *             genug Artikel auf Lager
      */
     public void aendereAnzahl(Artikel art, int anz) {
+
 	artikel.replace(art, anz);
     }
 
@@ -71,6 +73,7 @@ public class Warenkorb implements Serializable {
      */
     public void speichereArtikel(Artikel art, int anz)
 	    throws ArticleStockNotSufficientException, ArticleAlreadyInBasketException {
+
 	if (!sucheArtikel(art)) {
 	    if (anz > 0) {
 		pruefeBestand(art, anz);
@@ -89,6 +92,7 @@ public class Warenkorb implements Serializable {
      * @param art
      */
     public void loescheArtikel(Artikel art) {
+
 	if (sucheArtikel(art)) {
 	    artikel.remove(art, artikel.get(art));
 	}
@@ -98,6 +102,7 @@ public class Warenkorb implements Serializable {
      * Leert Warenkorb, indem Artikelliste verworfen wird
      */
     public void leereWarkenkorb() {
+
 	artikel.clear();
     }
 
@@ -106,6 +111,7 @@ public class Warenkorb implements Serializable {
      * @see java.lang.Object#toString()
      */
     public String toString() {
+
 	String retStr = "";
 	int pos = 1;
 	for (Map.Entry<Artikel, Integer> ent : artikel.entrySet()) {
@@ -120,6 +126,7 @@ public class Warenkorb implements Serializable {
      * @return Gibt die LinkedHashMap mit Artikeln und Anzahl zurueck
      */
     public Map<Artikel, Integer> getArtikel() {
+
 	return artikel;
     }
 
@@ -132,12 +139,14 @@ public class Warenkorb implements Serializable {
      *            Gewuenschte Anzahl
      */
     private void pruefeBestand(Artikel art, int anz) throws ArticleStockNotSufficientException {
+
 	if (art.getBestand() < anz) {
 	    throw new ArticleStockNotSufficientException(art, anz);
 	}
     }
 
     public void setArtikel(Map<Artikel, Integer> map) {
+
 	for (Map.Entry<Artikel, Integer> ent : map.entrySet()) {
 	    artikel.clear();
 	    artikel.put(ent.getKey(), ent.getValue());
@@ -145,6 +154,7 @@ public class Warenkorb implements Serializable {
     }
 
     public void copy(Warenkorb wk) {
+
 	artikel.putAll(wk.getArtikel());
     }
 }

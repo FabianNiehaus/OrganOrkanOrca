@@ -37,13 +37,16 @@ import eshop.common.util.IO;
  */
 public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 
-    private Artikelverwaltung av;
-    private Kundenverwaltung kv;
+    private Artikelverwaltung	  av;
+    private Kundenverwaltung	  kv;
     private Mitarbeiterverwaltung mv;
-    private Warenkorbverwaltung wv;
-    private Rechnungsverwaltung rv;
-    private Ereignisverwaltung ev;
-    private String dateipfad = "";
+    private Warenkorbverwaltung	  wv;
+    private Rechnungsverwaltung	  rv;
+    private Ereignisverwaltung	  ev;
+    private String		  dateipfad = "";
+    private Object		  warenkorbKey;
+    private Object		  artikelKey;
+    private Object		  benutzerKey;
 
     /**
      * @throws PersonNonexistantException
@@ -63,6 +66,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
     }
 
     public static void main(String[] args) {
+
 	String serviceName = "eShopServer";
 	try {
 	    ShopRemote eShop = new eShopCore();
@@ -75,8 +79,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 	    }
 	    IO.println("eShop wird beendet");
 	    System.exit(0);
-	} catch (IOException | ArticleNonexistantException | PersonNonexistantException
-		| InvalidPersonDataException e) {
+	} catch(IOException | ArticleNonexistantException | PersonNonexistantException | InvalidPersonDataException e) {
 	    e.printStackTrace();
 	}
     }
@@ -86,7 +89,8 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
      * @see domain.ShopRemote#anmelden(int, java.lang.String)
      */
     @Override
-    public Person anmelden(int id, String passwort) throws LoginFailedException, RemoteException {
+    public synchronized Person anmelden(int id, String passwort) throws LoginFailedException, RemoteException {
+
 	if (id >= 1000 && id < 9000) {
 	    return kv.anmelden(id, passwort);
 	} else if (id >= 9000 && id < 10000) {
@@ -101,7 +105,9 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
      * @see domain.ShopRemote#alleArtikelAusgeben(data_objects.Person)
      */
     @Override
-    public Vector<Artikel> alleArtikelAusgeben(Person p) throws AccessRestrictedException, RemoteException {
+    public synchronized Vector<Artikel> alleArtikelAusgeben(Person p)
+	    throws AccessRestrictedException, RemoteException {
+
 	if (istKunde(p) || istMitarbeiter(p)) {
 	    return av.getArtikel();
 	} else {
@@ -114,7 +120,8 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
      * @see domain.ShopRemote#alleKundenAusgeben(data_objects.Person)
      */
     @Override
-    public Vector<Kunde> alleKundenAusgeben(Person p) throws AccessRestrictedException, RemoteException {
+    public synchronized Vector<Kunde> alleKundenAusgeben(Person p) throws AccessRestrictedException, RemoteException {
+
 	if (istMitarbeiter(p)) {
 	    return kv.getKunden();
 	} else {
@@ -127,7 +134,9 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
      * @see domain.ShopRemote#alleMitarbeiterAusgeben(data_objects.Person)
      */
     @Override
-    public Vector<Mitarbeiter> alleMitarbeiterAusgeben(Person p) throws AccessRestrictedException, RemoteException {
+    public synchronized Vector<Mitarbeiter> alleMitarbeiterAusgeben(Person p)
+	    throws AccessRestrictedException, RemoteException {
+
 	if (istMitarbeiter(p)) {
 	    return mv.getMitarbeiter();
 	} else {
@@ -141,6 +150,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
      */
     @Override
     public void alleWarenkoerbeAusgeben(Person p) throws AccessRestrictedException, RemoteException {
+
 	if (istMitarbeiter(p)) {
 	    for (Warenkorb w : wv.getWarenkoerbe()) {
 		w.toString();
@@ -160,6 +170,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
     public Kunde erstelleKunde(String firstname, String lastname, String passwort, String address_Street,
 	    String address_Zip, String address_Town, Person p)
 	    throws MaxIDsException, AccessRestrictedException, InvalidPersonDataException, RemoteException {
+
 	if (istMitarbeiter(p) || p == null) {
 	    return kv.erstelleKunde(firstname, lastname, passwort, address_Street, address_Zip, address_Town,
 		    wv.erstelleWarenkorb());
@@ -178,6 +189,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
     public Mitarbeiter erstelleMitatbeiter(String firstname, String lastname, String passwort, String address_Street,
 	    String address_Zip, String address_Town, Person p)
 	    throws MaxIDsException, AccessRestrictedException, InvalidPersonDataException, RemoteException {
+
 	if (istMitarbeiter(p) || p == null) {
 	    return mv.erstelleMitarbeiter(firstname, lastname, passwort, address_Street, address_Zip, address_Town);
 	} else {
@@ -193,6 +205,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
     @Override
     public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, int packungsgroesse, Person p)
 	    throws AccessRestrictedException, InvalidAmountException, RemoteException {
+
 	if (istMitarbeiter(p)) {
 	    Artikel art = av.erstelleArtikel(bezeichnung, bestand, preis, packungsgroesse);
 	    // Ereignis erzeugen
@@ -209,8 +222,9 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
      * data_objects.Person)
      */
     @Override
-    public Artikel erhoeheArtikelBestand(int artikelnummer, int bestand, Person p)
+    public synchronized Artikel erhoeheArtikelBestand(int artikelnummer, int bestand, Person p)
 	    throws ArticleNonexistantException, AccessRestrictedException, InvalidAmountException, RemoteException {
+
 	if (istMitarbeiter(p)) {
 	    Artikel art = av.erhoeheBestand(artikelnummer, bestand);
 	    // Ereignis erzeugen
@@ -219,6 +233,15 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 	} else {
 	    throw new AccessRestrictedException(p, "\"Bestand erhöhen\"");
 	}
+    }
+    
+
+    /* (non-Javadoc)
+     * @see eshop.common.net.ShopRemote#artikelInWarenkorb(eshop.common.data_objects.Artikel, eshop.common.data_objects.Person)
+     */
+    public boolean artikelInWarenkorb(Artikel art, Person p){
+	if(istKunde(p)) return ((Kunde)p).getWarenkorb().sucheArtikel(art);
+	else return false;
     }
 
     /*
@@ -230,6 +253,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
     public void artikelInWarenkorbLegen(int artikelnummer, int anz, Person p)
 	    throws ArticleNonexistantException, ArticleStockNotSufficientException, AccessRestrictedException,
 	    InvalidAmountException, ArticleAlreadyInBasketException, RemoteException {
+
 	if (istKunde(p)) {
 	    Warenkorb wk = kv.gibWarenkorbVonKunde(p);
 	    if (wk == null) {
@@ -248,7 +272,8 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
      * @see domain.ShopRemote#warenkorbAusgeben(data_objects.Person)
      */
     @Override
-    public Warenkorb warenkorbAusgeben(Person p) throws AccessRestrictedException, RemoteException {
+    public synchronized Warenkorb warenkorbAusgeben(Person p) throws AccessRestrictedException, RemoteException {
+
 	if (istKunde(p)) {
 	    return kv.gibWarenkorbVonKunde(p);
 	} else {
@@ -262,6 +287,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
      */
     @Override
     public void warenkorbLeeren(Person p) throws AccessRestrictedException, RemoteException {
+
 	if (istKunde(p)) {
 	    Warenkorb wk = kv.gibWarenkorbVonKunde(p);
 	    wv.leereWarenkorb(wk);
@@ -276,8 +302,10 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
      * int, data_objects.Person)
      */
     @Override
-    public void artikelInWarenkorbAendern(Artikel art, int anz, Person p) throws ArticleStockNotSufficientException,
-	    BasketNonexistantException, AccessRestrictedException, InvalidAmountException, RemoteException {
+    public synchronized void artikelInWarenkorbAendern(Artikel art, int anz, Person p)
+	    throws ArticleStockNotSufficientException, BasketNonexistantException, AccessRestrictedException,
+	    InvalidAmountException, RemoteException {
+
 	if (istKunde(p)) {
 	    Warenkorb wk = kv.gibWarenkorbVonKunde(p);
 	    wv.aendereWarenkorb(wk, art, anz);
@@ -293,6 +321,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
      */
     @Override
     public void artikelAusWarenkorbEntfernen(Artikel art, Person p) throws AccessRestrictedException, RemoteException {
+
 	if (istKunde(p)) {
 	    Warenkorb wk = kv.gibWarenkorbVonKunde(p);
 	    wv.loescheAusWarenkorn(wk, art);
@@ -306,8 +335,9 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
      * @see domain.ShopRemote#warenkorbKaufen(data_objects.Person)
      */
     @Override
-    public Rechnung warenkorbKaufen(Person p)
+    public synchronized Rechnung warenkorbKaufen(Person p)
 	    throws AccessRestrictedException, InvalidAmountException, RemoteException {
+
 	if (istKunde(p)) {
 	    // Warenkorb des Benutzers abfragen
 	    Warenkorb wk = kv.gibWarenkorbVonKunde(p);
@@ -321,7 +351,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 		    // Ereignis erstellen
 		    ev.ereignisErstellen(p, Typ.KAUF, ent.getKey(), ent.getValue());
 		    // TODO Ereigniserstellung in Verwaltungen auslagern
-		} catch (ArticleNonexistantException anne) {
+		} catch(ArticleNonexistantException anne) {
 		    // TODO
 		}
 		gesamt += (ent.getValue() * ent.getKey().getPreis());
@@ -345,7 +375,8 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
      * @see domain.ShopRemote#schreibeDaten()
      */
     @Override
-    public void schreibeDaten() throws IOException {
+    public synchronized void schreibeDaten() throws IOException {
+
 	av.schreibeDaten(dateipfad + "ARTIKEL.txt");
 	kv.schreibeDaten(dateipfad + "KUNDEN.txt");
 	mv.schreibeDaten(dateipfad + "MITARBEITER.txt");
@@ -357,8 +388,9 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
      * @see domain.ShopRemote#ladeDaten()
      */
     @Override
-    public void ladeDaten() throws IOException, ArticleNonexistantException, PersonNonexistantException,
+    public synchronized void ladeDaten() throws IOException, ArticleNonexistantException, PersonNonexistantException,
 	    InvalidPersonDataException, RemoteException {
+
 	av.liesDaten(dateipfad + "ARTIKEL.txt");
 	kv.liesDaten(dateipfad + "KUNDEN.txt", wv);
 	mv.liesDaten(dateipfad + "MITARBEITER.txt");
@@ -372,6 +404,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
     @Override
     public Artikel artikelSuchen(int artikelnummer, Person p)
 	    throws ArticleNonexistantException, AccessRestrictedException, RemoteException {
+
 	if (istMitarbeiter(p) || istKunde(p)) {
 	    return av.sucheArtikel(artikelnummer);
 	} else {
@@ -387,6 +420,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
     @Override
     public Vector<Artikel> artikelSuchen(String bezeichnung, Person p)
 	    throws ArticleNonexistantException, AccessRestrictedException, RemoteException {
+
 	if (istMitarbeiter(p) || istKunde(p)) {
 	    return av.sucheArtikel(bezeichnung);
 	} else {
@@ -401,6 +435,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
      */
     @Override
     public void artikelLoeschen(Artikel art, Person p) throws AccessRestrictedException, RemoteException {
+
 	if (istMitarbeiter(p)) {
 	    av.loeschen(art);
 	} else {
@@ -415,6 +450,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
      */
     @Override
     public void personLoeschen(Person loeschen, Person p) throws AccessRestrictedException, RemoteException {
+
 	if (istMitarbeiter(p)) {
 	    if (kv.loescheKunde((Kunde) loeschen)) {
 	    } else if (mv.loescheMitarbeiter((Mitarbeiter) loeschen)) ;
@@ -424,6 +460,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
     }
 
     private boolean istMitarbeiter(Person p) {
+
 	if (p instanceof Mitarbeiter) {
 	    return true;
 	} else {
@@ -432,6 +469,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
     }
 
     private boolean istKunde(Person p) {
+
 	if (p instanceof Kunde) {
 	    return true;
 	} else {
@@ -445,6 +483,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
      */
     @Override
     public Kunde kundeSuchen(int id, Person p) throws PersonNonexistantException, RemoteException {
+
 	return kv.sucheKunde(id);
     }
 
@@ -454,6 +493,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
      */
     @Override
     public Mitarbeiter mitarbeiterSuchen(int id, Person p) throws PersonNonexistantException, RemoteException {
+
 	return mv.sucheMitarbeiter(id);
     }
 
@@ -463,6 +503,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
      */
     @Override
     public Vector<Ereignis> alleEreignisseAusgeben(Person p) throws AccessRestrictedException, RemoteException {
+
 	if (istMitarbeiter(p)) {
 	    return ev.getEreignisse();
 	} else {
@@ -472,11 +513,13 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 
     @Override
     public void addShopEventListener(ShopEventListener listener) throws RemoteException {
+
 	// TODO Auto-generated method stub
     }
 
     @Override
     public void removeShopEventListener(ShopEventListener listener) throws RemoteException {
+
 	// TODO Auto-generated method stub
     }
 }

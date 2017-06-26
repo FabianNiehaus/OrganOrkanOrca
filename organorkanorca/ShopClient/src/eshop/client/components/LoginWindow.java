@@ -26,16 +26,16 @@ import net.miginfocom.swing.MigLayout;
 
 public class LoginWindow extends JFrame {
 
-    JTabbedPane tabbedPane = new JTabbedPane();
-    JLabel benutzerLabel = new JLabel("Benutzer");
-    JLabel passwortLabel = new JLabel("Passwort");
-    JTextField benutzerField = new JTextField(10);
-    JPasswordField passwortField = new JPasswordField(10);
-    JLabel headerLabel = new JLabel("Willkommen bei OrganOrkanOrca");
-    JButton anmeldenButton = new JButton("Login");
-    JButton registrierenButton = new JButton("Registrieren");
-    private ShopRemote server = null;
-    private LoginListener loginListener = null;
+    JTabbedPane		  tabbedPane	     = new JTabbedPane();
+    JLabel		  benutzerLabel	     = new JLabel("Benutzer");
+    JLabel		  passwortLabel	     = new JLabel("Passwort");
+    JTextField		  benutzerField	     = new JTextField(10);
+    JPasswordField	  passwortField	     = new JPasswordField(10);
+    JLabel		  headerLabel	     = new JLabel("Willkommen bei OrganOrkanOrca");
+    JButton		  anmeldenButton     = new JButton("Login");
+    JButton		  registrierenButton = new JButton("Registrieren");
+    private ShopRemote	  server	     = null;
+    private LoginListener loginListener	     = null;
 
     public LoginWindow(String titel, ShopRemote server, LoginListener listener) {
 	super(titel);
@@ -72,10 +72,12 @@ public class LoginWindow extends JFrame {
     }
 
     public int benutzerIdAuslesen() throws NumberFormatException {
+
 	return Integer.parseInt(benutzerField.getText());
     }
 
     public String passwortAuslesen() {
+
 	char[] pw = passwortField.getPassword();
 	passwortField.setText("");
 	return new String(pw);
@@ -85,13 +87,14 @@ public class LoginWindow extends JFrame {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+
 	    try {
 		Person user = server.anmelden(LoginWindow.this.benutzerIdAuslesen(),
 			LoginWindow.this.passwortAuslesen());
 		loginListener.userLoggedIn(user);
-	    } catch (NumberFormatException | LoginFailedException e1) {
+	    } catch(NumberFormatException | LoginFailedException e1) {
 		JOptionPane.showMessageDialog(LoginWindow.this, "Anmeldung fehlgeschlagen");
-	    } catch (RemoteException e1) {
+	    } catch(RemoteException e1) {
 		JOptionPane.showMessageDialog(LoginWindow.this, e1.getMessage());
 	    }
 	}
@@ -101,10 +104,11 @@ public class LoginWindow extends JFrame {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+
 	    try {
 		Person user = server.anmelden(1001, "test");
 		loginListener.userLoggedIn(user);
-	    } catch (LoginFailedException | RemoteException e1) {
+	    } catch(LoginFailedException | RemoteException e1) {
 		e1.printStackTrace();
 	    }
 	}
@@ -114,10 +118,11 @@ public class LoginWindow extends JFrame {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+
 	    try {
 		Person user = server.anmelden(9000, "test2");
 		loginListener.userLoggedIn(user);
-	    } catch (LoginFailedException | RemoteException e1) {
+	    } catch(LoginFailedException | RemoteException e1) {
 		JOptionPane.showMessageDialog(LoginWindow.this, e1.getMessage());
 	    }
 	}
@@ -127,6 +132,7 @@ public class LoginWindow extends JFrame {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+
 	    JTextField firstnameField = new JTextField();
 	    JTextField lastnameField = new JTextField();
 	    JTextField addressStreetField = new JTextField();
@@ -150,13 +156,13 @@ public class LoginWindow extends JFrame {
 						    addressTownField.getText(), null);
 					    JOptionPane.showMessageDialog(LoginWindow.this,
 						    "Benutzer " + ku.getId() + " erfolgreich erstellt");
-					} catch (MaxIDsException e1) {
+					} catch(MaxIDsException e1) {
 					    JOptionPane.showMessageDialog(LoginWindow.this, e1.getMessage());
-					} catch (AccessRestrictedException e1) {
+					} catch(AccessRestrictedException e1) {
 					    JOptionPane.showMessageDialog(LoginWindow.this, e1.getMessage());
-					} catch (InvalidPersonDataException e1) {
+					} catch(InvalidPersonDataException e1) {
 					    JOptionPane.showMessageDialog(LoginWindow.this, e1.getMessage());
-					} catch (RemoteException e1) {
+					} catch(RemoteException e1) {
 					    JOptionPane.showMessageDialog(LoginWindow.this, e1.getMessage());
 					}
 				    }

@@ -18,9 +18,9 @@ public class Artikelverwaltung {
 
     // Persistenz-Schnittstelle, die fuer die Details des Dateizugriffs
     // verantwortlich ist
-    private PersistenceManager pm = new FilePersistenceManager();
+    private PersistenceManager pm      = new FilePersistenceManager();
     // Vektor zur Speicherug der Artikel
-    private Vector<Artikel> artikel = new Vector<Artikel>(0);
+    private Vector<Artikel>    artikel = new Vector<Artikel>(0);
 
     /**
      * Methode zum Einlesen von Artikeln aus einer Datei.
@@ -30,6 +30,7 @@ public class Artikelverwaltung {
      * @throws IOException
      */
     public void liesDaten(String datei) throws IOException {
+
 	// PersistenzManager fuer Lesevorgänge öffnen
 	pm.openForReading(datei);
 	Artikel art;
@@ -53,6 +54,7 @@ public class Artikelverwaltung {
      * @throws IOException
      */
     public void schreibeDaten(String datei) throws IOException {
+
 	// PersistenzManager fuer Schreibvorgänge öffnen
 	pm.openForWriting(datei);
 	if (!artikel.isEmpty()) {
@@ -73,9 +75,10 @@ public class Artikelverwaltung {
      *            Einzufuegender Artikel
      */
     public void einfuegen(Artikel art) {
+
 	try {
 	    sucheArtikel(art.getArtikelnummer());
-	} catch (ArticleNonexistantException anne) {
+	} catch(ArticleNonexistantException anne) {
 	    artikel.add(art);
 	}
     }
@@ -86,6 +89,7 @@ public class Artikelverwaltung {
      * @return Verwatlete Artikel
      */
     public Vector<Artikel> getArtikel() {
+
 	return artikel;
     }
 
@@ -95,6 +99,7 @@ public class Artikelverwaltung {
      * @return Nächste Artikelnummer
      */
     public int getNextID() {
+
 	int hoechsteID = 0;
 	for (Artikel art : artikel) {
 	    if (art.getArtikelnummer() > hoechsteID) {
@@ -119,6 +124,7 @@ public class Artikelverwaltung {
      */
     public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, int packungsgroesse)
 	    throws InvalidAmountException {
+
 	if (packungsgroesse == 1) {
 	    Artikel art = new Artikel(bezeichnung, getNextID(), bestand, preis, null);
 	    artikel.add(art);
@@ -144,6 +150,7 @@ public class Artikelverwaltung {
      *             Artikelnummer nicht vorhanden
      */
     public Artikel sucheArtikel(int artikelnummer) throws ArticleNonexistantException {
+
 	for (Artikel art : artikel) {
 	    if (art.getArtikelnummer() == artikelnummer) {
 		return art;
@@ -162,6 +169,7 @@ public class Artikelverwaltung {
      *             Keine Artikel gefunden
      */
     public Vector<Artikel> sucheArtikel(String bezeichnung) throws ArticleNonexistantException {
+
 	Vector<Artikel> liste = new Vector<Artikel>(0);
 	bezeichnung = bezeichnung.toLowerCase();
 	for (Artikel art : artikel) {
@@ -190,6 +198,7 @@ public class Artikelverwaltung {
      */
     public Artikel erhoeheBestand(int artikelnummer, int bestand)
 	    throws ArticleNonexistantException, InvalidAmountException {
+
 	try {
 	    Artikel art = sucheArtikel(artikelnummer);
 	    if (art instanceof Massengutartikel) {
@@ -203,12 +212,13 @@ public class Artikelverwaltung {
 		art.setBestand(art.getBestand() + bestand);
 	    }
 	    return art;
-	} catch (ArticleNonexistantException anne) {
+	} catch(ArticleNonexistantException anne) {
 	    throw new ArticleNonexistantException(artikelnummer);
 	}
     }
 
     public void loeschen(Artikel art) {
+
 	artikel.remove(art);
     }
 }

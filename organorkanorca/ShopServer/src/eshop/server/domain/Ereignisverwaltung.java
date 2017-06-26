@@ -22,9 +22,9 @@ import eshop.server.persistence.PersistenceManager;
  */
 public class Ereignisverwaltung {
 
-    Kundenverwaltung kv;
+    Kundenverwaltung	  kv;
     Mitarbeiterverwaltung mv;
-    Artikelverwaltung av;
+    Artikelverwaltung	  av;
 
     public Ereignisverwaltung(Kundenverwaltung kv, Mitarbeiterverwaltung mv, Artikelverwaltung av) {
 	this.kv = kv;
@@ -34,10 +34,11 @@ public class Ereignisverwaltung {
 
     // Persistenz-Schnittstelle, die fuer die Details des Dateizugriffs
     // verantwortlich ist
-    private PersistenceManager pm = new FilePersistenceManager();
-    private Vector<Ereignis> ereignisse = new Vector<Ereignis>();
+    private PersistenceManager pm	  = new FilePersistenceManager();
+    private Vector<Ereignis>   ereignisse = new Vector<Ereignis>();
 
     public void liesDaten(String datei) throws IOException, ArticleNonexistantException, PersonNonexistantException {
+
 	// PersistenzManager f�r Lesevorgänge öffnen
 	pm.openForReading(datei);
 	Ereignis er;
@@ -64,7 +65,7 @@ public class Ereignisverwaltung {
 		DateFormat formatter = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 		try {
 		    date = formatter.parse((String) info.elementAt(5));
-		} catch (ParseException e) {
+		} catch(ParseException e) {
 		    e.printStackTrace();
 		}
 		// Ereignis wird aus dem Vector Elementen erstellt
@@ -73,13 +74,14 @@ public class Ereignisverwaltung {
 		// Ereignisse in die Ereignisliste einfuegen
 		einfuegen(er);
 	    } while (er.getId() != 0);
-	} catch (NullPointerException npe) {
+	} catch(NullPointerException npe) {
 	}
 	// Persistenz-Schnittstelle wieder schließen
 	pm.close();
     }
 
     public void schreibeDaten(String datei) throws IOException {
+
 	// PersistenzManager fuer Schreibvorgänge öffnen
 	pm.openForWriting(datei);
 	if (!ereignisse.isEmpty()) {
@@ -94,6 +96,7 @@ public class Ereignisverwaltung {
     }
 
     public void einfuegen(Ereignis er) {
+
 	ereignisse.add(er);
     }
 
@@ -103,6 +106,7 @@ public class Ereignisverwaltung {
      * @return Ereignisse
      */
     public Vector<Ereignis> getEreignisse() {
+
 	return ereignisse;
     }
 
@@ -119,10 +123,12 @@ public class Ereignisverwaltung {
      *            Betroffene Stueckzahl
      */
     public void ereignisErstellen(Person wer, Typ was, Artikel womit, int wieviel) {
+
 	ereignisse.add(new Ereignis(getNextID(), wer, was, womit, wieviel, new Date()));
     }
 
     public int getNextID() {
+
 	int hoechsteID = 0;
 	for (Ereignis er : ereignisse) {
 	    if (er.getId() > hoechsteID) {

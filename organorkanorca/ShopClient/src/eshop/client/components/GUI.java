@@ -18,14 +18,14 @@ import eshop.common.net.ShopEventListener;
 import eshop.common.net.ShopRemote;
 import eshop.server.domain.eShopCore;
 
-public class GUI extends UnicastRemoteObject implements ShopEventListener {
+public class GUI extends UnicastRemoteObject {
 
-    private Person user;
-    LoginWindow loginwindow;
-    MainWindow mainwindow;
+    private Person	     user;
+    LoginWindow		     loginwindow;
+    MainWindow		     mainwindow;
     private ListenerForLogin listenerForLogin = new ListenerForLogin();
     // Shop server
-    private ShopRemote server;
+    private ShopRemote	     server;
 
     public GUI() throws RemoteException {
 	try {
@@ -34,19 +34,20 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener {
 	    Registry registry = LocateRegistry.getRegistry();
 	    server = (ShopRemote) registry.lookup(serviceName);
 	    // Register for game events
-	    server.addShopEventListener(this);
+	    server.addShopEventListener(mainwindow);
 	    loginwindow = new LoginWindow("OrganOrkanOrca server", server, listenerForLogin);
-	} catch (RemoteException e) {
+	} catch(RemoteException e) {
 	    JOptionPane.showMessageDialog(null, e.getMessage());
-	} catch (NotBoundException e) {
+	} catch(NotBoundException e) {
 	    JOptionPane.showMessageDialog(null, e.getMessage());
 	}
     }
 
     public static void main(String[] args) {
+
 	try {
 	    GUI gui = new GUI();
-	} catch (RemoteException e) {
+	} catch(RemoteException e) {
 	    e.printStackTrace();
 	}
     }
@@ -55,6 +56,7 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener {
 
 	@Override
 	public void userLoggedIn(Person user) {
+
 	    GUI.this.user = user;
 	    mainwindow = new MainWindow("OrganOrkanOrca server", user, server, this);
 	    loginwindow.dispose();
@@ -62,11 +64,13 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener {
 
 	@Override
 	public void loginCancelled() {
+
 	    loginwindow.dispose();
 	}
 
 	@Override
 	public void logout() {
+
 	    GUI.this.user = null;
 	    mainwindow.dispose();
 	    loginwindow = new LoginWindow("OrganOrkanOrca server", server, this);

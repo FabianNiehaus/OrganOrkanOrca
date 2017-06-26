@@ -17,7 +17,7 @@ public class Kunde extends Person implements Serializable {
      * 
      */
     private static final long serialVersionUID = -1133891813422452141L;
-    private Warenkorb wk;
+    private Warenkorb	      wk;
 
     /**
      * Extra-Konstruktor für Laden aus Persistenz
@@ -74,6 +74,7 @@ public class Kunde extends Person implements Serializable {
      * @return
      */
     public Warenkorb getWarenkorb() {
+
 	return wk;
     }
 
@@ -81,10 +82,12 @@ public class Kunde extends Person implements Serializable {
      * @param warenkorb
      */
     public void setWarenkorb(Warenkorb warenkorb) {
+
 	this.wk = warenkorb;
     }
 
     public String toString() {
+
 	return id + ": " + firstname + " " + lastname + " | " + address_Street + " ," + address_Zip + " "
 		+ address_Town;
     }

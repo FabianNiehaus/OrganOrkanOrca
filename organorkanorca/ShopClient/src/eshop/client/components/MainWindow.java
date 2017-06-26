@@ -51,11 +51,12 @@ import eshop.common.exceptions.InvalidAmountException;
 import eshop.common.exceptions.InvalidPersonDataException;
 import eshop.common.exceptions.MaxIDsException;
 import eshop.common.exceptions.PersonNonexistantException;
+import eshop.common.net.ShopEventListener;
 import eshop.common.net.ShopRemote;
 import eshop.server.domain.eShopCore;
 import net.miginfocom.swing.MigLayout;
 
-public class MainWindow extends JFrame {
+public class MainWindow extends JFrame implements ShopEventListener {
 
     public MainWindow(String titel, Person user, ShopRemote server, LoginListener loginListener) {
 	super(titel);
@@ -65,31 +66,32 @@ public class MainWindow extends JFrame {
 	initialize();
     }
 
-    Person user;
-    ShopRemote server;
-    LoginListener loginListener;
-    JPanel main = (JPanel) this.getContentPane();
-    JPanel leftArea = new JPanel(new MigLayout());
-    JPanel rightArea = new JPanel(new MigLayout());
-    JPanel moduleButtons = new JPanel();
-    JButton artikelButton = new JButton("Artikel");
-    JButton kundenButton = new JButton("Kunden");
-    JButton mitarbeiterButton = new JButton("Mitarbeiter");
-    JButton shopButton = new JButton("Shop");
-    JButton logoutButton = new JButton("Logout");
-    Kundensichtfenster kundensichtfenster;
-    Artikelsichtfenster artikelsichtfenster;
-    Mitarbeitersichtfenster mitarbeitersichtfenster;
-    ShopManagement shopManagement;
-    Warenkorbverwaltungsfenster warenkorbverwaltungsfenster;
-    Artikelverwaltungsfenster artikelverwaltungsfenster;
-    Personenverwaltungsfenster kundenverwaltungsfenster;
-    Personenverwaltungsfenster mitarbeiterverwaltungsfenster;
-    double prefWidth = 0;
-    double maxWidthLeft = 0;
-    double maxWidthRight = 0;
+    Person			user;
+    ShopRemote			server;
+    LoginListener		loginListener;
+    JPanel			main		  = (JPanel) this.getContentPane();
+    JPanel			leftArea	  = new JPanel(new MigLayout());
+    JPanel			rightArea	  = new JPanel(new MigLayout());
+    JPanel			moduleButtons	  = new JPanel();
+    JButton			artikelButton	  = new JButton("Artikel");
+    JButton			kundenButton	  = new JButton("Kunden");
+    JButton			mitarbeiterButton = new JButton("Mitarbeiter");
+    JButton			shopButton	  = new JButton("Shop");
+    JButton			logoutButton	  = new JButton("Logout");
+    Kundensichtfenster		kundensichtfenster;
+    Artikelsichtfenster		artikelsichtfenster;
+    Mitarbeitersichtfenster	mitarbeitersichtfenster;
+    ShopManagement		shopManagement;
+    Warenkorbverwaltungsfenster	warenkorbverwaltungsfenster;
+    Artikelverwaltungsfenster	artikelverwaltungsfenster;
+    Personenverwaltungsfenster	kundenverwaltungsfenster;
+    Personenverwaltungsfenster	mitarbeiterverwaltungsfenster;
+    double			prefWidth	  = 0;
+    double			maxWidthLeft	  = 0;
+    double			maxWidthRight	  = 0;
 
     public void initialize() {
+
 	this.setLayout(new MigLayout("", "30[]30[]30", "30[]30"));
 	artikelButton.addActionListener(new MenuButtonsActionListener());
 	moduleButtons.add(artikelButton);
@@ -126,6 +128,7 @@ public class MainWindow extends JFrame {
      * 
      */
     public void setWindowSize() {
+
 	if (artikelsichtfenster != null)
 	    maxWidthLeft = Math.max(maxWidthLeft, artikelsichtfenster.getPreferredSize().getWidth() + 15);
 	if (kundensichtfenster != null)
@@ -152,7 +155,7 @@ public class MainWindow extends JFrame {
 
     class eShopTableModel extends AbstractTableModel {
 
-	Vector<String> columnIdentifiers;
+	Vector<String>	       columnIdentifiers;
 	Vector<Vector<Object>> dataVector;
 
 	public eShopTableModel(Vector<Vector<Object>> data, String[] columnNames) {
@@ -161,6 +164,7 @@ public class MainWindow extends JFrame {
 	}
 
 	public Vector<String> setColumns(String[] columnNames) {
+
 	    Vector<String> columns = new Vector<>();
 	    for (String str : columnNames) {
 		columns.addElement(str);
@@ -170,36 +174,40 @@ public class MainWindow extends JFrame {
 
 	@Override
 	public int getColumnCount() {
+
 	    return columnIdentifiers.size();
 	}
 
 	@Override
 	public int getRowCount() {
+
 	    return dataVector.size();
 	}
 
 	@Override
 	public Object getValueAt(int arg0, int arg1) {
+
 	    return dataVector.elementAt(arg0).elementAt(arg1);
 	}
 
 	@Override
 	public String getColumnName(int column) {
+
 	    return columnIdentifiers.elementAt(column);
 	}
     }
 
     abstract class Sichtfenster extends JPanel {
 
-	JPanel overviewButtons = new JPanel();
-	JButton alleButton = new JButton("Alle");
-	JButton sucheButton = new JButton("Suche");
-	JTextField sucheField = new JTextField();
-	JPanel leftAreaActionField = new JPanel();
-	JXTable auflistung = new JXTable();
-	JScrollPane auflistungContainer = new JScrollPane(auflistung);
-	JButton aktion = new JButton();
-	JTextField anzahl = new JTextField(5);
+	JPanel	    overviewButtons	= new JPanel();
+	JButton	    alleButton		= new JButton("Alle");
+	JButton	    sucheButton		= new JButton("Suche");
+	JTextField  sucheField		= new JTextField();
+	JPanel	    leftAreaActionField	= new JPanel();
+	JXTable	    auflistung		= new JXTable();
+	JScrollPane auflistungContainer	= new JScrollPane(auflistung);
+	JButton	    aktion		= new JButton();
+	JTextField  anzahl		= new JTextField(5);
 
 	public Sichtfenster() {
 	    this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -221,43 +229,49 @@ public class MainWindow extends JFrame {
 	    leftAreaActionField.add(anzahl);
 	    try {
 		auflistungInitialize();
-		TableColumnAdjuster tca = new TableColumnAdjuster(auflistung, 30);
-		tca.adjustColumns(JLabel.CENTER);
-	    } catch (AccessRestrictedException e) {
+		adjustColumns();
+	    } catch(AccessRestrictedException e) {
 		removeAll();
 		add(new JLabel(e.getMessage()));
-	    } catch (RemoteException e) {
+	    } catch(RemoteException e) {
 		JOptionPane.showMessageDialog(Sichtfenster.this, e.getMessage());
 	    }
 	}
 
 	public abstract void auflistungInitialize() throws AccessRestrictedException, RemoteException;
 
+	public void adjustColumns() {
+
+	    TableColumnAdjuster tca = new TableColumnAdjuster(auflistung, 30);
+	    tca.adjustColumns(JLabel.CENTER);
+	}
+
 	class ArtikelInWarenkorbListener implements ActionListener {
 
 	    @Override
 	    public void actionPerformed(ActionEvent e) {
+
 		try {
 		    Artikel art = server.artikelSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0),
 			    user);
 		    server.artikelInWarenkorbLegen(art.getArtikelnummer(), Integer.parseInt(anzahl.getText()), user);
 		    warenkorbverwaltungsfenster.warenkorbAufrufen();
 		    anzahl.setText("");
-		} catch (NumberFormatException e1) {
+		} catch(NumberFormatException e1) {
 		    JOptionPane.showMessageDialog(Sichtfenster.this, "Keine gueltige Anzahl!");
-		} catch (ArticleNonexistantException e1) {
+		} catch(ArticleNonexistantException e1) {
 		    JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
-		} catch (ArticleStockNotSufficientException e1) {
+		} catch(ArticleStockNotSufficientException e1) {
 		    JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
-		} catch (AccessRestrictedException e1) {
+		} catch(AccessRestrictedException e1) {
 		    JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
-		} catch (InvalidAmountException e1) {
+		} catch(InvalidAmountException e1) {
 		    JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
-		} catch (ArrayIndexOutOfBoundsException e1) {
+		} catch(ArrayIndexOutOfBoundsException e1) {
 		    JOptionPane.showMessageDialog(Sichtfenster.this, "Kein Artikel ausgewählt");
-		} catch (ArticleAlreadyInBasketException e1) {
+		} catch(ArticleAlreadyInBasketException e1) {
 		    JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
-		} catch (RemoteException e1) {
+		} catch(RemoteException e1) {
 		    JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
 		}
 	    }
@@ -267,16 +281,17 @@ public class MainWindow extends JFrame {
 
 	    @Override
 	    public void actionPerformed(ActionEvent e) {
+
 		try {
 		    artikelverwaltungsfenster.artikelAnzeigen(
 			    server.artikelSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user));
-		} catch (ArticleNonexistantException e1) {
+		} catch(ArticleNonexistantException e1) {
 		    JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
-		} catch (AccessRestrictedException e1) {
+		} catch(AccessRestrictedException e1) {
 		    JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
-		} catch (ArrayIndexOutOfBoundsException e1) {
+		} catch(ArrayIndexOutOfBoundsException e1) {
 		    JOptionPane.showMessageDialog(Sichtfenster.this, "Kein Artikel ausgewählt");
-		} catch (RemoteException e1) {
+		} catch(RemoteException e1) {
 		    JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
 		}
 	    }
@@ -286,6 +301,7 @@ public class MainWindow extends JFrame {
 
 	    @Override
 	    public void actionPerformed(ActionEvent arg0) {
+
 		TableRowSorter<eShopTableModel> sorter = (TableRowSorter<eShopTableModel>) auflistung.getRowSorter();
 		sorter.setRowFilter(RowFilter.regexFilter(sucheField.getText()));
 		sorter.setSortsOnUpdates(true);
@@ -296,11 +312,12 @@ public class MainWindow extends JFrame {
 
 	    @Override
 	    public void actionPerformed(ActionEvent e) {
+
 		try {
 		    auflistungInitialize();
-		} catch (AccessRestrictedException e1) {
+		} catch(AccessRestrictedException e1) {
 		    JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
-		} catch (RemoteException e1) {
+		} catch(RemoteException e1) {
 		    JOptionPane.showMessageDialog(Sichtfenster.this, e1.getMessage());
 		}
 	    }
@@ -309,8 +326,8 @@ public class MainWindow extends JFrame {
 
     class Artikelsichtfenster extends Sichtfenster {
 
-	eShopTableModel etm;
-	JButton verlaufAnzeigenButton = new JButton("Verlauf anzeigen");
+	eShopTableModel	etm;
+	JButton		verlaufAnzeigenButton = new JButton("Verlauf anzeigen");
 
 	public Artikelsichtfenster() {
 	    super();
@@ -329,6 +346,7 @@ public class MainWindow extends JFrame {
 
 	@Override
 	public void auflistungInitialize() throws AccessRestrictedException, RemoteException {
+
 	    Vector<Vector<Object>> data = new Vector<>();
 	    for (Artikel art : server.alleArtikelAusgeben(user)) {
 		Vector<Object> tmp = new Vector<>();
@@ -353,6 +371,7 @@ public class MainWindow extends JFrame {
 
 	    @Override
 	    public void actionPerformed(ActionEvent e) {
+
 		try {
 		    Artikel art = server.artikelSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0),
 			    user);
@@ -371,13 +390,13 @@ public class MainWindow extends JFrame {
 		    chartFrame.setDefaultCloseOperation(chartFrame.DISPOSE_ON_CLOSE);
 		    chartFrame.pack();
 		    chartFrame.setVisible(true);
-		} catch (ArticleNonexistantException e1) {
+		} catch(ArticleNonexistantException e1) {
 		    JOptionPane.showMessageDialog(artikelsichtfenster, e1.getMessage());
-		} catch (AccessRestrictedException e1) {
+		} catch(AccessRestrictedException e1) {
 		    JOptionPane.showMessageDialog(artikelsichtfenster, e1.getMessage());
-		} catch (ArrayIndexOutOfBoundsException e1) {
+		} catch(ArrayIndexOutOfBoundsException e1) {
 		    JOptionPane.showMessageDialog(artikelsichtfenster, "Es muss ein Artikel ausgewählt werden!");
-		} catch (RemoteException e1) {
+		} catch(RemoteException e1) {
 		    JOptionPane.showMessageDialog(artikelsichtfenster, e1.getMessage());
 		}
 	    }
@@ -397,6 +416,7 @@ public class MainWindow extends JFrame {
 
 	@Override
 	public void auflistungInitialize() throws AccessRestrictedException, RemoteException {
+
 	    Vector<Vector<Object>> data = new Vector<>();
 	    for (Kunde ku : server.alleKundenAusgeben(user)) {
 		Vector<Object> tmp = new Vector<>();
@@ -417,14 +437,15 @@ public class MainWindow extends JFrame {
 
 	    @Override
 	    public void actionPerformed(ActionEvent e) {
+
 		try {
 		    kundenverwaltungsfenster.personAnzeigen(
 			    server.kundeSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user));
-		} catch (ArrayIndexOutOfBoundsException e1) {
+		} catch(ArrayIndexOutOfBoundsException e1) {
 		    JOptionPane.showMessageDialog(Kundensichtfenster.this, "Kein Kunde ausgewählt");
-		} catch (PersonNonexistantException e1) {
+		} catch(PersonNonexistantException e1) {
 		    JOptionPane.showMessageDialog(Kundensichtfenster.this, e1.getMessage());
-		} catch (RemoteException e1) {
+		} catch(RemoteException e1) {
 		    JOptionPane.showMessageDialog(Kundensichtfenster.this, e1.getMessage());
 		}
 	    }
@@ -443,6 +464,7 @@ public class MainWindow extends JFrame {
 
 	@Override
 	public void auflistungInitialize() throws AccessRestrictedException, RemoteException {
+
 	    Vector<Vector<Object>> data = new Vector<>();
 	    for (Mitarbeiter mi : server.alleMitarbeiterAusgeben(user)) {
 		Vector<Object> tmp = new Vector<>();
@@ -463,14 +485,15 @@ public class MainWindow extends JFrame {
 
 	    @Override
 	    public void actionPerformed(ActionEvent e) {
+
 		try {
 		    mitarbeiterverwaltungsfenster.personAnzeigen(server
 			    .mitarbeiterSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user));
-		} catch (ArrayIndexOutOfBoundsException e1) {
+		} catch(ArrayIndexOutOfBoundsException e1) {
 		    JOptionPane.showMessageDialog(Mitarbeitersichtfenster.this, "Kein Mitarbeiter ausgewählt");
-		} catch (PersonNonexistantException e1) {
+		} catch(PersonNonexistantException e1) {
 		    JOptionPane.showMessageDialog(Mitarbeitersichtfenster.this, e1.getMessage());
-		} catch (RemoteException e1) {
+		} catch(RemoteException e1) {
 		    JOptionPane.showMessageDialog(Mitarbeitersichtfenster.this, e1.getMessage());
 		}
 	    }
@@ -479,11 +502,11 @@ public class MainWindow extends JFrame {
 
     class ShopManagement extends JPanel {
 
-	JButton speichernButton = new JButton("Bestandsdaten speichern");
-	JButton ladenButton = new JButton("Bestandsdaten importieren");
+	JButton		   speichernButton     = new JButton("Bestandsdaten speichern");
+	JButton		   ladenButton	       = new JButton("Bestandsdaten importieren");
 	EreignisTableModel etm;
-	JXTable auflistung = new JXTable();
-	JScrollPane auflistungContainer = new JScrollPane(auflistung);
+	JXTable		   auflistung	       = new JXTable();
+	JScrollPane	   auflistungContainer = new JScrollPane(auflistung);
 
 	public ShopManagement() {
 	    this.setLayout(new MigLayout());
@@ -495,15 +518,16 @@ public class MainWindow extends JFrame {
 		this.add(auflistungContainer, "span");
 		auflistung.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		auflistungInitialize();
-	    } catch (AccessRestrictedException e) {
+	    } catch(AccessRestrictedException e) {
 		removeAll();
 		add(new JLabel(e.getMessage()));
-	    } catch (RemoteException e) {
+	    } catch(RemoteException e) {
 		JOptionPane.showMessageDialog(this, e.getMessage());
 	    }
 	}
 
 	public void auflistungInitialize() throws AccessRestrictedException, RemoteException {
+
 	    Vector<Vector<Object>> data = new Vector<>();
 	    DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 	    for (Ereignis er : server.alleEreignisseAusgeben(user)) {
@@ -528,7 +552,7 @@ public class MainWindow extends JFrame {
 
 	class EreignisTableModel extends AbstractTableModel {
 
-	    Vector<String> columnIdentifiers;
+	    Vector<String>	   columnIdentifiers;
 	    Vector<Vector<Object>> dataVector;
 
 	    public EreignisTableModel(Vector<Vector<Object>> data) {
@@ -538,6 +562,7 @@ public class MainWindow extends JFrame {
 	    }
 
 	    public Vector<String> setColumns(String[] columnNames) {
+
 		Vector<String> columns = new Vector<>();
 		for (String str : columnNames) {
 		    columns.addElement(str);
@@ -547,21 +572,25 @@ public class MainWindow extends JFrame {
 
 	    @Override
 	    public int getColumnCount() {
+
 		return columnIdentifiers.size();
 	    }
 
 	    @Override
 	    public int getRowCount() {
+
 		return dataVector.size();
 	    }
 
 	    @Override
 	    public Object getValueAt(int arg0, int arg1) {
+
 		return dataVector.elementAt(arg0).elementAt(arg1);
 	    }
 
 	    @Override
 	    public String getColumnName(int column) {
+
 		return columnIdentifiers.elementAt(column);
 	    }
 	}
@@ -570,11 +599,12 @@ public class MainWindow extends JFrame {
 
 	    @Override
 	    public void actionPerformed(ActionEvent ae) {
+
 		if (ae.getSource().equals(speichernButton)) {
 		    try {
 			server.schreibeDaten();
 			JOptionPane.showMessageDialog(ShopManagement.this, "Daten erfolgreich gespeichert!");
-		    } catch (IOException e1) {
+		    } catch(IOException e1) {
 			JOptionPane.showMessageDialog(ShopManagement.this, e1.getMessage());
 		    }
 		} else if (ae.getSource().equals(ladenButton)) {
@@ -587,15 +617,15 @@ public class MainWindow extends JFrame {
 			kundenverwaltungsfenster = new Personenverwaltungsfenster("Kundenverwaltung", "Kunde");
 			mitarbeiterverwaltungsfenster = new Personenverwaltungsfenster("Mitarbeiterverwaltung",
 				"Mitarbeiter");
-		    } catch (IOException e1) {
+		    } catch(IOException e1) {
 			JOptionPane.showMessageDialog(ShopManagement.this, e1.getMessage());
-		    } catch (ArticleNonexistantException e1) {
+		    } catch(ArticleNonexistantException e1) {
 			JOptionPane.showMessageDialog(ShopManagement.this, e1.getMessage());
-		    } catch (PersonNonexistantException e1) {
+		    } catch(PersonNonexistantException e1) {
 			JOptionPane.showMessageDialog(ShopManagement.this, e1.getMessage());
-		    } catch (InvalidPersonDataException e1) {
+		    } catch(InvalidPersonDataException e1) {
 			JOptionPane.showMessageDialog(ShopManagement.this, e1.getMessage());
-		    } catch (Exception e1) {
+		    } catch(Exception e1) {
 			JOptionPane.showMessageDialog(ShopManagement.this, e1.getMessage());
 		    }
 		}
@@ -605,24 +635,24 @@ public class MainWindow extends JFrame {
 
     class Artikelverwaltungsfenster extends JPanel {
 
-	Artikel art;
-	JPanel detailArea = new JPanel();
-	JLabel artNrLabel = new JLabel("Artikelnummer:");
-	JTextField artNrField = new JTextField(15);
-	JLabel bezeichnungLabel = new JLabel("Bezeichnung:");
-	JTextField bezeichnungField = new JTextField(15);
-	JLabel preisLabel = new JLabel("Preis:");
-	JTextField preisField = new JTextField(15);
-	JLabel pkggroesseLabel = new JLabel("Packungsgröße:");
-	JTextField pkggroesseField = new JTextField(15);
-	JLabel bestandLabel = new JLabel("Bestand:");
-	JTextField bestandField = new JTextField(15);
-	JPanel buttons = new JPanel();
-	JButton neuAnlegenButton = new JButton("Neu");
-	JButton aendernButton = new JButton("Ändern");
-	JButton aendernBestaetigenButton = new JButton("Bestätigen");
-	JButton loeschenButton = new JButton("Löschen");
-	JButton neuAnlegenBestaetigenButton = new JButton("Anlegen");
+	Artikel	   art;
+	JPanel	   detailArea		       = new JPanel();
+	JLabel	   artNrLabel		       = new JLabel("Artikelnummer:");
+	JTextField artNrField		       = new JTextField(15);
+	JLabel	   bezeichnungLabel	       = new JLabel("Bezeichnung:");
+	JTextField bezeichnungField	       = new JTextField(15);
+	JLabel	   preisLabel		       = new JLabel("Preis:");
+	JTextField preisField		       = new JTextField(15);
+	JLabel	   pkggroesseLabel	       = new JLabel("Packungsgröße:");
+	JTextField pkggroesseField	       = new JTextField(15);
+	JLabel	   bestandLabel		       = new JLabel("Bestand:");
+	JTextField bestandField		       = new JTextField(15);
+	JPanel	   buttons		       = new JPanel();
+	JButton	   neuAnlegenButton	       = new JButton("Neu");
+	JButton	   aendernButton	       = new JButton("Ändern");
+	JButton	   aendernBestaetigenButton    = new JButton("Bestätigen");
+	JButton	   loeschenButton	       = new JButton("Löschen");
+	JButton	   neuAnlegenBestaetigenButton = new JButton("Anlegen");
 
 	public Artikelverwaltungsfenster() {
 	    this.setLayout(new MigLayout());
@@ -661,6 +691,7 @@ public class MainWindow extends JFrame {
 	}
 
 	public void artikelAnzeigen(Artikel art) {
+
 	    this.art = art;
 	    artNrField.setText(String.valueOf(art.getArtikelnummer()));
 	    bezeichnungField.setText(art.getBezeichnung());
@@ -677,6 +708,7 @@ public class MainWindow extends JFrame {
 
 	    @Override
 	    public void actionPerformed(ActionEvent e) {
+
 		if (e.getSource().equals(neuAnlegenButton)) {
 		    // Artikelnummer ausblenden, kann nicht neu angegeben werden
 		    artNrLabel.setVisible(false);
@@ -725,21 +757,21 @@ public class MainWindow extends JFrame {
 				    neuAnlegenBestaetigenButton.setVisible(false);
 				    artikelsichtfenster.auflistungInitialize();
 				    artikelverwaltungsfenster.repaint();
-				} catch (AccessRestrictedException e1) {
+				} catch(AccessRestrictedException e1) {
 				    JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
-				} catch (InvalidAmountException e1) {
+				} catch(InvalidAmountException e1) {
 				    JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
-				} catch (RemoteException e1) {
+				} catch(RemoteException e1) {
 				    JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
 				}
-			    } catch (NumberFormatException e1) {
+			    } catch(NumberFormatException e1) {
 				JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this,
 					"Keine gueltige Packungsgröße");
 			    }
-			} catch (NumberFormatException e1) {
+			} catch(NumberFormatException e1) {
 			    JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, "Kein gueltiger Preis!");
 			}
-		    } catch (NumberFormatException e1) {
+		    } catch(NumberFormatException e1) {
 			JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, "Kein gueltiger Bestand!");
 		    }
 		}
@@ -750,6 +782,7 @@ public class MainWindow extends JFrame {
 
 	    @Override
 	    public void actionPerformed(ActionEvent e) {
+
 		if (e.getSource().equals(aendernButton)) {
 		    if (!artNrField.getText().equals("")) {
 			// Felder editierbar machen
@@ -791,23 +824,23 @@ public class MainWindow extends JFrame {
 				    loeschenButton.setVisible(true);
 				    artikelsichtfenster.auflistungInitialize();
 				    artikelverwaltungsfenster.repaint();
-				} catch (ArticleNonexistantException e1) {
+				} catch(ArticleNonexistantException e1) {
 				    JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
-				} catch (AccessRestrictedException e1) {
+				} catch(AccessRestrictedException e1) {
 				    JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
-				} catch (InvalidAmountException e1) {
+				} catch(InvalidAmountException e1) {
 				    JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
-				} catch (RemoteException e1) {
+				} catch(RemoteException e1) {
 				    JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
 				}
-			    } catch (NumberFormatException e1) {
+			    } catch(NumberFormatException e1) {
 				JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this,
 					"Keine gueltige Packungsgröße");
 			    }
-			} catch (NumberFormatException e1) {
+			} catch(NumberFormatException e1) {
 			    JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, "Kein gueltiger Preis!");
 			}
-		    } catch (NumberFormatException e1) {
+		    } catch(NumberFormatException e1) {
 			JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, "Kein gueltiger Bestand!");
 		    }
 		}
@@ -818,6 +851,7 @@ public class MainWindow extends JFrame {
 
 	    @Override
 	    public void actionPerformed(ActionEvent e) {
+
 		try {
 		    server.artikelLoeschen(art, user);
 		    artNrField.setText("");
@@ -827,9 +861,9 @@ public class MainWindow extends JFrame {
 		    bestandField.setText("");
 		    art = null;
 		    artikelsichtfenster.auflistungInitialize();
-		} catch (AccessRestrictedException e1) {
+		} catch(AccessRestrictedException e1) {
 		    JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
-		} catch (RemoteException e1) {
+		} catch(RemoteException e1) {
 		    JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
 		}
 	    }
@@ -838,14 +872,14 @@ public class MainWindow extends JFrame {
 
     class Warenkorbverwaltungsfenster extends JPanel {
 
-	Warenkorb wk;
-	JPanel buttons = new JPanel();
-	JTable warenkorbAuflistung = new JTable();
+	Warenkorb   wk;
+	JPanel	    buttons			 = new JPanel();
+	JTable	    warenkorbAuflistung		 = new JTable();
 	JScrollPane warenkorbAuflistungContainer = new JScrollPane(warenkorbAuflistung);
-	JButton aendernButton = new JButton("Anzahl ändern");
-	JButton artikelEntfernenButton = new JButton("Entfernen");
-	JButton leerenButton = new JButton("Leeren");
-	JButton kaufenButton = new JButton("Kaufen");
+	JButton	    aendernButton		 = new JButton("Anzahl ändern");
+	JButton	    artikelEntfernenButton	 = new JButton("Entfernen");
+	JButton	    leerenButton		 = new JButton("Leeren");
+	JButton	    kaufenButton		 = new JButton("Kaufen");
 
 	public Warenkorbverwaltungsfenster() {
 	    this.setLayout(new MigLayout());
@@ -869,6 +903,7 @@ public class MainWindow extends JFrame {
 	}
 
 	public void warenkorbAufrufen() throws AccessRestrictedException, RemoteException {
+
 	    Warenkorb wk = server.warenkorbAusgeben(user);
 	    Map<Artikel, Integer> inhalt = wk.getArtikel();
 	    warenkorbAuflistung.setModel(new WarenkorbTableModel(inhalt));
@@ -878,6 +913,7 @@ public class MainWindow extends JFrame {
 
 	    @Override
 	    public void actionPerformed(ActionEvent e) {
+
 		// Anzahl eines Artikels im Warenkorn ändern
 		if (e.getSource().equals(aendernButton)) {
 		    try {
@@ -893,19 +929,19 @@ public class MainWindow extends JFrame {
 			    wk = server.warenkorbAusgeben(user);
 			    warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
 			}
-		    } catch (ArticleStockNotSufficientException e1) {
+		    } catch(ArticleStockNotSufficientException e1) {
 			JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
-		    } catch (BasketNonexistantException e1) {
+		    } catch(BasketNonexistantException e1) {
 			JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
-		    } catch (AccessRestrictedException e1) {
+		    } catch(AccessRestrictedException e1) {
 			JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
-		    } catch (NumberFormatException e1) {
+		    } catch(NumberFormatException e1) {
 			JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, "Keine gueltige Anzahl!");
-		    } catch (InvalidAmountException e1) {
+		    } catch(InvalidAmountException e1) {
 			JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
-		    } catch (ArticleNonexistantException e1) {
+		    } catch(ArticleNonexistantException e1) {
 			JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
-		    } catch (RemoteException e1) {
+		    } catch(RemoteException e1) {
 			JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
 		    }
 		    // Artikel aus Warenkorb entfernen
@@ -918,11 +954,11 @@ public class MainWindow extends JFrame {
 			    wk = server.warenkorbAusgeben(user);
 			    warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
 			}
-		    } catch (AccessRestrictedException e1) {
+		    } catch(AccessRestrictedException e1) {
 			JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
-		    } catch (ArticleNonexistantException e1) {
+		    } catch(ArticleNonexistantException e1) {
 			JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
-		    } catch (RemoteException e1) {
+		    } catch(RemoteException e1) {
 			JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
 		    }
 		    // Warenkorb leeren
@@ -931,9 +967,9 @@ public class MainWindow extends JFrame {
 			server.warenkorbLeeren(user);
 			wk = server.warenkorbAusgeben(user);
 			warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
-		    } catch (AccessRestrictedException e1) {
+		    } catch(AccessRestrictedException e1) {
 			JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
-		    } catch (RemoteException e1) {
+		    } catch(RemoteException e1) {
 			JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
 		    }
 		    warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
@@ -957,11 +993,11 @@ public class MainWindow extends JFrame {
 			JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, rechnungsString);
 			wk = server.warenkorbAusgeben(user);
 			warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
-		    } catch (AccessRestrictedException e1) {
+		    } catch(AccessRestrictedException e1) {
 			JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
-		    } catch (InvalidAmountException e1) {
+		    } catch(InvalidAmountException e1) {
 			JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
-		    } catch (RemoteException e1) {
+		    } catch(RemoteException e1) {
 			JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
 		    }
 		}
@@ -970,9 +1006,9 @@ public class MainWindow extends JFrame {
 
 	class WarenkorbTableModel extends AbstractTableModel {
 
-	    String[] columns = { "Artikelnummer", "Artikel", "Preis", "Menge", "Gesamt" };
-	    Vector<Vector<Object>> dataVector = new Vector<>(0);
-	    Vector<String> columnIdentifiers = new Vector<>(0);
+	    String[]		   columns	     = { "Artikelnummer", "Artikel", "Preis", "Menge", "Gesamt" };
+	    Vector<Vector<Object>> dataVector	     = new Vector<>(0);
+	    Vector<String>	   columnIdentifiers = new Vector<>(0);
 
 	    public WarenkorbTableModel(Map<Artikel, Integer> inhalt) {
 		columnIdentifiers = setColumns(columns);
@@ -992,6 +1028,7 @@ public class MainWindow extends JFrame {
 	    }
 
 	    public Vector<String> setColumns(String[] columnNames) {
+
 		Vector<String> columns = new Vector<>();
 		for (String str : columnNames) {
 		    columns.addElement(str);
@@ -1001,21 +1038,25 @@ public class MainWindow extends JFrame {
 
 	    @Override
 	    public int getColumnCount() {
+
 		return columnIdentifiers.size();
 	    }
 
 	    @Override
 	    public int getRowCount() {
+
 		return dataVector.size();
 	    }
 
 	    @Override
 	    public Object getValueAt(int arg0, int arg1) {
+
 		return dataVector.elementAt(arg0).elementAt(arg1);
 	    }
 
 	    @Override
 	    public String getColumnName(int column) {
+
 		return columnIdentifiers.elementAt(column);
 	    }
 	}
@@ -1023,28 +1064,28 @@ public class MainWindow extends JFrame {
 
     class Personenverwaltungsfenster extends JPanel {
 
-	Person p;
-	JPanel detailArea = new JPanel();
-	JLabel persNrLabel = new JLabel("ID:");
-	JTextField persNrField = new JTextField(15);
-	JLabel vornameLabel = new JLabel("Vorname:");
-	JTextField vornameField = new JTextField(15);
-	JLabel nachnameLabel = new JLabel("Nachname:");
-	JTextField nachnameField = new JTextField(15);
-	JLabel strasseLabel = new JLabel("Straße:");
-	JTextField strasseField = new JTextField(15);
-	JLabel ortLabel = new JLabel("Stadt");
-	JTextField ortField = new JTextField(15);
-	JLabel zipLabel = new JLabel("PLZ:");
-	JTextField zipField = new JTextField(15);
-	JLabel passwordLabel = new JLabel("Passwort:");
-	JTextField passwordField = new JTextField("*********", 15);
-	JPanel buttons = new JPanel();
-	JButton neuAnlegenButton = new JButton("Neu");
-	JButton aendernButton = new JButton("Ändern");
-	JButton aendernBestaetigenButton = new JButton("Bestätigen");
-	JButton loeschenButton = new JButton("Löschen");
-	JButton neuAnlegenBestaetigenButton = new JButton("Anlegen");
+	Person	   p;
+	JPanel	   detailArea		       = new JPanel();
+	JLabel	   persNrLabel		       = new JLabel("ID:");
+	JTextField persNrField		       = new JTextField(15);
+	JLabel	   vornameLabel		       = new JLabel("Vorname:");
+	JTextField vornameField		       = new JTextField(15);
+	JLabel	   nachnameLabel	       = new JLabel("Nachname:");
+	JTextField nachnameField	       = new JTextField(15);
+	JLabel	   strasseLabel		       = new JLabel("Straße:");
+	JTextField strasseField		       = new JTextField(15);
+	JLabel	   ortLabel		       = new JLabel("Stadt");
+	JTextField ortField		       = new JTextField(15);
+	JLabel	   zipLabel		       = new JLabel("PLZ:");
+	JTextField zipField		       = new JTextField(15);
+	JLabel	   passwordLabel	       = new JLabel("Passwort:");
+	JTextField passwordField	       = new JTextField("*********", 15);
+	JPanel	   buttons		       = new JPanel();
+	JButton	   neuAnlegenButton	       = new JButton("Neu");
+	JButton	   aendernButton	       = new JButton("Ändern");
+	JButton	   aendernBestaetigenButton    = new JButton("Bestätigen");
+	JButton	   loeschenButton	       = new JButton("Löschen");
+	JButton	   neuAnlegenBestaetigenButton = new JButton("Anlegen");
 
 	public Personenverwaltungsfenster(String titel, String personenTyp) throws Exception {
 	    this.setLayout(new MigLayout());
@@ -1089,6 +1130,7 @@ public class MainWindow extends JFrame {
 	}
 
 	public void personAnzeigen(Person p) {
+
 	    this.p = p;
 	    persNrField.setText(String.valueOf(p.getId()));
 	    vornameField.setText(p.getLastname());
@@ -1108,7 +1150,7 @@ public class MainWindow extends JFrame {
 	public class PersonBearbeitenListener implements ActionListener {
 
 	    Personenverwaltungsfenster verwaltungsfenster = null;
-	    Sichtfenster sichtfenster = null;
+	    Sichtfenster	       sichtfenster	  = null;
 
 	    public PersonBearbeitenListener(String personenTyp) throws Exception {
 		if (personenTyp.equals("Kunde")) {
@@ -1124,6 +1166,7 @@ public class MainWindow extends JFrame {
 
 	    @Override
 	    public void actionPerformed(ActionEvent e) {
+
 		if (e.getSource().equals(aendernButton)) {
 		    if (!persNrField.getText().equals("")) {
 			// Felder editierbar machen
@@ -1162,12 +1205,12 @@ public class MainWindow extends JFrame {
 			aendernButton.setVisible(true);
 			loeschenButton.setVisible(true);
 			sichtfenster.auflistungInitialize();
-		    } catch (InvalidPersonDataException e1) {
+		    } catch(InvalidPersonDataException e1) {
 			JOptionPane.showMessageDialog(verwaltungsfenster, e1.getMessage());
 			personAnzeigen(p);
-		    } catch (AccessRestrictedException e1) {
+		    } catch(AccessRestrictedException e1) {
 			JOptionPane.showMessageDialog(verwaltungsfenster, e1.getMessage());
-		    } catch (RemoteException e1) {
+		    } catch(RemoteException e1) {
 			JOptionPane.showMessageDialog(verwaltungsfenster, e1.getMessage());
 		    }
 		}
@@ -1177,8 +1220,8 @@ public class MainWindow extends JFrame {
 	public class PersonNeuAnlegenListener implements ActionListener {
 
 	    Personenverwaltungsfenster verwaltungsfenster = null;
-	    Sichtfenster sichtfenster = null;
-	    String personenTyp = "";
+	    Sichtfenster	       sichtfenster	  = null;
+	    String		       personenTyp	  = "";
 
 	    public PersonNeuAnlegenListener(String personenTyp) throws Exception {
 		if (personenTyp.equals("Kunde")) {
@@ -1196,6 +1239,7 @@ public class MainWindow extends JFrame {
 
 	    @Override
 	    public void actionPerformed(ActionEvent e) {
+
 		if (e.getSource().equals(neuAnlegenButton)) {
 		    // Alle Felder leeren
 		    persNrField.setText("");
@@ -1250,7 +1294,7 @@ public class MainWindow extends JFrame {
 			neuAnlegenBestaetigenButton.setVisible(false);
 			sichtfenster.auflistungInitialize();
 			verwaltungsfenster.repaint();
-		    } catch (InvalidPersonDataException e1) {
+		    } catch(InvalidPersonDataException e1) {
 			JOptionPane.showMessageDialog(verwaltungsfenster, e1.getMessage());
 			persNrField.setText("");
 			vornameField.setText("");
@@ -1259,11 +1303,11 @@ public class MainWindow extends JFrame {
 			ortField.setText("");
 			zipField.setText("");
 			passwordField.setText("");
-		    } catch (AccessRestrictedException e1) {
+		    } catch(AccessRestrictedException e1) {
 			JOptionPane.showMessageDialog(verwaltungsfenster, e1.getMessage());
-		    } catch (MaxIDsException e1) {
+		    } catch(MaxIDsException e1) {
 			JOptionPane.showMessageDialog(verwaltungsfenster, e1.getMessage());
-		    } catch (RemoteException e1) {
+		    } catch(RemoteException e1) {
 			JOptionPane.showMessageDialog(verwaltungsfenster, e1.getMessage());
 		    }
 		}
@@ -1274,6 +1318,7 @@ public class MainWindow extends JFrame {
 
 	    @Override
 	    public void actionPerformed(ActionEvent e) {
+
 		try {
 		    server.personLoeschen(p, user);
 		    persNrField.setText("");
@@ -1285,9 +1330,9 @@ public class MainWindow extends JFrame {
 		    passwordField.setText("");
 		    p = null;
 		    kundensichtfenster.auflistungInitialize();
-		} catch (AccessRestrictedException e1) {
+		} catch(AccessRestrictedException e1) {
 		    JOptionPane.showMessageDialog(kundensichtfenster, e1.getMessage());
-		} catch (RemoteException e1) {
+		} catch(RemoteException e1) {
 		    JOptionPane.showMessageDialog(kundensichtfenster, e1.getMessage());
 		}
 	    }
@@ -1298,6 +1343,7 @@ public class MainWindow extends JFrame {
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
+
 	    if (ae.getSource().equals(artikelButton)) {
 		leftArea.remove(kundensichtfenster);
 		leftArea.remove(mitarbeitersichtfenster);
@@ -1324,7 +1370,7 @@ public class MainWindow extends JFrame {
 		    try {
 			kundenverwaltungsfenster = new Personenverwaltungsfenster("Kundenverwaltung", "Kunde");
 			rightArea.add(kundenverwaltungsfenster);
-		    } catch (Exception e) {
+		    } catch(Exception e) {
 			JOptionPane.showMessageDialog(MainWindow.this, e.getMessage());
 		    }
 		    MainWindow.this.pack();
@@ -1343,7 +1389,7 @@ public class MainWindow extends JFrame {
 			mitarbeiterverwaltungsfenster = new Personenverwaltungsfenster("Mitarbeiterverwaltung",
 				"Mitarbeiter");
 			rightArea.add(mitarbeiterverwaltungsfenster);
-		    } catch (Exception e) {
+		    } catch(Exception e) {
 			JOptionPane.showMessageDialog(MainWindow.this, e.getMessage());
 		    }
 		    MainWindow.this.pack();
@@ -1367,5 +1413,42 @@ public class MainWindow extends JFrame {
 		loginListener.logout();
 	    }
 	}
+    }
+
+    @Override
+    public void handleUserChanged() {
+	// TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void handleArticleChanged(Artikel art) {
+
+	try {
+	    artikelsichtfenster.auflistungInitialize();
+	    artikelsichtfenster.adjustColumns();
+	} catch(AccessRestrictedException e) {
+	    removeAll();
+	    add(new JLabel(e.getMessage()));
+	} catch(RemoteException e) {
+	    JOptionPane.showMessageDialog(artikelsichtfenster, e.getMessage());
+	}
+	if (user instanceof Kunde) {
+	    if (server.artikelInWarenkorb(art, user)) {
+		try {
+		    warenkorbverwaltungsfenster.warenkorbAufrufen();
+		} catch(RemoteException | AccessRestrictedException e) {
+		    JOptionPane.showMessageDialog(artikelsichtfenster, e.getMessage());
+		}
+	    }
+	} else if (user instanceof Mitarbeiter) {
+	    artikelverwaltungsfenster = new Artikelverwaltungsfenster();
+	}
+    }
+
+    @Override
+    public void handleEventChanged() {
+	// TODO Auto-generated method stub
+
     }
 }

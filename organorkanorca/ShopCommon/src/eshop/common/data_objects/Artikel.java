@@ -64,10 +64,10 @@ public class Artikel implements Serializable {
 	 */
     }
 
-    private String bezeichnung;
-    private int artikelnummer;
-    private int bestand;
-    private double preis;
+    private String		  bezeichnung;
+    private int			  artikelnummer;
+    private int			  bestand;
+    private double		  preis;
     private Map<Integer, Integer> bestandsverlauf = new LinkedHashMap<>();
     /*
      * Nocht nicht verwendet private String kategorie; private boolean angebot;
@@ -78,6 +78,7 @@ public class Artikel implements Serializable {
      * @return Gibt die Bezeichnung des Artikels aus
      */
     public String getBezeichnung() {
+
 	return bezeichnung;
     }
 
@@ -88,6 +89,7 @@ public class Artikel implements Serializable {
      *            Gewuenschte Artikelbezeichnung
      */
     public void setBezeichnung(String bezeichnung) {
+
 	this.bezeichnung = bezeichnung;
     }
 
@@ -95,6 +97,7 @@ public class Artikel implements Serializable {
      * @return
      */
     public int getArtikelnummer() {
+
 	return artikelnummer;
     }
 
@@ -102,6 +105,7 @@ public class Artikel implements Serializable {
      * @param artikelnummer
      */
     public void setArtikelnummer(int artikelnummer) {
+
 	this.artikelnummer = artikelnummer;
     }
 
@@ -109,6 +113,7 @@ public class Artikel implements Serializable {
      * @return
      */
     public int getBestand() {
+
 	return bestand;
     }
 
@@ -116,6 +121,7 @@ public class Artikel implements Serializable {
      * @param bestand
      */
     public void setBestand(int bestand) {
+
 	this.bestand = bestand;
     }
 
@@ -123,6 +129,7 @@ public class Artikel implements Serializable {
      * @return
      */
     public double getPreis() {
+
 	return preis;
     }
 
@@ -130,10 +137,12 @@ public class Artikel implements Serializable {
      * @param preis
      */
     public void setPreis(double preis) {
+
 	this.preis = preis;
     }
 
     public void aktualisiereBestandsverlauf() {
+
 	if (bestandsverlauf.size() >= 30) {
 	    bestandsverlauf.remove(0);
 	}
@@ -142,6 +151,7 @@ public class Artikel implements Serializable {
     }
 
     public Map<Integer, Integer> getBestandsverlauf() {
+
 	return bestandsverlauf;
     }
 
@@ -150,6 +160,7 @@ public class Artikel implements Serializable {
      * @see java.lang.Object#toString()
      */
     public String toString() {
+
 	return artikelnummer + " | " + bezeichnung + " | " + preis + " | " + bestand;
     }
 }

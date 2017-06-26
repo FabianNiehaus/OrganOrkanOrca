@@ -17,13 +17,13 @@ public abstract class Person implements Serializable {
      * 
      */
     private static final long serialVersionUID = 5177564072380459834L;
-    protected int id;
-    protected String passwort;
-    protected String firstname;
-    protected String lastname;
-    protected String address_Street;
-    protected String address_Zip;
-    protected String address_Town;
+    protected int	      id;
+    protected String	      passwort;
+    protected String	      firstname;
+    protected String	      lastname;
+    protected String	      address_Street;
+    protected String	      address_Zip;
+    protected String	      address_Town;
 
     /**
      * Erzeugt eine Persion
@@ -52,6 +52,7 @@ public abstract class Person implements Serializable {
      * @return
      */
     public String getFirstname() {
+
 	return firstname;
     }
 
@@ -60,6 +61,7 @@ public abstract class Person implements Serializable {
      * @throws InvalidPersonDataException
      */
     public void setFirstname(String firstname) throws InvalidPersonDataException {
+
 	if (!firstname.equals("")) {
 	    this.firstname = firstname;
 	} else {
@@ -71,6 +73,7 @@ public abstract class Person implements Serializable {
      * @return
      */
     public String getLastname() {
+
 	return lastname;
     }
 
@@ -79,6 +82,7 @@ public abstract class Person implements Serializable {
      * @throws InvalidPersonDataException
      */
     public void setLastname(String lastname) throws InvalidPersonDataException {
+
 	if (!lastname.equals("")) {
 	    this.lastname = lastname;
 	} else {
@@ -90,6 +94,7 @@ public abstract class Person implements Serializable {
      * @return
      */
     public int getId() {
+
 	return id;
     }
 
@@ -97,6 +102,7 @@ public abstract class Person implements Serializable {
      * @param id
      */
     public void setId(int id) {
+
 	this.id = id;
     }
 
@@ -104,6 +110,7 @@ public abstract class Person implements Serializable {
      * @return
      */
     public String getAddress_Street() {
+
 	return address_Street;
     }
 
@@ -112,6 +119,7 @@ public abstract class Person implements Serializable {
      * @throws InvalidPersonDataException
      */
     public void setAddress_Street(String address_Street) throws InvalidPersonDataException {
+
 	if (!address_Street.equals("")) {
 	    this.address_Street = address_Street;
 	} else {
@@ -123,6 +131,7 @@ public abstract class Person implements Serializable {
      * @return
      */
     public String getAddress_Zip() {
+
 	return address_Zip;
     }
 
@@ -131,6 +140,7 @@ public abstract class Person implements Serializable {
      * @throws InvalidPersonDataException
      */
     public void setAddress_Zip(String address_Zip) throws InvalidPersonDataException {
+
 	if (!address_Zip.equals("")) {
 	    this.address_Zip = address_Zip;
 	} else {
@@ -142,6 +152,7 @@ public abstract class Person implements Serializable {
      * @return
      */
     public String getAddress_Town() {
+
 	return address_Town;
     }
 
@@ -150,6 +161,7 @@ public abstract class Person implements Serializable {
      * @throws InvalidPersonDataException
      */
     public void setAddress_Town(String address_Town) throws InvalidPersonDataException {
+
 	if (!address_Town.equals("")) {
 	    this.address_Town = address_Town;
 	} else {
@@ -161,6 +173,7 @@ public abstract class Person implements Serializable {
      * @return
      */
     public String getPasswort() {
+
 	return passwort;
     }
 
@@ -169,6 +182,7 @@ public abstract class Person implements Serializable {
      * @throws InvalidPersonDataException
      */
     public void setPasswort(String passwort) throws InvalidPersonDataException {
+
 	if (!passwort.equals("")) {
 	    this.passwort = passwort;
 	} else {

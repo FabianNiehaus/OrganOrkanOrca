@@ -32,16 +32,17 @@ import eshop.common.exceptions.InvalidPersonDataException;
 public class FilePersistenceManager implements PersistenceManager {
 
     private BufferedReader reader = null;
-    private PrintWriter writer = null;
+    private PrintWriter	   writer = null;
 
     /*
      * (non-Javadoc)
      * @see persistence.PersistenceManager#openForReading(java.lang.String)
      */
     public void openForReading(String datei) throws FileNotFoundException {
+
 	try {
 	    reader = new BufferedReader(new FileReader(datei));
-	} catch (FileNotFoundException fnfe) {
+	} catch(FileNotFoundException fnfe) {
 	    throw new FileNotFoundException(datei);
 	}
     }
@@ -51,6 +52,7 @@ public class FilePersistenceManager implements PersistenceManager {
      * @see persistence.PersistenceManager#openForWriting(java.lang.String)
      */
     public void openForWriting(String datei) throws IOException {
+
 	writer = new PrintWriter(new BufferedWriter(new FileWriter(datei)));
 	// Dokument leeren
 	if (writer != null) {
@@ -65,11 +67,12 @@ public class FilePersistenceManager implements PersistenceManager {
      * @see persistence.PersistenceManager#close()
      */
     public boolean close() {
+
 	if (writer != null) writer.close();
 	if (reader != null) {
 	    try {
 		reader.close();
-	    } catch (IOException e) {
+	    } catch(IOException e) {
 		e.printStackTrace();
 		return false;
 	    }
@@ -85,6 +88,7 @@ public class FilePersistenceManager implements PersistenceManager {
      * @return Artikel-Objekt, wenn Einlesen erfolgreich, false null
      */
     public Artikel ladeArtikel() throws IOException {
+
 	int artikelnummer = 0;
 	String bezeichnung = "";
 	double preis = 0;
@@ -94,7 +98,7 @@ public class FilePersistenceManager implements PersistenceManager {
 	// Lies Artikelnummer
 	try {
 	    artikelnummer = Integer.parseInt(liesZeile());
-	} catch (NumberFormatException nfe) {
+	} catch(NumberFormatException nfe) {
 	    // Abbruch wenn Leerzeile -> keine Artikel mehr vorhanden
 	    return null;
 	}
@@ -119,7 +123,7 @@ public class FilePersistenceManager implements PersistenceManager {
 	    } else {
 		reader.reset();
 	    }
-	} catch (NullPointerException e) {
+	} catch(NullPointerException e) {
 	}
 	if (packungsgroesse == 1) {
 	    return new Artikel(bezeichnung, artikelnummer, bestand, preis, bestandsverlauf);
@@ -138,6 +142,7 @@ public class FilePersistenceManager implements PersistenceManager {
      * @return true, wenn Schreibvorgang erfolgreich, false sonst
      */
     public boolean speichereArtikel(Artikel art) throws IOException {
+
 	// Schreibe Artikelnummer
 	schreibeZeile(String.valueOf(art.getArtikelnummer()));
 	// Schreibe Artikelbezeichnung
@@ -168,6 +173,7 @@ public class FilePersistenceManager implements PersistenceManager {
      * @throws InvalidPersonDataException
      */
     public Kunde ladeKunde() throws IOException, InvalidPersonDataException {
+
 	int id = 0;
 	String firstname = "";
 	String lastname = "";
@@ -178,7 +184,7 @@ public class FilePersistenceManager implements PersistenceManager {
 	// Lies ID
 	try {
 	    id = Integer.parseInt(liesZeile());
-	} catch (NumberFormatException nfe) {
+	} catch(NumberFormatException nfe) {
 	    // Abbruch wenn Leerzeile -> keine Kunden mehr vorhanden
 	    return null;
 	}
@@ -195,6 +201,7 @@ public class FilePersistenceManager implements PersistenceManager {
     }
 
     public boolean speichereKunde(Kunde ku) throws IOException {
+
 	// Schreibe ID
 	schreibeZeile(String.valueOf(ku.getId()));
 	// Schreibe firstname
@@ -215,6 +222,7 @@ public class FilePersistenceManager implements PersistenceManager {
      * @throws InvalidPersonData
      */
     public Mitarbeiter ladeMitarbeiter() throws IOException, InvalidPersonDataException {
+
 	int id = 0;
 	String firstname = "";
 	String lastname = "";
@@ -225,7 +233,7 @@ public class FilePersistenceManager implements PersistenceManager {
 	// Lies ID
 	try {
 	    id = Integer.parseInt(liesZeile());
-	} catch (NumberFormatException nfe) {
+	} catch(NumberFormatException nfe) {
 	    // Abbruch wenn Leerzeile -> keine Kunden mehr vorhanden
 	    return null;
 	}
@@ -242,6 +250,7 @@ public class FilePersistenceManager implements PersistenceManager {
     }
 
     public boolean speichereMitarbeiter(Mitarbeiter mi) throws IOException {
+
 	// Schreibe ID
 	schreibeZeile(String.valueOf(mi.getId()));
 	// Schreibe firstname
@@ -254,6 +263,7 @@ public class FilePersistenceManager implements PersistenceManager {
     }
 
     public Vector<Object> ladeEreignis() throws IOException {
+
 	Vector<Object> ret = new Vector<Object>(6);
 	int id = 0;
 	int werId = 0;
@@ -263,7 +273,7 @@ public class FilePersistenceManager implements PersistenceManager {
 	String wann;
 	try {
 	    id = Integer.parseInt(liesZeile());
-	} catch (NumberFormatException nfe) {
+	} catch(NumberFormatException nfe) {
 	    // Abbruch wenn Leerzeile -> keine Ereignisse mehr vorhanden
 	    return null;
 	}
@@ -282,6 +292,7 @@ public class FilePersistenceManager implements PersistenceManager {
     }
 
     public boolean speichereEreignis(Ereignis er) throws IOException {
+
 	// Schreibe
 	schreibeZeile(String.valueOf(er.getId()));
 	schreibeZeile(String.valueOf(er.getWer().getId()));
@@ -301,9 +312,10 @@ public class FilePersistenceManager implements PersistenceManager {
      * @throws IOException
      */
     private String liesZeile() throws IOException {
+
 	if (reader != null) try {
 	    return reader.readLine();
-	} catch (IOException ie) {
+	} catch(IOException ie) {
 	    return "";
 	}
 	else return "";
@@ -316,6 +328,7 @@ public class FilePersistenceManager implements PersistenceManager {
      *            Zu schreibende Zeile als String
      */
     private void schreibeZeile(String daten) {
+
 	if (writer != null) writer.println(daten);
     }
 }
