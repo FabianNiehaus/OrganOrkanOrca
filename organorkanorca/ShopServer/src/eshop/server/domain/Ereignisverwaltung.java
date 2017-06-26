@@ -18,122 +18,117 @@ import eshop.server.persistence.FilePersistenceManager;
 import eshop.server.persistence.PersistenceManager;
 
 /**
- * @author Fabian Niehaus
- * Klasse zur Verwaltung von Ereignissen
+ * @author Fabian Niehaus Klasse zur Verwaltung von Ereignissen
  */
 public class Ereignisverwaltung {
-	
-	Kundenverwaltung kv;
-	Mitarbeiterverwaltung mv;
-	Artikelverwaltung av;
-	
-	public Ereignisverwaltung(Kundenverwaltung kv, Mitarbeiterverwaltung mv, Artikelverwaltung av){
-		this.kv = kv;
-		this.av = av;
-		this.mv = mv;
-	}
 
-	// Persistenz-Schnittstelle, die fuer die Details des Dateizugriffs verantwortlich ist
-	private PersistenceManager pm = new FilePersistenceManager();
-	
-	private Vector<Ereignis> ereignisse = new Vector<Ereignis>();
-	
-	public void liesDaten(String datei) throws IOException, ArticleNonexistantException, PersonNonexistantException {
-		// PersistenzManager f�r Lesevorgänge öffnen
-		pm.openForReading(datei);
+    Kundenverwaltung kv;
+    Mitarbeiterverwaltung mv;
+    Artikelverwaltung av;
 
-		Ereignis er;
-		
-		try{
-			do {
-			
-				Vector<Object> info = pm.ladeEreignis();
-				
-				Person p = null;
-				int personennummer = (int) info.elementAt(1);
-				
-				//wenn Person ein Kunde ist (Unterscheidung durch Personennummern)
-				if (personennummer > 1000 && personennummer < 9000){
-					p = kv.sucheKunde(personennummer);
-				//wenn Person ein Mitarbeiter ist				
-				} else if (personennummer >= 9000 && personennummer < 10000 ) {
-					p = mv.sucheMitarbeiter(personennummer);
-				} else {
-					throw new PersonNonexistantException(personennummer);
-				}
-				//Artikel wird durch Artikelnummer gesucht
-				Artikel art = null;
-				art = av.sucheArtikel((int) info.elementAt(3));
-				
-				//Datum wird eingelesen und von String zu date
-				Date date = null;
-				DateFormat formatter = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-				try {
-				  date = formatter.parse((String) info.elementAt(5));
-				} catch (ParseException e) {
-				  e.printStackTrace();
-				}
-				//Ereignis wird aus dem Vector Elementen erstellt
-				er = new Ereignis((int) info.elementAt(0), p, (Typ) info.elementAt(2), art, (int) info.elementAt(4), date); 
-				
-				// Ereignisse in die Ereignisliste einfuegen
-				einfuegen(er);
-				
-			} while (er.getId() != 0);
-		} catch (NullPointerException npe){
-			
+    public Ereignisverwaltung(Kundenverwaltung kv, Mitarbeiterverwaltung mv, Artikelverwaltung av) {
+	this.kv = kv;
+	this.av = av;
+	this.mv = mv;
+    }
+
+    // Persistenz-Schnittstelle, die fuer die Details des Dateizugriffs
+    // verantwortlich ist
+    private PersistenceManager pm = new FilePersistenceManager();
+    private Vector<Ereignis> ereignisse = new Vector<Ereignis>();
+
+    public void liesDaten(String datei) throws IOException, ArticleNonexistantException, PersonNonexistantException {
+	// PersistenzManager f�r Lesevorgänge öffnen
+	pm.openForReading(datei);
+	Ereignis er;
+	try {
+	    do {
+		Vector<Object> info = pm.ladeEreignis();
+		Person p = null;
+		int personennummer = (int) info.elementAt(1);
+		// wenn Person ein Kunde ist (Unterscheidung durch
+		// Personennummern)
+		if (personennummer > 1000 && personennummer < 9000) {
+		    p = kv.sucheKunde(personennummer);
+		    // wenn Person ein Mitarbeiter ist
+		} else if (personennummer >= 9000 && personennummer < 10000) {
+		    p = mv.sucheMitarbeiter(personennummer);
+		} else {
+		    throw new PersonNonexistantException(personennummer);
 		}
-
-		// Persistenz-Schnittstelle wieder schließen
-		pm.close();
-				
-	}
-	
-	public void schreibeDaten(String datei) throws IOException {
-		// PersistenzManager fuer Schreibvorgänge öffnen
-		pm.openForWriting(datei);
-
-		if (!ereignisse.isEmpty()) {
-			Iterator<Ereignis> iter = ereignisse.iterator();
-			while (iter.hasNext()) {
-				Ereignis er = (Ereignis) iter.next();
-				pm.speichereEreignis(er);				
-			}
+		// Artikel wird durch Artikelnummer gesucht
+		Artikel art = null;
+		art = av.sucheArtikel((int) info.elementAt(3));
+		// Datum wird eingelesen und von String zu date
+		Date date = null;
+		DateFormat formatter = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+		try {
+		    date = formatter.parse((String) info.elementAt(5));
+		} catch (ParseException e) {
+		    e.printStackTrace();
 		}
-		
-		// Persistenz-Schnittstelle wieder schließen
-		pm.close();
+		// Ereignis wird aus dem Vector Elementen erstellt
+		er = new Ereignis((int) info.elementAt(0), p, (Typ) info.elementAt(2), art, (int) info.elementAt(4),
+			date);
+		// Ereignisse in die Ereignisliste einfuegen
+		einfuegen(er);
+	    } while (er.getId() != 0);
+	} catch (NullPointerException npe) {
 	}
-	public void einfuegen(Ereignis er) {
-		ereignisse.add(er);
-	}
-	/**
-	 * Gibt alle gespeicherten Ereignisse aus
-	 * @return Ereignisse
-	 */
-	public Vector<Ereignis> getEreignisse() {
-		return ereignisse;
-	}
-	
-	/**
-	 * Erstellt und speichert ein neues Ereignis
-	 * @param wer Person, die die Aktion durchgefuehrt hat
-	 * @param was Typ der Aktion (EINLAGERUNG, AUSLAGERUNG, KAUF, NEU)
-	 * @param womit Welcher Artikel ist betroffen
-	 * @param wieviel Betroffene Stueckzahl
-	 */
-	public void ereignisErstellen(Person wer, Typ was, Artikel womit, int wieviel){
-		ereignisse.add(new Ereignis(getNextID(), wer, was, womit, wieviel, new Date()));
-	}
-	
-	public int getNextID() {
-		int hoechsteID = 0;
-		for(Ereignis er : ereignisse){
-			if(er.getId() > hoechsteID){
-				hoechsteID = er.getId();
-			}
-		}		
-		return hoechsteID+1;
-	}
+	// Persistenz-Schnittstelle wieder schließen
+	pm.close();
+    }
 
+    public void schreibeDaten(String datei) throws IOException {
+	// PersistenzManager fuer Schreibvorgänge öffnen
+	pm.openForWriting(datei);
+	if (!ereignisse.isEmpty()) {
+	    Iterator<Ereignis> iter = ereignisse.iterator();
+	    while (iter.hasNext()) {
+		Ereignis er = (Ereignis) iter.next();
+		pm.speichereEreignis(er);
+	    }
+	}
+	// Persistenz-Schnittstelle wieder schließen
+	pm.close();
+    }
+
+    public void einfuegen(Ereignis er) {
+	ereignisse.add(er);
+    }
+
+    /**
+     * Gibt alle gespeicherten Ereignisse aus
+     * 
+     * @return Ereignisse
+     */
+    public Vector<Ereignis> getEreignisse() {
+	return ereignisse;
+    }
+
+    /**
+     * Erstellt und speichert ein neues Ereignis
+     * 
+     * @param wer
+     *            Person, die die Aktion durchgefuehrt hat
+     * @param was
+     *            Typ der Aktion (EINLAGERUNG, AUSLAGERUNG, KAUF, NEU)
+     * @param womit
+     *            Welcher Artikel ist betroffen
+     * @param wieviel
+     *            Betroffene Stueckzahl
+     */
+    public void ereignisErstellen(Person wer, Typ was, Artikel womit, int wieviel) {
+	ereignisse.add(new Ereignis(getNextID(), wer, was, womit, wieviel, new Date()));
+    }
+
+    public int getNextID() {
+	int hoechsteID = 0;
+	for (Ereignis er : ereignisse) {
+	    if (er.getId() > hoechsteID) {
+		hoechsteID = er.getId();
+	    }
+	}
+	return hoechsteID + 1;
+    }
 }

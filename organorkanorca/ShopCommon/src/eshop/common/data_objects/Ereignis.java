@@ -6,95 +6,97 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * @author Fabian Niehaus
- * Dient zur Ereignisspeicherung fuer den eShop
+ * @author Fabian Niehaus Dient zur Ereignisspeicherung fuer den eShop
  */
-public class Ereignis implements Serializable  {
+public class Ereignis implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1817043294145890221L;
-	private int id;
-	private Person wer;
-	private Date wann;
-	private Typ was;
-	private Artikel womit;
-	private int wieviel;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1817043294145890221L;
+    private int id;
+    private Person wer;
+    private Date wann;
+    private Typ was;
+    private Artikel womit;
+    private int wieviel;
 
-	
-	/**
-	 * @param wer Person, die die Aktion durchgefuehrt hat
-	 * @param was Typ der Aktion (EINLAGERUNG, AUSLAGERUNG, KAUF, NEU)
-	 * @param womit Welcher Artikel ist betroffen
-	 * @param wieviel Betroffene Stueckzahl
-	 */
-	public Ereignis(int id, Person wer, Typ was, Artikel womit, int wieviel, Date wann) {
-		super();
-		this.id = id;
-		this.wer = wer;
-		this.was = was;
-		this.womit = womit;
-		this.wieviel = wieviel;
-		this.wann = wann;
-	}
-	
-	public void setId(int id) {
-		this.id = id;
-	}
-	
-	public int getId() {
-		return id;
-	}
-	public void setWer(Person wer) {
-		this.wer = wer;
-	}
-	
-	public Person getWer() {
-		return wer;
-	}
-	
-	public void setWas(Typ was) {
-		this.was = was;
-	}
-	
-	public Typ getTyp() {
-		return was;
-	}
-	
-	public void setWomit(Artikel womit) {
-		this.womit = womit;
-	}
-	
-	public Artikel getWomit() {
-		return womit;
-	}
-	
-	public void setWieviel(int wieviel) {
-		this.wieviel = wieviel;
-	}
-	
-	public int getWieviel() {
-		return wieviel;
-	}
-	
-	public void setWann(Date wann) {
-		
-		this.wann = wann;
-	}
-	
-	public Date getWann() {
-		return wann;
-	}
-	
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString(){
-		//Formatierungsvorlage fuer Datum
-		DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-				
-		return dateFormat.format(wann) + " | " + wer.getId() + ": " + wer.getLastname() + " " + wer.getLastname() + " | " + was + " | " + womit.getArtikelnummer() + ": " + womit.getBezeichnung() + " | " + wieviel; 
-	}
+    /**
+     * @param wer
+     *            Person, die die Aktion durchgefuehrt hat
+     * @param was
+     *            Typ der Aktion (EINLAGERUNG, AUSLAGERUNG, KAUF, NEU)
+     * @param womit
+     *            Welcher Artikel ist betroffen
+     * @param wieviel
+     *            Betroffene Stueckzahl
+     */
+    public Ereignis(int id, Person wer, Typ was, Artikel womit, int wieviel, Date wann) {
+	super();
+	this.id = id;
+	this.wer = wer;
+	this.was = was;
+	this.womit = womit;
+	this.wieviel = wieviel;
+	this.wann = wann;
+    }
+
+    public void setId(int id) {
+	this.id = id;
+    }
+
+    public int getId() {
+	return id;
+    }
+
+    public void setWer(Person wer) {
+	this.wer = wer;
+    }
+
+    public Person getWer() {
+	return wer;
+    }
+
+    public void setWas(Typ was) {
+	this.was = was;
+    }
+
+    public Typ getTyp() {
+	return was;
+    }
+
+    public void setWomit(Artikel womit) {
+	this.womit = womit;
+    }
+
+    public Artikel getWomit() {
+	return womit;
+    }
+
+    public void setWieviel(int wieviel) {
+	this.wieviel = wieviel;
+    }
+
+    public int getWieviel() {
+	return wieviel;
+    }
+
+    public void setWann(Date wann) {
+	this.wann = wann;
+    }
+
+    public Date getWann() {
+	return wann;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+	// Formatierungsvorlage fuer Datum
+	DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+	return dateFormat.format(wann) + " | " + wer.getId() + ": " + wer.getLastname() + " " + wer.getLastname()
+		+ " | " + was + " | " + womit.getArtikelnummer() + ": " + womit.getBezeichnung() + " | " + wieviel;
+    }
 }
