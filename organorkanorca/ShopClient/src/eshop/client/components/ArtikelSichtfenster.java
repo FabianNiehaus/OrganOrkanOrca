@@ -30,7 +30,6 @@ import eshop.common.net.ShopRemote;
 
 public class ArtikelSichtfenster extends Sichtfenster {
 
-	ShopTableModel	shoptablemodel;
 	JButton		verlaufAnzeigenButton = new JButton("Verlauf anzeigen");
 
 	public ArtikelSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
@@ -48,7 +47,7 @@ public class ArtikelSichtfenster extends Sichtfenster {
 		}
 		
 		try {
-			updateTable(server.alleArtikelAusgeben(user), new String[] {"Nummer"} );
+			updateTable(server.alleArtikelAusgeben(user), new String[] { "ArtNr.", "Bezeichnung", "Preis", "Einheit", "Bestand" } );
 		} catch (RemoteException | AccessRestrictedException e) {
 			JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e.getMessage());
 		}
@@ -92,7 +91,7 @@ public class ArtikelSichtfenster extends Sichtfenster {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
-			listener.ArtikelBearbeiten();
+			listener.artikelBearbeiten();
 
 		}
 	}
@@ -107,7 +106,7 @@ public class ArtikelSichtfenster extends Sichtfenster {
 						user);
 				server.artikelInWarenkorbLegen(art.getArtikelnummer(), Integer.parseInt(anzahl.getText()), user);
 //				warenkorbverwaltungsfenster.warenkorbAufrufen();
-				listener.ArtikelInWarenkorb();
+				listener.artikelInWarenkorb();
 				anzahl.setText("");
 			} catch(NumberFormatException e1) {
 				JOptionPane.showMessageDialog(ArtikelSichtfenster.this, "Keine gueltige Anzahl!");
@@ -127,5 +126,15 @@ public class ArtikelSichtfenster extends Sichtfenster {
 				JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e1.getMessage());
 			}
 		}
+	}
+
+	@Override
+	public void callTableUpdate() {
+		try {
+			updateTable(server.alleArtikelAusgeben(user), new String[] { "ArtNr.", "Bezeichnung", "Preis", "Einheit", "Bestand" } );
+		} catch (RemoteException | AccessRestrictedException e) {
+			JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e.getMessage());
+		}
+		
 	}
 }

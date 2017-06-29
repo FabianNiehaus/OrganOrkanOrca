@@ -38,9 +38,19 @@ class KundenSichtfenster extends Sichtfenster {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
-			listener.KundeBearbeiten();
+			listener.kundeBearbeiten();
 
 		}
+	}
+	
+	@Override
+	public void callTableUpdate() {
+		try {
+			updateTable(server.alleKundenAusgeben(user), new String[] { "ArtNr.", "Bezeichnung", "Preis", "Einheit", "Bestand" } );
+		} catch (RemoteException | AccessRestrictedException e) {
+			JOptionPane.showMessageDialog(KundenSichtfenster.this, e.getMessage());
+		}
+		
 	}
 }
 

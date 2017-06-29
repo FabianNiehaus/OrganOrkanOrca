@@ -33,10 +33,11 @@ import eshop.common.net.ShopRemote;
 public abstract class Sichtfenster extends JPanel {
 
 	public interface SichtfensterCallbacks {
-		public void ArtikelInWarenkorb();
-		public void ArtikelBearbeiten();
-		public void KundeBearbeiten();
-		public void MitarbeiterBearbeiten();
+		public void artikelInWarenkorb();
+		public void artikelBearbeiten();
+		public void kundeBearbeiten();
+		public void mitarbeiterBearbeiten();
+		public void alleSichtfensterErneuern();
 		
 	}
 	
@@ -82,6 +83,8 @@ public abstract class Sichtfenster extends JPanel {
 		leftAreaActionField.add(anzahl);
 		
 	}
+	
+	public abstract void callTableUpdate();
 
 	protected <T> void updateTable(Vector<T> dataVector, String[] headerString) throws RemoteException {
 		shoptablemodel = new ShopTableModel(dataVector, headerString);

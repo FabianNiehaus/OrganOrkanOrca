@@ -35,7 +35,10 @@ import org.jfree.chart.ChartFrame;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.DefaultCategoryDataset;
 
+import eshop.client.components.Artikelsichtfenster;
 import eshop.client.components.Artikelverwaltungsfenster;
+import eshop.client.components.Kundensichtfenster;
+import eshop.client.components.Mitarbeitersichtfenster;
 import eshop.client.components.Personenverwaltungsfenster;
 import eshop.client.util.LoginListener;
 import eshop.client.util.Sichtfenster;
@@ -311,7 +314,7 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 									neuAnlegenButton.setVisible(true);
 									aendernButton.setVisible(true);
 									loeschenButton.setVisible(true);
-									artikelsichtfenster.auflistungInitialize();
+									artikelsichtfenster.update();
 									artikelverwaltungsfenster.repaint();
 								} catch(ArticleNonexistantException e1) {
 									JOptionPane.showMessageDialog(Artikelverwaltungsfenster.this, e1.getMessage());
@@ -435,55 +438,6 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 
 	
 
-	class Kundensichtfenster extends Sichtfenster {
-
-		eShopTableModel etm;
-
-		public Kundensichtfenster() {
-			super();
-			aktion.setText("Bearbeiten");
-			aktion.addActionListener(new KundeBearbeitenListener());
-			anzahl.setVisible(false);
-		}
-
-		@Override
-		public void auflistungInitialize() throws AccessRestrictedException, RemoteException {
-
-			Vector<Vector<Object>> data = new Vector<>();
-			for (Kunde ku : server.alleKundenAusgeben(user)) {
-				Vector<Object> tmp = new Vector<>();
-				tmp.addElement(ku.getId());
-				tmp.addElement(ku.getFirstname());
-				tmp.addElement(ku.getLastname());
-				tmp.addElement(ku.getAddress_Street());
-				tmp.addElement(ku.getAddress_Zip());
-				tmp.addElement(ku.getAddress_Town());
-				data.addElement(tmp);
-			}
-			etm = new eShopTableModel(data,
-					new String[] { "Kundennummer", "Vorname", "Nachname", "Straße", "PLZ", "Ort" });
-			auflistung.setModel(etm);
-		}
-
-		class KundeBearbeitenListener implements ActionListener {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-				try {
-					kundenverwaltungsfenster.personAnzeigen(
-							server.kundeSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user));
-				} catch(ArrayIndexOutOfBoundsException e1) {
-					JOptionPane.showMessageDialog(Kundensichtfenster.this, "Kein Kunde ausgewählt");
-				} catch(PersonNonexistantException e1) {
-					JOptionPane.showMessageDialog(Kundensichtfenster.this, e1.getMessage());
-				} catch(RemoteException e1) {
-					JOptionPane.showMessageDialog(Kundensichtfenster.this, e1.getMessage());
-				}
-			}
-		}
-	}
-
 	class MenuButtonsActionListener implements ActionListener {
 
 		@Override
@@ -556,54 +510,6 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 				}
 			} else if (ae.getSource().equals(logoutButton)) {
 				loginListener.logout();
-			}
-		}
-	}
-
-	class Mitarbeitersichtfenster extends Sichtfenster {
-
-		eShopTableModel etm;
-
-		public Mitarbeitersichtfenster() {
-			super();
-			aktion.setText("Bearbeiten");
-			anzahl.setVisible(false);
-		}
-
-		@Override
-		public void auflistungInitialize() throws AccessRestrictedException, RemoteException {
-
-			Vector<Vector<Object>> data = new Vector<>();
-			for (Mitarbeiter mi : server.alleMitarbeiterAusgeben(user)) {
-				Vector<Object> tmp = new Vector<>();
-				tmp.addElement(mi.getId());
-				tmp.addElement(mi.getFirstname());
-				tmp.addElement(mi.getLastname());
-				tmp.addElement(mi.getAddress_Street());
-				tmp.addElement(mi.getAddress_Zip());
-				tmp.addElement(mi.getAddress_Town());
-				data.addElement(tmp);
-			}
-			etm = new eShopTableModel(data,
-					new String[] { "Kundennummer", "Vorname", "Nachname", "Straße", "PLZ", "Ort" });
-			auflistung.setModel(etm);
-		}
-
-		class KundeBearbeitenListener implements ActionListener {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-				try {
-					mitarbeiterverwaltungsfenster.personAnzeigen(server
-							.mitarbeiterSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user));
-				} catch(ArrayIndexOutOfBoundsException e1) {
-					JOptionPane.showMessageDialog(Mitarbeitersichtfenster.this, "Kein Mitarbeiter ausgewählt");
-				} catch(PersonNonexistantException e1) {
-					JOptionPane.showMessageDialog(Mitarbeitersichtfenster.this, e1.getMessage());
-				} catch(RemoteException e1) {
-					JOptionPane.showMessageDialog(Mitarbeitersichtfenster.this, e1.getMessage());
-				}
 			}
 		}
 	}
@@ -885,139 +791,6 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 		}
 	}
 
-	class ShopManagement extends JPanel {
-
-		JButton		   speichernButton     = new JButton("Bestandsdaten speichern");
-		JButton		   ladenButton	       = new JButton("Bestandsdaten importieren");
-		EreignisTableModel etm;
-		JXTable		   auflistung	       = new JXTable();
-		JScrollPane	   auflistungContainer = new JScrollPane(auflistung);
-
-		public ShopManagement() {
-			this.setLayout(new MigLayout());
-			try {
-				speichernButton.addActionListener(new PersistenceButtonListener());
-				ladenButton.addActionListener(new PersistenceButtonListener());
-				this.add(speichernButton, "dock center");
-				this.add(ladenButton, "wrap, dock center");
-				this.add(auflistungContainer, "span");
-				auflistung.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-				auflistungInitialize();
-			} catch(AccessRestrictedException e) {
-				removeAll();
-				add(new JLabel(e.getMessage()));
-			} catch(RemoteException e) {
-				JOptionPane.showMessageDialog(this, e.getMessage());
-			}
-		}
-
-		public void auflistungInitialize() throws AccessRestrictedException, RemoteException {
-
-			Vector<Vector<Object>> data = new Vector<>();
-			DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-			for (Ereignis er : server.alleEreignisseAusgeben(user)) {
-				Vector<Object> tmp = new Vector<>();
-				tmp.addElement(dateFormat.format(er.getWann()));
-				tmp.addElement(er.getId());
-				tmp.addElement(er.getTyp());
-				tmp.addElement(er.getWomit().getArtikelnummer());
-				tmp.addElement(er.getWomit().getBezeichnung());
-				tmp.addElement(er.getWieviel());
-				tmp.addElement(er.getWer().getId());
-				tmp.addElement(er.getWer().getFirstname() + " " + er.getWer().getLastname());
-				data.addElement(tmp);
-			}
-			etm = new EreignisTableModel(data);
-			auflistung.setModel(etm);
-			TableRowSorter<EreignisTableModel> sorter = new TableRowSorter<EreignisTableModel>(etm);
-			auflistung.setRowSorter(sorter);
-			TableColumnAdjuster tca = new TableColumnAdjuster(auflistung, 30);
-			tca.adjustColumns(SwingConstants.CENTER);
-		}
-
-		class EreignisTableModel extends AbstractTableModel {
-
-			Vector<String>	   columnIdentifiers;
-			Vector<Vector<Object>> dataVector;
-
-			public EreignisTableModel(Vector<Vector<Object>> data) {
-				columnIdentifiers = setColumns(
-						new String[] { "Datum", "Id", "Aktion", "ArtikelNr", "Artikel", "Anzahl", "UserID", "Name" });
-				dataVector = data;
-			}
-
-			@Override
-			public int getColumnCount() {
-
-				return columnIdentifiers.size();
-			}
-
-			@Override
-			public String getColumnName(int column) {
-
-				return columnIdentifiers.elementAt(column);
-			}
-
-			@Override
-			public int getRowCount() {
-
-				return dataVector.size();
-			}
-
-			@Override
-			public Object getValueAt(int arg0, int arg1) {
-
-				return dataVector.elementAt(arg0).elementAt(arg1);
-			}
-
-			public Vector<String> setColumns(String[] columnNames) {
-
-				Vector<String> columns = new Vector<>();
-				for (String str : columnNames) {
-					columns.addElement(str);
-				}
-				return columns;
-			}
-		}
-
-		class PersistenceButtonListener implements ActionListener {
-
-			@Override
-			public void actionPerformed(ActionEvent ae) {
-
-				if (ae.getSource().equals(speichernButton)) {
-					try {
-						server.schreibeDaten();
-						JOptionPane.showMessageDialog(ShopManagement.this, "Daten erfolgreich gespeichert!");
-					} catch(IOException e1) {
-						JOptionPane.showMessageDialog(ShopManagement.this, e1.getMessage());
-					}
-				} else if (ae.getSource().equals(ladenButton)) {
-					try {
-						server.ladeDaten();
-						artikelsichtfenster = new Artikelsichtfenster();
-						kundensichtfenster = new Kundensichtfenster();
-						mitarbeitersichtfenster = new Mitarbeitersichtfenster();
-						artikelverwaltungsfenster = new Artikelverwaltungsfenster();
-						kundenverwaltungsfenster = new Personenverwaltungsfenster("Kundenverwaltung", "Kunde");
-						mitarbeiterverwaltungsfenster = new Personenverwaltungsfenster("Mitarbeiterverwaltung",
-								"Mitarbeiter");
-					} catch(IOException e1) {
-						JOptionPane.showMessageDialog(ShopManagement.this, e1.getMessage());
-					} catch(ArticleNonexistantException e1) {
-						JOptionPane.showMessageDialog(ShopManagement.this, e1.getMessage());
-					} catch(PersonNonexistantException e1) {
-						JOptionPane.showMessageDialog(ShopManagement.this, e1.getMessage());
-					} catch(InvalidPersonDataException e1) {
-						JOptionPane.showMessageDialog(ShopManagement.this, e1.getMessage());
-					} catch(Exception e1) {
-						JOptionPane.showMessageDialog(ShopManagement.this, e1.getMessage());
-					}
-				}
-			}
-		}
-	}
-
 	class Warenkorbverwaltungsfenster extends JPanel {
 
 		Warenkorb   wk;
@@ -1211,7 +984,7 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 	}
 
 	@Override
-	public void ArtikelInWarenkorb() {
+	public void artikelInWarenkorb() {
 		try {
 			warenkorbverwaltungsfenster.warenkorbAufrufen();
 		} catch (RemoteException | AccessRestrictedException e) {
@@ -1221,20 +994,32 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 	}
 
 	@Override
-	public void ArtikelBearbeiten() {
+	public void artikelBearbeiten() {
 		artikelverwaltungsfenster.artikelAnzeigen(
 				server.artikelSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user));
 	}
 
 	@Override
-	public void KundeBearbeiten() {
+	public void kundeBearbeiten() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void MitarbeiterBearbeiten() {
+	public void mitarbeiterBearbeiten() {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void alleSichtfensterErneuern() {
+		artikelsichtfenster = new ArtikelSichtfenster();
+		kundensichtfenster = new KundenSichtfenster();
+		mitarbeitersichtfenster = new MitarbeiterSichtfenster();
+		artikelverwaltungsfenster = new Artikelverwaltungsfenster();
+		kundenverwaltungsfenster = new Personenverwaltungsfenster("Kundenverwaltung", "Kunde");
+		mitarbeiterverwaltungsfenster = new Personenverwaltungsfenster("Mitarbeiterverwaltung",
+				"Mitarbeiter");
 		
 	}
 	
@@ -1313,4 +1098,6 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 			}
 		}
 	}
+
+	
 }
