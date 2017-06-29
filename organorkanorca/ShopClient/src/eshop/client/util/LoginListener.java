@@ -1,4 +1,4 @@
-package eshop.client.components;
+package eshop.client.util;
 
 import eshop.common.data_objects.Person;
 

@@ -1,4 +1,4 @@
-package eshop.client.components;
+package eshop.client;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +13,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
+import eshop.client.util.LoginListener;
 import eshop.common.data_objects.Kunde;
 import eshop.common.data_objects.Person;
 import eshop.common.exceptions.AccessRestrictedException;

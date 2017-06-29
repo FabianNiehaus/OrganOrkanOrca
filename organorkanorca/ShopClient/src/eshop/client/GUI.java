@@ -1,4 +1,4 @@
-package eshop.client.components;
+package eshop.client;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -8,13 +8,14 @@ import java.rmi.server.UnicastRemoteObject;
 
 import javax.swing.JOptionPane;
 
+import eshop.client.util.LoginListener;
 import eshop.common.data_objects.Person;
 import eshop.common.net.ShopRemote;
 
 public class GUI extends UnicastRemoteObject {
 
-    static LoginWindow	     loginwindow;
-    static MainWindow	     mainwindow;
+    LoginWindow	     loginwindow;
+    MainWindow	     mainwindow;
     private ListenerForLogin listenerForLogin = new ListenerForLogin();
     // Shop server
     private ShopRemote	     server;

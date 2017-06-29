@@ -1,0 +1,7 @@
+To-Do
+- Auslagerung Ereigniserstellung in Ereignisverwaltung
+- Überarbeitung GUI
+- Ausschlusslogik Methoden
+- Bugfixes
+- Table Model ein Konstruktor pro Inhaltstyp, Vektor übergeben
+- Tabellenfilterung (Tabelle neu zeichnen!)
