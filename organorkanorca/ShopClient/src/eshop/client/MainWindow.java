@@ -35,11 +35,6 @@ import org.jfree.chart.ChartFrame;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.DefaultCategoryDataset;
 
-import eshop.client.components.Artikelsichtfenster;
-import eshop.client.components.Artikelverwaltungsfenster;
-import eshop.client.components.Kundensichtfenster;
-import eshop.client.components.Mitarbeitersichtfenster;
-import eshop.client.components.Personenverwaltungsfenster;
 import eshop.client.util.LoginListener;
 import eshop.client.util.Sichtfenster;
 import eshop.client.util.TableColumnAdjuster;
@@ -79,7 +74,7 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 	JButton			mitarbeiterButton = new JButton("Mitarbeiter");
 	JButton			shopButton	  = new JButton("Shop");
 	JButton			logoutButton	  = new JButton("Logout");
-	Kundensichtfenster		kundensichtfenster;
+	KundenSichtfenster		kundensichtfenster;
 	Artikelsichtfenster		artikelsichtfenster;
 	Mitarbeitersichtfenster	mitarbeitersichtfenster;
 	ShopManagement		shopManagement;
@@ -273,198 +268,6 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 				}
 			} else if (ae.getSource().equals(logoutButton)) {
 				loginListener.logout();
-			}
-		}
-	}
-
-	class Warenkorbverwaltungsfenster extends JPanel {
-
-		Warenkorb   wk;
-		JPanel	    buttons			 = new JPanel();
-		JTable	    warenkorbAuflistung		 = new JTable();
-		JScrollPane warenkorbAuflistungContainer = new JScrollPane(warenkorbAuflistung);
-		JButton	    aendernButton		 = new JButton("Anzahl ändern");
-		JButton	    artikelEntfernenButton	 = new JButton("Entfernen");
-		JButton	    leerenButton		 = new JButton("Leeren");
-		JButton	    kaufenButton		 = new JButton("Kaufen");
-
-		public Warenkorbverwaltungsfenster() {
-			this.setLayout(new MigLayout());
-			this.add(new JLabel("Warenkorbverwaltung"), "align center, wrap");
-			this.add(warenkorbAuflistungContainer, "wrap");
-			aendernButton.addActionListener(new WarenkorbActionListener());
-			artikelEntfernenButton.addActionListener(new WarenkorbActionListener());
-			leerenButton.addActionListener(new WarenkorbActionListener());
-			kaufenButton.addActionListener(new WarenkorbActionListener());
-			buttons.add(aendernButton);
-			buttons.add(artikelEntfernenButton);
-			buttons.add(leerenButton);
-			buttons.add(kaufenButton);
-			this.add(buttons, "align center, wrap");
-			JTableHeader header = warenkorbAuflistung.getTableHeader();
-			header.setUpdateTableInRealTime(true);
-			header.setReorderingAllowed(false);
-			warenkorbAuflistung.setAutoCreateRowSorter(true);
-			warenkorbAuflistung.setModel(new WarenkorbTableModel());
-			this.setVisible(true);
-		}
-
-		public void warenkorbAufrufen() throws AccessRestrictedException, RemoteException {
-
-			Warenkorb wk = server.warenkorbAusgeben(user);
-			Map<Artikel, Integer> inhalt = wk.getArtikel();
-			warenkorbAuflistung.setModel(new WarenkorbTableModel(inhalt));
-		}
-
-		class WarenkorbActionListener implements ActionListener {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-				// Anzahl eines Artikels im Warenkorn ändern
-				if (e.getSource().equals(aendernButton)) {
-					try {
-						int row = warenkorbAuflistung.getSelectedRow();
-						if (row != -1) {
-							Artikel art = server.artikelSuchen(((int) warenkorbAuflistung.getValueAt(row, 0)), user);
-							int anz = Integer.parseInt(JOptionPane.showInputDialog("Bitte gewuenschte Anzahl angeben"));
-							if (anz > 0) {
-								server.artikelInWarenkorbAendern(art, anz, user);
-							} else {
-								throw new InvalidAmountException();
-							}
-							wk = server.warenkorbAusgeben(user);
-							warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
-						}
-					} catch(ArticleStockNotSufficientException e1) {
-						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
-					} catch(BasketNonexistantException e1) {
-						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
-					} catch(AccessRestrictedException e1) {
-						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
-					} catch(NumberFormatException e1) {
-						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, "Keine gueltige Anzahl!");
-					} catch(InvalidAmountException e1) {
-						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
-					} catch(ArticleNonexistantException e1) {
-						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
-					} catch(RemoteException e1) {
-						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
-					}
-					// Artikel aus Warenkorb entfernen
-				} else if (e.getSource().equals(artikelEntfernenButton)) {
-					try {
-						int row = warenkorbAuflistung.getSelectedRow();
-						if (row != -1) {
-							Artikel art = server.artikelSuchen(((int) warenkorbAuflistung.getValueAt(row, 0)), user);
-							server.artikelAusWarenkorbEntfernen(art, user);
-							wk = server.warenkorbAusgeben(user);
-							warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
-						}
-					} catch(AccessRestrictedException e1) {
-						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
-					} catch(ArticleNonexistantException e1) {
-						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
-					} catch(RemoteException e1) {
-						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
-					}
-					// Warenkorb leeren
-				} else if (e.getSource().equals(leerenButton)) {
-					try {
-						server.warenkorbLeeren(user);
-						wk = server.warenkorbAusgeben(user);
-						warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
-					} catch(AccessRestrictedException e1) {
-						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
-					} catch(RemoteException e1) {
-						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
-					}
-					warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
-					// Warenkorb kaufen
-				} else if (e.getSource().equals(kaufenButton)) {
-					try {
-						// Formatierungsvorlage fuer Datum
-						DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-						Rechnung re = server.warenkorbKaufen(user);
-						artikelsichtfenster.auflistungInitialize();
-						String rechnungsString = "";
-						rechnungsString += "Rechnung" + "\n\n";
-						rechnungsString += dateFormat.format(re.getDatum()) + "\n\n";
-						rechnungsString += "Kundennummer: " + re.getKu().getId() + "\n";
-						rechnungsString += re.getKu().getFirstname() + " " + re.getKu().getLastname() + "\n";
-						rechnungsString += re.getKu().getAddress_Street() + "\n";
-						rechnungsString += re.getKu().getAddress_Zip() + " " + re.getKu().getAddress_Town() + "\n\n";
-						rechnungsString += "Warenkorb" + "\n";
-						rechnungsString += re.getWk().toString() + "\n";
-						rechnungsString += "Gesamtbetrag: " + re.getGesamt() + "€";
-						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, rechnungsString);
-						wk = server.warenkorbAusgeben(user);
-						warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
-					} catch(AccessRestrictedException e1) {
-						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
-					} catch(InvalidAmountException e1) {
-						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
-					} catch(RemoteException e1) {
-						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e1.getMessage());
-					}
-				}
-			}
-		}
-
-		class WarenkorbTableModel extends AbstractTableModel {
-
-			String[]		   columns	     = { "Artikelnummer", "Artikel", "Preis", "Menge", "Gesamt" };
-			Vector<Vector<Object>> dataVector	     = new Vector<>(0);
-			Vector<String>	   columnIdentifiers = new Vector<>(0);
-
-			public WarenkorbTableModel() {
-				columnIdentifiers = setColumns(columns);
-			}
-
-			public WarenkorbTableModel(Map<Artikel, Integer> inhalt) {
-				columnIdentifiers = setColumns(columns);
-				for (Map.Entry<Artikel, Integer> ent : inhalt.entrySet()) {
-					Vector<Object> tmp = new Vector<>(0);
-					tmp.addElement(ent.getKey().getArtikelnummer());
-					tmp.addElement(ent.getKey().getBezeichnung());
-					tmp.addElement(ent.getKey().getPreis());
-					tmp.addElement(ent.getValue());
-					tmp.addElement(ent.getKey().getPreis() * ent.getValue());
-					dataVector.addElement(tmp);
-				}
-			}
-
-			@Override
-			public int getColumnCount() {
-
-				return columnIdentifiers.size();
-			}
-
-			@Override
-			public String getColumnName(int column) {
-
-				return columnIdentifiers.elementAt(column);
-			}
-
-			@Override
-			public int getRowCount() {
-
-				return dataVector.size();
-			}
-
-			@Override
-			public Object getValueAt(int arg0, int arg1) {
-
-				return dataVector.elementAt(arg0).elementAt(arg1);
-			}
-
-			public Vector<String> setColumns(String[] columnNames) {
-
-				Vector<String> columns = new Vector<>();
-				for (String str : columnNames) {
-					columns.addElement(str);
-				}
-				return columns;
 			}
 		}
 	}
