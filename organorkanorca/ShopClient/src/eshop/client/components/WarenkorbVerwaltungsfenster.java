@@ -30,6 +30,11 @@ import net.miginfocom.swing.MigLayout;
 
 public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6170535941906530451L;
+    
     Warenkorb	wk;
     JPanel	buttons			     = new JPanel();
     JTable	warenkorbAuflistung	     = new JTable();
@@ -38,6 +43,7 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
     JButton	artikelEntfernenButton	     = new JButton("Entfernen");
     JButton	leerenButton		     = new JButton("Leeren");
     JButton	kaufenButton		     = new JButton("Kaufen");
+    String[]	columnHeaders			= { "Artikelnummer", "Artikel", "Preis", "Menge", "Gesamt" };
 
     public WarenkorbVerwaltungsfenster() {
 	this.setLayout(new MigLayout());
@@ -164,6 +170,11 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 
     class WarenkorbTableModel extends AbstractTableModel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5529552191258522247L;
+	
 	String[]	       columns		 = { "Artikelnummer", "Artikel", "Preis", "Menge", "Gesamt" };
 	Vector<Vector<Object>> dataVector	 = new Vector<>(0);
 	Vector<String>	       columnIdentifiers = new Vector<>(0);

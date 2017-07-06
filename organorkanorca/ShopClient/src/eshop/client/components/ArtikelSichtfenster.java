@@ -29,6 +29,11 @@ import eshop.common.net.ShopRemote;
 
 public class ArtikelSichtfenster extends Sichtfenster {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5439399681692245672L;
+    
     JButton verlaufAnzeigenButton = new JButton("Verlauf anzeigen");
 
     public ArtikelSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {

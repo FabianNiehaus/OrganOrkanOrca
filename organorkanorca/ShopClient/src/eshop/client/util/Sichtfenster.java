@@ -24,6 +24,11 @@ import eshop.common.net.ShopRemote;
 
 public abstract class Sichtfenster extends JPanel {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8136926280757449267L;
+
     public interface SichtfensterCallbacks {
 
 	public void artikelInWarenkorb();

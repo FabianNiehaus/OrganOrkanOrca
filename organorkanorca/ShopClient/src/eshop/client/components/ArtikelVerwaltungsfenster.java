@@ -20,6 +20,11 @@ import net.miginfocom.swing.MigLayout;
 
 public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -107879108721906207L;
+    
     Artikel    art;
     JPanel     detailArea		   = new JPanel();
     JLabel     artNrLabel		   = new JLabel("Artikelnummer:");

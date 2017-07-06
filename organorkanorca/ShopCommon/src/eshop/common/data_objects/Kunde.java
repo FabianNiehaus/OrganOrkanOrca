@@ -40,7 +40,7 @@ public class Kunde extends Person implements Serializable {
      */
     public Kunde(String firstname, String lastname, int id, String passwort, String address_Street, String address_Zip,
 	    String address_Town) throws InvalidPersonDataException {
-	super(firstname, lastname, id, passwort, address_Town, address_Town, address_Town);
+	super(firstname, lastname, id, passwort, address_Street, address_Zip, address_Town);
     }
 
     /**
@@ -66,7 +66,7 @@ public class Kunde extends Person implements Serializable {
      */
     public Kunde(String firstname, String lastname, int id, String passwort, String address_Street, String address_Zip,
 	    String address_Town, Warenkorb wk) throws InvalidPersonDataException {
-	super(firstname, lastname, id, passwort, address_Town, address_Town, address_Town);
+	super(firstname, lastname, id, passwort, address_Street, address_Zip, address_Town);
 	this.wk = wk;
     }
 

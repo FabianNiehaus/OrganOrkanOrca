@@ -6,14 +6,17 @@ import java.rmi.RemoteException;
 
 import javax.swing.JOptionPane;
 
-import eshop.client.components.KundenSichtfenster.KundeBearbeitenListener;
 import eshop.client.util.Sichtfenster;
-import eshop.client.util.Sichtfenster.SichtfensterCallbacks;
 import eshop.common.data_objects.Person;
 import eshop.common.exceptions.AccessRestrictedException;
 import eshop.common.net.ShopRemote;
 
 public class MitarbeiterSichtfenster extends Sichtfenster {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3884938912530629406L;
 
     public MitarbeiterSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
 	super(server, user, listener);

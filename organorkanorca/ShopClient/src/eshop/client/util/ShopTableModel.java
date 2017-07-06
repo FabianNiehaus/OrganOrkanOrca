@@ -5,17 +5,20 @@ import java.text.SimpleDateFormat;
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableRowSorter;
 
 import eshop.common.data_objects.Artikel;
 import eshop.common.data_objects.Ereignis;
 import eshop.common.data_objects.Kunde;
 import eshop.common.data_objects.Massengutartikel;
 import eshop.common.data_objects.Mitarbeiter;
-import eshop.common.data_objects.Person;
 
 public class ShopTableModel extends AbstractTableModel {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3784279748338157614L;
+    
     Vector<String>	   columnIdentifiers = new Vector<>(0);
     Vector<Vector<Object>> tableData = new Vector<>(0);
 
@@ -74,6 +77,12 @@ public class ShopTableModel extends AbstractTableModel {
 		tmp.addElement(er.getWer().getFirstname() + " " + er.getWer().getLastname());
 		tableData.addElement(tmp);
 	    }
+	}
+	
+	columnIdentifiers.removeAllElements();
+	
+	for(String s : columnNames){
+	    columnIdentifiers.addElement(s);
 	}
     }
 

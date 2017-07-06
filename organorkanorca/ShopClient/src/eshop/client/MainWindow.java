@@ -11,18 +11,28 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import eshop.client.components.ArtikelSichtfenster;
+import eshop.client.components.ArtikelVerwaltungsfenster;
+import eshop.client.components.KundenSichtfenster;
+import eshop.client.components.ManagementSichtfenster;
+import eshop.client.components.MitarbeiterSichtfenster;
+import eshop.client.components.PersonenVerwaltungsfenster;
+import eshop.client.components.WarenkorbVerwaltungsfenster;
+
 import eshop.client.util.LoginListener;
 import eshop.client.util.Sichtfenster.SichtfensterCallbacks;
+
 import eshop.common.data_objects.Artikel;
 import eshop.common.data_objects.Kunde;
 import eshop.common.data_objects.Mitarbeiter;
 import eshop.common.data_objects.Person;
+
 import eshop.common.exceptions.AccessRestrictedException;
+
 import eshop.common.net.ShopEventListener;
 import eshop.common.net.ShopRemote;
-import net.miginfocom.swing.MigLayout;
 
-import eshop.client.components.*;
+import net.miginfocom.swing.MigLayout;
 
 public class MainWindow extends JFrame implements ShopEventListener, SichtfensterCallbacks {
 

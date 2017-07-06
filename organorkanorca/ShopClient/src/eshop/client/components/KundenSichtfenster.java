@@ -1,24 +1,22 @@
 package eshop.client.components;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
-import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
-import eshop.client.MainWindow;
 import eshop.client.util.Sichtfenster;
-import eshop.client.util.Sichtfenster.SichtfensterCallbacks;
-import eshop.common.data_objects.Kunde;
-import eshop.common.data_objects.Mitarbeiter;
 import eshop.common.data_objects.Person;
 import eshop.common.exceptions.AccessRestrictedException;
-import eshop.common.exceptions.PersonNonexistantException;
 import eshop.common.net.ShopRemote;
 
 public class KundenSichtfenster extends Sichtfenster {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4821072292018595904L;
 
     public KundenSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
 	super(server, user, listener);

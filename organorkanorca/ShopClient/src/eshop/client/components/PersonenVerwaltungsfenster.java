@@ -10,7 +10,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import eshop.client.util.Sichtfenster;
 import eshop.client.util.Verwaltungsfenster;
 import eshop.common.data_objects.Person;
 import eshop.common.exceptions.AccessRestrictedException;
@@ -20,6 +19,11 @@ import net.miginfocom.swing.MigLayout;
 
 public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3593841333668075281L;
+    
     Person     p;
     JPanel     detailArea		   = new JPanel();
     JLabel     persNrLabel		   = new JLabel("ID:");
@@ -142,13 +146,16 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		    String address_Street = strasseField.getText();
 		    String address_Town = ortField.getText();
 		    String address_Zip = zipField.getText();
-		    String passwort = passwordField.getText();
+		    if(!passwordField.getText().equals("")){
+			p.setPasswort(passwordField.getText());
+		    }
 		    // TODO Keine leeren / sinnfreien Einträge
 		    p.setFirstname(firstname);
 		    p.setLastname(lastname);
 		    p.setAddress_Street(address_Street);
 		    p.setAddress_Town(address_Town);
 		    p.setAddress_Zip(address_Zip);
+		   
 		    // Bearbeiteten Kunden anzeigen
 		    personAnzeigen(p);
 		    // Buttons anpassen
