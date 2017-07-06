@@ -23,6 +23,11 @@ public class Kundenverwaltung {
     // verantwortlich ist
     private PersistenceManager pm     = new FilePersistenceManager();
     private Vector<Kunde>      kunden = new Vector<Kunde>();
+    private Warenkorbverwaltung wv;
+    
+    public Kundenverwaltung(Warenkorbverwaltung wv){
+	this.wv = wv;
+    }
 
     /**
      * Logik zur Anmeldung
@@ -144,6 +149,7 @@ public class Kundenverwaltung {
 	    // Kunde-Objekt einlesen
 	    ku = pm.ladeKunde();
 	    if (ku != null) {
+		ku.setWarenkorb(wv.erstelleWarenkorb());
 		// Mitarbeiter in Mitarbeiterliste einfuegen
 		einfuegen(ku);
 	    }

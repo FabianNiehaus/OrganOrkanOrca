@@ -47,13 +47,7 @@ public class ArtikelSichtfenster extends Sichtfenster {
 	    aktion.addActionListener(new ArtikelBearbeitenListener());
 	    anzahl.setVisible(false);
 	    verlaufAnzeigenButton.addActionListener(new VerlaufAnzeigenListener());
-	    leftAreaActionField.add(verlaufAnzeigenButton);
-	}
-	try {
-	    updateTable(server.alleArtikelAusgeben(user),
-		    new String[] { "ArtNr.", "Bezeichnung", "Preis", "Einheit", "Bestand" });
-	} catch(RemoteException | AccessRestrictedException e) {
-	    JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e.getMessage());
+	    actionField.add(verlaufAnzeigenButton);
 	}
     }
 

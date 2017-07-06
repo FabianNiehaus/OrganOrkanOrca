@@ -17,8 +17,11 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 
+import eshop.client.util.ShopTableModel;
 import eshop.client.util.Verwaltungsfenster;
+import eshop.client.util.Verwaltungsfenster.VerwaltungsfensterCallbacks;
 import eshop.common.data_objects.Artikel;
+import eshop.common.data_objects.Person;
 import eshop.common.data_objects.Rechnung;
 import eshop.common.data_objects.Warenkorb;
 import eshop.common.exceptions.AccessRestrictedException;
@@ -26,6 +29,7 @@ import eshop.common.exceptions.ArticleNonexistantException;
 import eshop.common.exceptions.ArticleStockNotSufficientException;
 import eshop.common.exceptions.BasketNonexistantException;
 import eshop.common.exceptions.InvalidAmountException;
+import eshop.common.net.ShopRemote;
 import net.miginfocom.swing.MigLayout;
 
 public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
@@ -45,7 +49,8 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
     JButton	kaufenButton		     = new JButton("Kaufen");
     String[]	columnHeaders			= { "Artikelnummer", "Artikel", "Preis", "Menge", "Gesamt" };
 
-    public WarenkorbVerwaltungsfenster() {
+    public WarenkorbVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener) {
+	super(server, user, listener);
 	this.setLayout(new MigLayout());
 	this.add(new JLabel("Warenkorbverwaltung"), "align center, wrap");
 	this.add(warenkorbAuflistungContainer, "wrap");

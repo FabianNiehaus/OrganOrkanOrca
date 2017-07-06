@@ -11,16 +11,18 @@ import javax.swing.JButton;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableRowSorter;
 
+import org.jdesktop.swingx.JXTable;
+
 import eshop.common.data_objects.Artikel;
 import eshop.common.data_objects.Person;
 import eshop.common.net.ShopRemote;
+import net.miginfocom.swing.MigLayout;
 
 public abstract class Sichtfenster extends JPanel {
 
@@ -49,9 +51,9 @@ public abstract class Sichtfenster extends JPanel {
     protected JPanel		    overviewButtons	= new JPanel();
     protected JButton		    alleButton		= new JButton("Alle");
     protected JButton		    sucheButton		= new JButton("Suche");
-    protected JTextField	    sucheField		= new JTextField();
-    protected JPanel		    leftAreaActionField	= new JPanel();
-    protected JTable		    auflistung		= new JTable();
+    protected JTextField	    sucheField		= new JTextField(30);
+    protected JPanel		    actionField		= new JPanel(new MigLayout("align 50% 50%"));
+    protected JXTable		    auflistung		= new JXTable();
     protected JScrollPane	    auflistungContainer	= new JScrollPane(auflistung);
     protected JButton		    aktion		= new JButton();
     protected JTextField	    anzahl		= new JTextField(5);
@@ -60,11 +62,11 @@ public abstract class Sichtfenster extends JPanel {
 	this.listener = listener;
 	this.user = user;
 	this.server = server;
-	this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-	overviewButtons.setMaximumSize(new Dimension(1024, 40));
-	this.add(overviewButtons);
-	this.add(auflistungContainer);
-	this.add(leftAreaActionField);
+	this.setLayout(new MigLayout("fillx, align 50% 50%"));
+	//overviewButtons.setMaximumSize(new Dimension(1024, 40));
+	this.add(overviewButtons,"wrap, w 100%");
+	this.add(auflistungContainer,"wrap");
+	this.add(actionField, "w 100%");
 	overviewButtons.setLayout(new BoxLayout(overviewButtons, BoxLayout.X_AXIS));
 	alleButton.addActionListener(new TabelleAlleAnzeigenListener());
 	overviewButtons.add(alleButton);
@@ -75,8 +77,10 @@ public abstract class Sichtfenster extends JPanel {
 	JTableHeader header = auflistung.getTableHeader();
 	header.setUpdateTableInRealTime(true);
 	header.setReorderingAllowed(false);
-	leftAreaActionField.add(aktion);
-	leftAreaActionField.add(anzahl);
+	actionField.add(aktion);
+	actionField.add(anzahl);
+	auflistung.setHorizontalScrollEnabled(true);
+	callTableUpdate();
     }
 
     public abstract void callTableUpdate();

@@ -23,12 +23,6 @@ public class MitarbeiterSichtfenster extends Sichtfenster {
 	aktion.setText("Bearbeiten");
 	aktion.addActionListener(new MitarbeiterBearbeitenListener());
 	anzahl.setVisible(false);
-	try {
-	    updateTable(server.alleMitarbeiterAusgeben(user),
-		    new String[] { "ID", "Vorname", "Nachname", "Straße", "PLZ", "Ort" });
-	} catch(RemoteException | AccessRestrictedException e) {
-	    JOptionPane.showMessageDialog(MitarbeiterSichtfenster.this, e.getMessage());
-	}
     }
 
     class MitarbeiterBearbeitenListener implements ActionListener {
@@ -45,7 +39,7 @@ public class MitarbeiterSichtfenster extends Sichtfenster {
 
 	try {
 	    updateTable(server.alleMitarbeiterAusgeben(user),
-		    new String[] { "ArtNr.", "Bezeichnung", "Preis", "Einheit", "Bestand" });
+		    new String[] { "MaNr.", "Vorname", "Nachname", "Straße", "PLZ","Ort"  });
 	} catch(RemoteException | AccessRestrictedException e) {
 	    JOptionPane.showMessageDialog(MitarbeiterSichtfenster.this, e.getMessage());
 	}

@@ -10,11 +10,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import eshop.client.util.ShopTableModel;
 import eshop.client.util.Verwaltungsfenster;
+import eshop.client.util.Verwaltungsfenster.VerwaltungsfensterCallbacks;
 import eshop.common.data_objects.Person;
 import eshop.common.exceptions.AccessRestrictedException;
 import eshop.common.exceptions.InvalidPersonDataException;
 import eshop.common.exceptions.MaxIDsException;
+import eshop.common.net.ShopRemote;
 import net.miginfocom.swing.MigLayout;
 
 public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
@@ -48,7 +51,8 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
     JButton    neuAnlegenBestaetigenButton = new JButton("Anlegen");
     String     typ			   = "";
 
-    public PersonenVerwaltungsfenster(String titel, String personenTyp) throws Exception {
+    public PersonenVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener, String titel, String personenTyp) throws Exception {
+	super(server, user, listener);
 	this.setLayout(new MigLayout());
 	detailArea.setLayout(new MigLayout());
 	this.add(new JLabel(titel), "span 2, align center, wrap");

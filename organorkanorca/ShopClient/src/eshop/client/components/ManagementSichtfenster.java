@@ -26,15 +26,15 @@ public class ManagementSichtfenster extends Sichtfenster {
     
     JButton	       speichernButton	   = new JButton("Bestandsdaten speichern");
     JButton	       ladenButton	   = new JButton("Bestandsdaten importieren");
-    JScrollPane	       auflistungContainer = new JScrollPane(auflistung);
 
     public ManagementSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
 	super(server, user, listener);
-	this.remove(aktion);
+	actionField.remove(aktion);
+	actionField.remove(anzahl);
 	speichernButton.addActionListener(new PersistenceButtonListener());
 	ladenButton.addActionListener(new PersistenceButtonListener());
-	this.add(speichernButton, "dock center");
-	this.add(ladenButton, "wrap, dock center");
+	actionField.add(speichernButton);
+	actionField.add(ladenButton);
     }
 
     class PersistenceButtonListener implements ActionListener {

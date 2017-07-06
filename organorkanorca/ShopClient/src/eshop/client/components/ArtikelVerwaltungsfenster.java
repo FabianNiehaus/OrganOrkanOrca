@@ -10,12 +10,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import eshop.client.util.ShopTableModel;
 import eshop.client.util.Verwaltungsfenster;
+import eshop.client.util.Verwaltungsfenster.VerwaltungsfensterCallbacks;
 import eshop.common.data_objects.Artikel;
 import eshop.common.data_objects.Massengutartikel;
+import eshop.common.data_objects.Person;
 import eshop.common.exceptions.AccessRestrictedException;
 import eshop.common.exceptions.ArticleNonexistantException;
 import eshop.common.exceptions.InvalidAmountException;
+import eshop.common.net.ShopRemote;
 import net.miginfocom.swing.MigLayout;
 
 public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
@@ -44,7 +48,8 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
     JButton    loeschenButton		   = new JButton("Löschen");
     JButton    neuAnlegenBestaetigenButton = new JButton("Anlegen");
 
-    public ArtikelVerwaltungsfenster() {
+    public ArtikelVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener) {
+	super(server, user, listener);
 	this.setLayout(new MigLayout());
 	detailArea.setLayout(new MigLayout());
 	this.add(new JLabel("Artikelverwaltung"), "align center, wrap");

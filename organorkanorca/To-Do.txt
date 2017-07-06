@@ -3,5 +3,5 @@ To-Do
 - Überarbeitung GUI
 - Ausschlusslogik Methoden
 - Bugfixes
-- Table Model ein Konstruktor pro Inhaltstyp, Vektor übergeben
+- Table Model ein Konstruktor pro Inhaltstyp, Vektor übergeben - ./
 - Tabellenfilterung (Tabelle neu zeichnen!)

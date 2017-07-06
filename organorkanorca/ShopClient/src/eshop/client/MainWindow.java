@@ -21,7 +21,7 @@ import eshop.client.components.WarenkorbVerwaltungsfenster;
 
 import eshop.client.util.LoginListener;
 import eshop.client.util.Sichtfenster.SichtfensterCallbacks;
-
+import eshop.client.util.Verwaltungsfenster.VerwaltungsfensterCallbacks;
 import eshop.common.data_objects.Artikel;
 import eshop.common.data_objects.Kunde;
 import eshop.common.data_objects.Mitarbeiter;
@@ -34,7 +34,7 @@ import eshop.common.net.ShopRemote;
 
 import net.miginfocom.swing.MigLayout;
 
-public class MainWindow extends JFrame implements ShopEventListener, SichtfensterCallbacks {
+public class MainWindow extends JFrame implements ShopEventListener, SichtfensterCallbacks, VerwaltungsfensterCallbacks {
 
     /**
      * 
@@ -85,7 +85,7 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 		JOptionPane.showMessageDialog(artikelsichtfenster, e.getMessage());
 	    }
 	} else if (user instanceof Mitarbeiter) {
-	    artikelverwaltungsfenster = new ArtikelVerwaltungsfenster();
+	    artikelverwaltungsfenster = new ArtikelVerwaltungsfenster(server, user, this);
 	}
     }
 
@@ -115,17 +115,19 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 	logoutButton.addActionListener(new MenuButtonsActionListener());
 	moduleButtons.add(logoutButton);
 	leftArea.add(moduleButtons, "wrap, dock center");
-	kundensichtfenster = new KundenSichtfenster(server, user, this);
+	
 	artikelsichtfenster = new ArtikelSichtfenster(server, user, this);
-	mitarbeitersichtfenster = new MitarbeiterSichtfenster(server, user, this);
-	managementsichtfenster = new ManagementSichtfenster(server, user, this);
+	
 	leftArea.add(artikelsichtfenster, "dock center");
 	if (user instanceof Kunde) {
-	    warenkorbverwaltungsfenster = new WarenkorbVerwaltungsfenster();
+	    warenkorbverwaltungsfenster = new WarenkorbVerwaltungsfenster(server, user, this);
 	    rightArea.add(warenkorbverwaltungsfenster, "dock center");
 	} else {
-	    artikelverwaltungsfenster = new ArtikelVerwaltungsfenster();
+	    artikelverwaltungsfenster = new ArtikelVerwaltungsfenster(server, user, this);
 	    rightArea.add(artikelverwaltungsfenster, "dock center");
+	    mitarbeitersichtfenster = new MitarbeiterSichtfenster(server, user, this);
+	    managementsichtfenster = new ManagementSichtfenster(server, user, this);
+	    kundensichtfenster = new KundenSichtfenster(server, user, this);
 	}
 	main.add(leftArea);
 	main.add(rightArea);
@@ -179,7 +181,7 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 		if (user instanceof Kunde) {
 		    rightArea.add(warenkorbverwaltungsfenster);
 		} else {
-		    artikelverwaltungsfenster = new ArtikelVerwaltungsfenster();
+		    artikelverwaltungsfenster = new ArtikelVerwaltungsfenster(server, user, MainWindow.this);
 		    rightArea.add(artikelverwaltungsfenster);
 		}
 		rightArea.repaint();
@@ -193,7 +195,7 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 		    leftArea.repaint();
 		    rightArea.removeAll();
 		    try {
-			kundenverwaltungsfenster = new PersonenVerwaltungsfenster("Kundenverwaltung", "Kunde");
+			kundenverwaltungsfenster = new PersonenVerwaltungsfenster(server, user, MainWindow.this, "Kundenverwaltung", "Kunde");
 			rightArea.add(kundenverwaltungsfenster);
 		    } catch(Exception e) {
 			JOptionPane.showMessageDialog(MainWindow.this, e.getMessage());
@@ -211,7 +213,7 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 		    leftArea.repaint();
 		    rightArea.removeAll();
 		    try {
-			mitarbeiterverwaltungsfenster = new PersonenVerwaltungsfenster("Mitarbeiterverwaltung",
+			mitarbeiterverwaltungsfenster = new PersonenVerwaltungsfenster(server, user, MainWindow.this, "Mitarbeiterverwaltung",
 				"Mitarbeiter");
 			rightArea.add(mitarbeiterverwaltungsfenster);
 		    } catch(Exception e) {
@@ -275,12 +277,26 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 	    artikelsichtfenster = new ArtikelSichtfenster(server, user, this);
 	    kundensichtfenster = new KundenSichtfenster(server, user, this);
 	    mitarbeitersichtfenster = new MitarbeiterSichtfenster(server, user, this);
-	    artikelverwaltungsfenster = new ArtikelVerwaltungsfenster();
-	    kundenverwaltungsfenster = new PersonenVerwaltungsfenster("Kundenverwaltung", "Kunde");
-	    mitarbeiterverwaltungsfenster = new PersonenVerwaltungsfenster("Mitarbeiterverwaltung", "Mitarbeiter");
+	    artikelverwaltungsfenster = new ArtikelVerwaltungsfenster(server, user, this);
+	    kundenverwaltungsfenster = new PersonenVerwaltungsfenster(server, user, this, "Kundenverwaltung", "Kunde");
+	    mitarbeiterverwaltungsfenster = new PersonenVerwaltungsfenster(server, user, this, "Mitarbeiterverwaltung", "Mitarbeiter");
 	} catch(Exception e) {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
+    }
+
+    @Override
+    public void update(String sichtfenster) {
+
+	// TODO Auto-generated method stub
+	
+    }
+
+    @Override
+    public void artikelBearbeiten() {
+
+	// TODO Auto-generated method stub
+	
     }
 }

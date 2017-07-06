@@ -56,10 +56,10 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
     public eShopCore()
 	    throws IOException, ArticleNonexistantException, PersonNonexistantException, InvalidPersonDataException {
 	super();
-	av = new Artikelverwaltung();
-	kv = new Kundenverwaltung();
-	mv = new Mitarbeiterverwaltung();
 	wv = new Warenkorbverwaltung();
+	av = new Artikelverwaltung();
+	kv = new Kundenverwaltung(wv);
+	mv = new Mitarbeiterverwaltung();
 	rv = new Rechnungsverwaltung();
 	ev = new Ereignisverwaltung(kv, mv, av);
 	ladeDaten();

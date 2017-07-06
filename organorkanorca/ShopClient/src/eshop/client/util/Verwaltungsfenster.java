@@ -24,5 +24,10 @@ public abstract class Verwaltungsfenster extends JPanel {
     protected VerwaltungsfensterCallbacks listener = null;
     protected Person			  user;
     protected ShopRemote		  server;
-    protected ShopTableModel		  shoptablemodel;
+    
+    public Verwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener){
+	this.server = server;
+	this.user = user;
+	this.listener = listener;
+    }
 }

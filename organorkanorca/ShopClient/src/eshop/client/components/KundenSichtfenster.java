@@ -23,12 +23,6 @@ public class KundenSichtfenster extends Sichtfenster {
 	aktion.setText("Bearbeiten");
 	aktion.addActionListener(new KundeBearbeitenListener());
 	anzahl.setVisible(false);
-	try {
-	    updateTable(server.alleKundenAusgeben(user),
-		    new String[] { "Kundennummer", "Vorname", "Nachname", "Straße", "PLZ", "Ort" });
-	} catch(RemoteException | AccessRestrictedException e) {
-	    JOptionPane.showMessageDialog(KundenSichtfenster.this, e.getMessage());
-	}
     }
 
     class KundeBearbeitenListener implements ActionListener {
@@ -45,7 +39,7 @@ public class KundenSichtfenster extends Sichtfenster {
 
 	try {
 	    updateTable(server.alleKundenAusgeben(user),
-		    new String[] { "ArtNr.", "Bezeichnung", "Preis", "Einheit", "Bestand" });
+		    new String[] { "KundenNr.", "Vorname", "Nachname", "Straße", "PLZ","Ort" });
 	} catch(RemoteException | AccessRestrictedException e) {
 	    JOptionPane.showMessageDialog(KundenSichtfenster.this, e.getMessage());
 	}
