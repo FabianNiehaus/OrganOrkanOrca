@@ -14,8 +14,8 @@ import eshop.common.net.ShopRemote;
 
 public class GUI extends UnicastRemoteObject {
 
-    LoginWindow	     loginwindow;
-    MainWindow	     mainwindow;
+    LoginWindow		     loginwindow;
+    MainWindow		     mainwindow;
     private ListenerForLogin listenerForLogin = new ListenerForLogin();
     // Shop server
     private ShopRemote	     server;

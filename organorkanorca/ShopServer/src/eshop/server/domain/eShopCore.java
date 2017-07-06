@@ -98,13 +98,13 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
     public synchronized Vector<Artikel> alleArtikelAusgeben(Person p)
 	    throws AccessRestrictedException, RemoteException {
 
-//    	synchronized (av) {
-    		if (istKunde(p) || istMitarbeiter(p)) {
-    		    return av.getArtikel();
-    		} else {
-    		    throw new AccessRestrictedException(p, "\"Alle Artikel ausgeben\"");
-    		}			
-//		}
+	// synchronized (av) {
+	if (istKunde(p) || istMitarbeiter(p)) {
+	    return av.getArtikel();
+	} else {
+	    throw new AccessRestrictedException(p, "\"Alle Artikel ausgeben\"");
+	}
+	// }
     }
 
     /*
