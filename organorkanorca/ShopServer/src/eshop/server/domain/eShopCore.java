@@ -13,6 +13,7 @@ import java.util.Vector;
 import eshop.common.data_objects.Artikel;
 import eshop.common.data_objects.Ereignis;
 import eshop.common.data_objects.Kunde;
+import eshop.common.data_objects.Massengutartikel;
 import eshop.common.data_objects.Mitarbeiter;
 import eshop.common.data_objects.Person;
 import eshop.common.data_objects.Rechnung;
@@ -47,6 +48,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
     private Object		  warenkorbKey;
     private Object		  artikelKey;
     private Object		  benutzerKey;
+    private Vector<ShopEventListener> listeners;
 
     /**
      * @throws PersonNonexistantException
@@ -87,7 +89,8 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
     @Override
     public void addShopEventListener(ShopEventListener listener) throws RemoteException {
 
-	// TODO Auto-generated method stub
+	listeners.add(listener);
+	
     }
 
     /*
@@ -261,9 +264,17 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
     public void artikelLoeschen(Artikel art, Person p) throws AccessRestrictedException, RemoteException {
 
 	if (istMitarbeiter(p)) {
+	    for(Warenkorb wk : wv.getWarenkoerbe()){
+		wk.loescheArtikel(art);
+	    }
 	    av.loeschen(art);
 	} else {
-	    throw new AccessRestrictedException(p, "\"Artikel suchen (Artikelnummer)\"");
+	    throw new AccessRestrictedException(p, "\"Artikel löschen\"");
+	}
+	
+	for(ShopEventListener sel : listeners){
+	    sel.handleArticleDeleted();
+	    sel.handleBasketChanged(art);
 	}
     }
 
@@ -304,14 +315,27 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
      * data_objects.Person)
      */
     @Override
-    public synchronized Artikel erhoeheArtikelBestand(int artikelnummer, int bestand, Person p)
-	    throws ArticleNonexistantException, AccessRestrictedException, InvalidAmountException, RemoteException {
+    public synchronized Artikel aendereArtikelBestand(Artikel art, int bestand, String operator, Person p)
+	    throws AccessRestrictedException, InvalidAmountException, RemoteException {
 
 	if (istMitarbeiter(p)) {
-	    Artikel art = av.erhoeheBestand(artikelnummer, bestand);
-	    // Ereignis erzeugen
-	    ev.ereignisErstellen(p, Typ.EINLAGERUNG, art, bestand);
+	    	    
+	    int tmpBestand = 0;
+		
+	    if(operator.equals("+")){
+		art = av.erhoeheBestand(art, bestand);
+		ev.ereignisErstellen(p, Typ.EINLAGERUNG, art, bestand);
+	    } else if(operator.equals("-")){
+		art = av.erhoeheBestand(art, bestand * -1);
+		ev.ereignisErstellen(p, Typ.AUSLAGERUNG, art, bestand);
+	    } else if(operator.equals("0")){
+		tmpBestand = art.getBestand();
+		art = av.erhoeheBestand(art, tmpBestand*-1);
+		ev.ereignisErstellen(p, Typ.AUSLAGERUNG, art, tmpBestand);
+	    } 
+
 	    return art;
+	    
 	} else {
 	    throw new AccessRestrictedException(p, "\"Bestand erhöhen\"");
 	}
@@ -327,10 +351,13 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 	    throws AccessRestrictedException, InvalidAmountException, RemoteException {
 
 	if (istMitarbeiter(p)) {
+	    
+	    
 	    Artikel art = av.erstelleArtikel(bezeichnung, bestand, preis, packungsgroesse);
 	    // Ereignis erzeugen
 	    ev.ereignisErstellen(p, Typ.NEU, art, bestand);
 	    return art;
+	    
 	} else {
 	    throw new AccessRestrictedException(p, "\"Artikel anlegen\"");
 	}
@@ -444,7 +471,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
     @Override
     public void removeShopEventListener(ShopEventListener listener) throws RemoteException {
 
-	// TODO Auto-generated method stub
+	listeners.remove(listener);
     }
 
     /*
@@ -490,14 +517,12 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 	    int gesamt = 0;
 	    Map<Artikel, Integer> inhalt = wk.getArtikel();
 	    for (Map.Entry<Artikel, Integer> ent : inhalt.entrySet()) {
-		try {
-		    av.erhoeheBestand(ent.getKey().getArtikelnummer(), -1 * ent.getValue());
-		    // Ereignis erstellen
-		    ev.ereignisErstellen(p, Typ.KAUF, ent.getKey(), ent.getValue());
-		    // TODO Ereigniserstellung in Verwaltungen auslagern
-		} catch(ArticleNonexistantException anne) {
-		    // TODO
-		}
+
+		av.erhoeheBestand(ent.getKey(), -1 * ent.getValue());
+		// Ereignis erstellen
+		ev.ereignisErstellen(p, Typ.KAUF, ent.getKey(), ent.getValue());
+		// TODO Ereigniserstellung in Verwaltungen auslagern
+
 		gesamt += (ent.getValue() * ent.getKey().getPreis());
 	    }
 	    // Warenkorb fuer Rechnung erzeugen
@@ -527,5 +552,27 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 	} else {
 	    throw new AccessRestrictedException(p, "\"Warenkorb leeren\"");
 	}
+    }
+
+    @Override
+    public Artikel artikelAendern(Artikel art, Person p, String bezeichnung, int bestand, String operator, double preis, int packungsgroesse) throws RemoteException, AccessRestrictedException, InvalidAmountException {
+
+	art.setBezeichnung(bezeichnung);
+	art.setPreis(preis);
+	
+	if (packungsgroesse > 1 && packungsgroesse != ((Massengutartikel)art).getPackungsgroesse()) {
+	    int tmpBestand = art.getBestand();
+	    artikelLoeschen(art, p);
+	    art = erstelleArtikel(bezeichnung, tmpBestand, preis, packungsgroesse, p);
+	}
+	
+	aendereArtikelBestand(art, bestand, operator, p);
+
+	for(ShopEventListener sel : listeners){
+	    sel.handleArticleChanged(art);
+	}
+	
+	return art;
+	
     }
 }

@@ -31,20 +31,8 @@ public abstract class Sichtfenster extends JPanel {
      */
     private static final long serialVersionUID = 8136926280757449267L;
 
-    public interface SichtfensterCallbacks {
-
-	public void artikelInWarenkorb();
-
-	public void artikelBearbeiten(Artikel art);
-
-	public void kundeBearbeiten();
-
-	public void mitarbeiterBearbeiten();
-
-	public void alleSichtfensterErneuern();
-    }
-
     protected SichtfensterCallbacks listener		= null;
+
     protected Person		    user;
     protected ShopRemote	    server;
     protected ShopTableModel	    shoptablemodel;
@@ -57,15 +45,14 @@ public abstract class Sichtfenster extends JPanel {
     protected JScrollPane	    auflistungContainer	= new JScrollPane(auflistung);
     protected JButton		    aktion		= new JButton();
     protected JTextField	    anzahl		= new JTextField(5);
-
     public Sichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
 	this.listener = listener;
 	this.user = user;
 	this.server = server;
 	this.setLayout(new MigLayout("fillx, align 50% 50%"));
-	//overviewButtons.setMaximumSize(new Dimension(1024, 40));
-	this.add(overviewButtons,"wrap, w 100%");
-	this.add(auflistungContainer,"wrap");
+	// overviewButtons.setMaximumSize(new Dimension(1024, 40));
+	this.add(overviewButtons, "wrap, w 100%");
+	this.add(auflistungContainer, "wrap");
 	this.add(actionField, "w 100%");
 	overviewButtons.setLayout(new BoxLayout(overviewButtons, BoxLayout.X_AXIS));
 	alleButton.addActionListener(new TabelleAlleAnzeigenListener());
@@ -93,6 +80,19 @@ public abstract class Sichtfenster extends JPanel {
 	auflistung.setRowSorter(sorter);
 	TableColumnAdjuster tca = new TableColumnAdjuster(auflistung, 30);
 	tca.adjustColumns(SwingConstants.CENTER);
+    }
+
+    public interface SichtfensterCallbacks {
+
+	public void alleFensterErneuern();
+
+	public void artikelBearbeiten(Artikel art);
+
+	public void artikelInWarenkorb();
+
+	public void kundeBearbeiten();
+
+	public void mitarbeiterBearbeiten();
     }
 
     class TabelleAlleAnzeigenListener implements ActionListener {

@@ -113,7 +113,7 @@ public interface ShopRemote extends Remote {
 	    InvalidAmountException, ArticleAlreadyInBasketException, RemoteException;
 
     void artikelLoeschen(Artikel art, Person p) throws AccessRestrictedException, RemoteException;
-
+    
     /**
      * Erlaubt die Suche nach einer Artikelnummer
      * 
@@ -138,24 +138,6 @@ public interface ShopRemote extends Remote {
      */
     Vector<Artikel> artikelSuchen(String bezeichnung, Person p)
 	    throws ArticleNonexistantException, AccessRestrictedException, RemoteException;
-
-    /**
-     * Erhöht den Bestand eines Artikels
-     * 
-     * @param artikelnummer
-     *            Artikelnummer des zu bearbeitenden Artikels
-     * @param bestand
-     *            Neuer Bestand
-     * @param p
-     *            Userobjekt
-     * @return Bearbeiteten Artikel
-     * @throws ArticleNonexistantException
-     *             Artikelnummer existiert nicht
-     * @throws AccessRestrictedException
-     * @throws InvalidAmountException
-     */
-    Artikel erhoeheArtikelBestand(int artikelnummer, int bestand, Person p)
-	    throws ArticleNonexistantException, AccessRestrictedException, InvalidAmountException, RemoteException;
 
     /**
      * Erstellt einen neuen Artikel
@@ -250,4 +232,10 @@ public interface ShopRemote extends Remote {
      * @throws AccessRestrictedException
      */
     void warenkorbLeeren(Person p) throws AccessRestrictedException, RemoteException;
+
+    Artikel artikelAendern(Artikel art, Person p, String bezeichnung, int bestand, String operator, double preis,
+	    int packungsgroesse) throws RemoteException, AccessRestrictedException, InvalidAmountException;
+
+    Artikel aendereArtikelBestand(Artikel art, int bestand, String operator, Person p)
+	    throws AccessRestrictedException, InvalidAmountException, RemoteException;
 }

@@ -21,11 +21,11 @@ public class Kundenverwaltung {
 
     // Persistenz-Schnittstelle, die f�r die Details des Dateizugriffs
     // verantwortlich ist
-    private PersistenceManager pm     = new FilePersistenceManager();
-    private Vector<Kunde>      kunden = new Vector<Kunde>();
-    private Warenkorbverwaltung wv;
-    
-    public Kundenverwaltung(Warenkorbverwaltung wv){
+    private PersistenceManager	pm     = new FilePersistenceManager();
+    private Vector<Kunde>	kunden = new Vector<Kunde>();
+    private Warenkorbverwaltung	wv;
+
+    public Kundenverwaltung(Warenkorbverwaltung wv) {
 	this.wv = wv;
     }
 

@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import eshop.common.exceptions.InvalidAmountException;
+
 public class Artikel implements Serializable {
 
     /**
@@ -129,10 +131,15 @@ public class Artikel implements Serializable {
 
     /**
      * @param bestand
+     * @throws InvalidAmountException 
      */
-    public void setBestand(int bestand) {
+    public void setBestand(int bestand) throws InvalidAmountException {
 
-	this.bestand = bestand;
+	if(bestand >= 0){
+	    this.bestand = bestand;
+	} else {
+	    throw new InvalidAmountException(bestand);
+	}
     }
 
     /**

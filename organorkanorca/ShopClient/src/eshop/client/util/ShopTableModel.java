@@ -17,10 +17,9 @@ public class ShopTableModel extends AbstractTableModel {
     /**
      * 
      */
-    private static final long serialVersionUID = 3784279748338157614L;
-    
-    Vector<String>	   columnIdentifiers = new Vector<>(0);
-    Vector<Vector<Object>> tableData = new Vector<>(0);
+    private static final long serialVersionUID	= 3784279748338157614L;
+    Vector<String>	      columnIdentifiers	= new Vector<>(0);
+    Vector<Vector<Object>>    tableData		= new Vector<>(0);
 
     public ShopTableModel(Vector<?> dataVector, String[] columnNames) {
 	if (dataVector.elementAt(0) instanceof Artikel) {
@@ -78,10 +77,8 @@ public class ShopTableModel extends AbstractTableModel {
 		tableData.addElement(tmp);
 	    }
 	}
-	
 	columnIdentifiers.removeAllElements();
-	
-	for(String s : columnNames){
+	for (String s : columnNames) {
 	    columnIdentifiers.addElement(s);
 	}
     }

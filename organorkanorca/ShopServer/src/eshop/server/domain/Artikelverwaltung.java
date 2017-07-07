@@ -6,6 +6,8 @@ import java.util.Vector;
 
 import eshop.common.data_objects.Artikel;
 import eshop.common.data_objects.Massengutartikel;
+import eshop.common.data_objects.Person;
+import eshop.common.data_objects.Typ;
 import eshop.common.exceptions.ArticleNonexistantException;
 import eshop.common.exceptions.InvalidAmountException;
 import eshop.server.persistence.FilePersistenceManager;
@@ -21,7 +23,7 @@ public class Artikelverwaltung {
     private PersistenceManager pm      = new FilePersistenceManager();
     // Vektor zur Speicherug der Artikel
     private Vector<Artikel>    artikel = new Vector<Artikel>(0);
-
+    
     /**
      * Artikel in Liste der Verwalteten Artikel einfuegen
      * 
@@ -49,25 +51,20 @@ public class Artikelverwaltung {
      *             Artikelnummer nicht vorhanden
      * @throws InvalidAmountException
      */
-    public Artikel erhoeheBestand(int artikelnummer, int bestand)
-	    throws ArticleNonexistantException, InvalidAmountException {
-
-	try {
-	    Artikel art = sucheArtikel(artikelnummer);
-	    if (art instanceof Massengutartikel) {
-		Massengutartikel tmp = (Massengutartikel) art;
-		if (bestand % tmp.getPackungsgroesse() != 0) {
-		    throw new InvalidAmountException(tmp);
-		} else {
-		    tmp.setBestand(tmp.getBestand() + bestand);
-		}
+    public Artikel erhoeheBestand(Artikel art, int bestand)
+	throws InvalidAmountException {
+	
+	if (art instanceof Massengutartikel) {
+	    Massengutartikel tmp = (Massengutartikel) art;
+	    if (bestand % tmp.getPackungsgroesse() != 0) {
+		throw new InvalidAmountException(tmp);
 	    } else {
-		art.setBestand(art.getBestand() + bestand);
+		tmp.setBestand(tmp.getBestand() + bestand);
 	    }
-	    return art;
-	} catch(ArticleNonexistantException anne) {
-	    throw new ArticleNonexistantException(artikelnummer);
+	} else {
+	    art.setBestand(art.getBestand() + bestand);
 	}
+	return art;
     }
 
     /**

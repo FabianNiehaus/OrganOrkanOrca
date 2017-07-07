@@ -1,7 +1,19 @@
 To-Do
-- Auslagerung Ereigniserstellung in Ereignisverwaltung
+- (Auslagerung Ereigniserstellung in Ereignisverwaltung)
 - Überarbeitung GUI
 - Ausschlusslogik Methoden
-- Bugfixes
-- Table Model ein Konstruktor pro Inhaltstyp, Vektor übergeben - ./
+./ Table Model ein Konstruktor pro Inhaltstyp, Vektor übergeben
+- Eventlistener -> Tabelle updaten
+- Eventlistener -> Objekt im Warenkorb etc.
+- DOKUMENTATION
+
+Bugfixes:
+- Kunde bearbeiten / löschen
+- Mitarbeiter berarbeiten / löschen
+- Bestandsdaten speichern -> überschreiben
 - Tabellenfilterung (Tabelle neu zeichnen!)
+- Tabellensortierung (Pfeile)
+
+
+Nice-To-Have:
+- Kategorien für Produkte

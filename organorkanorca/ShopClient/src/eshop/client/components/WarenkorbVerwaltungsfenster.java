@@ -32,22 +32,25 @@ import eshop.common.exceptions.InvalidAmountException;
 import eshop.common.net.ShopRemote;
 import net.miginfocom.swing.MigLayout;
 
+/**
+ * @author Manic
+ *
+ */
 public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 
     /**
      * 
      */
-    private static final long serialVersionUID = -6170535941906530451L;
-    
-    Warenkorb	wk;
-    JPanel	buttons			     = new JPanel();
-    JTable	warenkorbAuflistung	     = new JTable();
-    JScrollPane	warenkorbAuflistungContainer = new JScrollPane(warenkorbAuflistung);
-    JButton	aendernButton		     = new JButton("Anzahl ändern");
-    JButton	artikelEntfernenButton	     = new JButton("Entfernen");
-    JButton	leerenButton		     = new JButton("Leeren");
-    JButton	kaufenButton		     = new JButton("Kaufen");
-    String[]	columnHeaders			= { "Artikelnummer", "Artikel", "Preis", "Menge", "Gesamt" };
+    private static final long serialVersionUID		   = -6170535941906530451L;
+    Warenkorb		      wk;
+    JPanel		      buttons			   = new JPanel();
+    JTable		      warenkorbAuflistung	   = new JTable();
+    JScrollPane		      warenkorbAuflistungContainer = new JScrollPane(warenkorbAuflistung);
+    JButton		      aendernButton		   = new JButton("Anzahl ändern");
+    JButton		      artikelEntfernenButton	   = new JButton("Entfernen");
+    JButton		      leerenButton		   = new JButton("Leeren");
+    JButton		      kaufenButton		   = new JButton("Kaufen");
+    String[]		      columnHeaders		   = { "Artikelnummer", "Artikel", "Preis", "Menge", "Gesamt" };
 
     public WarenkorbVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener) {
 	super(server, user, listener);
@@ -71,11 +74,19 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 	this.setVisible(true);
     }
 
-    public void warenkorbAufrufen() throws AccessRestrictedException, RemoteException {
+    public void warenkorbAufrufen() {
 
-	Warenkorb wk = server.warenkorbAusgeben(user);
-	Map<Artikel, Integer> inhalt = wk.getArtikel();
-	warenkorbAuflistung.setModel(new WarenkorbTableModel(inhalt));
+	
+	try {
+	    Warenkorb wk = server.warenkorbAusgeben(user);
+	    Map<Artikel, Integer> inhalt = wk.getArtikel();
+	    warenkorbAuflistung.setModel(new WarenkorbTableModel(inhalt));
+	} catch(RemoteException e) {
+	    JOptionPane.showMessageDialog(this, e.getMessage());
+	} catch(AccessRestrictedException e) {
+	    JOptionPane.showMessageDialog(this, e.getMessage());
+	}
+	
     }
 
     class WarenkorbActionListener implements ActionListener {
@@ -178,11 +189,10 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5529552191258522247L;
-	
-	String[]	       columns		 = { "Artikelnummer", "Artikel", "Preis", "Menge", "Gesamt" };
-	Vector<Vector<Object>> dataVector	 = new Vector<>(0);
-	Vector<String>	       columnIdentifiers = new Vector<>(0);
+	private static final long serialVersionUID  = 5529552191258522247L;
+	String[]		  columns	    = { "Artikelnummer", "Artikel", "Preis", "Menge", "Gesamt" };
+	Vector<Vector<Object>>	  dataVector	    = new Vector<>(0);
+	Vector<String>		  columnIdentifiers = new Vector<>(0);
 
 	public WarenkorbTableModel() {
 	    columnIdentifiers = setColumns(columns);

@@ -27,19 +27,18 @@ import eshop.common.data_objects.Kunde;
 import eshop.common.data_objects.Mitarbeiter;
 import eshop.common.data_objects.Person;
 
-import eshop.common.exceptions.AccessRestrictedException;
-
 import eshop.common.net.ShopEventListener;
 import eshop.common.net.ShopRemote;
 
 import net.miginfocom.swing.MigLayout;
 
-public class MainWindow extends JFrame implements ShopEventListener, SichtfensterCallbacks, VerwaltungsfensterCallbacks {
+public class MainWindow extends JFrame
+	implements ShopEventListener, SichtfensterCallbacks, VerwaltungsfensterCallbacks {
 
     /**
      * 
      */
-    private static final long serialVersionUID = 251175113124520728L;
+    private static final long	serialVersionUID  = 251175113124520728L;
     Person			user;
     ShopRemote			server;
     LoginListener		loginListener;
@@ -73,6 +72,41 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
     }
 
     @Override
+    public void alleFensterErneuern() {
+
+	try {
+	    artikelsichtfenster = new ArtikelSichtfenster(server, user, this);
+	    kundensichtfenster = new KundenSichtfenster(server, user, this);
+	    mitarbeitersichtfenster = new MitarbeiterSichtfenster(server, user, this);
+	    artikelverwaltungsfenster = new ArtikelVerwaltungsfenster(server, user, this);
+	    kundenverwaltungsfenster = new PersonenVerwaltungsfenster(server, user, this, "Kundenverwaltung", "Kunde");
+	    mitarbeiterverwaltungsfenster = new PersonenVerwaltungsfenster(server, user, this, "Mitarbeiterverwaltung",
+		    "Mitarbeiter");
+	} catch(Exception e) {
+	    JOptionPane.showMessageDialog(this, e.getMessage());
+	}
+    }
+
+    @Override
+    public void artikelBeabeitet() {
+
+	artikelsichtfenster.callTableUpdate();
+	
+    }
+
+    @Override
+    public void artikelBearbeiten(Artikel art) {
+
+	artikelverwaltungsfenster.artikelAnzeigen(art);
+    }
+
+    @Override
+    public void artikelInWarenkorb() {
+
+	warenkorbverwaltungsfenster.warenkorbAufrufen();
+    }
+
+    @Override
     public void handleArticleChanged(Artikel art) {
 
 	artikelsichtfenster.callTableUpdate();
@@ -81,12 +115,28 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 		if (server.artikelInWarenkorb(art, user)) {
 		    warenkorbverwaltungsfenster.warenkorbAufrufen();
 		}
-	    } catch(RemoteException | AccessRestrictedException e) {
+	    } catch(RemoteException e) {
 		JOptionPane.showMessageDialog(artikelsichtfenster, e.getMessage());
 	    }
 	} else if (user instanceof Mitarbeiter) {
 	    artikelverwaltungsfenster = new ArtikelVerwaltungsfenster(server, user, this);
 	}
+	
+	artikelsichtfenster.callTableUpdate();
+    }
+
+    @Override
+    public void handleArticleDeleted() {
+
+	artikelsichtfenster.callTableUpdate();
+	
+    }
+
+    @Override
+    public void handleBasketChanged(Artikel art) {
+
+	warenkorbverwaltungsfenster.warenkorbAufrufen();
+
     }
 
     @Override
@@ -97,7 +147,8 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 
     @Override
     public void handleUserChanged() {
-	// TODO Auto-generated method stub
+	kundensichtfenster.callTableUpdate();
+	// TODO Kunde in Bearbeitung
 
     }
 
@@ -115,9 +166,7 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 	logoutButton.addActionListener(new MenuButtonsActionListener());
 	moduleButtons.add(logoutButton);
 	leftArea.add(moduleButtons, "wrap, dock center");
-	
 	artikelsichtfenster = new ArtikelSichtfenster(server, user, this);
-	
 	leftArea.add(artikelsichtfenster, "dock center");
 	if (user instanceof Kunde) {
 	    warenkorbverwaltungsfenster = new WarenkorbVerwaltungsfenster(server, user, this);
@@ -135,6 +184,33 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	this.pack();
 	this.setVisible(true);
+    }
+
+    @Override
+    public void kundeBearbeiten() {
+	// TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void kundeBearbeitet() {
+
+	kundensichtfenster.callTableUpdate();
+	
+    }
+
+
+    @Override
+    public void mitarbeiterBearbeiten() {
+	// TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void mitarbeiterBearbeitet() {
+
+	mitarbeitersichtfenster.callTableUpdate();
+	
     }
 
     /**
@@ -166,6 +242,22 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 	this.setPreferredSize(new Dimension((int) prefWidth, (int) this.getPreferredSize().getHeight()));
     }
 
+    @Override
+    public void update(String typ) {
+
+	switch(typ){
+	    case("kunde"):{
+		kundensichtfenster.callTableUpdate();
+	    }break;
+	    case("mitarbeiter"):{
+		mitarbeitersichtfenster.callTableUpdate();
+	    }break;
+	    case("artikel"):{
+		artikelsichtfenster.callTableUpdate();
+	    }break;
+	}
+    }
+
     class MenuButtonsActionListener implements ActionListener {
 
 	@Override
@@ -195,7 +287,8 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 		    leftArea.repaint();
 		    rightArea.removeAll();
 		    try {
-			kundenverwaltungsfenster = new PersonenVerwaltungsfenster(server, user, MainWindow.this, "Kundenverwaltung", "Kunde");
+			kundenverwaltungsfenster = new PersonenVerwaltungsfenster(server, user, MainWindow.this,
+				"Kundenverwaltung", "Kunde");
 			rightArea.add(kundenverwaltungsfenster);
 		    } catch(Exception e) {
 			JOptionPane.showMessageDialog(MainWindow.this, e.getMessage());
@@ -213,8 +306,8 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 		    leftArea.repaint();
 		    rightArea.removeAll();
 		    try {
-			mitarbeiterverwaltungsfenster = new PersonenVerwaltungsfenster(server, user, MainWindow.this, "Mitarbeiterverwaltung",
-				"Mitarbeiter");
+			mitarbeiterverwaltungsfenster = new PersonenVerwaltungsfenster(server, user, MainWindow.this,
+				"Mitarbeiterverwaltung", "Mitarbeiter");
 			rightArea.add(mitarbeiterverwaltungsfenster);
 		    } catch(Exception e) {
 			JOptionPane.showMessageDialog(MainWindow.this, e.getMessage());
@@ -243,60 +336,10 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
     }
 
     @Override
-    public void artikelInWarenkorb() {
+    public void handleStaffChanged() {
 
-	try {
-	    warenkorbverwaltungsfenster.warenkorbAufrufen();
-	} catch(RemoteException | AccessRestrictedException e) {
-	    JOptionPane.showMessageDialog(this, e.getMessage());
-	}
-    }
-
-    @Override
-    public void artikelBearbeiten(Artikel art) {
-
-	artikelverwaltungsfenster.artikelAnzeigen(art);
-    }
-
-    @Override
-    public void kundeBearbeiten() {
-	// TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void mitarbeiterBearbeiten() {
-	// TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void alleSichtfensterErneuern() {
-
-	try {
-	    artikelsichtfenster = new ArtikelSichtfenster(server, user, this);
-	    kundensichtfenster = new KundenSichtfenster(server, user, this);
-	    mitarbeitersichtfenster = new MitarbeiterSichtfenster(server, user, this);
-	    artikelverwaltungsfenster = new ArtikelVerwaltungsfenster(server, user, this);
-	    kundenverwaltungsfenster = new PersonenVerwaltungsfenster(server, user, this, "Kundenverwaltung", "Kunde");
-	    mitarbeiterverwaltungsfenster = new PersonenVerwaltungsfenster(server, user, this, "Mitarbeiterverwaltung", "Mitarbeiter");
-	} catch(Exception e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
-    }
-
-    @Override
-    public void update(String sichtfenster) {
-
-	// TODO Auto-generated method stub
-	
-    }
-
-    @Override
-    public void artikelBearbeiten() {
-
-	// TODO Auto-generated method stub
+	mitarbeitersichtfenster.callTableUpdate();
+	//TODO Mitarbeiter in Bearbeitung
 	
     }
 }

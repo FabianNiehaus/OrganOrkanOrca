@@ -12,20 +12,20 @@ public abstract class Verwaltungsfenster extends JPanel {
 
 	public void update(String sichtfenster);
 
-	public void artikelBearbeiten();
+	public void artikelBeabeitet();
 
-	public void kundeBearbeiten();
+	public void kundeBearbeitet();
 
-	public void mitarbeiterBearbeiten();
+	public void mitarbeiterBearbeitet();
 
-	public void alleSichtfensterErneuern();
+	public void alleFensterErneuern();
     }
 
     protected VerwaltungsfensterCallbacks listener = null;
     protected Person			  user;
     protected ShopRemote		  server;
-    
-    public Verwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener){
+
+    public Verwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener) {
 	this.server = server;
 	this.user = user;
 	this.listener = listener;

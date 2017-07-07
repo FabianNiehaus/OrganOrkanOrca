@@ -1,5 +1,6 @@
 package eshop.common.exceptions;
 
+import eshop.common.data_objects.Artikel;
 import eshop.common.data_objects.Massengutartikel;
 
 public class InvalidAmountException extends Exception {
@@ -13,5 +14,9 @@ public class InvalidAmountException extends Exception {
     public InvalidAmountException(Massengutartikel art) {
 	super("Artikel mit Nummer " + art.getArtikelnummer() + " kann nur in Mengen vielfach von "
 		+ art.getPackungsgroesse() + " ein-/ausgebucht werden.");
+    }
+    
+    public InvalidAmountException(int bestand){
+	super(bestand + " ist kein gültiger Bestand!");
     }
 }

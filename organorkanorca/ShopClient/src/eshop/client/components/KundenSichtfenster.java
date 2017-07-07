@@ -39,7 +39,7 @@ public class KundenSichtfenster extends Sichtfenster {
 
 	try {
 	    updateTable(server.alleKundenAusgeben(user),
-		    new String[] { "KundenNr.", "Vorname", "Nachname", "Straße", "PLZ","Ort" });
+		    new String[] { "KundenNr.", "Vorname", "Nachname", "Straße", "PLZ", "Ort" });
 	} catch(RemoteException | AccessRestrictedException e) {
 	    JOptionPane.showMessageDialog(KundenSichtfenster.this, e.getMessage());
 	}

@@ -10,14 +10,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import eshop.client.util.ShopTableModel;
 import eshop.client.util.Verwaltungsfenster;
-import eshop.client.util.Verwaltungsfenster.VerwaltungsfensterCallbacks;
 import eshop.common.data_objects.Artikel;
 import eshop.common.data_objects.Massengutartikel;
 import eshop.common.data_objects.Person;
 import eshop.common.exceptions.AccessRestrictedException;
-import eshop.common.exceptions.ArticleNonexistantException;
 import eshop.common.exceptions.InvalidAmountException;
 import eshop.common.net.ShopRemote;
 import net.miginfocom.swing.MigLayout;
@@ -27,26 +24,25 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
     /**
      * 
      */
-    private static final long serialVersionUID = -107879108721906207L;
-    
-    Artikel    art;
-    JPanel     detailArea		   = new JPanel();
-    JLabel     artNrLabel		   = new JLabel("Artikelnummer:");
-    JTextField artNrField		   = new JTextField(15);
-    JLabel     bezeichnungLabel		   = new JLabel("Bezeichnung:");
-    JTextField bezeichnungField		   = new JTextField(15);
-    JLabel     preisLabel		   = new JLabel("Preis:");
-    JTextField preisField		   = new JTextField(15);
-    JLabel     pkggroesseLabel		   = new JLabel("Packungsgröße:");
-    JTextField pkggroesseField		   = new JTextField(15);
-    JLabel     bestandLabel		   = new JLabel("Bestand:");
-    JTextField bestandField		   = new JTextField(15);
-    JPanel     buttons			   = new JPanel();
-    JButton    neuAnlegenButton		   = new JButton("Neu");
-    JButton    aendernButton		   = new JButton("Ändern");
-    JButton    aendernBestaetigenButton	   = new JButton("Bestätigen");
-    JButton    loeschenButton		   = new JButton("Löschen");
-    JButton    neuAnlegenBestaetigenButton = new JButton("Anlegen");
+    private static final long serialVersionUID		  = -107879108721906207L;
+    Artikel		      art;
+    JPanel		      detailArea		  = new JPanel();
+    JLabel		      artNrLabel		  = new JLabel("Artikelnummer:");
+    JTextField		      artNrField		  = new JTextField(15);
+    JLabel		      bezeichnungLabel		  = new JLabel("Bezeichnung:");
+    JTextField		      bezeichnungField		  = new JTextField(15);
+    JLabel		      preisLabel		  = new JLabel("Preis:");
+    JTextField		      preisField		  = new JTextField(15);
+    JLabel		      pkggroesseLabel		  = new JLabel("Packungsgröße:");
+    JTextField		      pkggroesseField		  = new JTextField(15);
+    JLabel		      bestandLabel		  = new JLabel("Bestand:");
+    JTextField		      bestandField		  = new JTextField(15);
+    JPanel		      buttons			  = new JPanel();
+    JButton		      neuAnlegenButton		  = new JButton("Neu");
+    JButton		      aendernButton		  = new JButton("Ändern");
+    JButton		      aendernBestaetigenButton	  = new JButton("Bestätigen");
+    JButton		      loeschenButton		  = new JButton("Löschen");
+    JButton		      neuAnlegenBestaetigenButton = new JButton("Anlegen");
 
     public ArtikelVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener) {
 	super(server, user, listener);
@@ -121,31 +117,31 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 	    } else if (e.getSource().equals(aendernBestaetigenButton)) {
 		String bezeichnung = bezeichnungField.getText();
 		try {
-		    int bestand = Integer.parseInt(bestandField.getText());
+		    int bestand = 0;
+		    String zeile = bestandField.getText();
+		    String operator = zeile.substring(0, 1);
+		    if(operator.equals("+") || operator.equals("-")){
+			bestand = Integer.parseInt(zeile.substring(1));
+		    } else if (operator.equals("0")){
+			bestand = Integer.parseInt(zeile);
+		    } else {
+			throw new NumberFormatException("Kein gültiger Operator! Nur + und - sind erlaubt!");
+		    }
+		    
+		    
 		    try {
 			double preis = Double.parseDouble(preisField.getText());
 			try {
 			    int packungsgroesse = Integer.parseInt(pkggroesseField.getText());
 			    try {
-				Artikel art = server.artikelSuchen(Integer.parseInt(artNrField.getText()), user);
-				art.setBezeichnung(bezeichnung);
-				server.erhoeheArtikelBestand(art.getArtikelnummer(), bestand, user);
-				art.setPreis(preis);
-				if (packungsgroesse > 1) {
-				    server.artikelLoeschen(art, user);
-				    art = server.erstelleArtikel(bezeichnung, bestand, preis, packungsgroesse, user);
-				}
-				// Neu erstellten Artikel anzeigen
+				art = server.artikelAendern(art, user, bezeichnung, bestand, operator, preis, packungsgroesse);
 				artikelAnzeigen(art);
-				// Buttons anpassen
 				aendernBestaetigenButton.setVisible(false);
 				neuAnlegenButton.setVisible(true);
 				aendernButton.setVisible(true);
 				loeschenButton.setVisible(true);
-				listener.update("Artikel");
+				listener.update("artikel");
 				ArtikelVerwaltungsfenster.this.repaint();
-			    } catch(ArticleNonexistantException e1) {
-				JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this, e1.getMessage());
 			    } catch(AccessRestrictedException e1) {
 				JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this, e1.getMessage());
 			    } catch(InvalidAmountException e1) {

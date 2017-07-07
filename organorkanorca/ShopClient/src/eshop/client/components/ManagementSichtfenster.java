@@ -23,9 +23,8 @@ public class ManagementSichtfenster extends Sichtfenster {
      * 
      */
     private static final long serialVersionUID = -4495211746151221729L;
-    
-    JButton	       speichernButton	   = new JButton("Bestandsdaten speichern");
-    JButton	       ladenButton	   = new JButton("Bestandsdaten importieren");
+    JButton		      speichernButton  = new JButton("Bestandsdaten speichern");
+    JButton		      ladenButton      = new JButton("Bestandsdaten importieren");
 
     public ManagementSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
 	super(server, user, listener);
