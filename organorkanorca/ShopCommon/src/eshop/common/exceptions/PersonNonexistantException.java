@@ -8,13 +8,13 @@ package eshop.common.exceptions;
  */
 public class PersonNonexistantException extends Exception {
 
-    private static final long serialVersionUID = -4926085803539481775L;
+	private static final long serialVersionUID = -4926085803539481775L;
 
-    public PersonNonexistantException(int id) {
-	super("Fuer die ID " + id + " ist keine Person angelegt.");
-    }
+	public PersonNonexistantException(int id) {
+		super("Fuer die ID " + id + " ist keine Person angelegt.");
+	}
 
-    public PersonNonexistantException(String firstname, String lastname) {
-	super("Es existiert keine Person mit dem Namen " + firstname + " " + lastname);
-    }
+	public PersonNonexistantException(String firstname, String lastname) {
+		super("Es existiert keine Person mit dem Namen " + firstname + " " + lastname);
+	}
 }

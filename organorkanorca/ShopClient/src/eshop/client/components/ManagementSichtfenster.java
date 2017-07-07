@@ -19,55 +19,55 @@ import eshop.common.net.ShopRemote;
 
 public class ManagementSichtfenster extends Sichtfenster {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -4495211746151221729L;
-    JButton		      speichernButton  = new JButton("Bestandsdaten speichern");
-    JButton		      ladenButton      = new JButton("Bestandsdaten importieren");
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4495211746151221729L;
+	JButton speichernButton = new JButton("Bestandsdaten speichern");
+	JButton ladenButton = new JButton("Bestandsdaten importieren");
 
-    public ManagementSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
-	super(server, user, listener);
-	actionField.remove(aktion);
-	actionField.remove(anzahl);
-	speichernButton.addActionListener(new PersistenceButtonListener());
-	ladenButton.addActionListener(new PersistenceButtonListener());
-	actionField.add(speichernButton);
-	actionField.add(ladenButton);
-    }
+	public ManagementSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
+		super(server, user, listener);
+		actionField.remove(aktion);
+		actionField.remove(anzahl);
+		speichernButton.addActionListener(new PersistenceButtonListener());
+		ladenButton.addActionListener(new PersistenceButtonListener());
+		actionField.add(speichernButton);
+		actionField.add(ladenButton);
+	}
 
-    class PersistenceButtonListener implements ActionListener {
+	class PersistenceButtonListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent ae) {
+
+			if (ae.getSource().equals(speichernButton)) {
+				try {
+					server.schreibeDaten();
+					JOptionPane.showMessageDialog(ManagementSichtfenster.this, "Daten erfolgreich gespeichert!");
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(ManagementSichtfenster.this, e1.getMessage());
+				}
+			} else if (ae.getSource().equals(ladenButton)) {
+				try {
+					server.ladeDaten();
+					JOptionPane.showMessageDialog(ManagementSichtfenster.this, "Daten erfolgreich geladen!");
+				} catch (IOException | ArticleNonexistantException | PersonNonexistantException
+						| InvalidPersonDataException e1) {
+					JOptionPane.showMessageDialog(ManagementSichtfenster.this, e1.getMessage());
+				}
+			}
+		}
+	}
 
 	@Override
-	public void actionPerformed(ActionEvent ae) {
+	public void callTableUpdate() {
 
-	    if (ae.getSource().equals(speichernButton)) {
 		try {
-		    server.schreibeDaten();
-		    JOptionPane.showMessageDialog(ManagementSichtfenster.this, "Daten erfolgreich gespeichert!");
-		} catch(IOException e1) {
-		    JOptionPane.showMessageDialog(ManagementSichtfenster.this, e1.getMessage());
+			updateTable(server.alleEreignisseAusgeben(user),
+					new String[] { "ArtNr.", "Bezeichnung", "Preis", "Einheit", "Bestand" });
+		} catch (RemoteException | AccessRestrictedException e) {
+			JOptionPane.showMessageDialog(ManagementSichtfenster.this, e.getMessage());
 		}
-	    } else if (ae.getSource().equals(ladenButton)) {
-		try {
-		    server.ladeDaten();
-		    JOptionPane.showMessageDialog(ManagementSichtfenster.this, "Daten erfolgreich geladen!");
-		} catch(IOException | ArticleNonexistantException | PersonNonexistantException
-			| InvalidPersonDataException e1) {
-		    JOptionPane.showMessageDialog(ManagementSichtfenster.this, e1.getMessage());
-		}
-	    }
 	}
-    }
-
-    @Override
-    public void callTableUpdate() {
-
-	try {
-	    updateTable(server.alleEreignisseAusgeben(user),
-		    new String[] { "ArtNr.", "Bezeichnung", "Preis", "Einheit", "Bestand" });
-	} catch(RemoteException | AccessRestrictedException e) {
-	    JOptionPane.showMessageDialog(ManagementSichtfenster.this, e.getMessage());
-	}
-    }
 }

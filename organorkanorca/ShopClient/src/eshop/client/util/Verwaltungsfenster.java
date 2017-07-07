@@ -8,26 +8,26 @@ import eshop.common.net.ShopRemote;
 
 public abstract class Verwaltungsfenster extends JPanel {
 
-    public interface VerwaltungsfensterCallbacks {
+	public interface VerwaltungsfensterCallbacks {
 
-	public void update(String sichtfenster);
+		public void update(String sichtfenster);
 
-	public void artikelBeabeitet();
+		public void artikelBeabeitet();
 
-	public void kundeBearbeitet();
+		public void kundeBearbeitet();
 
-	public void mitarbeiterBearbeitet();
+		public void mitarbeiterBearbeitet();
 
-	public void alleFensterErneuern();
-    }
+		public void alleFensterErneuern();
+	}
 
-    protected VerwaltungsfensterCallbacks listener = null;
-    protected Person			  user;
-    protected ShopRemote		  server;
+	protected VerwaltungsfensterCallbacks listener = null;
+	protected Person user;
+	protected ShopRemote server;
 
-    public Verwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener) {
-	this.server = server;
-	this.user = user;
-	this.listener = listener;
-    }
+	public Verwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener) {
+		this.server = server;
+		this.user = user;
+		this.listener = listener;
+	}
 }

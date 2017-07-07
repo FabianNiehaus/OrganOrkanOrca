@@ -8,13 +8,13 @@ package eshop.common.exceptions;
  */
 public class ArticleNonexistantException extends Exception {
 
-    private static final long serialVersionUID = 5248914535441215896L;
+	private static final long serialVersionUID = 5248914535441215896L;
 
-    public ArticleNonexistantException(int artikelnummer) {
-	super("Die gesuchte Artikelnummer " + artikelnummer + " existiert nicht!");
-    }
+	public ArticleNonexistantException(int artikelnummer) {
+		super("Die gesuchte Artikelnummer " + artikelnummer + " existiert nicht!");
+	}
 
-    public ArticleNonexistantException(String bezeichnung) {
-	super("Der gesuchte Artikel " + bezeichnung + " existiert nicht!");
-    }
+	public ArticleNonexistantException(String bezeichnung) {
+		super("Der gesuchte Artikel " + bezeichnung + " existiert nicht!");
+	}
 }

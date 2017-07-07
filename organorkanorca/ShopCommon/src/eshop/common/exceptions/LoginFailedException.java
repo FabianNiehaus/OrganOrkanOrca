@@ -5,13 +5,13 @@ package eshop.common.exceptions;
  */
 public class LoginFailedException extends Exception {
 
-    private static final long serialVersionUID = 4399203773116521889L;
+	private static final long serialVersionUID = 4399203773116521889L;
 
-    public LoginFailedException() {
-	super("Nutzer-ID ist nicht gueltig.");
-    }
+	public LoginFailedException() {
+		super("Nutzer-ID ist nicht gueltig.");
+	}
 
-    public LoginFailedException(int id) {
-	super("Login fuer Nutzer " + id + " ist fehlgeschlaggen.");
-    }
+	public LoginFailedException(int id) {
+		super("Login fuer Nutzer " + id + " ist fehlgeschlaggen.");
+	}
 }

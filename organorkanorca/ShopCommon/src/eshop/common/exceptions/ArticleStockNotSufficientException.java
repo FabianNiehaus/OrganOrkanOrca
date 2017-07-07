@@ -7,10 +7,10 @@ import eshop.common.data_objects.Artikel;
  */
 public class ArticleStockNotSufficientException extends Exception {
 
-    private static final long serialVersionUID = 6807321841850724912L;
+	private static final long serialVersionUID = 6807321841850724912L;
 
-    public ArticleStockNotSufficientException(Artikel art, int anz) {
-	super("Bestand nicht ausreichend! Artikel " + art.getBezeichnung() + " hat Bestand " + art.getBestand() + " < "
-		+ anz);
-    }
+	public ArticleStockNotSufficientException(Artikel art, int anz) {
+		super("Bestand nicht ausreichend! Artikel " + art.getBezeichnung() + " hat Bestand " + art.getBestand() + " < "
+				+ anz);
+	}
 }
