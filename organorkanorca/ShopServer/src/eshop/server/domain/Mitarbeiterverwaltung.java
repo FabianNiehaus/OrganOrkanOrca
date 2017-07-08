@@ -138,9 +138,9 @@ public class Mitarbeiterverwaltung {
 	 *            Zu entfernender Mitarbeiter
 	 * @return
 	 */
-	public boolean loescheMitarbeiter(Mitarbeiter einMa) {
+	public void loescheMitarbeiter(Mitarbeiter einMa) {
 
-		return mitarbeiter.remove(einMa);
+		mitarbeiter.remove(einMa);
 	}
 
 	/**

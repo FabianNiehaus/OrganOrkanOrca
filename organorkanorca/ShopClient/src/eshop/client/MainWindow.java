@@ -1,6 +1,5 @@
 package eshop.client;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -108,7 +107,7 @@ public class MainWindow extends JFrame
 	}
 
 	@Override
-	public void handleArticleChanged(Artikel art){
+	public void handleArticleChanged(Artikel art) {
 
 		if (user instanceof Kunde) {
 			try {
@@ -119,15 +118,23 @@ public class MainWindow extends JFrame
 				JOptionPane.showMessageDialog(null, e.getMessage());
 			}
 		} else if (user instanceof Mitarbeiter) {
-			artikelverwaltungsfenster.artikelAnzeigen(art);
-			JOptionPane.showMessageDialog(null, "Der ausgew�hlte Artikel wurde ver�ndert!");
+			if(artikelverwaltungsfenster.getArtikel().getArtikelnummer() == art.getArtikelnummer()){
+				if(art.getBezeichnung().equals("deleted!")){
+					artikelverwaltungsfenster = new ArtikelVerwaltungsfenster(server, user, this);
+					JOptionPane.showMessageDialog(artikelverwaltungsfenster, "Der ausgewählte Kunde wurde gelöscht!");
+				} else {
+					artikelverwaltungsfenster.artikelAnzeigen(art);
+					JOptionPane.showMessageDialog(artikelverwaltungsfenster, "Der ausgewählte Artikel wurde geändert!");
+				}
+				
+			}
+			
 		}
-
-		artikelsichtfenster.callTableUpdate();
+		
 	}
 
 	@Override
-	public void handleBasketChanged(Artikel art){
+	public void handleBasketChanged(Artikel art) {
 
 		warenkorbverwaltungsfenster.warenkorbAufrufen();
 
@@ -161,7 +168,7 @@ public class MainWindow extends JFrame
 		}
 		main.add(leftArea);
 		main.add(rightArea);
-		setWindowSize();
+		//setWindowSize();
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.pack();
 		this.setVisible(true);
@@ -176,8 +183,7 @@ public class MainWindow extends JFrame
 
 	@Override
 	public void mitarbeiterBearbeiten(Mitarbeiter mi) {
-		kundenverwaltungsfenster.personAnzeigen(mi);
-
+		mitarbeiterverwaltungsfenster.personAnzeigen(mi);
 
 	}
 
@@ -245,7 +251,8 @@ public class MainWindow extends JFrame
 				leftArea.remove(kundensichtfenster);
 				leftArea.remove(mitarbeitersichtfenster);
 				leftArea.remove(managementsichtfenster);
-				leftArea.add(artikelsichtfenster, BorderLayout.CENTER);
+				artikelsichtfenster = new ArtikelSichtfenster(server, user, MainWindow.this);
+				leftArea.add(artikelsichtfenster);
 				leftArea.repaint();
 				rightArea.removeAll();
 				if (user instanceof Kunde) {
@@ -261,7 +268,8 @@ public class MainWindow extends JFrame
 					leftArea.remove(artikelsichtfenster);
 					leftArea.remove(mitarbeitersichtfenster);
 					leftArea.remove(managementsichtfenster);
-					leftArea.add(kundensichtfenster, BorderLayout.CENTER);
+					kundensichtfenster = new KundenSichtfenster(server, user, MainWindow.this);
+					leftArea.add(kundensichtfenster);
 					leftArea.repaint();
 					rightArea.removeAll();
 					try {
@@ -280,7 +288,8 @@ public class MainWindow extends JFrame
 					leftArea.remove(artikelsichtfenster);
 					leftArea.remove(kundensichtfenster);
 					leftArea.remove(managementsichtfenster);
-					leftArea.add(mitarbeitersichtfenster, BorderLayout.CENTER);
+					mitarbeitersichtfenster = new MitarbeiterSichtfenster(server, user, MainWindow.this);
+					leftArea.add(mitarbeitersichtfenster);
 					leftArea.repaint();
 					rightArea.removeAll();
 					try {
@@ -299,7 +308,8 @@ public class MainWindow extends JFrame
 					leftArea.remove(artikelsichtfenster);
 					leftArea.remove(kundensichtfenster);
 					leftArea.remove(mitarbeitersichtfenster);
-					leftArea.add(managementsichtfenster, BorderLayout.CENTER);
+					managementsichtfenster = new ManagementSichtfenster(server, user, MainWindow.this);
+					leftArea.add(managementsichtfenster);
 					leftArea.revalidate();
 					leftArea.repaint();
 					rightArea.removeAll();
@@ -314,27 +324,44 @@ public class MainWindow extends JFrame
 	}
 
 	@Override
-	public void handleEventChanged(Ereignis er){
+	public void handleEventChanged(Ereignis er) {
 
 		managementsichtfenster.callTableUpdate();
 
 	}
 
 	@Override
-	public void handleStaffChanged(Mitarbeiter mi){
+	public void handleStaffChanged(Mitarbeiter mi) {
+		
+		if (mitarbeiterverwaltungsfenster.getPerson().getId() == mi.getId()) {
+			if (mi.getFirstname().equals("deleted!")) {
+				JOptionPane.showMessageDialog(mitarbeiterverwaltungsfenster, "Der ausgewählte Mitarbeiter wurde gelöscht!");
+				kundenverwaltungsfenster = new PersonenVerwaltungsfenster(server, user, this, "Mitarbeiterverwaltung",
+						"Mitarbeiter");
+			} else {
+				kundenverwaltungsfenster.personAnzeigen(mi);
+				JOptionPane.showMessageDialog(mitarbeiterverwaltungsfenster, "Der ausgewählte Mitarbeiter wurde verändert!");
 
-		mitarbeiterverwaltungsfenster.personAnzeigen(mi);
-		JOptionPane.showMessageDialog(artikelverwaltungsfenster, "Der ausgew�hlte Mitarbeiter wurde ver�ndert!");
-
+			}
+		}
 		mitarbeitersichtfenster.callTableUpdate();
-
+		
 	}
 
 	@Override
 	public void handleUserChanged(Kunde ku) {
-		kundenverwaltungsfenster.personAnzeigen(ku);
-		JOptionPane.showMessageDialog(artikelverwaltungsfenster, "Der ausgew�hlte Kunde wurde ver�ndert!");
 
+		if (kundenverwaltungsfenster.getPerson().getId() == ku.getId()) {
+			if (ku.getFirstname().equals("deleted!")) {
+				JOptionPane.showMessageDialog(kundenverwaltungsfenster, "Der ausgewählte Kunde wurde gelöscht!");
+				kundenverwaltungsfenster = new PersonenVerwaltungsfenster(server, user, this, "Kundenverwaltung",
+						"Kunde");
+			} else {
+				kundenverwaltungsfenster.personAnzeigen(ku);
+				JOptionPane.showMessageDialog(kundenverwaltungsfenster, "Der ausgewählte Kunde wurde verändert!");
+
+			}
+		}
 		kundensichtfenster.callTableUpdate();
 
 	}

@@ -112,7 +112,6 @@ public interface ShopRemote extends Remote {
 			throws ArticleNonexistantException, ArticleStockNotSufficientException, AccessRestrictedException,
 			InvalidAmountException, ArticleAlreadyInBasketException, RemoteException;
 
-	void artikelLoeschen(Artikel art, Person p) throws AccessRestrictedException, RemoteException;
 
 	/**
 	 * Erlaubt die Suche nach einer Artikelnummer
@@ -192,7 +191,7 @@ public interface ShopRemote extends Remote {
 
 	Mitarbeiter mitarbeiterSuchen(int id, Person p) throws PersonNonexistantException, RemoteException;
 
-	void personLoeschen(Person loeschen, Person p) throws AccessRestrictedException, RemoteException;
+	void personLoeschen(Person loeschen, Person p) throws AccessRestrictedException, RemoteException, InvalidPersonDataException, PersonNonexistantException;
 
 	public void removeShopEventListener(ShopEventListener listener) throws RemoteException;
 
@@ -238,4 +237,10 @@ public interface ShopRemote extends Remote {
 
 	Artikel aendereArtikelBestand(Artikel art, int bestand, String operator, Person p)
 			throws AccessRestrictedException, InvalidAmountException, RemoteException;
+
+	Person personAendern(String typ, Person p, String firstname, String lastname, int id, String passwort,
+			String address_Street, String address_Zip, String address_Town)
+			throws RemoteException, AccessRestrictedException, InvalidPersonDataException, PersonNonexistantException;
+
+	void artikelLoeschen(int artikelnummer, Person p) throws AccessRestrictedException, RemoteException, ArticleNonexistantException;
 }

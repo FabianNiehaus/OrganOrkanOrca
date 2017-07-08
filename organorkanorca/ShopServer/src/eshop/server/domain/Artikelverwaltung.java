@@ -89,10 +89,14 @@ public class Artikelverwaltung {
 			return art;
 		}
 		if (packungsgroesse > 1) {
+			if (bestand % packungsgroesse != 0) {
+				throw new InvalidAmountException(bestand);
+			} else {
 			Massengutartikel art = new Massengutartikel(bezeichnung, getNextID(), bestand, preis, packungsgroesse,
 					null);
 			artikel.add(art);
 			return art;
+			}
 		} else {
 			throw new InvalidAmountException();
 		}

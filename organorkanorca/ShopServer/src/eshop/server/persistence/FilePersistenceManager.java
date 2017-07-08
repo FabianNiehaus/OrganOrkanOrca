@@ -347,6 +347,10 @@ public class FilePersistenceManager implements PersistenceManager {
 		schreibeZeile(mi.getLastname());
 		// Schreibe passwort
 		schreibeZeile(mi.getPasswort());
+		// Schreibe Adresse
+		schreibeZeile(mi.getAddress_Street());
+		schreibeZeile(mi.getAddress_Zip());
+		schreibeZeile(mi.getAddress_Town());
 		return true;
 	}
 }

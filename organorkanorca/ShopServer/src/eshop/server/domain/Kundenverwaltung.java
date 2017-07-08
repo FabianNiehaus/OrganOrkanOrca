@@ -163,9 +163,9 @@ public class Kundenverwaltung {
 	 * @param einKunde
 	 *            Zu löschender Kunde
 	 */
-	public boolean loescheKunde(Kunde einKunde) {
+	public void loescheKunde(Kunde einKunde) {
 
-		return kunden.remove(einKunde);
+		kunden.remove(einKunde);
 	}
 	/*
 	 * Nicht verwendet public void aendereKunde(Kunde einKunde) { }

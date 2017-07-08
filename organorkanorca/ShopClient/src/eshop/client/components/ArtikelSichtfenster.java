@@ -1,21 +1,30 @@
 package eshop.client.components;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 import java.util.Calendar;
 import java.util.Map.Entry;
 
+import javax.swing.DefaultRowSorter;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
+import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
+import javax.swing.table.TableRowSorter;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartFrame;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.DefaultCategoryDataset;
 
+import eshop.client.components.tablemodels.ArtikelTableModel;
+import eshop.client.components.tablemodels.EreignisTableModel;
 import eshop.client.util.Sichtfenster;
+import eshop.client.util.TableColumnAdjuster;
 import eshop.common.data_objects.Artikel;
 import eshop.common.data_objects.Kunde;
 import eshop.common.data_objects.Mitarbeiter;
@@ -133,10 +142,38 @@ public class ArtikelSichtfenster extends Sichtfenster {
 	public void callTableUpdate() {
 
 		try {
-			updateTable(server.alleArtikelAusgeben(user),
-					new String[] { "ArtNr.", "Bezeichnung", "Preis", "Einheit", "Bestand" });
+			model = new ArtikelTableModel(server.alleArtikelAusgeben(user));
+			
+			auflistung.setModel(model);
+			
+			auflistung.setPreferredScrollableViewportSize(new Dimension(500, 70));
+			auflistung.setFillsViewportHeight(true);
+			
+			TableColumnAdjuster tca = new TableColumnAdjuster(auflistung, 30);
+			tca.adjustColumns(SwingConstants.CENTER);
+			model.fireTableDataChanged();
+			
+			auflistung.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			
 		} catch (RemoteException | AccessRestrictedException e) {
 			JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e.getMessage());
 		}
+	}
+	
+	@Override
+	public void TabelleFiltern() {
+		RowFilter<ArtikelTableModel,Object> rf = null;
+		try {
+            rf = RowFilter.regexFilter(sucheField.getText(), 0);
+        } catch (java.util.regex.PatternSyntaxException e) {
+            return;
+        }
+        ((DefaultRowSorter<ArtikelTableModel, Integer>) auflistung.getRowSorter()).setRowFilter(rf);
+	}
+
+	@Override
+	public void TabellenFilterEntfernen() {
+		((DefaultRowSorter<ArtikelTableModel, Integer>) auflistung.getRowSorter()).setRowFilter(null);
+		
 	}
 }

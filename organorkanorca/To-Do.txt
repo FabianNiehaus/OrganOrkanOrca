@@ -3,17 +3,19 @@ To-Do
 - Überarbeitung GUI
 - Ausschlusslogik Methoden
 ./ Table Model ein Konstruktor pro Inhaltstyp, Vektor übergeben
-- Eventlistener -> Tabelle updaten
+./ Eventlistener -> Tabelle updaten
 - Eventlistener -> Objekt im Warenkorb etc.
 - DOKUMENTATION
 
 Bugfixes:
-- Kunde bearbeiten / löschen
-- Mitarbeiter berarbeiten / löschen
-- Bestandsdaten speichern -> überschreiben
+./ Kunde + Mitarbeiter bearbeiten / löschen -> Tabelle aktualisieren
+./ Kunde bearbeitern -> Feld Vorname
+./ Bestandsdaten speichern -> überschreiben
 - Tabellenfilterung (Tabelle neu zeichnen!)
 - Tabellensortierung (Pfeile)
-
+./ Artikel neu anlegen -> Prüfung Packungsgröße
+./ Artikel löschen -> Aktualisierung Tabelle
+./ Aktualisierng Sicherenster bei Wechsel
 
 Nice-To-Have:
 - Kategorien für Produkte

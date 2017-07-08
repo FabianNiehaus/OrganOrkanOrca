@@ -173,7 +173,7 @@ public class LoginWindow extends JFrame {
 				Person user = server.anmelden(1001, "test");
 				loginListener.userLoggedIn(user);
 			} catch (LoginFailedException | RemoteException e1) {
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(LoginWindow.this, e1.getMessage());
 			}
 		}
 	}

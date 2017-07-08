@@ -17,6 +17,7 @@ import eshop.common.data_objects.Person;
 import eshop.common.exceptions.AccessRestrictedException;
 import eshop.common.exceptions.InvalidPersonDataException;
 import eshop.common.exceptions.MaxIDsException;
+import eshop.common.exceptions.PersonNonexistantException;
 import eshop.common.net.ShopRemote;
 import net.miginfocom.swing.MigLayout;
 
@@ -52,7 +53,7 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 	String typ = "";
 
 	public PersonenVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener,
-			String titel, String personenTyp) throws Exception {
+			String titel, String personenTyp) {
 		super(server, user, listener);
 		this.setLayout(new MigLayout());
 		detailArea.setLayout(new MigLayout());
@@ -99,7 +100,7 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 
 		this.p = p;
 		persNrField.setText(String.valueOf(p.getId()));
-		vornameField.setText(p.getLastname());
+		vornameField.setText(p.getFirstname());
 		nachnameField.setText(p.getLastname());
 		strasseField.setText(p.getAddress_Street());
 		ortField.setText(p.getAddress_Town());
@@ -115,13 +116,11 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 
 	public class PersonBearbeitenListener implements ActionListener {
 
-		public PersonBearbeitenListener(String personenTyp) throws Exception {
-			if (personenTyp.equals("Kunde")) {
+		public PersonBearbeitenListener(String personenTyp) {
+			if (personenTyp.equals("kunde")) {
 				typ = "kunde";
 			} else if (personenTyp.equals("Mitarbeiter")) {
 				typ = "mitarbeiter";
-			} else {
-				throw new Exception("Error: PersonManagementWindows not properly conffigured!");
 			}
 		}
 
@@ -151,15 +150,11 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 					String address_Street = strasseField.getText();
 					String address_Town = ortField.getText();
 					String address_Zip = zipField.getText();
-					if (!passwordField.getText().equals("")) {
-						p.setPasswort(passwordField.getText());
-					}
-					// TODO Keine leeren / sinnfreien Einträge
-					p.setFirstname(firstname);
-					p.setLastname(lastname);
-					p.setAddress_Street(address_Street);
-					p.setAddress_Town(address_Town);
-					p.setAddress_Zip(address_Zip);
+					String passwort = passwordField.getText();
+					
+					
+					p = server.personAendern(typ, p, firstname, lastname, p.getId(), passwort,
+			address_Street, address_Zip, address_Town);
 
 					// Bearbeiteten Kunden anzeigen
 					personAnzeigen(p);
@@ -168,8 +163,21 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 					neuAnlegenButton.setVisible(true);
 					aendernButton.setVisible(true);
 					loeschenButton.setVisible(true);
+					System.out.println(typ);
 					listener.update(typ);
+
+					PersonenVerwaltungsfenster.this.repaint();
+					
 				} catch (InvalidPersonDataException e1) {
+					JOptionPane.showMessageDialog(PersonenVerwaltungsfenster.this, e1.getMessage());
+					personAnzeigen(p);
+				} catch (RemoteException e1) {
+					JOptionPane.showMessageDialog(PersonenVerwaltungsfenster.this, e1.getMessage());
+					personAnzeigen(p);
+				} catch (AccessRestrictedException e1) {
+					JOptionPane.showMessageDialog(PersonenVerwaltungsfenster.this, e1.getMessage());
+					personAnzeigen(p);
+				} catch (PersonNonexistantException e1) {
 					JOptionPane.showMessageDialog(PersonenVerwaltungsfenster.this, e1.getMessage());
 					personAnzeigen(p);
 				}
@@ -197,19 +205,21 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 				JOptionPane.showMessageDialog(PersonenVerwaltungsfenster.this, e1.getMessage());
 			} catch (RemoteException e1) {
 				JOptionPane.showMessageDialog(PersonenVerwaltungsfenster.this, e1.getMessage());
+			} catch (InvalidPersonDataException e1) {
+				JOptionPane.showMessageDialog(PersonenVerwaltungsfenster.this, e1.getMessage());
+			} catch (PersonNonexistantException e1) {
+				JOptionPane.showMessageDialog(PersonenVerwaltungsfenster.this, e1.getMessage());
 			}
 		}
 	}
 
 	public class PersonNeuAnlegenListener implements ActionListener {
 
-		public PersonNeuAnlegenListener(String personenTyp) throws Exception {
+		public PersonNeuAnlegenListener(String personenTyp){
 			if (personenTyp.equals("Kunde")) {
 				typ = "kunde";
 			} else if (personenTyp.equals("Mitarbeiter")) {
 				typ = "mitarbeiter";
-			} else {
-				throw new Exception("Error: PersonManagementWindows not properly conffigured!");
 			}
 		}
 
@@ -288,5 +298,9 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 				}
 			}
 		}
+	}
+	
+	public Person getPerson(){
+		return p;
 	}
 }

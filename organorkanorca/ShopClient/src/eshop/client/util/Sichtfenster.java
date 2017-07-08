@@ -1,10 +1,7 @@
 package eshop.client.util;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.rmi.RemoteException;
-import java.util.Vector;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -12,10 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.RowFilter;
-import javax.swing.SwingConstants;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableRowSorter;
 
 import org.jdesktop.swingx.JXTable;
 
@@ -35,9 +29,10 @@ public abstract class Sichtfenster extends JPanel {
 
 	protected SichtfensterCallbacks listener = null;
 
+	protected ShopTableModel model;
+
 	protected Person user;
 	protected ShopRemote server;
-	protected ShopTableModel shoptablemodel;
 	protected JPanel overviewButtons = new JPanel();
 	protected JButton alleButton = new JButton("Alle");
 	protected JButton sucheButton = new JButton("Suche");
@@ -58,33 +53,49 @@ public abstract class Sichtfenster extends JPanel {
 		this.add(auflistungContainer, "wrap");
 		this.add(actionField, "w 100%");
 		overviewButtons.setLayout(new BoxLayout(overviewButtons, BoxLayout.X_AXIS));
-		alleButton.addActionListener(new TabelleAlleAnzeigenListener());
 		overviewButtons.add(alleButton);
 		overviewButtons.add(sucheField);
-		sucheButton.addActionListener(new TabelleFilternListener());
 		overviewButtons.add(sucheButton);
 		overviewButtons.setVisible(true);
+
+		actionField.add(aktion);
+		actionField.add(anzahl);
+
+		callTableUpdate();
+
+		auflistung.setHorizontalScrollEnabled(true);
+
 		JTableHeader header = auflistung.getTableHeader();
 		header.setUpdateTableInRealTime(true);
 		header.setReorderingAllowed(false);
-		actionField.add(aktion);
-		actionField.add(anzahl);
-		auflistung.setHorizontalScrollEnabled(true);
-		callTableUpdate();
+		
+		auflistung.setAutoCreateRowSorter(true);
+		
+		alleButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				TabellenFilterEntfernen();
+				
+			}
+		});
+		
+		sucheButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				TabelleFiltern();
+				
+			}
+		});
+
 	}
 
 	public abstract void callTableUpdate();
-
-	protected void updateTable(Vector<?> dataVector, String[] headerString) throws RemoteException {
-
-		shoptablemodel = new ShopTableModel(dataVector, headerString);
-		auflistung.setModel(shoptablemodel);
-		TableRowSorter<ShopTableModel> sorter = new TableRowSorter<ShopTableModel>(shoptablemodel);
-		auflistung.setRowSorter(sorter);
-		TableColumnAdjuster tca = new TableColumnAdjuster(auflistung, 30);
-		tca.adjustColumns(SwingConstants.CENTER);
-		shoptablemodel.fireTableDataChanged();
-	}
+	
+	public abstract void TabelleFiltern();
+	
+	public abstract void TabellenFilterEntfernen();
 
 	public interface SichtfensterCallbacks {
 
@@ -99,24 +110,4 @@ public abstract class Sichtfenster extends JPanel {
 		public void mitarbeiterBearbeiten(Mitarbeiter mi);
 	}
 
-	class TabelleAlleAnzeigenListener implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-
-			TableRowSorter<ShopTableModel> sorter = (TableRowSorter<ShopTableModel>) auflistung.getRowSorter();
-			sorter.setRowFilter(null);
-		}
-	}
-
-	class TabelleFilternListener implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-
-			TableRowSorter<ShopTableModel> sorter = (TableRowSorter<ShopTableModel>) auflistung.getRowSorter();
-			sorter.setRowFilter(RowFilter.regexFilter(sucheField.getText()));
-			sorter.setSortsOnUpdates(true);
-		}
-	}
 }

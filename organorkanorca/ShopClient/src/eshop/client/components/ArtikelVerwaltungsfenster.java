@@ -172,7 +172,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		public void actionPerformed(ActionEvent e) {
 
 			try {
-				server.artikelLoeschen(art, user);
+				server.artikelLoeschen(art.getArtikelnummer(), user);
 				artNrField.setText("");
 				bezeichnungField.setText("");
 				preisField.setText("");
@@ -183,6 +183,8 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 			} catch (AccessRestrictedException e1) {
 				JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this, e1.getMessage());
 			} catch (RemoteException e1) {
+				JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this, e1.getMessage());
+			} catch (ArticleNonexistantException e1) {
 				JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this, e1.getMessage());
 			}
 		}
@@ -260,5 +262,9 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 				}
 			}
 		}
+	}
+	
+	public Artikel getArtikel(){
+		return art;
 	}
 }
