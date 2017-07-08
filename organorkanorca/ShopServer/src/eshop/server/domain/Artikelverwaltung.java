@@ -6,9 +6,6 @@ import java.util.Vector;
 
 import eshop.common.data_objects.Artikel;
 import eshop.common.data_objects.Massengutartikel;
-import eshop.common.data_objects.Person;
-import eshop.common.data_objects.Typ;
-import eshop.common.exceptions.ArticleAlreadyInBasketException;
 import eshop.common.exceptions.ArticleNonexistantException;
 import eshop.common.exceptions.InvalidAmountException;
 import eshop.server.persistence.FilePersistenceManager;

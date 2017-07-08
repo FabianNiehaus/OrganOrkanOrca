@@ -2,12 +2,14 @@ package eshop.client.components.tablemodels;
 
 import java.util.Vector;
 
-import eshop.common.data_objects.Artikel;
-import eshop.common.data_objects.Kunde;
-import eshop.common.data_objects.Massengutartikel;
 import eshop.common.data_objects.Person;
 
 public class PersonenTableModel extends ShopTableModel {
+
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 6108669637836557607L;
 
 	public PersonenTableModel(Vector<? extends Person> dataVector) {
 		

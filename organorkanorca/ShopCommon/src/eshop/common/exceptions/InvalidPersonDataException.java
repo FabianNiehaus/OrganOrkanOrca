@@ -2,6 +2,11 @@ package eshop.common.exceptions;
 
 public class InvalidPersonDataException extends Exception {
 
+	/**
+     * 
+     */
+    private static final long serialVersionUID = -5794550176553643715L;
+
 	public InvalidPersonDataException(int id, String object) {
 		super(determineOutput(id, object));
 	}

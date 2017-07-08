@@ -38,6 +38,10 @@ import eshop.common.util.IO;
  */
 public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 
+	/**
+     * 
+     */
+    private static final long serialVersionUID = -1852260814852420682L;
 	private Artikelverwaltung av;
 	private Kundenverwaltung kv;
 	private Mitarbeiterverwaltung mv;
@@ -45,9 +49,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 	private Rechnungsverwaltung rv;
 	private Ereignisverwaltung ev;
 	private String dateipfad = "";
-	private Object warenkorbKey;
-	private Object artikelKey;
-	private Object benutzerKey;
+
 	private Vector<ShopEventListener> listeners = new Vector<ShopEventListener>();
 
 	/**

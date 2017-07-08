@@ -5,8 +5,6 @@ import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 
 import javax.swing.JOptionPane;
-import javax.swing.table.TableRowSorter;
-
 import eshop.client.components.tablemodels.PersonenTableModel;
 import eshop.client.util.Sichtfenster;
 import eshop.common.data_objects.Person;
@@ -22,8 +20,6 @@ public class MitarbeiterSichtfenster extends Sichtfenster {
 	private static final long serialVersionUID = -3884938912530629406L;
 	
 	private PersonenTableModel model;
-	private TableRowSorter<PersonenTableModel> sorter;
-
 	public MitarbeiterSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
 		super(server, user, listener);
 		aktion.setText("Bearbeiten");

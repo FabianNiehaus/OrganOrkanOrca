@@ -5,8 +5,6 @@ import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 
 import javax.swing.JOptionPane;
-import javax.swing.table.TableRowSorter;
-
 import eshop.client.components.tablemodels.PersonenTableModel;
 import eshop.client.util.Sichtfenster;
 import eshop.common.data_objects.Person;
@@ -17,9 +15,7 @@ import eshop.common.net.ShopRemote;
 public class KundenSichtfenster extends Sichtfenster {
 
     private PersonenTableModel model;
-    private TableRowSorter<PersonenTableModel> sorter;
-    
-	/**
+    /**
 	 * 
 	 */
 	private static final long serialVersionUID = 4821072292018595904L;

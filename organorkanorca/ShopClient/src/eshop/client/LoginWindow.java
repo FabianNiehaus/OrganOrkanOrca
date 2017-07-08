@@ -25,6 +25,10 @@ import net.miginfocom.swing.MigLayout;
 
 public class LoginWindow extends JFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5042186875268113945L;
     JTabbedPane		  tabbedPane	     = new JTabbedPane();
     JLabel		  benutzerLabel	     = new JLabel("Benutzer");
     JLabel		  passwortLabel	     = new JLabel("Passwort");

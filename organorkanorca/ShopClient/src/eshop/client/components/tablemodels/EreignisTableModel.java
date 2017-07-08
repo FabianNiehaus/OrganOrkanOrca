@@ -4,13 +4,14 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Vector;
 
-import eshop.common.data_objects.Artikel;
 import eshop.common.data_objects.Ereignis;
-import eshop.common.data_objects.Kunde;
-import eshop.common.data_objects.Massengutartikel;
-import eshop.common.data_objects.Person;
 
 public class EreignisTableModel extends ShopTableModel {
+
+	/**
+     * 
+     */
+    private static final long serialVersionUID = -8140938517029973790L;
 
 	public EreignisTableModel(Vector<Ereignis> dataVector) {
 		

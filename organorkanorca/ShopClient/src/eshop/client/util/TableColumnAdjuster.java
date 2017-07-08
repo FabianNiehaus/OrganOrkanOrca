@@ -360,6 +360,10 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 	 */
 	class ColumnAction extends AbstractAction {
 
+		/**
+	     * 
+	     */
+	    private static final long serialVersionUID = 5635874354402328455L;
 		private boolean isSelectedColumn;
 		private boolean isAdjust;
 
@@ -395,6 +399,10 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 	 */
 	class ToggleAction extends AbstractAction {
 
+		/**
+	     * 
+	     */
+	    private static final long serialVersionUID = 7283343797640064307L;
 		private boolean isToggleDynamic;
 		private boolean isToggleLarger;
 

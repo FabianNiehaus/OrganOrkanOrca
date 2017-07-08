@@ -7,8 +7,6 @@ import java.rmi.RemoteException;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import javax.swing.table.TableRowSorter;
-
 import eshop.client.components.tablemodels.EreignisTableModel;
 import eshop.client.util.Sichtfenster;
 import eshop.common.data_objects.Person;
@@ -26,8 +24,6 @@ public class ManagementSichtfenster extends Sichtfenster {
 	private static final long serialVersionUID = -4495211746151221729L;
 	
 	private EreignisTableModel model;
-	private TableRowSorter<EreignisTableModel> sorter;
-	
 	JButton speichernButton = new JButton("Bestandsdaten speichern");
 	JButton ladenButton = new JButton("Bestandsdaten importieren");
 

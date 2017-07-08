@@ -8,8 +8,6 @@ import java.util.Map.Entry;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
-import javax.swing.table.TableRowSorter;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartFrame;
 import org.jfree.chart.JFreeChart;
@@ -32,9 +30,8 @@ import eshop.common.net.ShopRemote;
 public class ArtikelSichtfenster extends Sichtfenster {
     
     private ArtikelTableModel model;
-    private TableRowSorter<ArtikelTableModel> sorter;
-
-	class ArtikelBearbeitenListener implements ActionListener {
+    
+    class ArtikelBearbeitenListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {

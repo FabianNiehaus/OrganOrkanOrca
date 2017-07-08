@@ -23,10 +23,8 @@ public class Kundenverwaltung {
 	// verantwortlich ist
 	private PersistenceManager pm = new FilePersistenceManager();
 	private Vector<Kunde> kunden = new Vector<Kunde>();
-	private Warenkorbverwaltung wv;
-
+	
 	public Kundenverwaltung(Warenkorbverwaltung wv) {
-		this.wv = wv;
 	}
 
 	/**

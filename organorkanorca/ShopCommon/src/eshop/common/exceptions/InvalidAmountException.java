@@ -1,6 +1,5 @@
 package eshop.common.exceptions;
 
-import eshop.common.data_objects.Artikel;
 import eshop.common.data_objects.Massengutartikel;
 
 public class InvalidAmountException extends Exception {

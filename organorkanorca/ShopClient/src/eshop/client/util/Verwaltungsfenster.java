@@ -2,11 +2,15 @@ package eshop.client.util;
 
 import javax.swing.JPanel;
 
-import eshop.client.util.Sichtfenster.SichtfensterCallbacks;
 import eshop.common.data_objects.Person;
 import eshop.common.net.ShopRemote;
 
 public abstract class Verwaltungsfenster extends JPanel {
+
+	/**
+     * 
+     */
+    private static final long serialVersionUID = -1766082173934041583L;
 
 	public interface VerwaltungsfensterCallbacks {
 
