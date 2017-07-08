@@ -1,7 +1,7 @@
 2
 Orkan
 99999.0
-5
+2
 1
 ---BEGINHISTORY---
 174:5
@@ -28,11 +28,11 @@ Organ
 4
 Pringles
 2.79
-494
+491
 1
 ---BEGINHISTORY---
 174:499
-189:499
+189:494
 ---ENDHISTORY---
 5
 Test Massengut
@@ -40,5 +40,5 @@ Test Massengut
 15
 3
 ---BEGINHISTORY---
-189:6
+189:15
 ---ENDHISTORY---

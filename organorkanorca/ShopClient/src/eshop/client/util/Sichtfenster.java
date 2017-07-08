@@ -109,6 +109,7 @@ public abstract class Sichtfenster extends JPanel {
 	    TableColumnAdjuster tca = new TableColumnAdjuster(auflistung, 30);
 	    tca.adjustColumns(SwingConstants.CENTER);
 	    
+	    //auflistung.setSortOrder(1, SortOrder.ASCENDING);
 	    auflistung.setSortOrder(0, SortOrder.ASCENDING);
 	}
 	

@@ -29,6 +29,7 @@ import eshop.common.exceptions.ArticleNonexistantException;
 import eshop.common.exceptions.ArticleStockNotSufficientException;
 import eshop.common.exceptions.BasketNonexistantException;
 import eshop.common.exceptions.InvalidAmountException;
+import eshop.common.exceptions.PersonNonexistantException;
 import eshop.common.net.ShopRemote;
 import net.miginfocom.swing.MigLayout;
 
@@ -72,18 +73,22 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 		warenkorbAuflistung.setAutoCreateRowSorter(true);
 		warenkorbAuflistung.setModel(new WarenkorbTableModel());
 		this.setVisible(true);
+		
+		warenkorbAufrufen();
 	}
 
 	public void warenkorbAufrufen() {
 
 		try {
-			Warenkorb wk = server.warenkorbAusgeben(user);
+			Warenkorb wk = server.warenkorbAusgeben(user.getId(),user);
 			Map<Artikel, Integer> inhalt = wk.getArtikel();
 			warenkorbAuflistung.setModel(new WarenkorbTableModel(inhalt));
 		} catch (RemoteException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage());
 		} catch (AccessRestrictedException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage());
+		} catch(PersonNonexistantException e) {
+		    JOptionPane.showMessageDialog(this, e.getMessage());
 		}
 
 	}
@@ -101,11 +106,11 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 						Artikel art = server.artikelSuchen(((int) warenkorbAuflistung.getValueAt(row, 0)), user);
 						int anz = Integer.parseInt(JOptionPane.showInputDialog("Bitte gewuenschte Anzahl angeben"));
 						if (anz > 0) {
-							server.artikelInWarenkorbAendern(art, anz, user);
+							server.artikelInWarenkorbAendern(art.getArtikelnummer(), anz, user);
 						} else {
 							throw new InvalidAmountException();
 						}
-						wk = server.warenkorbAusgeben(user);
+						wk = server.warenkorbAusgeben(user.getId(),user);
 						warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
 					}
 				} catch (ArticleStockNotSufficientException e1) {
@@ -122,15 +127,15 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
 				} catch (RemoteException e1) {
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
+				} catch(PersonNonexistantException e1) {
+				    JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
 				}
-				// Artikel aus Warenkorb entfernen
 			} else if (e.getSource().equals(artikelEntfernenButton)) {
 				try {
 					int row = warenkorbAuflistung.getSelectedRow();
 					if (row != -1) {
-						Artikel art = server.artikelSuchen(((int) warenkorbAuflistung.getValueAt(row, 0)), user);
-						server.artikelAusWarenkorbEntfernen(art, user);
-						wk = server.warenkorbAusgeben(user);
+						server.artikelAusWarenkorbEntfernen((int) warenkorbAuflistung.getValueAt(row, 0), user);
+						wk = server.warenkorbAusgeben(user.getId(),user);
 						warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
 					}
 				} catch (AccessRestrictedException e1) {
@@ -139,17 +144,20 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
 				} catch (RemoteException e1) {
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
+				} catch(PersonNonexistantException e1) {
+				    JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
 				}
-				// Warenkorb leeren
 			} else if (e.getSource().equals(leerenButton)) {
 				try {
 					server.warenkorbLeeren(user);
-					wk = server.warenkorbAusgeben(user);
+					wk = server.warenkorbAusgeben(user.getId(),user);
 					warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
 				} catch (AccessRestrictedException e1) {
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
 				} catch (RemoteException e1) {
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
+				} catch(PersonNonexistantException e1) {
+				    JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
 				}
 				warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
 				// Warenkorb kaufen
@@ -170,7 +178,7 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 					rechnungsString += re.getWk().toString() + "\n";
 					rechnungsString += "Gesamtbetrag: " + re.getGesamt() + "€";
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, rechnungsString);
-					wk = server.warenkorbAusgeben(user);
+					wk = server.warenkorbAusgeben(user.getId(),user);
 					warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
 				} catch (AccessRestrictedException e1) {
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
@@ -178,6 +186,8 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
 				} catch (RemoteException e1) {
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
+				} catch(PersonNonexistantException e1) {
+				    JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
 				}
 			}
 		}

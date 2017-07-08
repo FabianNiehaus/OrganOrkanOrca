@@ -26,6 +26,7 @@ import eshop.common.exceptions.ArticleAlreadyInBasketException;
 import eshop.common.exceptions.ArticleNonexistantException;
 import eshop.common.exceptions.ArticleStockNotSufficientException;
 import eshop.common.exceptions.InvalidAmountException;
+import eshop.common.exceptions.PersonNonexistantException;
 import eshop.common.net.ShopRemote;
 
 public class ArtikelSichtfenster extends Sichtfenster {
@@ -53,9 +54,7 @@ public class ArtikelSichtfenster extends Sichtfenster {
 		public void actionPerformed(ActionEvent e) {
 
 			try {
-				Artikel art = server.artikelSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user);
-				server.artikelInWarenkorbLegen(art.getArtikelnummer(), Integer.parseInt(anzahl.getText()), user);
-				// warenkorbverwaltungsfenster.warenkorbAufrufen();
+				server.artikelInWarenkorbLegen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), Integer.parseInt(anzahl.getText()), user.getId(),user);
 				listener.artikelInWarenkorb();
 				anzahl.setText("");
 			} catch (NumberFormatException e1) {
@@ -74,6 +73,8 @@ public class ArtikelSichtfenster extends Sichtfenster {
 				JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e1.getMessage());
 			} catch (RemoteException e1) {
 				JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e1.getMessage());
+			} catch(PersonNonexistantException e1) {
+			    JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e1.getMessage());
 			}
 		}
 	}

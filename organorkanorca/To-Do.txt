@@ -16,7 +16,7 @@ Bugfixes:
 ./ Artikel neu anlegen -> Prüfung Packungsgröße
 ./ Artikel löschen -> Aktualisierung Tabelle
 ./ Aktualisierng Sicherenster bei Wechsel
-- Artikel in Warenkorb
+./ Artikel in Warenkorb
 
 Nice-To-Have:
 - Kategorien für Produkte
