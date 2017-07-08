@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import eshop.client.util.ShopTableModel;
+import eshop.client.components.tablemodels.ShopTableModel;
 import eshop.client.util.Verwaltungsfenster;
 import eshop.client.util.Verwaltungsfenster.VerwaltungsfensterCallbacks;
 import eshop.common.data_objects.Person;

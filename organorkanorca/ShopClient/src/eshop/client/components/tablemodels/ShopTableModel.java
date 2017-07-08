@@ -1,6 +1,4 @@
-package eshop.client.util;
-
-import java.util.Vector;
+package eshop.client.components.tablemodels;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -47,12 +45,4 @@ public class ShopTableModel extends AbstractTableModel {
         fireTableCellUpdated(row, col);
     }
 
-	/*public Vector<String> setColumns(String[] columnNames) {
-
-		Vector<String> columns = new Vector<>();
-		for (String str : columnNames) {
-			columns.addElement(str);
-		}
-		return columns;
-	}*/
 }

@@ -2,11 +2,15 @@ package eshop.client.components.tablemodels;
 
 import java.util.Vector;
 
-import eshop.client.util.ShopTableModel;
 import eshop.common.data_objects.Artikel;
 import eshop.common.data_objects.Massengutartikel;
 
 public class ArtikelTableModel extends ShopTableModel {
+
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 7021676013626973075L;
 
 	public ArtikelTableModel(Vector<Artikel> dataVector) {
 		
@@ -30,4 +34,39 @@ public class ArtikelTableModel extends ShopTableModel {
 		
 	}
 
+	protected String[] columnNames;
+	protected Object[][] data;
+
+	@Override
+	public int getColumnCount() {
+
+		return columnNames.length;
+	}
+
+	@Override
+	public String getColumnName(int column) {
+
+		return columnNames[column];
+	}
+
+	@Override
+	public int getRowCount() {
+
+		return data.length;
+	}
+
+	@Override
+	public Object getValueAt(int arg0, int arg1) {
+
+		return data[arg0][arg1];
+	}
+
+    /*
+     * Don't need to implement this method unless your table's
+     * data can change.
+     */
+    public void setValueAt(Object value, int row, int col) {
+        data[row][col] = value;
+        fireTableCellUpdated(row, col);
+    }
 }

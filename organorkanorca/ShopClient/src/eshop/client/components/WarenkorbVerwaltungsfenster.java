@@ -17,7 +17,7 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 
-import eshop.client.util.ShopTableModel;
+import eshop.client.components.tablemodels.ShopTableModel;
 import eshop.client.util.Verwaltungsfenster;
 import eshop.client.util.Verwaltungsfenster.VerwaltungsfensterCallbacks;
 import eshop.common.data_objects.Artikel;

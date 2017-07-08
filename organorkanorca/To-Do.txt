@@ -11,11 +11,12 @@ Bugfixes:
 ./ Kunde + Mitarbeiter bearbeiten / löschen -> Tabelle aktualisieren
 ./ Kunde bearbeitern -> Feld Vorname
 ./ Bestandsdaten speichern -> überschreiben
-- Tabellenfilterung (Tabelle neu zeichnen!)
-- Tabellensortierung (Pfeile)
+./ Tabellenfilterung (Tabelle neu zeichnen!) -> Nur 1 Spalte möglich!
+./ Tabellensortierung (Pfeile)
 ./ Artikel neu anlegen -> Prüfung Packungsgröße
 ./ Artikel löschen -> Aktualisierung Tabelle
 ./ Aktualisierng Sicherenster bei Wechsel
+- Artikel in Warenkorb
 
 Nice-To-Have:
 - Kategorien für Produkte

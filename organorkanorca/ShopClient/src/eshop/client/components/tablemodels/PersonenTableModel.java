@@ -2,7 +2,6 @@ package eshop.client.components.tablemodels;
 
 import java.util.Vector;
 
-import eshop.client.util.ShopTableModel;
 import eshop.common.data_objects.Artikel;
 import eshop.common.data_objects.Kunde;
 import eshop.common.data_objects.Massengutartikel;

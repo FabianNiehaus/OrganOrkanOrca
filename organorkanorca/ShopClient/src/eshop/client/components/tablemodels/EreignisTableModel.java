@@ -4,7 +4,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Vector;
 
-import eshop.client.util.ShopTableModel;
 import eshop.common.data_objects.Artikel;
 import eshop.common.data_objects.Ereignis;
 import eshop.common.data_objects.Kunde;

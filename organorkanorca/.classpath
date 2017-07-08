@@ -7,6 +7,6 @@
 	<classpathentry kind="lib" path="external/jcommon-1.0.23.jar"/>
 	<classpathentry kind="lib" path="external/jfreechart-1.0.19.jar"/>
 	<classpathentry kind="lib" path="external/miglayout-4.0-swing.jar"/>
-	<classpathentry kind="lib" path="external/swingx.jar"/>
+	<classpathentry kind="lib" path="external/swingx.jar" sourcepath="external/swingx.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
