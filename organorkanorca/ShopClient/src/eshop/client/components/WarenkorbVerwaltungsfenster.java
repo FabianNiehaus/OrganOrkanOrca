@@ -78,7 +78,7 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 	public void warenkorbAufrufen() {
 
 		try {
-			Warenkorb wk = server.warenkorbAusgeben(user.getId(),user);
+			wk = server.warenkorbAusgeben(user.getId(),user);
 			Map<Artikel, Integer> inhalt = wk.getArtikel();
 			warenkorbAuflistung.setModel(new WarenkorbTableModel(inhalt));
 		} catch (RemoteException e) {
@@ -90,6 +90,26 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 		}
 
 	}
+	
+	public boolean artikelImWarenkorbPruefen(Artikel art) throws RemoteException, AccessRestrictedException, PersonNonexistantException, ArticleNonexistantException{
+	    try{
+
+        	    server.artikelSuchen(art.getArtikelnummer(), user);
+        	    
+        		    for(Map.Entry<Artikel, Integer> ent : wk.getArtikel().entrySet()){
+        			if(ent.getKey().getArtikelnummer() == art.getArtikelnummer()){
+        			    return true;
+        			}
+        		    } 
+        	    
+        	    return false;
+	    } catch (ArticleNonexistantException e) {
+		throw new ArticleNonexistantException(art.getBezeichnung(), true);
+	    }
+	    
+		    
+	}
+	
 
 	class WarenkorbActionListener implements ActionListener {
 
@@ -164,7 +184,6 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 					// Formatierungsvorlage fuer Datum
 					DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 					Rechnung re = server.warenkorbKaufen(user);
-					listener.update("artikel");
 					String rechnungsString = "";
 					rechnungsString += "Rechnung" + "\n\n";
 					rechnungsString += dateFormat.format(re.getDatum()) + "\n\n";

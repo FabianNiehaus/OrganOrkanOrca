@@ -1,8 +1,10 @@
 package eshop.client;
 
 import java.awt.Dimension;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowListener;
 import java.rmi.RemoteException;
 
 import javax.swing.JButton;
@@ -27,7 +29,9 @@ import eshop.common.data_objects.Ereignis;
 import eshop.common.data_objects.Kunde;
 import eshop.common.data_objects.Mitarbeiter;
 import eshop.common.data_objects.Person;
-
+import eshop.common.exceptions.AccessRestrictedException;
+import eshop.common.exceptions.ArticleNonexistantException;
+import eshop.common.exceptions.PersonNonexistantException;
 import eshop.common.net.ShopRemote;
 
 import net.miginfocom.swing.MigLayout;
@@ -63,11 +67,12 @@ public class MainWindow extends JFrame
     double			maxWidthLeft	  = 0;
     double			maxWidthRight	  = 0;
 
-    public MainWindow(String titel, Person user, ShopRemote server, LoginListener loginListener) {
+    public MainWindow(String titel, Person user, ShopRemote server, LoginListener loginListener, WindowListener windowListener) {
 	super(titel);
 	this.user = user;
 	this.server = server;
 	this.loginListener = loginListener;
+	addWindowListener(windowListener);
 	initialize();
     }
 
@@ -110,29 +115,37 @@ public class MainWindow extends JFrame
 
 	if (user instanceof Kunde) {
 	    try {
-		if (server.artikelInWarenkorb(art, user)) {
-		    warenkorbverwaltungsfenster.warenkorbAufrufen();
-		}
+		if(warenkorbverwaltungsfenster.artikelImWarenkorbPruefen(art)){
+		        
+		        JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, "Artikel \"" + art.getBezeichnung() + "\" wurde geändert. Bitte Warenkorb überprüfen!");
+		        warenkorbverwaltungsfenster.warenkorbAufrufen();
+		    }
 	    } catch(RemoteException e) {
-		JOptionPane.showMessageDialog(null, e.getMessage());
+		JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e.getMessage());
+	    } catch(HeadlessException e) {
+		JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e.getMessage());
+	    } catch(ArticleNonexistantException e) {
+		JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, "Ein Artikel im Warenkorb wurde gelöscht!");
+		warenkorbverwaltungsfenster.warenkorbAufrufen();
+	    } catch(AccessRestrictedException e) {
+		JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e.getMessage());
+	    } catch(PersonNonexistantException e) {
+		JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e.getMessage());
 	    }
 	} else if (user instanceof Mitarbeiter) {
 	    if (artikelverwaltungsfenster.getArtikel().getArtikelnummer() == art.getArtikelnummer()) {
 		if (art.getBezeichnung().equals("deleted!")) {
+		    JOptionPane.showMessageDialog(artikelverwaltungsfenster, "Der ausgewählte Artikel wurde gelöscht!");
 		    artikelverwaltungsfenster = new ArtikelVerwaltungsfenster(server, user, this);
-		    JOptionPane.showMessageDialog(artikelverwaltungsfenster, "Der ausgewählte Kunde wurde gelöscht!");
+		    this.repaint();
 		} else {
-		    artikelverwaltungsfenster.artikelAnzeigen(art);
 		    JOptionPane.showMessageDialog(artikelverwaltungsfenster, "Der ausgewählte Artikel wurde geändert!");
+		    artikelverwaltungsfenster.artikelAnzeigen(art);
 		}
 	    }
 	}
-    }
-
-    @Override
-    public void handleBasketChanged(Artikel art) {
-
-	warenkorbverwaltungsfenster.warenkorbAufrufen();
+	
+	artikelsichtfenster.callTableUpdate();
     }
 
     public void initialize() {
@@ -164,7 +177,7 @@ public class MainWindow extends JFrame
 	main.add(leftArea);
 	main.add(rightArea);
 	// setWindowSize();
-	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	this.pack();
 	this.setVisible(true);
     }
@@ -214,25 +227,6 @@ public class MainWindow extends JFrame
 	// rightArea.setMinimumSize(rightArea.getPreferredSize());
 	prefWidth = maxWidthLeft + maxWidthRight;
 	this.setPreferredSize(new Dimension((int) prefWidth, (int) this.getPreferredSize().getHeight()));
-    }
-
-    @Override
-    public void update(String typ) {
-
-	switch (typ) {
-	    case ("kunde"): {
-		kundensichtfenster.callTableUpdate();
-	    }
-		break;
-	    case ("mitarbeiter"): {
-		mitarbeitersichtfenster.callTableUpdate();
-	    }
-		break;
-	    case ("artikel"): {
-		artikelsichtfenster.callTableUpdate();
-	    }
-		break;
-	}
     }
 
     class MenuButtonsActionListener implements ActionListener {
@@ -361,4 +355,5 @@ public class MainWindow extends JFrame
 
 	kundenverwaltungsfenster.personAnzeigen(ku);
     }
+
 }

@@ -14,8 +14,6 @@ public abstract class Verwaltungsfenster extends JPanel {
 
 	public interface VerwaltungsfensterCallbacks {
 
-		public void update(String sichtfenster);
-
 		public void artikelBeabeitet();
 
 		public void kundeBearbeitet();

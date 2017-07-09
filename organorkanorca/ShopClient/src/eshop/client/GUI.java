@@ -1,5 +1,7 @@
 package eshop.client;
 
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -17,7 +19,7 @@ import eshop.common.data_objects.Person;
 import eshop.common.net.ShopEventListener;
 import eshop.common.net.ShopRemote;
 
-public class GUI extends UnicastRemoteObject implements ShopEventListener {
+public class GUI extends UnicastRemoteObject implements ShopEventListener, WindowListener {
 
     /**
      * 
@@ -27,8 +29,6 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener {
     public interface ShopEventCallbacks {
 
 	public void handleArticleChanged(Artikel art);
-
-	public void handleBasketChanged(Artikel art);
 
 	void handleEventChanged(Ereignis er);
 
@@ -49,7 +49,7 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener {
 	    Registry registry = LocateRegistry.getRegistry();
 	    server = (ShopRemote) registry.lookup(serviceName);
 	    server.addShopEventListener(this);
-	    loginwindow = new LoginWindow("OrganOrkanOrca server", server, listenerForLogin);
+	    loginwindow = new LoginWindow("OrganOrkanOrca server", server, listenerForLogin, this);
 	} catch(RemoteException e) {
 	    JOptionPane.showMessageDialog(null, e.getMessage());
 	} catch(NotBoundException e) {
@@ -78,44 +78,93 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener {
 	public void logout() {
 
 	    mainwindow.dispose();
-	    loginwindow = new LoginWindow("OrganOrkanOrca server", server, this);
+	    loginwindow = new LoginWindow("OrganOrkanOrca server", server, this, GUI.this);
 	}
 
 	@Override
 	public void userLoggedIn(Person user) {
 
-	    mainwindow = new MainWindow("OrganOrkanOrca server", user, server, this);
+	    mainwindow = new MainWindow("OrganOrkanOrca server", user, server, this, GUI.this);
 	    loginwindow.dispose();
 	}
     }
 
     @Override
     public void handleArticleChanged(Artikel art) throws RemoteException {
-
-	mainwindow.handleArticleChanged(art);
-    }
-
-    @Override
-    public void handleBasketChanged(Artikel art) throws RemoteException {
-
-	mainwindow.handleBasketChanged(art);
+	
+	if(mainwindow != null) mainwindow.handleArticleChanged(art);
     }
 
     @Override
     public void handleEventChanged(Ereignis er) throws RemoteException {
 
-	mainwindow.handleEventChanged(er);
+	if(mainwindow != null) mainwindow.handleEventChanged(er);
     }
 
     @Override
     public void handleStaffChanged(Mitarbeiter mi) throws RemoteException {
 
-	mainwindow.handleStaffChanged(mi);
+	if(mainwindow != null) mainwindow.handleStaffChanged(mi);
     }
 
     @Override
     public void handleUserChanged(Kunde ku) throws RemoteException {
 
-	mainwindow.handleUserChanged(ku);
+	if(mainwindow != null) mainwindow.handleUserChanged(ku);
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+
+	// TODO Auto-generated method stub
+	
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+
+	
+	
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+
+	try {
+	    server.removeShopEventListener(this);
+	    System.exit(0);
+	} catch(RemoteException e1) {
+	    // TODO Auto-generated catch block
+	    e1.printStackTrace();
+	}
+	
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+
+	// TODO Auto-generated method stub
+	
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+
+	// TODO Auto-generated method stub
+	
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+
+	// TODO Auto-generated method stub
+	
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+
+	// TODO Auto-generated method stub
+	
     }
 }

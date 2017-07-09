@@ -17,6 +17,8 @@ Bugfixes:
 ./ Artikel löschen -> Aktualisierung Tabelle
 ./ Aktualisierng Sicherenster bei Wechsel
 ./ Artikel in Warenkorb
+- Artikelverlauf
+- Handling Artikel löschen
 
 Nice-To-Have:
 - Kategorien für Produkte

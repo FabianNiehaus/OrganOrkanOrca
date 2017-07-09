@@ -5,7 +5,7 @@ Orkan
 1
 ---BEGINHISTORY---
 174:5
-189:5
+190:2
 ---ENDHISTORY---
 3
 Orca
@@ -14,7 +14,7 @@ Orca
 1
 ---BEGINHISTORY---
 174:97
-189:210
+190:210
 ---ENDHISTORY---
 1
 Organ
@@ -23,7 +23,7 @@ Organ
 1
 ---BEGINHISTORY---
 174:18
-189:36
+190:36
 ---ENDHISTORY---
 4
 Pringles
@@ -32,7 +32,7 @@ Pringles
 1
 ---BEGINHISTORY---
 174:499
-189:494
+190:491
 ---ENDHISTORY---
 5
 Test Massengut
@@ -40,5 +40,5 @@ Test Massengut
 15
 3
 ---BEGINHISTORY---
-189:15
+190:15
 ---ENDHISTORY---

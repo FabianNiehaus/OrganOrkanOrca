@@ -309,13 +309,14 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 				public void run() {
 					try {
 						listener.handleArticleChanged(artBack);
-						listener.handleBasketChanged(artBack);
 					} catch (RemoteException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
 			});
+			
+			t.start();
 		}
 	}
 
@@ -532,6 +533,8 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 							}
 						}
 					});
+					
+					t.start();
 				}
 				
 			} else if (loeschen.getId() >= 9000 && loeschen.getId() < 10000) {
@@ -555,6 +558,8 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 							}
 						}
 					});
+					
+					t.start();
 				}
 				
 			} else {
@@ -697,6 +702,8 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 					}
 				}
 			});
+			
+			t.start();
 		}
 
 		return art;
@@ -738,6 +745,8 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 						}
 					}
 				});
+				
+				t.start();
 			}
 
 			person = ku;
@@ -770,6 +779,8 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 						}
 					}
 				});
+				
+				t.start();
 			}
 
 			person = mi;

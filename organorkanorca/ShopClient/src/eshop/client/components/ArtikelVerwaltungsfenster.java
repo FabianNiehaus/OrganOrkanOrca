@@ -101,6 +101,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		bestandField.setText(String.valueOf(art.getBestand()));
 		
 		setStores(art);
+		
 	}
 
 	public class ArtikelBearbeitenListener implements ActionListener {
@@ -164,7 +165,6 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 								pkggroesseField.setEditable(false);
 								bestandField.setEditable(false);
 								
-								listener.update("artikel");
 								ArtikelVerwaltungsfenster.this.repaint();
 								setStores(art);
 							} catch (AccessRestrictedException e1) {
@@ -197,13 +197,6 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 
 			try {
 				server.artikelLoeschen(art.getArtikelnummer(), user);
-				artNrField.setText("");
-				bezeichnungField.setText("");
-				preisField.setText("");
-				pkggroesseField.setText("");
-				bestandField.setText("");
-				art = null;
-				listener.update("artikel");
 			} catch (AccessRestrictedException e1) {
 				JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this, e1.getMessage());
 			} catch (RemoteException e1) {
@@ -265,7 +258,6 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 								aendernButton.setVisible(true);
 								loeschenButton.setVisible(true);
 								neuAnlegenBestaetigenButton.setVisible(false);
-								listener.update("artikel");
 								ArtikelVerwaltungsfenster.this.repaint();
 								setStores(art);
 							} catch (AccessRestrictedException e1) {

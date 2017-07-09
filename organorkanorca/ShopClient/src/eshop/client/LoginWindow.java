@@ -2,6 +2,7 @@ package eshop.client;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowListener;
 import java.rmi.RemoteException;
 
 import javax.swing.JButton;
@@ -40,10 +41,11 @@ public class LoginWindow extends JFrame {
     private ShopRemote	  server	     = null;
     private LoginListener loginListener	     = null;
 
-    public LoginWindow(String titel, ShopRemote server, LoginListener listener) {
+    public LoginWindow(String titel, ShopRemote server, LoginListener listener, WindowListener windowListener) {
 	super(titel);
 	this.server = server;
 	this.loginListener = listener;
+	addWindowListener(windowListener);
 	JPanel form = new JPanel();
 	form.setLayout(new MigLayout());
 	form.add(headerLabel, "span 2, wrap");
@@ -68,7 +70,7 @@ public class LoginWindow extends JFrame {
 	this.getContentPane().add(tabbedPane);
 	anmeldenButton.addActionListener(new LoginButtonListener());
 	registrierenButton.addActionListener(new LoginNeuerNutzerAnlegenListener());
-	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	this.setLocationRelativeTo(null);
 	this.pack();
 	this.setVisible(true);

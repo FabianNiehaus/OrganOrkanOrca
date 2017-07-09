@@ -139,7 +139,6 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 					aendernButton.setVisible(false);
 					loeschenButton.setVisible(false);
 					aendernBestaetigenButton.setVisible(true);
-					listener.update(typ);
 				}
 			} else if (e.getSource().equals(aendernBestaetigenButton)) {
 				try {
@@ -162,7 +161,6 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 					aendernButton.setVisible(true);
 					loeschenButton.setVisible(true);
 					System.out.println(typ);
-					listener.update(typ);
 
 					PersonenVerwaltungsfenster.this.repaint();
 					
@@ -198,7 +196,6 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 				zipField.setText("");
 				passwordField.setText("");
 				p = null;
-				listener.update(typ);
 			} catch (AccessRestrictedException e1) {
 				JOptionPane.showMessageDialog(PersonenVerwaltungsfenster.this, e1.getMessage());
 			} catch (RemoteException e1) {
@@ -245,7 +242,6 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 				aendernButton.setVisible(false);
 				loeschenButton.setVisible(false);
 				neuAnlegenBestaetigenButton.setVisible(true);
-				listener.update(typ);
 			} else if (e.getSource().equals(neuAnlegenBestaetigenButton)) {
 				try {
 					Person p = null;
@@ -276,7 +272,6 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 					aendernButton.setVisible(true);
 					loeschenButton.setVisible(true);
 					neuAnlegenBestaetigenButton.setVisible(false);
-					listener.update(typ);
 					PersonenVerwaltungsfenster.this.repaint();
 				} catch (InvalidPersonDataException e1) {
 					JOptionPane.showMessageDialog(PersonenVerwaltungsfenster.this, e1.getMessage());
