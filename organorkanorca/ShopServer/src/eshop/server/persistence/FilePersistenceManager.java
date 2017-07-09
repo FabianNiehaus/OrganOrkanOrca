@@ -91,9 +91,11 @@ public class FilePersistenceManager implements PersistenceManager {
 			reader.mark(400);
 			if (liesZeile().equals("---BEGINHISTORY---")) {
 				String content = liesZeile();
-				while (!liesZeile().equals("---ENDHISTORY---")) {
-					String[] contents = content.split(":");
-					bestandsverlauf.put(Integer.parseInt(contents[0]), Integer.parseInt(contents[1]));
+				while (!content.equals("---ENDHISTORY---")) {
+				    String[] contents = content.split(":");
+				    bestandsverlauf.put(Integer.parseInt(contents[0]), Integer.parseInt(contents[1]));
+				    reader.mark(30);
+				    content = liesZeile();
 				}
 			} else {
 				reader.reset();
