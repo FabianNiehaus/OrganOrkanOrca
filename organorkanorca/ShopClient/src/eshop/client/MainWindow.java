@@ -1,6 +1,7 @@
 package eshop.client;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import eshop.client.components.ArtikelDetailsfenster;
 import eshop.client.components.ArtikelSichtfenster;
 import eshop.client.components.ArtikelVerwaltungsfenster;
 import eshop.client.components.KundenSichtfenster;
@@ -58,8 +60,10 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
     ManagementSichtfenster	managementsichtfenster;
     WarenkorbVerwaltungsfenster	warenkorbverwaltungsfenster;
     ArtikelVerwaltungsfenster	artikelverwaltungsfenster;
+    ArtikelDetailsfenster		artikeldetailsfenster;
     PersonenVerwaltungsfenster	kundenverwaltungsfenster;
     PersonenVerwaltungsfenster	mitarbeiterverwaltungsfenster;
+    
     double			prefWidth	  = 0;
     double			maxWidthLeft	  = 0;
     double			maxWidthRight	  = 0;
@@ -103,7 +107,7 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 
     public void initialize() {
 
-	this.setLayout(new MigLayout("", "30[]30[]30", "30[]30"));
+	this.setLayout(new MigLayout("", "30[]30", "30[]15[]30"));
 	artikelButton.addActionListener(new MenuButtonsActionListener());
 	moduleButtons.add(artikelButton);
 	kundenButton.addActionListener(new MenuButtonsActionListener());
@@ -116,12 +120,15 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 	moduleButtons.add(logoutButton);
 	leftArea.add(moduleButtons, "wrap, dock center");
 	
+	//wieder löschen
+	//rightArea.setBackground(Color.DARK_GRAY);
 	artikelsichtfenster = new ArtikelSichtfenster(server, user, this);
 	
 	leftArea.add(artikelsichtfenster, "dock center");
 	if (user instanceof Kunde) {
-	    warenkorbverwaltungsfenster = new WarenkorbVerwaltungsfenster(server, user, this);
-	    rightArea.add(warenkorbverwaltungsfenster, "dock center");
+	    //warenkorbverwaltungsfenster = new WarenkorbVerwaltungsfenster(server, user, this);
+	    artikeldetailsfenster = new ArtikelDetailsfenster(server,user,this);
+	    rightArea.add(artikeldetailsfenster, "dock center");
 	} else {
 	    artikelverwaltungsfenster = new ArtikelVerwaltungsfenster(server, user, this);
 	    rightArea.add(artikelverwaltungsfenster, "dock center");
@@ -129,12 +136,16 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 	    managementsichtfenster = new ManagementSichtfenster(server, user, this);
 	    kundensichtfenster = new KundenSichtfenster(server, user, this);
 	}
-	main.add(leftArea);
-	main.add(rightArea);
-	setWindowSize();
+	main.add(leftArea, "wrap, dock center");
+	main.add(rightArea, "dock center");
+	//setWindowSize();
+	this.setPreferredSize(new Dimension(1024,800));
 	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	this.pack();
 	this.setVisible(true);
+	
+	leftArea.setPreferredSize(new Dimension(900,400));
+	rightArea.setPreferredSize(new Dimension(900,400));
     }
 
     /**
@@ -191,7 +202,7 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 		    leftArea.remove(artikelsichtfenster);
 		    leftArea.remove(mitarbeitersichtfenster);
 		    leftArea.remove(managementsichtfenster);
-		    leftArea.add(kundensichtfenster, BorderLayout.CENTER);
+		    leftArea.add(kundensichtfenster, "w 100%");
 		    leftArea.repaint();
 		    rightArea.removeAll();
 		    try {
@@ -209,7 +220,7 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 		    leftArea.remove(artikelsichtfenster);
 		    leftArea.remove(kundensichtfenster);
 		    leftArea.remove(managementsichtfenster);
-		    leftArea.add(mitarbeitersichtfenster, BorderLayout.CENTER);
+		    leftArea.add(mitarbeitersichtfenster, "w 100%");
 		    leftArea.repaint();
 		    rightArea.removeAll();
 		    try {
@@ -228,7 +239,7 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
 		    leftArea.remove(artikelsichtfenster);
 		    leftArea.remove(kundensichtfenster);
 		    leftArea.remove(mitarbeitersichtfenster);
-		    leftArea.add(managementsichtfenster, BorderLayout.CENTER);
+		    leftArea.add(managementsichtfenster, "w 100%");
 		    leftArea.revalidate();
 		    leftArea.repaint();
 		    rightArea.removeAll();
@@ -256,6 +267,7 @@ public class MainWindow extends JFrame implements ShopEventListener, Sichtfenste
     public void artikelBearbeiten(Artikel art) {
 
 	artikelverwaltungsfenster.artikelAnzeigen(art);
+	artikeldetailsfenster.artikelAnzeigen(art);
     }
 
     @Override

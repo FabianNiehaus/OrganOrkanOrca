@@ -39,7 +39,7 @@ public class MitarbeiterSichtfenster extends Sichtfenster {
 
 	try {
 	    updateTable(server.alleMitarbeiterAusgeben(user),
-		    new String[] { "MaNr.", "Vorname", "Nachname", "Stra√üe", "PLZ","Ort"  });
+		    new String[] { "MaNr.", "Vorname", "Nachname", "Straﬂe", "PLZ","Ort"  });
 	} catch(RemoteException | AccessRestrictedException e) {
 	    JOptionPane.showMessageDialog(MitarbeiterSichtfenster.this, e.getMessage());
 	}

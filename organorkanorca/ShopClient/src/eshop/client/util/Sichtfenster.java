@@ -1,6 +1,8 @@
 package eshop.client.util;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
@@ -47,12 +49,12 @@ public abstract class Sichtfenster extends JPanel {
     protected SichtfensterCallbacks listener		= null;
     protected Person		    user;
     protected ShopRemote	    server;
-    protected ShopTableModel	    shoptablemodel;
+    protected ShopTableModel	shoptablemodel;
     protected JPanel		    overviewButtons	= new JPanel();
     protected JButton		    alleButton		= new JButton("Alle");
     protected JButton		    sucheButton		= new JButton("Suche");
-    protected JTextField	    sucheField		= new JTextField(30);
-    protected JPanel		    actionField		= new JPanel(new MigLayout("align 50% 50%"));
+    protected JTextField	    sucheField		= new JTextField(5);
+    protected JPanel		    actionField		= new JPanel();
     protected JXTable		    auflistung		= new JXTable();
     protected JScrollPane	    auflistungContainer	= new JScrollPane(auflistung);
     protected JButton		    aktion		= new JButton();
@@ -62,23 +64,26 @@ public abstract class Sichtfenster extends JPanel {
 	this.listener = listener;
 	this.user = user;
 	this.server = server;
-	this.setLayout(new MigLayout("fillx, align 50% 50%"));
-	//overviewButtons.setMaximumSize(new Dimension(1024, 40));
-	this.add(overviewButtons,"wrap, w 100%");
-	this.add(auflistungContainer,"wrap");
-	this.add(actionField, "w 100%");
-	overviewButtons.setLayout(new BoxLayout(overviewButtons, BoxLayout.X_AXIS));
+	this.setLayout(new MigLayout());
+	this.add(overviewButtons, "dock west");
+	//this.add(actionField);
+	this.add(auflistungContainer,"wrap, w 100%");
+	
+	overviewButtons.setLayout(new MigLayout());
 	alleButton.addActionListener(new TabelleAlleAnzeigenListener());
-	overviewButtons.add(alleButton);
-	overviewButtons.add(sucheField);
 	sucheButton.addActionListener(new TabelleFilternListener());
-	overviewButtons.add(sucheButton);
+	overviewButtons.add(alleButton, "wrap 10,w 100!");
+	overviewButtons.add(sucheField, "wrap 10,w 100!");
+	overviewButtons.add(sucheButton, "wrap 10, w 100!");
+	overviewButtons.add(actionField, "wrap 10, w 100!");
+	overviewButtons.add(aktion,"w 100!");
 	overviewButtons.setVisible(true);
+	actionField.setBackground(Color.CYAN);
+
 	JTableHeader header = auflistung.getTableHeader();
 	header.setUpdateTableInRealTime(true);
 	header.setReorderingAllowed(false);
-	actionField.add(aktion);
-	actionField.add(anzahl);
+
 	auflistung.setHorizontalScrollEnabled(true);
 	callTableUpdate();
     }

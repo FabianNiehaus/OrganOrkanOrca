@@ -26,6 +26,7 @@ import eshop.common.exceptions.ArticleNonexistantException;
 import eshop.common.exceptions.ArticleStockNotSufficientException;
 import eshop.common.exceptions.InvalidAmountException;
 import eshop.common.net.ShopRemote;
+import net.miginfocom.swing.MigLayout;
 
 public class ArtikelSichtfenster extends Sichtfenster {
 
@@ -34,14 +35,16 @@ public class ArtikelSichtfenster extends Sichtfenster {
      */
     private static final long serialVersionUID = -5439399681692245672L;
     
-    JButton verlaufAnzeigenButton = new JButton("Verlauf anzeigen");
-
+    JButton verlaufAnzeigenButton = new JButton("Verlauf");
+    
     public ArtikelSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
 	super(server, user, listener);
+	//verlaufAnzeigenButton.setLayout(new MigLayout());
 	if (user instanceof Kunde) {
 	    aktion.setText("In Warenkorb");
 	    aktion.addActionListener(new ArtikelInWarenkorbListener());
 	    anzahl.setVisible(true);
+	    
 	} else if (user instanceof Mitarbeiter) {
 	    aktion.setText("Bearbeiten");
 	    aktion.addActionListener(new ArtikelBearbeitenListener());
@@ -77,7 +80,7 @@ public class ArtikelSichtfenster extends Sichtfenster {
 	    } catch(AccessRestrictedException e1) {
 		JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e1.getMessage());
 	    } catch(ArrayIndexOutOfBoundsException e1) {
-		JOptionPane.showMessageDialog(ArtikelSichtfenster.this, "Es muss ein Artikel ausgew√§hlt werden!");
+		JOptionPane.showMessageDialog(ArtikelSichtfenster.this, "Es muss ein Artikel ausgew‰hlt werden!");
 	    } catch(RemoteException e1) {
 		JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e1.getMessage());
 	    }

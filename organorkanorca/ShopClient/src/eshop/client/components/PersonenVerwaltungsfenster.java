@@ -35,7 +35,7 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
     JTextField vornameField		   = new JTextField(15);
     JLabel     nachnameLabel		   = new JLabel("Nachname:");
     JTextField nachnameField		   = new JTextField(15);
-    JLabel     strasseLabel		   = new JLabel("StraÃŸe:");
+    JLabel     strasseLabel		   = new JLabel("Straße:");
     JTextField strasseField		   = new JTextField(15);
     JLabel     ortLabel			   = new JLabel("Stadt");
     JTextField ortField			   = new JTextField(15);
@@ -45,9 +45,9 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
     JTextField passwordField		   = new JTextField("*********", 15);
     JPanel     buttons			   = new JPanel();
     JButton    neuAnlegenButton		   = new JButton("Neu");
-    JButton    aendernButton		   = new JButton("Ã„ndern");
+    JButton    aendernButton		   = new JButton("Ändern");
     JButton    aendernBestaetigenButton	   = new JButton("BestÃ¤tigen");
-    JButton    loeschenButton		   = new JButton("LÃ¶schen");
+    JButton    loeschenButton		   = new JButton("Löschen");
     JButton    neuAnlegenBestaetigenButton = new JButton("Anlegen");
     String     typ			   = "";
 
@@ -55,7 +55,10 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 	super(server, user, listener);
 	this.setLayout(new MigLayout());
 	detailArea.setLayout(new MigLayout());
-	this.add(new JLabel(titel), "span 2, align center, wrap");
+	buttons.setLayout(new MigLayout());
+	this.add(new JLabel(titel), "wrap");
+	this.add(buttons, "dock west, wrap");
+	this.add(detailArea, "wrap");
 	detailArea.add(persNrLabel);
 	detailArea.add(persNrField, "wrap");
 	detailArea.add(vornameLabel);
@@ -70,12 +73,12 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 	detailArea.add(zipField, "wrap");
 	detailArea.add(passwordLabel);
 	detailArea.add(passwordField);
-	this.add(detailArea, "wrap");
-	buttons.add(neuAnlegenButton);
-	buttons.add(aendernButton);
-	buttons.add(aendernBestaetigenButton);
-	buttons.add(loeschenButton);
-	buttons.add(neuAnlegenBestaetigenButton);
+	
+	buttons.add(neuAnlegenButton, "wrap 10, w 100!");
+	buttons.add(aendernButton, "wrap 10, w 100!");
+	buttons.add(loeschenButton, "wrap 10, w 100!");
+	buttons.add(aendernBestaetigenButton, "wrap 10, w 100!");
+	buttons.add(neuAnlegenBestaetigenButton, "w 100!");
 	aendernBestaetigenButton.setVisible(false);
 	neuAnlegenBestaetigenButton.setVisible(false);
 	aendernButton.addActionListener(new PersonBearbeitenListener(personenTyp));
@@ -83,7 +86,7 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 	neuAnlegenButton.addActionListener(new PersonNeuAnlegenListener(personenTyp));
 	neuAnlegenBestaetigenButton.addActionListener(new PersonNeuAnlegenListener(personenTyp));
 	loeschenButton.addActionListener(new PersonLoeschenListener());
-	this.add(buttons, "align center");
+
 	persNrField.setEditable(false);
 	vornameField.setEditable(false);
 	nachnameField.setEditable(false);

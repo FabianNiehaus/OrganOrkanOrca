@@ -1,5 +1,6 @@
 package eshop.client.components;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
@@ -37,22 +38,26 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
     JTextField bezeichnungField		   = new JTextField(15);
     JLabel     preisLabel		   = new JLabel("Preis:");
     JTextField preisField		   = new JTextField(15);
-    JLabel     pkggroesseLabel		   = new JLabel("PackungsgrÃ¶ÃŸe:");
+    JLabel     pkggroesseLabel		   = new JLabel("Packungsgröße:");
     JTextField pkggroesseField		   = new JTextField(15);
     JLabel     bestandLabel		   = new JLabel("Bestand:");
     JTextField bestandField		   = new JTextField(15);
     JPanel     buttons			   = new JPanel();
     JButton    neuAnlegenButton		   = new JButton("Neu");
-    JButton    aendernButton		   = new JButton("Ã„ndern");
-    JButton    aendernBestaetigenButton	   = new JButton("BestÃ¤tigen");
-    JButton    loeschenButton		   = new JButton("LÃ¶schen");
+    JButton    aendernButton		   = new JButton("Ändern");
+    JButton    aendernBestaetigenButton	   = new JButton("Bestätigen");
+    JButton    loeschenButton		   = new JButton("Löschen");
     JButton    neuAnlegenBestaetigenButton = new JButton("Anlegen");
 
     public ArtikelVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener) {
 	super(server, user, listener);
 	this.setLayout(new MigLayout());
 	detailArea.setLayout(new MigLayout());
-	this.add(new JLabel("Artikelverwaltung"), "align center, wrap");
+	buttons.setLayout(new MigLayout());
+	this.add(new JLabel("Artikelverwaltung"), "wrap");
+	this.add(buttons, "dock west, wrap");
+	this.add(detailArea, "wrap");
+	
 	detailArea.add(artNrLabel);
 	detailArea.add(artNrField, "wrap");
 	detailArea.add(bezeichnungLabel);
@@ -63,12 +68,13 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 	detailArea.add(pkggroesseField, "wrap");
 	detailArea.add(bestandLabel);
 	detailArea.add(bestandField, "wrap");
-	this.add(detailArea, "wrap");
-	buttons.add(neuAnlegenButton);
-	buttons.add(aendernButton);
-	buttons.add(aendernBestaetigenButton);
-	buttons.add(loeschenButton);
-	buttons.add(neuAnlegenBestaetigenButton);
+
+	
+	buttons.add(neuAnlegenButton, "wrap 10, w 100!");
+	buttons.add(aendernButton, "wrap 10, w 100!");
+	buttons.add(loeschenButton, "wrap 10, w 100!");
+	buttons.add(aendernBestaetigenButton, "wrap 10, w 100!");
+	buttons.add(neuAnlegenBestaetigenButton, "w 100!");
 	aendernBestaetigenButton.setVisible(false);
 	neuAnlegenBestaetigenButton.setVisible(false);
 	aendernButton.addActionListener(new ArtikelBearbeitenListener());
@@ -76,28 +82,30 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 	neuAnlegenButton.addActionListener(new ArtikelNeuAnlegenListener());
 	neuAnlegenBestaetigenButton.addActionListener(new ArtikelNeuAnlegenListener());
 	loeschenButton.addActionListener(new ArtikelLoeschenListener());
-	this.add(buttons, "align center, wrap");
+	
 	artNrField.setEditable(false);
 	bezeichnungField.setEditable(false);
 	preisField.setEditable(false);
 	pkggroesseField.setEditable(false);
 	bestandField.setEditable(false);
 	this.setVisible(true);
+	
+
     }
 
     public void artikelAnzeigen(Artikel art) {
 
-	this.art = art;
-	artNrField.setText(String.valueOf(art.getArtikelnummer()));
-	bezeichnungField.setText(art.getBezeichnung());
-	preisField.setText(String.valueOf(art.getPreis()));
-	if (art instanceof Massengutartikel) {
-	    pkggroesseField.setText(String.valueOf(((Massengutartikel) art).getPackungsgroesse()));
-	} else {
-	    pkggroesseField.setText("1");
+		this.art = art;
+		artNrField.setText(String.valueOf(art.getArtikelnummer()));
+		bezeichnungField.setText(art.getBezeichnung());
+		preisField.setText(String.valueOf(art.getPreis()));
+		if (art instanceof Massengutartikel) {
+		    pkggroesseField.setText(String.valueOf(((Massengutartikel) art).getPackungsgroesse()));
+		} else {
+		    pkggroesseField.setText("1");
+		}
+		bestandField.setText(String.valueOf(art.getBestand()));
 	}
-	bestandField.setText(String.valueOf(art.getBestand()));
-    }
 
     public class ArtikelBearbeitenListener implements ActionListener {
 
@@ -155,7 +163,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 			    }
 			} catch(NumberFormatException e1) {
 			    JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this,
-				    "Keine gueltige PackungsgrÃ¶ÃŸe");
+				    "Keine gueltige Packungsgröße");
 			}
 		    } catch(NumberFormatException e1) {
 			JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this, "Kein gueltiger Preis!");
