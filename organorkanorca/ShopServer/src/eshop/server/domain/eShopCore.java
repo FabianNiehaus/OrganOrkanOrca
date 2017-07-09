@@ -313,8 +313,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 					try {
 						listener.handleArticleChanged(artBack);
 					} catch (RemoteException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						JOptionPane.showMessageDialog(null, "Übermittlungsfehler bei Listener " + listener.toString());
 					}
 				}
 			});
@@ -531,8 +530,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 							try {
 								listener.handleUserChanged(kundeBack);
 							} catch (RemoteException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+							    JOptionPane.showMessageDialog(null, "Übermittlungsfehler bei Listener " + listener.toString());
 							}
 						}
 					});
@@ -556,8 +554,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 							try {
 								listener.handleStaffChanged(mitarbeiterBack);
 							} catch (RemoteException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+							    JOptionPane.showMessageDialog(null, "Übermittlungsfehler bei Listener " + listener.toString());
 							}
 						}
 					});
@@ -700,8 +697,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 					try {
 						listener.handleArticleChanged(artBack);
 					} catch (RemoteException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					    JOptionPane.showMessageDialog(null, "Übermittlungsfehler bei Listener " + listener.toString());
 					}
 				}
 			});
@@ -743,8 +739,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 						try {
 							listener.handleUserChanged(kundeBack);
 						} catch (RemoteException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+						    JOptionPane.showMessageDialog(null, "Übermittlungsfehler bei Listener " + listener.toString());
 						}
 					}
 				});
@@ -777,8 +772,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 						try {
 							listener.handleStaffChanged(mitarbeiterBack);
 						} catch (RemoteException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+						    JOptionPane.showMessageDialog(null, "Übermittlungsfehler bei Listener " + listener.toString());
 						}
 					}
 				});
