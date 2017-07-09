@@ -34,8 +34,6 @@ import eshop.common.exceptions.ArticleNonexistantException;
 import eshop.common.exceptions.PersonNonexistantException;
 import eshop.common.net.ShopRemote;
 
-import net.miginfocom.swing.MigLayout;
-
 public class MainWindow extends JFrame
 	implements ShopEventCallbacks, SichtfensterCallbacks, VerwaltungsfensterCallbacks {
 
@@ -84,7 +82,7 @@ public class MainWindow extends JFrame
     }
 
     @Override
-    public void artikelBearbeiten(Artikel art) {
+    public void artikelAnzeigen(Artikel art) {
 
 	artikelverwaltungsfenster.artikelAnzeigen(art);
     }
@@ -181,7 +179,7 @@ public class MainWindow extends JFrame
     }
 
     @Override
-    public void mitarbeiterBearbeiten(Mitarbeiter mi) {
+    public void mitarbeiterAnzeigen(Mitarbeiter mi) {
 
 	mitarbeiterverwaltungsfenster.personAnzeigen(mi);
     }
@@ -232,7 +230,7 @@ public class MainWindow extends JFrame
     }
 
     @Override
-    public void kundeBearbeiten(Kunde ku) {
+    public void kundeAnzeigen(Kunde ku) {
 
 	kundenverwaltungsfenster.personAnzeigen(ku);
     }

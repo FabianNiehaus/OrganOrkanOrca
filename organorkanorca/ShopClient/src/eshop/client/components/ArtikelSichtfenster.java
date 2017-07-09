@@ -1,113 +1,38 @@
 package eshop.client.components;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
-import java.util.Calendar;
-import java.util.Map.Entry;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import javax.swing.WindowConstants;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartFrame;
-import org.jfree.chart.JFreeChart;
-import org.jfree.data.category.DefaultCategoryDataset;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import eshop.client.components.tablemodels.ArtikelTableModel;
 import eshop.client.util.Sichtfenster;
-import eshop.common.data_objects.Artikel;
-import eshop.common.data_objects.Kunde;
-import eshop.common.data_objects.Mitarbeiter;
 import eshop.common.data_objects.Person;
 import eshop.common.exceptions.AccessRestrictedException;
-import eshop.common.exceptions.ArticleAlreadyInBasketException;
 import eshop.common.exceptions.ArticleNonexistantException;
-import eshop.common.exceptions.ArticleStockNotSufficientException;
-import eshop.common.exceptions.InvalidAmountException;
-import eshop.common.exceptions.PersonNonexistantException;
 import eshop.common.net.ShopRemote;
 
 public class ArtikelSichtfenster extends Sichtfenster {
     
     private ArtikelTableModel model;
     
-    class ArtikelBearbeitenListener implements ActionListener {
+    class ArtikelAnzeigenListener implements ListSelectionListener  {
 
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void valueChanged(ListSelectionEvent e) {
 
-			try {
-				listener.artikelBearbeiten(
-						server.artikelSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user));
-			} catch (RemoteException | ArticleNonexistantException | AccessRestrictedException e1) {
-				JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e1.getMessage());
-			}
+		    try {
+			listener.artikelAnzeigen(
+					server.artikelSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user));
+		} catch (RemoteException | ArticleNonexistantException | AccessRestrictedException e1) {
+			JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e1.getMessage());
+		}
+		    
 		}
 	}
 
-	class ArtikelInWarenkorbListener implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-
-			try {
-				server.artikelInWarenkorbLegen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), Integer.parseInt(anzahl.getText()), user.getId(),user);
-				listener.artikelInWarenkorb();
-				anzahl.setText("");
-			} catch (NumberFormatException e1) {
-				JOptionPane.showMessageDialog(ArtikelSichtfenster.this, "Keine gueltige Anzahl!");
-			} catch (ArticleNonexistantException e1) {
-				JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e1.getMessage());
-			} catch (ArticleStockNotSufficientException e1) {
-				JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e1.getMessage());
-			} catch (AccessRestrictedException e1) {
-				JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e1.getMessage());
-			} catch (InvalidAmountException e1) {
-				JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e1.getMessage());
-			} catch (ArrayIndexOutOfBoundsException e1) {
-				JOptionPane.showMessageDialog(ArtikelSichtfenster.this, "Kein Artikel ausgewählt");
-			} catch (ArticleAlreadyInBasketException e1) {
-				JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e1.getMessage());
-			} catch (RemoteException e1) {
-				JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e1.getMessage());
-			} catch(PersonNonexistantException e1) {
-			    JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e1.getMessage());
-			}
-		}
-	}
-
-	class VerlaufAnzeigenListener implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-
-			try {
-				Artikel art = server.artikelSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user);
-				DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-				for (Entry<Integer, Integer> ent : art.getBestandsverlauf().entrySet()) {
-					int dayOfYear = ent.getKey();
-					Calendar calendar = Calendar.getInstance();
-					calendar.set(Calendar.DAY_OF_YEAR, dayOfYear);
-					String date = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)) + "."
-							+ String.valueOf(calendar.get(Calendar.MONTH) + 1) + ".";
-					dataset.addValue((int) ent.getValue(), "Bestand", date);
-				}
-				JFreeChart chart = ChartFactory.createLineChart("Bestandsverlauf", "Tag", "Bestand", dataset);
-				ChartFrame chartFrame = new ChartFrame("Bestandsverlauf", chart);
-				chartFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-				chartFrame.pack();
-				chartFrame.setVisible(true);
-			} catch (ArticleNonexistantException e1) {
-				JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e1.getMessage());
-			} catch (AccessRestrictedException e1) {
-				JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e1.getMessage());
-			} catch (ArrayIndexOutOfBoundsException e1) {
-				JOptionPane.showMessageDialog(ArtikelSichtfenster.this, "Es muss ein Artikel ausgewählt werden!");
-			} catch (RemoteException e1) {
-				JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e1.getMessage());
-			}
-		}
-	}
+	
 
 	/**
 	 * 
@@ -118,17 +43,7 @@ public class ArtikelSichtfenster extends Sichtfenster {
 
 	public ArtikelSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
 		super(server, user, listener);
-		if (user instanceof Kunde) {
-			aktion.setText("In Warenkorb");
-			aktion.addActionListener(new ArtikelInWarenkorbListener());
-			anzahl.setVisible(true);
-		} else if (user instanceof Mitarbeiter) {
-			aktion.setText("Bearbeiten");
-			aktion.addActionListener(new ArtikelBearbeitenListener());
-			anzahl.setVisible(false);
-			verlaufAnzeigenButton.addActionListener(new VerlaufAnzeigenListener());
-			actionField.add(verlaufAnzeigenButton);
-		}
+		auflistung.getSelectionModel().addListSelectionListener(new ArtikelAnzeigenListener());
 	}
 
 	@Override

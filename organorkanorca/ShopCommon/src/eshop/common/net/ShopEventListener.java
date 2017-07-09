@@ -12,9 +12,9 @@ public interface ShopEventListener extends Remote {
 
 	public void handleArticleChanged(Artikel art) throws RemoteException;
 
-	void handleEventChanged(Ereignis er) throws RemoteException;
+	public void handleEventChanged(Ereignis er) throws RemoteException;
 
-	void handleStaffChanged(Mitarbeiter mi) throws RemoteException;
+	public void handleStaffChanged(Mitarbeiter mi) throws RemoteException;
 
-	void handleUserChanged(Kunde ku) throws RemoteException;
+	public void handleUserChanged(Kunde ku) throws RemoteException;
 }

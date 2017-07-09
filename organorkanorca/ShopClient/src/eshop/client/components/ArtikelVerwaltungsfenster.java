@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
+import java.util.Calendar;
+import java.util.Map.Entry;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -12,6 +14,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.DefaultCategoryDataset;
 
 import eshop.client.util.Verwaltungsfenster;
 import eshop.common.data_objects.Artikel;
@@ -19,8 +27,11 @@ import eshop.common.data_objects.Kunde;
 import eshop.common.data_objects.Massengutartikel;
 import eshop.common.data_objects.Person;
 import eshop.common.exceptions.AccessRestrictedException;
+import eshop.common.exceptions.ArticleAlreadyInBasketException;
 import eshop.common.exceptions.ArticleNonexistantException;
+import eshop.common.exceptions.ArticleStockNotSufficientException;
 import eshop.common.exceptions.InvalidAmountException;
+import eshop.common.exceptions.PersonNonexistantException;
 import eshop.common.net.ShopRemote;
 import net.miginfocom.swing.MigLayout;
 
@@ -332,4 +343,62 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		resetStores();
 	    
 	}	
+	
+	class ArtikelInWarenkorbListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+
+			try {
+				server.artikelInWarenkorbLegen(art.getArtikelnummer(), Integer.parseInt(anzahlField.getText()), user.getId(),user);
+				listener.artikelInWarenkorb();
+				anzahlField.setText("");
+			} catch (NumberFormatException e1) {
+				JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this, "Keine gueltige Anzahl!");
+			} catch (ArticleNonexistantException e1) {
+				JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this, e1.getMessage());
+			} catch (ArticleStockNotSufficientException e1) {
+				JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this, e1.getMessage());
+			} catch (AccessRestrictedException e1) {
+				JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this, e1.getMessage());
+			} catch (InvalidAmountException e1) {
+				JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this, e1.getMessage());
+			} catch (ArrayIndexOutOfBoundsException e1) {
+				JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this, "Kein Artikel ausgewählt");
+			} catch (ArticleAlreadyInBasketException e1) {
+				JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this, e1.getMessage());
+			} catch (RemoteException e1) {
+				JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this, e1.getMessage());
+			} catch(PersonNonexistantException e1) {
+			    JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this, e1.getMessage());
+			}
+		}
+	}
+	
+	class VerlaufAnzeigenListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+
+			try {
+				//Artikel artikel = server.artikelSuchen(art.getArtikelnummer(), user);
+				DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+				for (Entry<Integer, Integer> ent : art.getBestandsverlauf().entrySet()) {
+					int dayOfYear = ent.getKey();
+					Calendar calendar = Calendar.getInstance();
+					calendar.set(Calendar.DAY_OF_YEAR, dayOfYear);
+					String date = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)) + "."
+							+ String.valueOf(calendar.get(Calendar.MONTH) + 1) + ".";
+					dataset.addValue((int) ent.getValue(), "Bestand", date);
+				}
+				JFreeChart chart = ChartFactory.createLineChart("Bestandsverlauf", "Tag", "Bestand", dataset);
+				ChartFrame chartFrame = new ChartFrame("Bestandsverlauf", chart);
+				chartFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+				chartFrame.pack();
+				chartFrame.setVisible(true);
+			} catch (ArrayIndexOutOfBoundsException e1) {
+				JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this, "Es muss ein Artikel ausgewählt werden!");
+			}
+		}
+	}
 }

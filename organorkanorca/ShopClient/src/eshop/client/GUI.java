@@ -36,17 +36,16 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
 
 	public void handleArticleChanged(Artikel art);
 
-	void handleEventChanged(Ereignis er);
+	public void handleEventChanged(Ereignis er);
 
-	void handleStaffChanged(Mitarbeiter mi);
+	public void handleStaffChanged(Mitarbeiter mi);
 
-	void handleUserChanged(Kunde ku);
+	public void handleUserChanged(Kunde ku);
     }
 
     LoginWindow		     loginwindow;
     MainWindow		     mainwindow;
     private ListenerForLogin listenerForLogin = new ListenerForLogin();
-    // Shop server
     private ShopRemote	     server;
 
     public GUI() throws RemoteException {

@@ -17,6 +17,8 @@ public abstract class Verwaltungsfenster extends JPanel {
     
     
 	public interface VerwaltungsfensterCallbacks {
+	    
+	    	public void artikelInWarenkorb();
 
 		public void artikelBeabeitet();
 

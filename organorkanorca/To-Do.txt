@@ -25,7 +25,7 @@ Bugfixes:
 ./ Artikel in Warenkorb
 ./ Artikelverlauf
 ./ Handling Artikel löschen
-- Fenster ordentlich ersetzen
+./ Fenster ordentlich ersetzen
 
 
 Nice-To-Have:

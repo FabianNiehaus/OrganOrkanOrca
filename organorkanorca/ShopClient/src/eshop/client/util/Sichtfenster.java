@@ -1,7 +1,6 @@
 package eshop.client.util;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.regex.Pattern;
@@ -46,8 +45,6 @@ public abstract class Sichtfenster extends JPanel {
 	protected JPanel actionField = new JPanel(new MigLayout("align 50% 50%"));
 	protected JXTable auflistung = new JXTable();
 	protected JScrollPane auflistungContainer = new JScrollPane(auflistung);
-	protected JButton aktion = new JButton();
-	protected JTextField anzahl = new JTextField(5);
 
     public Sichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
 	this.listener = listener;
@@ -63,7 +60,6 @@ public abstract class Sichtfenster extends JPanel {
 	overviewButtons.add(sucheField, "wrap 10,w 100!");
 	overviewButtons.add(sucheButton, "wrap 10, w 100!");
 	overviewButtons.add(actionField, "wrap 10, w 100!");
-	overviewButtons.add(aktion,"w 100!");
 	overviewButtons.setVisible(true);
 	actionField.setBackground(Color.CYAN);
 
@@ -98,6 +94,8 @@ public abstract class Sichtfenster extends JPanel {
 				
 			}
 		});
+		
+		
 
     }
 
@@ -128,13 +126,11 @@ public abstract class Sichtfenster extends JPanel {
 
 	public interface SichtfensterCallbacks {
 
-		public void artikelBearbeiten(Artikel art);
+		void artikelAnzeigen(Artikel art);
 
-		public void artikelInWarenkorb();
+		void mitarbeiterAnzeigen(Mitarbeiter mi);
 
-		public void kundeBearbeiten(Kunde kunde);
-
-		public void mitarbeiterBearbeiten(Mitarbeiter mi);
+		void kundeAnzeigen(Kunde ku);
 	}
 
 }

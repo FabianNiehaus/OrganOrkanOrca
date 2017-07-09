@@ -30,8 +30,6 @@ public class ManagementSichtfenster extends Sichtfenster {
 
 	public ManagementSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
 		super(server, user, listener);
-		actionField.remove(aktion);
-		actionField.remove(anzahl);
 		speichernButton.addActionListener(new PersistenceButtonListener());
 		ladenButton.addActionListener(new PersistenceButtonListener());
 		actionField.add(speichernButton);

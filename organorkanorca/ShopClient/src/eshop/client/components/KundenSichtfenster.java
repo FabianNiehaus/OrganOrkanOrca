@@ -1,10 +1,11 @@
 package eshop.client.components;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import eshop.client.components.tablemodels.PersonenTableModel;
 import eshop.client.util.Sichtfenster;
 import eshop.common.data_objects.Person;
@@ -22,24 +23,22 @@ public class KundenSichtfenster extends Sichtfenster {
 
 	public KundenSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
 		super(server, user, listener);
-		aktion.setText("Bearbeiten");
-		aktion.addActionListener(new KundeBearbeitenListener());
-		anzahl.setVisible(false);
+		auflistung.getSelectionModel().addListSelectionListener(new KundeAnzeigenListener());
 	}
 
-	class KundeBearbeitenListener implements ActionListener {
+	class KundeAnzeigenListener implements ListSelectionListener {
 
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void valueChanged(ListSelectionEvent arg0) {
 
-			try {
-				listener.kundeBearbeiten(
-						server.kundeSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user));
-			} catch (RemoteException e1) {
-				JOptionPane.showMessageDialog(KundenSichtfenster.this, e1.getMessage());
-			} catch (PersonNonexistantException e1) {
-				JOptionPane.showMessageDialog(KundenSichtfenster.this, e1.getMessage());
-			}
+		    try {
+			if(auflistung.getSelectedRow()!= -1) listener.kundeAnzeigen(server.kundeSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user));
+		} catch (RemoteException e1) {
+			JOptionPane.showMessageDialog(KundenSichtfenster.this, e1.getMessage());
+		} catch (PersonNonexistantException e1) {
+			JOptionPane.showMessageDialog(KundenSichtfenster.this, e1.getMessage());
+		}
+		    
 		}
 	}
 
@@ -51,6 +50,7 @@ public class KundenSichtfenster extends Sichtfenster {
 		    model = new PersonenTableModel(server.alleKundenAusgeben(user));
 			
 			auflistung.setModel(model);
+			auflistung.getSelectionModel().addListSelectionListener(new KundeAnzeigenListener());
 			
 			fitTableLayout();
 
