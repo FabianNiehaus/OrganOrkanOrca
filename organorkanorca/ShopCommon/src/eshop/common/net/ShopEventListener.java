@@ -10,11 +10,11 @@ import eshop.common.data_objects.Mitarbeiter;
 
 public interface ShopEventListener extends Remote {
 
-	public void handleArticleChanged(Artikel art) throws RemoteException;
+	public void handleArticleChanged(Artikel art) throws RemoteException, InterruptedException;
 
-	public void handleEventChanged(Ereignis er) throws RemoteException;
+	public void handleEventChanged(Ereignis er) throws RemoteException, InterruptedException;
 
-	public void handleStaffChanged(Mitarbeiter mi) throws RemoteException;
+	public void handleStaffChanged(Mitarbeiter mi) throws RemoteException, InterruptedException;
 
-	public void handleUserChanged(Kunde ku) throws RemoteException;
+	public void handleUserChanged(Kunde ku) throws RemoteException, InterruptedException;
 }

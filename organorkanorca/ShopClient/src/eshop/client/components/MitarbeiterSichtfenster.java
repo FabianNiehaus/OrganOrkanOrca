@@ -3,6 +3,7 @@ package eshop.client.components;
 import java.rmi.RemoteException;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -32,7 +33,8 @@ public class MitarbeiterSichtfenster extends Sichtfenster {
 		public void valueChanged(ListSelectionEvent e) {
 
 		    try {
-			listener.mitarbeiterAnzeigen(server.mitarbeiterSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user));
+			if(auflistung.getSelectedRow()!= -1) listener.mitarbeiterAnzeigen(server.mitarbeiterSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user));
+			return;
 		} catch (RemoteException e1) {
 			JOptionPane.showMessageDialog(MitarbeiterSichtfenster.this, e1.getMessage());
 		} catch (PersonNonexistantException e1) {
@@ -47,10 +49,12 @@ public class MitarbeiterSichtfenster extends Sichtfenster {
 
 		try {
 		    	model = new PersonenTableModel(server.alleMitarbeiterAusgeben(user));
-			
-			auflistung.setModel(model);
-						
-			fitTableLayout();
+		    	
+		    	SwingUtilities.invokeLater(new Runnable(){public void run(){
+				auflistung.setModel(model);
+				fitTableLayout();
+
+			}});
 
 			
 		} catch (RemoteException | AccessRestrictedException e) {

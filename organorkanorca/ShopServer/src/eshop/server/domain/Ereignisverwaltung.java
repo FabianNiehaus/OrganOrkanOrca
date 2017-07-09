@@ -53,9 +53,11 @@ public class Ereignisverwaltung {
 	 * @param wieviel
 	 *            Betroffene Stueckzahl
 	 */
-	public void ereignisErstellen(Person wer, Typ was, Artikel womit, int wieviel) {
+	public Ereignis ereignisErstellen(Person wer, Typ was, Artikel womit, int wieviel) {
 
-		ereignisse.add(new Ereignis(getNextID(), wer, was, womit, wieviel, new Date()));
+	    Ereignis er = new Ereignis(getNextID(), wer, was, womit, wieviel, new Date());
+		    ereignisse.add(er);
+		return er;
 	}
 
 	/**

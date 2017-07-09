@@ -66,7 +66,6 @@ public abstract class Sichtfenster extends JPanel {
 	auflistung.setAutoCreateRowSorter(true);
 		
 		callTableUpdate();
-		fitTableLayout();
 
 		auflistung.setHorizontalScrollEnabled(true);
 		//auflistung.setPreferredScrollableViewportSize(new Dimension(500, 70));

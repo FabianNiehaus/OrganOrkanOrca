@@ -12,7 +12,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-import eshop.client.GUI.ShopEventCallbacks;
 import eshop.client.components.ArtikelSichtfenster;
 import eshop.client.components.ArtikelVerwaltungsfenster;
 import eshop.client.components.KundenSichtfenster;
@@ -35,7 +34,7 @@ import eshop.common.exceptions.PersonNonexistantException;
 import eshop.common.net.ShopRemote;
 
 public class MainWindow extends JFrame
-	implements ShopEventCallbacks, SichtfensterCallbacks, VerwaltungsfensterCallbacks {
+	implements SichtfensterCallbacks, VerwaltungsfensterCallbacks {
 
     /**
      * 
@@ -76,12 +75,6 @@ public class MainWindow extends JFrame
     }
 
     @Override
-    public void artikelBeabeitet() {
-
-	artikelsichtfenster.callTableUpdate();
-    }
-
-    @Override
     public void artikelAnzeigen(Artikel art) {
 
 	artikelverwaltungsfenster.artikelAnzeigen(art);
@@ -93,7 +86,6 @@ public class MainWindow extends JFrame
 	warenkorbverwaltungsfenster.warenkorbAufrufen();
     }
 
-    @Override
     public void handleArticleChanged(Artikel art) {
 
 	if (user instanceof Kunde) {
@@ -172,11 +164,6 @@ public class MainWindow extends JFrame
 	
     }
 
-    @Override
-    public void kundeBearbeitet() {
-
-	kundensichtfenster.callTableUpdate();
-    }
 
     @Override
     public void mitarbeiterAnzeigen(Mitarbeiter mi) {
@@ -184,19 +171,11 @@ public class MainWindow extends JFrame
 	mitarbeiterverwaltungsfenster.personAnzeigen(mi);
     }
 
-    @Override
-    public void mitarbeiterBearbeitet() {
-
-	mitarbeitersichtfenster.callTableUpdate();
-    }
-
-    @Override
     public void handleEventChanged(Ereignis er) {
 
 	managementsichtfenster.callTableUpdate();
     }
 
-    @Override
     public void handleStaffChanged(Mitarbeiter mi) {
 
 	if (mitarbeiterverwaltungsfenster.getPerson().getId() == mi.getId()) {
@@ -211,12 +190,10 @@ public class MainWindow extends JFrame
 	    }
 	}
 	mitarbeitersichtfenster.callTableUpdate();
-	//artikelverwaltungsfenster.artikelAnzeigen(art);
     }
 
-    @Override
     public void handleUserChanged(Kunde ku) {
-
+	
 	if (kundenverwaltungsfenster.getPerson().getId() == ku.getId()) {
 	    if (ku.getFirstname().equals("deleted!")) {
 		JOptionPane.showMessageDialog(kundenverwaltungsfenster, "Der ausgewählte Kunde wurde gelöscht!");

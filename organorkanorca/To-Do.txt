@@ -1,6 +1,5 @@
 To-Do
-- (Auslagerung Ereigniserstellung in Ereignisverwaltung)
-- Überarbeitung GUI
+./ Überarbeitung GUI
 - Ausschlusslogik Methoden
 ./ Table Model ein Konstruktor pro Inhaltstyp, Vektor übergeben
 ./ Eventlistener -> Tabelle updaten

@@ -20,11 +20,6 @@ public abstract class Verwaltungsfenster extends JPanel {
 	    
 	    	public void artikelInWarenkorb();
 
-		public void artikelBeabeitet();
-
-		public void kundeBearbeitet();
-
-		public void mitarbeiterBearbeitet();
 	}
 
 	protected VerwaltungsfensterCallbacks listener = null;

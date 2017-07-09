@@ -144,12 +144,9 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 					String address_Zip = zipField.getText();
 					String passwort = passwordField.getText();
 					
-					
 					p = server.personAendern(typ, p, firstname, lastname, p.getId(), passwort,
 			address_Street, address_Zip, address_Town);
 
-					// Bearbeiteten Kunden anzeigen
-					personAnzeigen(p);
 					// Buttons anpassen
 					aendernButton.setText("Ändern");
 					isBeingChanged = false;
@@ -178,14 +175,6 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 
 			try {
 				server.personLoeschen(p, user);
-				persNrField.setText("");
-				vornameField.setText("");
-				nachnameField.setText("");
-				strasseField.setText("");
-				ortField.setText("");
-				zipField.setText("");
-				passwordField.setText("");
-				p = null;
 			} catch (AccessRestrictedException e1) {
 				JOptionPane.showMessageDialog(PersonenVerwaltungsfenster.this, e1.getMessage());
 			} catch (RemoteException e1) {
@@ -233,7 +222,6 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 				
 			} else if (e.getSource().equals(neuAnlegenButton) && isBeingCreated) {
 				try {
-					Person p = null;
 					String firstname = vornameField.getText();
 					String lastname = nachnameField.getText();
 					String address_Street = strasseField.getText();
@@ -247,16 +235,6 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 						p = server.erstelleMitatbeiter(firstname, lastname, passwort, address_Street, address_Zip,
 								address_Town, user);
 					}
-					// Neu erstellte Person anzeigen
-					personAnzeigen(p);
-					// Felder nicht editierbar machen
-					vornameField.setEditable(false);
-					nachnameField.setEditable(false);
-					strasseField.setEditable(false);
-					ortField.setEditable(false);
-					zipField.setEditable(false);
-					passwordField.setEditable(false);
-					// Buttons anpassen
 					neuAnlegenButton.setText("Neu");
 					isBeingCreated = false;
 				} catch (InvalidPersonDataException e1) {

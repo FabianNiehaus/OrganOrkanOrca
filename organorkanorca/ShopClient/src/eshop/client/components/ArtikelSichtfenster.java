@@ -3,6 +3,7 @@ package eshop.client.components;
 import java.rmi.RemoteException;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -23,8 +24,9 @@ public class ArtikelSichtfenster extends Sichtfenster {
 		public void valueChanged(ListSelectionEvent e) {
 
 		    try {
-			listener.artikelAnzeigen(
+			if(auflistung.getSelectedRow()!= -1) listener.artikelAnzeigen(
 					server.artikelSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user));
+			return;
 		} catch (RemoteException | ArticleNonexistantException | AccessRestrictedException e1) {
 			JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e1.getMessage());
 		}
@@ -53,9 +55,11 @@ public class ArtikelSichtfenster extends Sichtfenster {
 				    
 			model = new ArtikelTableModel(server.alleArtikelAusgeben(user));
 			
-			auflistung.setModel(model);
-					
-			fitTableLayout();
+			SwingUtilities.invokeLater(new Runnable(){public void run(){
+				auflistung.setModel(model);
+				fitTableLayout();
+
+			}});
 					
 			
 		} catch (RemoteException | AccessRestrictedException e) {

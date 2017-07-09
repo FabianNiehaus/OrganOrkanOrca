@@ -21,6 +21,7 @@ import eshop.common.data_objects.Ereignis;
 import eshop.common.data_objects.Kunde;
 import eshop.common.data_objects.Mitarbeiter;
 import eshop.common.data_objects.Person;
+import eshop.common.exceptions.InvalidPersonDataException;
 import eshop.common.net.ShopEventListener;
 import eshop.common.net.ShopRemote;
 import net.miginfocom.swing.MigLayout;
@@ -30,18 +31,7 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
     /**
      * 
      */
-    private static final long serialVersionUID = -593668905786628709L;
-
-    public interface ShopEventCallbacks {
-
-	public void handleArticleChanged(Artikel art);
-
-	public void handleEventChanged(Ereignis er);
-
-	public void handleStaffChanged(Mitarbeiter mi);
-
-	public void handleUserChanged(Kunde ku);
-    }
+    private static final long serialVersionUID = 9030916773132281332L;
 
     LoginWindow		     loginwindow;
     MainWindow		     mainwindow;
@@ -93,27 +83,38 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
     }
 
     @Override
-    public void handleArticleChanged(Artikel art) throws RemoteException {
+    public void handleArticleChanged(Artikel art) throws RemoteException, InterruptedException {
+	
+	Thread.sleep(200);
 	
 	if(mainwindow != null) mainwindow.handleArticleChanged(art);
+	
     }
 
     @Override
-    public void handleEventChanged(Ereignis er) throws RemoteException {
+    public void handleEventChanged(Ereignis er) throws RemoteException, InterruptedException {
+	
+	Thread.sleep(200);
 
 	if(mainwindow != null) mainwindow.handleEventChanged(er);
     }
 
     @Override
-    public void handleStaffChanged(Mitarbeiter mi) throws RemoteException {
+    public void handleStaffChanged(Mitarbeiter mi) throws RemoteException, InterruptedException {
+	
+	Thread.sleep(200);
 
 	if(mainwindow != null) mainwindow.handleStaffChanged(mi);
     }
 
     @Override
-    public void handleUserChanged(Kunde ku) throws RemoteException {
+    public void handleUserChanged(Kunde ku) throws RemoteException, InterruptedException {
 
-	if(mainwindow != null) mainwindow.handleUserChanged(ku);
+	 Thread.sleep(200);
+	 
+	 if(mainwindow != null) mainwindow.handleUserChanged(ku);
+
+	
     }
 
     @Override
