@@ -52,9 +52,11 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 
 	public ArtikelVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener) {
 		super(server, user, listener);
+		
 		this.setLayout(new MigLayout());
 		detailArea.setLayout(new MigLayout());
-		this.add(new JLabel("Artikelverwaltung"), "align center, wrap");
+		buttons.setLayout(new MigLayout());
+		
 		detailArea.add(artNrLabel);
 		detailArea.add(artNrField, "wrap");
 		detailArea.add(bezeichnungLabel);
@@ -65,12 +67,13 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		detailArea.add(pkggroesseField, "wrap");
 		detailArea.add(bestandLabel);
 		detailArea.add(bestandField, "wrap");
-		this.add(detailArea, "wrap");
-		buttons.add(neuAnlegenButton);
-		buttons.add(aendernButton);
-		buttons.add(aendernBestaetigenButton);
-		buttons.add(loeschenButton);
-		buttons.add(neuAnlegenBestaetigenButton);
+		
+		buttons.add(neuAnlegenButton, "wrap 10, w 100!");
+		buttons.add(aendernButton, "wrap 10, w 100!");
+		buttons.add(loeschenButton, "wrap 10, w 100!");
+		buttons.add(aendernBestaetigenButton, "wrap 10, w 100!");
+		buttons.add(neuAnlegenBestaetigenButton, "w 100!");
+		
 		aendernBestaetigenButton.setVisible(false);
 		neuAnlegenBestaetigenButton.setVisible(false);
 		aendernButton.addActionListener(new ArtikelBearbeitenListener());
@@ -78,12 +81,17 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		neuAnlegenButton.addActionListener(new ArtikelNeuAnlegenListener());
 		neuAnlegenBestaetigenButton.addActionListener(new ArtikelNeuAnlegenListener());
 		loeschenButton.addActionListener(new ArtikelLoeschenListener());
-		this.add(buttons, "align center, wrap");
+		
 		artNrField.setEditable(false);
 		bezeichnungField.setEditable(false);
 		preisField.setEditable(false);
 		pkggroesseField.setEditable(false);
 		bestandField.setEditable(false);
+		
+		this.add(new JLabel("Artikelverwaltung"), "wrap");
+		this.add(buttons, "dock west, wrap");
+		this.add(detailArea, "wrap");
+		
 		this.setVisible(true);
 	}
 

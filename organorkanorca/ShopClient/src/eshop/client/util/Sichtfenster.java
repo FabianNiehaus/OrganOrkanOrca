@@ -1,10 +1,10 @@
 package eshop.client.util;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.regex.Pattern;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 
 import javax.swing.JPanel;
@@ -48,12 +48,25 @@ public abstract class Sichtfenster extends JPanel {
 	protected JButton aktion = new JButton();
 	protected JTextField anzahl = new JTextField(5);
 
-	public Sichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
-		this.listener = listener;
-		this.user = user;
-		this.server = server;
-			
-		auflistung.setAutoCreateRowSorter(true);
+    public Sichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
+	this.listener = listener;
+	this.user = user;
+	this.server = server;
+	this.setLayout(new MigLayout());
+	this.add(overviewButtons, "dock west");
+	//this.add(actionField);
+	this.add(auflistungContainer,"wrap, w 100%");
+	
+	overviewButtons.setLayout(new MigLayout());
+	overviewButtons.add(alleButton, "wrap 10,w 100!");
+	overviewButtons.add(sucheField, "wrap 10,w 100!");
+	overviewButtons.add(sucheButton, "wrap 10, w 100!");
+	overviewButtons.add(actionField, "wrap 10, w 100!");
+	overviewButtons.add(aktion,"w 100!");
+	overviewButtons.setVisible(true);
+	actionField.setBackground(Color.CYAN);
+
+	auflistung.setAutoCreateRowSorter(true);
 		
 		callTableUpdate();
 		fitTableLayout();
@@ -65,23 +78,7 @@ public abstract class Sichtfenster extends JPanel {
 
 		JTableHeader header = auflistung.getTableHeader();
 		header.setUpdateTableInRealTime(true);
-		header.setReorderingAllowed(false);		
-		
-		this.setLayout(new MigLayout("fillx, align 50% 50%"));
-		// overviewButtons.setMaximumSize(new Dimension(1024, 40));
-		this.add(overviewButtons, "wrap, w 100%");
-		this.add(auflistungContainer, "wrap");
-		this.add(actionField, "w 100%");
-		
-		overviewButtons.setLayout(new BoxLayout(overviewButtons, BoxLayout.X_AXIS));
-		overviewButtons.add(alleButton);
-		overviewButtons.add(sucheField);
-		overviewButtons.add(sucheButton);
-		overviewButtons.setVisible(true);
-		
-		actionField.add(aktion);
-		actionField.add(anzahl);
-		
+		header.setReorderingAllowed(false);	
 		
 		alleButton.addActionListener(new ActionListener() {
 
@@ -99,9 +96,8 @@ public abstract class Sichtfenster extends JPanel {
 				TabelleFiltern();
 				
 			}
-		});
-
-	}
+		});	
+    }
 
 	public abstract void callTableUpdate();
 	

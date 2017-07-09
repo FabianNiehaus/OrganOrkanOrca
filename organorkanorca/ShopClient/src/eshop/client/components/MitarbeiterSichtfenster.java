@@ -59,5 +59,4 @@ public class MitarbeiterSichtfenster extends Sichtfenster {
 			JOptionPane.showMessageDialog(MitarbeiterSichtfenster.this, e.getMessage());
 		}
 	}
-
 }

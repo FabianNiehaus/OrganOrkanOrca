@@ -71,11 +71,13 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		detailArea.add(passwordLabel);
 		detailArea.add(passwordField);
 		this.add(detailArea, "wrap");
-		buttons.add(neuAnlegenButton);
-		buttons.add(aendernButton);
-		buttons.add(aendernBestaetigenButton);
-		buttons.add(loeschenButton);
-		buttons.add(neuAnlegenBestaetigenButton);
+		
+		buttons.add(neuAnlegenButton, "wrap 10, w 100!");
+		buttons.add(aendernButton, "wrap 10, w 100!");
+		buttons.add(loeschenButton, "wrap 10, w 100!");
+		buttons.add(aendernBestaetigenButton, "wrap 10, w 100!");
+		buttons.add(neuAnlegenBestaetigenButton, "w 100!");
+		
 		aendernBestaetigenButton.setVisible(false);
 		neuAnlegenBestaetigenButton.setVisible(false);
 		aendernButton.addActionListener(new PersonBearbeitenListener(personenTyp));
