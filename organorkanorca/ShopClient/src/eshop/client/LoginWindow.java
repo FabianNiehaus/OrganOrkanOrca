@@ -73,6 +73,7 @@ public class LoginWindow extends JFrame {
 	this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	this.setLocationRelativeTo(null);
 	this.pack();
+	this.setLocationRelativeTo(null);
 	this.setVisible(true);
     }
 

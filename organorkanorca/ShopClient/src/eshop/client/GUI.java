@@ -1,5 +1,7 @@
 package eshop.client;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.rmi.NotBoundException;
@@ -8,6 +10,9 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import eshop.client.util.LoginListener;
@@ -18,6 +23,7 @@ import eshop.common.data_objects.Mitarbeiter;
 import eshop.common.data_objects.Person;
 import eshop.common.net.ShopEventListener;
 import eshop.common.net.ShopRemote;
+import net.miginfocom.swing.MigLayout;
 
 public class GUI extends UnicastRemoteObject implements ShopEventListener, WindowListener {
 
@@ -76,8 +82,6 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
 
 	@Override
 	public void logout() {
-
-	    mainwindow.dispose();
 	    loginwindow = new LoginWindow("OrganOrkanOrca server", server, this, GUI.this);
 	}
 
@@ -130,14 +134,40 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
     @Override
     public void windowClosing(WindowEvent e) {
 
-	try {
-	    server.removeShopEventListener(this);
-	    System.exit(0);
-	} catch(RemoteException e1) {
-	    // TODO Auto-generated catch block
-	    e1.printStackTrace();
+	JFrame closing = new JFrame("Closing");
+	JButton logout = new JButton("Ausloggen");
+	JButton quit = new JButton("Beenden");
+		
+	logout.addActionListener(new ActionListener(){
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+	    listenerForLogin.logout();
+	    closing.dispose();
 	}
+	});	   
+	quit.addActionListener(new ActionListener(){
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+	    try {
+		server.removeShopEventListener(GUI.this);
+		System.exit(0);
+	    } catch(RemoteException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	    }
+	    
+	}
+	});	 
 	
+	closing.getContentPane().setLayout(new MigLayout("", "30[]30", "30[]15[]30"));
+	
+	closing.getContentPane().add(new JLabel("Möchten Sie sich ausloggen oder das Programm beenden?"),"wrap, span 2");
+	closing.getContentPane().add(logout, "dock center");
+	closing.getContentPane().add(quit, "dock center");
+	
+	closing.pack();
+	closing.setLocationRelativeTo(null);
+	closing.setVisible(true);
     }
 
     @Override

@@ -44,6 +44,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
      * 
      */
     private static final long serialVersionUID = -1852260814852420682L;
+    
 	private Artikelverwaltung av;
 	private Kundenverwaltung kv;
 	private Mitarbeiterverwaltung mv;

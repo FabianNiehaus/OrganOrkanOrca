@@ -5,6 +5,12 @@ To-Do
 ./ Table Model ein Konstruktor pro Inhaltstyp, Vektor übergeben
 ./ Eventlistener -> Tabelle updaten
 ./ Eventlistener -> Objekt im Warenkorb etc.
+- Gegenstand aus tebelle bei Asuwahl anzeigen
+- Modulbuttons in Tabs
+./ Logout bei Schließen
+- Eine Suchleiste pro Spalte
+- Verwaltungsbuttons nach unten
+- Formatierung Schrift, Kästen, etc.
 - DOKUMENTATION
 
 Bugfixes:
@@ -19,6 +25,8 @@ Bugfixes:
 ./ Artikel in Warenkorb
 ./ Artikelverlauf
 ./ Handling Artikel löschen
+- Fenster ordentlich ersetzen
+
 
 Nice-To-Have:
 - Kategorien für Produkte

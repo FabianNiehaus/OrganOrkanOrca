@@ -1,5 +1,6 @@
 package eshop.client.components;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -35,6 +36,8 @@ public class ManagementSichtfenster extends Sichtfenster {
 		ladenButton.addActionListener(new PersistenceButtonListener());
 		actionField.add(speichernButton);
 		actionField.add(ladenButton);
+		
+		setPreferredSize(new Dimension(900,400));
 	}
 
 	class PersistenceButtonListener implements ActionListener {

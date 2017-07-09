@@ -1,6 +1,7 @@
 package eshop.client.util;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.regex.Pattern;
@@ -96,7 +97,8 @@ public abstract class Sichtfenster extends JPanel {
 				TabelleFiltern();
 				
 			}
-		});	
+		});
+
     }
 
 	public abstract void callTableUpdate();
@@ -125,8 +127,6 @@ public abstract class Sichtfenster extends JPanel {
 	}
 
 	public interface SichtfensterCallbacks {
-
-		public void alleFensterErneuern();
 
 		public void artikelBearbeiten(Artikel art);
 

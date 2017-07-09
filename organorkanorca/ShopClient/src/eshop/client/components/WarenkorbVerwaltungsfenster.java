@@ -270,4 +270,11 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 			return columns;
 		}
 	}
+
+	@Override
+	public void reset() {
+
+	    // TODO Auto-generated method stub
+	    
+	}
 }
