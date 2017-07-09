@@ -44,6 +44,11 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 	JButton aendernBestaetigenButton = new JButton("Bestätigen");
 	JButton loeschenButton = new JButton("Löschen");
 	JButton neuAnlegenBestaetigenButton = new JButton("Anlegen");
+	
+	 String bezeichnungStore;
+	    double preisStore;
+	    int packungsgroesseStore;
+	    int bestandStore;
 
 	public ArtikelVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener) {
 		super(server, user, listener);
@@ -94,9 +99,13 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 			pkggroesseField.setText("1");
 		}
 		bestandField.setText(String.valueOf(art.getBestand()));
+		
+		setStores(art);
 	}
 
 	public class ArtikelBearbeitenListener implements ActionListener {
+	    
+	   
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -125,7 +134,13 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 						bestand = Integer.parseInt(zeile.substring(1));
 					} else if (operator.equals("0")) {
 						bestand = Integer.parseInt(zeile);
-					} else {
+					} else if(operator.matches("[1-9]")){
+					    bestand = Integer.parseInt(zeile);
+					    if(bestand == bestandStore){
+						operator = "";
+						bestand = bestandStore;
+					    }
+					} else {					    
 						throw new NumberFormatException("Kein gültiger Operator! Nur + und - sind erlaubt!");
 					}
 
@@ -136,13 +151,22 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 							try {
 								art = server.artikelAendern(art.getArtikelnummer(), user, bezeichnung, bestand, operator, preis,
 										packungsgroesse);
+
 								artikelAnzeigen(art);
 								aendernBestaetigenButton.setVisible(false);
 								neuAnlegenButton.setVisible(true);
 								aendernButton.setVisible(true);
 								loeschenButton.setVisible(true);
+								
+								// Felder editierbar machen
+								bezeichnungField.setEditable(false);
+								preisField.setEditable(false);
+								pkggroesseField.setEditable(false);
+								bestandField.setEditable(false);
+								
 								listener.update("artikel");
 								ArtikelVerwaltungsfenster.this.repaint();
+								setStores(art);
 							} catch (AccessRestrictedException e1) {
 								JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this, e1.getMessage());
 							} catch (InvalidAmountException e1) {
@@ -243,6 +267,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 								neuAnlegenBestaetigenButton.setVisible(false);
 								listener.update("artikel");
 								ArtikelVerwaltungsfenster.this.repaint();
+								setStores(art);
 							} catch (AccessRestrictedException e1) {
 								JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this, e1.getMessage());
 							} catch (InvalidAmountException e1) {
@@ -267,4 +292,15 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 	public Artikel getArtikel(){
 		return art;
 	}
+	
+	public void setStores(Artikel art){
+	    bezeichnungStore = art.getBezeichnung();
+	    preisStore = art. getPreis();
+	    if(art instanceof Massengutartikel){
+		packungsgroesseStore = ((Massengutartikel) art).getPackungsgroesse();
+	    }else {
+		packungsgroesseStore = 1;
+	    }
+	    bestandStore = art.getBestand();
+	}	
 }
