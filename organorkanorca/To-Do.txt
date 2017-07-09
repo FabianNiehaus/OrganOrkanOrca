@@ -4,7 +4,7 @@ To-Do
 - Ausschlusslogik Methoden
 ./ Table Model ein Konstruktor pro Inhaltstyp, Vektor übergeben
 ./ Eventlistener -> Tabelle updaten
-- Eventlistener -> Objekt im Warenkorb etc.
+./ Eventlistener -> Objekt im Warenkorb etc.
 - DOKUMENTATION
 
 Bugfixes:
@@ -17,8 +17,8 @@ Bugfixes:
 ./ Artikel löschen -> Aktualisierung Tabelle
 ./ Aktualisierng Sicherenster bei Wechsel
 ./ Artikel in Warenkorb
-- Artikelverlauf
-- Handling Artikel löschen
+./ Artikelverlauf
+./ Handling Artikel löschen
 
 Nice-To-Have:
 - Kategorien für Produkte

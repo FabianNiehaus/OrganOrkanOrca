@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
+
 import eshop.common.data_objects.Artikel;
 import eshop.common.data_objects.Ereignis;
 import eshop.common.data_objects.Kunde;
@@ -85,7 +87,8 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 			System.exit(0);
 		} catch (IOException | ArticleNonexistantException | PersonNonexistantException
 				| InvalidPersonDataException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Server konnte nicht gestartet werden!\nWahrscheinlich läuft bereits eine Instanz des Servers!","Fehler",JOptionPane.ERROR_MESSAGE);
+			System.exit(0);
 		}
 	}
 

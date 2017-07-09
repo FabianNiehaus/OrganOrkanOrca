@@ -137,7 +137,9 @@ public class MainWindow extends JFrame
 		if (art.getBezeichnung().equals("deleted!")) {
 		    JOptionPane.showMessageDialog(artikelverwaltungsfenster, "Der ausgewählte Artikel wurde gelöscht!");
 		    artikelverwaltungsfenster = new ArtikelVerwaltungsfenster(server, user, this);
-		    this.repaint();
+		    rightArea.removeAll();
+		    rightArea.add(artikelverwaltungsfenster);
+		    rightArea.revalidate();
 		} else {
 		    JOptionPane.showMessageDialog(artikelverwaltungsfenster, "Der ausgewählte Artikel wurde geändert!");
 		    artikelverwaltungsfenster.artikelAnzeigen(art);

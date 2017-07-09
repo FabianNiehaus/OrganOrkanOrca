@@ -35,44 +35,11 @@ public class Artikel implements Serializable {
 	 */
 	public Artikel(String bezeichnung, int artikelnummer, int bestand, double preis,
 			Map<Integer, Integer> bestandsverlauf) {
-		super();
 		this.bezeichnung = bezeichnung;
 		this.artikelnummer = artikelnummer;
 		this.bestand = bestand;
 		this.preis = preis;
-		if (bestandsverlauf != null) {
-			this.bestandsverlauf = bestandsverlauf;
-		}
-		this.aktualisiereBestandsverlauf();
-	}
-
-	/**
-	 * @param bezeichnung
-	 *            Bezeichnung / Name des Artikels
-	 * @param artikelnummer
-	 *            Eindeutige Artikelnummer
-	 * @param bestand
-	 *            Aktueller Bestand des Artikels
-	 * @param preis
-	 *            Preis des Artikels
-	 * @param kategorie
-	 *            Kategorie des Artikels
-	 * @param angebot
-	 *            Zeigt an, ob Artikel aktuell im Angebot ist
-	 * @param bewertung
-	 *            Nuzterbewertung des Artikels
-	 */
-	public Artikel(String bezeichnung, int artikelnummer, int bestand, double preis, String kategorie, boolean angebot,
-			int bewertung) {
-		super();
-		this.bezeichnung = bezeichnung;
-		this.artikelnummer = artikelnummer;
-		this.bestand = bestand;
-		this.preis = preis;
-		/*
-		 * Noch nicht verwendet this.kategorie = kategorie; this.angebot = angebot;
-		 * this.bewertung = bewertung;
-		 */
+		this.bestandsverlauf = bestandsverlauf;
 	}
 
 	public void aktualisiereBestandsverlauf() {
@@ -137,6 +104,7 @@ public class Artikel implements Serializable {
 
 		if (bestand >= 0) {
 			this.bestand = bestand;
+			aktualisiereBestandsverlauf();
 		} else {
 			throw new InvalidAmountException(bestand);
 		}

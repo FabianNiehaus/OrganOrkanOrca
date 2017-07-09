@@ -1,11 +1,10 @@
 2
 Orkan
 99999.0
-2
+9
 1
 ---BEGINHISTORY---
-174:5
-190:2
+190:9
 ---ENDHISTORY---
 3
 Orca
@@ -13,7 +12,6 @@ Orca
 210
 1
 ---BEGINHISTORY---
-174:97
 190:210
 ---ENDHISTORY---
 1
@@ -22,7 +20,6 @@ Organ
 36
 1
 ---BEGINHISTORY---
-174:18
 190:36
 ---ENDHISTORY---
 4
@@ -31,7 +28,6 @@ Pringles
 491
 1
 ---BEGINHISTORY---
-174:499
 190:491
 ---ENDHISTORY---
 5

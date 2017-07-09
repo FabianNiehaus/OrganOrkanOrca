@@ -70,7 +70,7 @@ public class FilePersistenceManager implements PersistenceManager {
 		double preis = 0;
 		int bestand = 0;
 		int packungsgroesse = 0;
-		Map<Integer, Integer> bestandsverlauf = null;
+		Map<Integer, Integer> bestandsverlauf = new LinkedHashMap<>();
 		// Lies Artikelnummer
 		try {
 			artikelnummer = Integer.parseInt(liesZeile());
@@ -90,7 +90,6 @@ public class FilePersistenceManager implements PersistenceManager {
 		try {
 			reader.mark(400);
 			if (liesZeile().equals("---BEGINHISTORY---")) {
-				bestandsverlauf = new LinkedHashMap<>();
 				String content = liesZeile();
 				while (!liesZeile().equals("---ENDHISTORY---")) {
 					String[] contents = content.split(":");

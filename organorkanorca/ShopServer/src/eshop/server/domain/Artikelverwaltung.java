@@ -83,6 +83,7 @@ public class Artikelverwaltung {
 		if (packungsgroesse == 1) {
 			Artikel art = new Artikel(bezeichnung, getNextID(), bestand, preis, null);
 			artikel.add(art);
+			art.aktualisiereBestandsverlauf();
 			return art;
 		}
 		if (packungsgroesse > 1) {
@@ -92,6 +93,7 @@ public class Artikelverwaltung {
 			Massengutartikel art = new Massengutartikel(bezeichnung, getNextID(), bestand, preis, packungsgroesse,
 					null);
 			artikel.add(art);
+			art.aktualisiereBestandsverlauf();
 			return art;
 			}
 		} else {
@@ -169,6 +171,7 @@ public class Artikelverwaltung {
 			Iterator<Artikel> iter = artikel.iterator();
 			while (iter.hasNext()) {
 				Artikel art = iter.next();
+				art.aktualisiereBestandsverlauf();
 				pm.speichereArtikel(art);
 			}
 		}
