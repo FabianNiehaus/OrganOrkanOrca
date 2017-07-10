@@ -2,6 +2,8 @@ package eshop.client.util;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.regex.Pattern;
 
 import javax.swing.JButton;
@@ -101,6 +103,67 @@ public abstract class Sichtfenster extends JPanel {
 		JTableHeader header = auflistung.getTableHeader();
 		header.setUpdateTableInRealTime(true);
 		header.setReorderingAllowed(false);
+		
+		sucheField.setHorizontalAlignment(JTextField.CENTER);
+		sucheField2.setHorizontalAlignment(JTextField.CENTER);
+		sucheField3.setHorizontalAlignment(JTextField.CENTER);
+
+		sucheField.addFocusListener(new FocusListener(){
+			String text;
+	        @Override
+	        public void focusGained(FocusEvent e){
+	        	text = sucheField.getText();
+	        	sucheField.setText("");
+	        }
+
+	        
+			@Override
+			public void focusLost(FocusEvent e) {
+				// TODO Auto-generated method stub
+				if(sucheField.getText().equals("")){
+					sucheField.setText("Bezeichnung");
+				}
+				
+			}
+	    });
+		
+		sucheField2.addFocusListener(new FocusListener(){
+			String text;
+	        @Override
+	        public void focusGained(FocusEvent e){
+	        	text = sucheField2.getText();
+	        	sucheField2.setText("");
+	        }
+
+	        
+			@Override
+			public void focusLost(FocusEvent e) {
+				// TODO Auto-generated method stub
+				if(sucheField2.getText().equals("")){
+					sucheField2.setText("Artikel Nr.");
+				}
+				
+			}
+	    });
+		
+		sucheField3.addFocusListener(new FocusListener(){
+			String text;
+	        @Override
+	        public void focusGained(FocusEvent e){
+	        	text = sucheField3.getText();
+	        	sucheField3.setText("");
+	        }
+        
+			@Override
+			public void focusLost(FocusEvent e) {
+				// TODO Auto-generated method stub
+				if(sucheField3.getText().equals("")){
+					sucheField3.setText("Einheit");
+				}
+				
+			}
+	    });
+		
 		alleButton.addActionListener(new ActionListener() {
 
 			@Override
