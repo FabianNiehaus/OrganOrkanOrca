@@ -18,6 +18,7 @@ import eshop.client.components.ArtikelSichtfenster;
 import eshop.client.components.ArtikelVerwaltungsfenster;
 import eshop.client.components.KundenSichtfenster;
 import eshop.client.components.ManagementSichtfenster;
+import eshop.client.components.ManagementVerwaltungsfenster;
 import eshop.client.components.MitarbeiterSichtfenster;
 import eshop.client.components.PersonenVerwaltungsfenster;
 import eshop.client.components.WarenkorbSichtfenster;
@@ -51,6 +52,7 @@ public class MainWindow extends JFrame implements SichtfensterCallbacks, Verwalt
 	LoginListener						loginListener;
 	JButton								logoutButton		= new JButton("Logout");
 	ManagementSichtfenster			managementsichtfenster;
+	ManagementVerwaltungsfenster	managementverwaltungsfenster;
 	JButton								mitarbeiterButton	= new JButton("Mitarbeiter");
 	MitarbeiterSichtfenster			mitarbeitersichtfenster;
 	PersonenVerwaltungsfenster		mitarbeiterverwaltungsfenster;
@@ -174,11 +176,12 @@ public class MainWindow extends JFrame implements SichtfensterCallbacks, Verwalt
 			mitarbeiterverwaltungsfenster = new PersonenVerwaltungsfenster(server, user, this, "Mitarbeiterverwaltung",
 					"Mitarbeiter");
 			managementsichtfenster = new ManagementSichtfenster(server, user, this);
+			managementverwaltungsfenster = new ManagementVerwaltungsfenster(server, user, this);
 			tabbedPane.addTab("Artikel", null, new ContentPanel(artikelsichtfenster, artikelverwaltungsfenster));
 			tabbedPane.addTab("Kunden", null, new ContentPanel(kundensichtfenster, kundenverwaltungsfenster));
 			tabbedPane.addTab("Mitarbeiter", null,
 					new ContentPanel(mitarbeitersichtfenster, mitarbeiterverwaltungsfenster));
-			tabbedPane.addTab("Management", null, managementsichtfenster);
+			tabbedPane.addTab("Management", null, new ContentPanel(managementsichtfenster, managementverwaltungsfenster));
 		}
 		this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		this.getContentPane().add(new JPanel(), BorderLayout.NORTH);
@@ -202,6 +205,13 @@ public class MainWindow extends JFrame implements SichtfensterCallbacks, Verwalt
 	public void mitarbeiterAnzeigen(Mitarbeiter mi) {
 
 		mitarbeiterverwaltungsfenster.personAnzeigen(mi);
+	}
+	
+
+	@Override
+	public void ereignisAnzeigen(Ereignis er) {
+
+		managementverwaltungsfenster.ereignisAnzeigen(er);
 	}
 
 	@Override

@@ -21,6 +21,7 @@ import org.jdesktop.swingx.decorator.PatternFilter;
 import org.jdesktop.swingx.decorator.SortOrder;
 
 import eshop.common.data_objects.Artikel;
+import eshop.common.data_objects.Ereignis;
 import eshop.common.data_objects.Kunde;
 import eshop.common.data_objects.Mitarbeiter;
 import eshop.common.data_objects.Person;
@@ -36,7 +37,7 @@ public abstract class Sichtfenster extends JPanel {
 	/** The Constant serialVersionUID. */
 	private static final long			serialVersionUID			= 8136926280757449267L;
 	/** The action field. */
-	protected JPanel						actionField					= new JPanel(new MigLayout("align 50% 50%"));
+	protected JPanel						actionField					= new JPanel(new MigLayout(""));
 	/** The alle button. */
 	protected JButton						alleButton					= new JButton("Alle");
 	/** The auflistung. */
@@ -241,5 +242,7 @@ public abstract class Sichtfenster extends JPanel {
 		 *           the mitarbeiter
 		 */
 		void mitarbeiterAnzeigen(Mitarbeiter mi);
+		
+		void ereignisAnzeigen(Ereignis er);
 	}
 }

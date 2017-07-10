@@ -7,6 +7,8 @@ import java.rmi.RemoteException;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import eshop.client.components.tablemodels.EreignisTableModel;
 import eshop.client.util.Sichtfenster;
@@ -30,12 +32,12 @@ public class ManagementSichtfenster extends Sichtfenster {
 
 	public ManagementSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
 		super(server, user, listener);
-		this.setLayout(new MigLayout());
 		actionField.setLayout(new MigLayout());
 		speichernButton.addActionListener(new PersistenceButtonListener());
 		ladenButton.addActionListener(new PersistenceButtonListener());
 		actionField.add(speichernButton, "wrap");
 		actionField.add(ladenButton);
+
 		// setPreferredSize(new Dimension(900, 400));
 	}
 
@@ -74,4 +76,32 @@ public class ManagementSichtfenster extends Sichtfenster {
 			}
 		}
 	}
+	/*
+	class EreignisAnzeigenListener implements ListSelectionListener {
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.
+		 * ListSelectionEvent)
+		 
+		
+		@Override
+		public void valueChanged(ListSelectionEvent e) {
+
+			try {
+				
+				if (auflistung.getSelectedRow() != -1) sichtfensterCallbacks.ereignisAnzeigen(
+						server.ereignisSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user)
+						);
+				
+				return;
+			} catch (RemoteException | ArticleNonexistantException | AccessRestrictedException e1) {
+				JOptionPane.showMessageDialog(ManagementSichtfenster.this, e1.getMessage());
+			}
+		}
+		
+	}
+*/
 }
+
