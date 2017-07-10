@@ -414,6 +414,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 					wk.loescheArtikel(art);
 				}
 				av.loeschen(art);
+				ev.ereignisErstellen(person, Typ.LOESCHEN, art, 0);
 			} else {
 				throw new AccessRestrictedException(person, "\"Artikel löschen\"");
 			}
