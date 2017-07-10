@@ -437,7 +437,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 		if (istMitarbeiter(p)) {
 			Artikel art = av.erstelleArtikel(bezeichnung, bestand, preis, packungsgroesse);
 			// Ereignis erzeugen
-			Ereignis er = ev.ereignisErstellen(p, Typ.NEU, art, bestand);
+			ev.ereignisErstellen(p, Typ.NEU, art, bestand);
 			final Artikel artikelBack = art;
 			for (ShopEventListener listener : listeners) {
 				// notify every listener in a dedicated thread
