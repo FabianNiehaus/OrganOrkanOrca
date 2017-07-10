@@ -20,6 +20,7 @@ import eshop.client.components.KundenSichtfenster;
 import eshop.client.components.ManagementSichtfenster;
 import eshop.client.components.MitarbeiterSichtfenster;
 import eshop.client.components.PersonenVerwaltungsfenster;
+import eshop.client.components.WarenkorbSichtfenster;
 import eshop.client.components.WarenkorbVerwaltungsfenster;
 import eshop.client.util.ContentPanel;
 import eshop.client.util.LoginListener;
@@ -59,6 +60,7 @@ public class MainWindow extends JFrame implements SichtfensterCallbacks, Verwalt
 	JTabbedPane							tabbedPane			= new JTabbedPane();
 	Person								user;
 	WarenkorbVerwaltungsfenster	warenkorbverwaltungsfenster;
+	WarenkorbSichtfenster			warenkorbsichtfenster;
 
 	public MainWindow(String titel, Person user, ShopRemote server, LoginListener loginListener,
 			WindowListener windowListener) {
@@ -79,17 +81,18 @@ public class MainWindow extends JFrame implements SichtfensterCallbacks, Verwalt
 	@Override
 	public void artikelInWarenkorb() {
 
-		warenkorbverwaltungsfenster.warenkorbAufrufen();
+		warenkorbsichtfenster.callTableUpdate();
+		
 	}
 
 	public void handleArticleChanged(Artikel art) {
 
 		if (user instanceof Kunde) {
 			try {
-				if (warenkorbverwaltungsfenster.artikelImWarenkorbPruefen(art)) {
+				if (warenkorbsichtfenster.artikelImWarenkorbPruefen(art)) {
 					JOptionPane.showMessageDialog(warenkorbverwaltungsfenster,
 							"Artikel \"" + art.getBezeichnung() + "\" wurde geändert. Bitte Warenkorb überprüfen!");
-					warenkorbverwaltungsfenster.warenkorbAufrufen();
+					warenkorbverwaltungsfenster.reset();
 				}
 			} catch (RemoteException e) {
 				JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e.getMessage());
@@ -97,7 +100,7 @@ public class MainWindow extends JFrame implements SichtfensterCallbacks, Verwalt
 				JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e.getMessage());
 			} catch (ArticleNonexistantException e) {
 				JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, "Ein Artikel im Warenkorb wurde gelöscht!");
-				warenkorbverwaltungsfenster.warenkorbAufrufen();
+				warenkorbverwaltungsfenster.reset();
 			} catch (AccessRestrictedException e) {
 				JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e.getMessage());
 			} catch (PersonNonexistantException e) {
@@ -159,9 +162,10 @@ public class MainWindow extends JFrame implements SichtfensterCallbacks, Verwalt
 		if (user instanceof Kunde) {
 			artikelsichtfenster = new ArtikelSichtfenster(server, user, this);
 			artikelverwaltungsfenster = new ArtikelVerwaltungsfenster(server, user, this);
+			warenkorbsichtfenster = new WarenkorbSichtfenster(server, user, this);
 			warenkorbverwaltungsfenster = new WarenkorbVerwaltungsfenster(server, user, this);
 			tabbedPane.addTab("Artikel", null, new ContentPanel(artikelsichtfenster, artikelverwaltungsfenster));
-			tabbedPane.addTab("Warenkorb", null, warenkorbverwaltungsfenster);
+			tabbedPane.addTab("Warenkorb", null, new ContentPanel(warenkorbsichtfenster,warenkorbverwaltungsfenster));
 		} else if (user instanceof Mitarbeiter) {
 			artikelsichtfenster = new ArtikelSichtfenster(server, user, this);
 			artikelverwaltungsfenster = new ArtikelVerwaltungsfenster(server, user, this);
@@ -199,5 +203,12 @@ public class MainWindow extends JFrame implements SichtfensterCallbacks, Verwalt
 	public void mitarbeiterAnzeigen(Mitarbeiter mi) {
 
 		mitarbeiterverwaltungsfenster.personAnzeigen(mi);
+	}
+
+	@Override
+	public void artikelAusWarenkorbAnzeigen(Artikel art, int anzahl) {
+
+		warenkorbverwaltungsfenster.artikelAnzeigen(art, anzahl);
+		
 	}
 }

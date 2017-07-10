@@ -247,5 +247,7 @@ public abstract class Sichtfenster extends JPanel {
 		 *           the mitarbeiter
 		 */
 		void mitarbeiterAnzeigen(Mitarbeiter mi);
+
+		void artikelAusWarenkorbAnzeigen(Artikel art, int anzahl);
 	}
 }
