@@ -26,10 +26,6 @@ import eshop.common.exceptions.PersonNonexistantException;
 public interface ShopRemote extends Remote {
 
 	public void addShopEventListener(ShopEventListener listener) throws RemoteException;
-
-	Artikel aendereArtikelBestand(Artikel art, int bestand, String operator, Person p)
-			throws AccessRestrictedException, InvalidAmountException, RemoteException;
-
 	/**
 	 * @return Alle in der Artikelverwaltung gespeicherten Artikel
 	 * @throws AccessRestrictedException
@@ -74,13 +70,6 @@ public interface ShopRemote extends Remote {
 
 	void artikelAusWarenkorbEntfernen(int artikelnummer, Person p)
 			throws AccessRestrictedException, RemoteException, PersonNonexistantException, ArticleNonexistantException;
-
-	/**
-	 * @param art
-	 * @param p
-	 * @return
-	 */
-	public boolean artikelInWarenkorb(Artikel art, Person p) throws RemoteException;
 
 	void artikelInWarenkorbAendern(int artikelnummer, int anz, Person p)
 			throws ArticleStockNotSufficientException, BasketNonexistantException, AccessRestrictedException,

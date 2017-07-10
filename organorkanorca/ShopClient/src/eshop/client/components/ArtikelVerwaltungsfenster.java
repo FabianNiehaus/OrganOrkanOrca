@@ -73,7 +73,6 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 
 	public ArtikelVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener) {
 		super(server, user, listener);
-		// linker Abstand der DetailArea
 		this.setLayout(new MigLayout("", "114[]0"));
 		detailArea.setLayout(new MigLayout("", "[]10[]"));
 		buttonArea.setLayout(new MigLayout());
@@ -205,6 +204,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 
 			if (e.getSource().equals(aendernButton) && !isBeingChanged) {
 				if (!artNrField.getText().equals("")) {
+					//Hintergrund setzen
 					bezeichnungField.setBackground(Color.LIGHT_GRAY);
 					preisField.setBackground(Color.LIGHT_GRAY);
 					pkggroesseField.setBackground(Color.LIGHT_GRAY);
@@ -218,7 +218,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 					aendernButton.setText("OK");
 					isBeingChanged = true;
 				}
-			} else if (e.getSource().equals(aendernButton) && !isBeingChanged) {
+			} else if (e.getSource().equals(aendernButton) && isBeingChanged) {
 				String bezeichnung = bezeichnungField.getText();
 				try {
 					int bestand = 0;
@@ -245,7 +245,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 								art = server.artikelAendern(art.getArtikelnummer(), user, bezeichnung, bestand, operator, preis,
 										packungsgroesse);
 								artikelAnzeigen(art);
-								aendernButton.setText("Ändern");
+								aendernButton.setText("Andern");
 								isBeingChanged = false;
 								//
 								bezeichnungField.setBackground(Color.WHITE);

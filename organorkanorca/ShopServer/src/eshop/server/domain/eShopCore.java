@@ -44,6 +44,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 	  * 
 	  */
 	private static final long				serialVersionUID	= -1852260814852420682L;
+	private Object artActionKey = new Object();
 	private Artikelverwaltung				av;
 	private String								dateipfad			= "";
 	private Ereignisverwaltung				ev;
@@ -51,8 +52,9 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 	private Vector<ShopEventListener>	listeners			= new Vector<ShopEventListener>();
 	private Mitarbeiterverwaltung			mv;
 	private Rechnungsverwaltung			rv;
-	private Warenkorbverwaltung			wv;
 
+	private Warenkorbverwaltung			wv;
+	
 	/**
 	 * @throws PersonNonexistantException
 	 * @throws ArticleNonexistantException
@@ -101,67 +103,18 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 
 	/*
 	 * (non-Javadoc)
-	 * @see domain.ShopRemote#erhoeheArtikelBestand(int, int,
-	 * data_objects.Person)
-	 */
-	@Override
-	public Artikel aendereArtikelBestand(Artikel art, int bestand, String operator, Person p)
-			throws AccessRestrictedException, InvalidAmountException, RemoteException {
-
-		if (istMitarbeiter(p)) {
-			int tmpBestand = 0;
-			if (operator.equals("+")) {
-				art = av.erhoeheBestand(art, bestand);
-				ev.ereignisErstellen(p, Typ.EINLAGERUNG, art, bestand);
-			} else if (operator.equals("-")) {
-				art = av.erhoeheBestand(art, bestand * -1);
-				ev.ereignisErstellen(p, Typ.AUSLAGERUNG, art, bestand);
-			} else if (operator.equals("0")) {
-				tmpBestand = art.getBestand();
-				art = av.erhoeheBestand(art, tmpBestand * -1);
-				ev.ereignisErstellen(p, Typ.AUSLAGERUNG, art, tmpBestand);
-			}
-			for (ShopEventListener listener : listeners) {
-				// notify every listener in a dedicated thread
-				// (a notification should not block another one).
-				Thread t = new Thread(new Runnable() {
-
-					@Override
-					public void run() {
-
-						try {
-							listener.handleEventChanged(null);
-						} catch (RemoteException e) {
-							JOptionPane.showMessageDialog(null, "Übermittlungsfehler bei Listener " + listener.toString());
-						} catch (NullPointerException e) {
-							e.printStackTrace();
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-					}
-				});
-				t.start();
-			}
-			return art;
-		} else {
-			throw new AccessRestrictedException(p, "\"Bestand erhöhen\"");
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see domain.ShopRemote#alleArtikelAusgeben(data_objects.Person)
 	 */
 	@Override
 	public Vector<Artikel> alleArtikelAusgeben(Person p) throws AccessRestrictedException, RemoteException {
 
-		// synchronized (av) {
+		synchronized (artActionKey) {
 		if (istKunde(p) || istMitarbeiter(p)) {
 			return av.getArtikel();
 		} else {
 			throw new AccessRestrictedException(p, "\"Alle Artikel ausgeben\"");
 		}
-		// }
+		}
 	}
 
 	/*
@@ -243,38 +196,40 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 			double preis, int packungsgroesse)
 			throws RemoteException, AccessRestrictedException, InvalidAmountException, ArticleNonexistantException {
 
-		Artikel art = av.sucheArtikel(artikelnummer);
-		art = av.aendereBezeichnung(art, bezeichnung);
-		art = av.aenderePreis(art, preis);
-		if (packungsgroesse > 1 && packungsgroesse != ((Massengutartikel) art).getPackungsgroesse()) {
-			int tmpBestand = art.getBestand();
-			artikelLoeschen(art.getArtikelnummer(), p);
-			art = erstelleArtikel(bezeichnung, tmpBestand, preis, packungsgroesse, p);
-		}
-		aendereArtikelBestand(art, bestand, operator, p);
-		final Artikel artBack = art;
-		for (ShopEventListener listener : listeners) {
-			// notify every listener in a dedicated thread
-			// (a notification should not block another one).
-			Thread t = new Thread(new Runnable() {
+		synchronized (artActionKey) {
+			Artikel art = av.sucheArtikel(artikelnummer);
+			art = av.aendereBezeichnung(art, bezeichnung);
+			art = av.aenderePreis(art, preis);
+			if (packungsgroesse > 1 && packungsgroesse != ((Massengutartikel) art).getPackungsgroesse()) {
+				int tmpBestand = art.getBestand();
+				artikelLoeschen(art.getArtikelnummer(), p);
+				art = erstelleArtikel(bezeichnung, tmpBestand, preis, packungsgroesse, p);
+			}
+			artikelBestandAendern(art, bestand, operator, p);
+			final Artikel artBack = art;
+			for (ShopEventListener listener : listeners) {
+				// notify every listener in a dedicated thread
+				// (a notification should not block another one).
+				Thread t = new Thread(new Runnable() {
 
-				@Override
-				public void run() {
+					@Override
+					public void run() {
 
-					try {
-						listener.handleArticleChanged(artBack);
-					} catch (RemoteException e) {
-						JOptionPane.showMessageDialog(null, "Übermittlungsfehler bei Listener " + listener.toString());
-					} catch (NullPointerException e) {
-						e.printStackTrace();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+						try {
+							listener.handleArticleChanged(artBack);
+						} catch (RemoteException e) {
+							JOptionPane.showMessageDialog(null, "Übermittlungsfehler bei Listener " + listener.toString());
+						} catch (NullPointerException e) {
+							e.printStackTrace();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 					}
-				}
-			});
-			t.start();
+				});
+				t.start();
+			}
+			return art;
 		}
-		return art;
 	}
 
 	/*
@@ -289,23 +244,54 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 		Kunde user = kundeSuchen(p.getId(), p);
 		if (istKunde(user)) {
 			Warenkorb wk = kv.gibWarenkorbVonKunde(user);
-			wv.loescheAusWarenkorn(wk, artikelSuchen(artikelnummer, user));
+			wv.loescheAusWarenkorn(wk, av.sucheArtikel(artikelnummer));
 		} else {
 			throw new AccessRestrictedException(user, "\"Artikel aus Warenkorb löschen\"");
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * eshop.common.net.ShopRemote#artikelInWarenkorb(eshop.common.data_objects.
-	 * Artikel, eshop.common.data_objects.Person)
-	 */
-	@Override
-	public boolean artikelInWarenkorb(Artikel art, Person p) throws RemoteException {
+	private Artikel artikelBestandAendern(Artikel art, int bestand, String operator, Person p)
+			throws AccessRestrictedException, InvalidAmountException, RemoteException {
 
-		if (istKunde(p)) return ((Kunde) p).getWarenkorb().sucheArtikel(art);
-		else return false;
+			if (istMitarbeiter(p)) {
+				int tmpBestand = 0;
+				if (operator.equals("+")) {
+					art = av.erhoeheBestand(art, bestand);
+					ev.ereignisErstellen(p, Typ.EINLAGERUNG, art, bestand);
+				} else if (operator.equals("-")) {
+					art = av.erhoeheBestand(art, bestand * -1);
+					ev.ereignisErstellen(p, Typ.AUSLAGERUNG, art, bestand);
+				} else if (operator.equals("0")) {
+					tmpBestand = art.getBestand();
+					art = av.erhoeheBestand(art, tmpBestand * -1);
+					ev.ereignisErstellen(p, Typ.AUSLAGERUNG, art, tmpBestand);
+				}
+				for (ShopEventListener listener : listeners) {
+					// notify every listener in a dedicated thread
+					// (a notification should not block another one).
+					Thread t = new Thread(new Runnable() {
+
+						@Override
+						public void run() {
+
+							try {
+								listener.handleEventChanged(null);
+							} catch (RemoteException e) {
+								JOptionPane.showMessageDialog(null, "Übermittlungsfehler bei Listener " + listener.toString());
+							} catch (NullPointerException e) {
+								e.printStackTrace();
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+					});
+					t.start();
+				}
+				return art;
+			} else {
+				throw new AccessRestrictedException(p, "\"Bestand erhöhen\"");
+			}
+		
 	}
 
 	/*
@@ -318,13 +304,16 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 			throws ArticleStockNotSufficientException, BasketNonexistantException, AccessRestrictedException,
 			InvalidAmountException, RemoteException, ArticleNonexistantException, PersonNonexistantException {
 
-		Kunde user = kundeSuchen(p.getId(), p);
-		if (istKunde(user)) {
-			Warenkorb wk = kv.gibWarenkorbVonKunde(user);
-			wv.aendereWarenkorb(wk, artikelSuchen(artikelnummer, p), anz);
-		} else {
-			throw new AccessRestrictedException(user, "\"Anzahl Artikel in Warenkorb ändern\"");
+		synchronized (artActionKey) {
+			Kunde user = kundeSuchen(p.getId(), p);
+			if (istKunde(user)) {
+				Warenkorb wk = kv.gibWarenkorbVonKunde(user);
+				wv.aendereWarenkorb(wk, av.sucheArtikel(artikelnummer), anz);
+			} else {
+				throw new AccessRestrictedException(user, "\"Anzahl Artikel in Warenkorb ändern\"");
+			}
 		}
+		
 	}
 
 	/*
@@ -337,18 +326,21 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 			throws ArticleNonexistantException, ArticleStockNotSufficientException, AccessRestrictedException,
 			InvalidAmountException, ArticleAlreadyInBasketException, RemoteException, PersonNonexistantException {
 
-		Kunde user = kundeSuchen(id, p);
-		if (istKunde(user)) {
-			Warenkorb wk = kv.gibWarenkorbVonKunde(user);
-			if (wk == null) {
-				wk = wv.erstelleWarenkorb();
-				kv.weiseWarenkorbzu(user, wk);
+		synchronized (artActionKey) {
+			Kunde user = kundeSuchen(id, p);
+			if (istKunde(user)) {
+				Warenkorb wk = kv.gibWarenkorbVonKunde(user);
+				if (wk == null) {
+					wk = wv.erstelleWarenkorb();
+					kv.weiseWarenkorbzu(user, wk);
+				}
+				Artikel art = av.sucheArtikel(artikelnummer);
+				wv.legeInWarenkorb(wk, art, anz);
+			} else {
+				throw new AccessRestrictedException(p, "\"Artikel in Warenkorb legen\"");
 			}
-			Artikel art = av.sucheArtikel(artikelnummer);
-			wv.legeInWarenkorb(wk, art, anz);
-		} else {
-			throw new AccessRestrictedException(p, "\"Artikel in Warenkorb legen\"");
 		}
+		
 	}
 
 	/*
@@ -359,86 +351,18 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 	@Override
 	public void artikelLoeschen(int artikelnummer, Person p)
 			throws AccessRestrictedException, RemoteException, ArticleNonexistantException {
-
-		Artikel art = av.sucheArtikel(artikelnummer);
-		if (istMitarbeiter(p)) {
-			for (Warenkorb wk : wv.getWarenkoerbe()) {
-				wk.loescheArtikel(art);
-			}
-			av.loeschen(art);
-		} else {
-			throw new AccessRestrictedException(p, "\"Artikel löschen\"");
-		}
-		art.setBezeichnung("deleted!");
-		final Artikel artBack = art;
-		for (ShopEventListener listener : listeners) {
-			// notify every listener in a dedicated thread
-			// (a notification should not block another one).
-			Thread t = new Thread(new Runnable() {
-
-				@Override
-				public void run() {
-
-					try {
-						listener.handleArticleChanged(artBack);
-					} catch (RemoteException e) {
-						JOptionPane.showMessageDialog(null, "Übermittlungsfehler bei Listener " + listener.toString());
-					} catch (NullPointerException e) {
-						e.printStackTrace();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+		synchronized (artActionKey) {
+			Artikel art = av.sucheArtikel(artikelnummer);
+			if (istMitarbeiter(p)) {
+				for (Warenkorb wk : wv.getWarenkoerbe()) {
+					wk.loescheArtikel(art);
 				}
-			});
-			t.start();
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see domain.ShopRemote#artikelSuchen(int, data_objects.Person)
-	 */
-	@Override
-	public Artikel artikelSuchen(int artikelnummer, Person p)
-			throws ArticleNonexistantException, AccessRestrictedException, RemoteException {
-
-		if (istMitarbeiter(p) || istKunde(p)) {
-			return av.sucheArtikel(artikelnummer);
-		} else {
-			throw new AccessRestrictedException(p, "\"Artikel suchen (Artikelnummer)\"");
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see domain.ShopRemote#artikelSuchen(java.lang.String,
-	 * data_objects.Person)
-	 */
-	@Override
-	public Vector<Artikel> artikelSuchen(String bezeichnung, Person p)
-			throws ArticleNonexistantException, AccessRestrictedException, RemoteException {
-
-		if (istMitarbeiter(p) || istKunde(p)) {
-			return av.sucheArtikel(bezeichnung);
-		} else {
-			throw new AccessRestrictedException(p, "\"Artikel suchen (Bezeichnung)\"");
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see domain.ShopRemote#erstelleArtikel(java.lang.String, int, double, int,
-	 * data_objects.Person)
-	 */
-	@Override
-	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, int packungsgroesse, Person p)
-			throws AccessRestrictedException, InvalidAmountException, RemoteException {
-
-		if (istMitarbeiter(p)) {
-			Artikel art = av.erstelleArtikel(bezeichnung, bestand, preis, packungsgroesse);
-			// Ereignis erzeugen
-			ev.ereignisErstellen(p, Typ.NEU, art, bestand);
-			final Artikel artikelBack = art;
+				av.loeschen(art);
+			} else {
+				throw new AccessRestrictedException(p, "\"Artikel löschen\"");
+			}
+			art.setBezeichnung("deleted!");
+			final Artikel artBack = art;
 			for (ShopEventListener listener : listeners) {
 				// notify every listener in a dedicated thread
 				// (a notification should not block another one).
@@ -448,8 +372,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 					public void run() {
 
 						try {
-							listener.handleArticleChanged(artikelBack);
-							listener.handleEventChanged(null);
+							listener.handleArticleChanged(artBack);
 						} catch (RemoteException e) {
 							JOptionPane.showMessageDialog(null, "Übermittlungsfehler bei Listener " + listener.toString());
 						} catch (NullPointerException e) {
@@ -461,10 +384,87 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 				});
 				t.start();
 			}
-			return art;
-		} else {
-			throw new AccessRestrictedException(p, "\"Artikel anlegen\"");
 		}
+		
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see domain.ShopRemote#artikelSuchen(int, data_objects.Person)
+	 */
+	@Override
+	public Artikel artikelSuchen(int artikelnummer, Person p)
+			throws ArticleNonexistantException, AccessRestrictedException, RemoteException {
+		synchronized (p) {
+			if (istMitarbeiter(p) || istKunde(p)) {
+				return av.sucheArtikel(artikelnummer);
+			} else {
+				throw new AccessRestrictedException(p, "\"Artikel suchen (Artikelnummer)\"");
+			}
+		}
+		
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see domain.ShopRemote#artikelSuchen(java.lang.String,
+	 * data_objects.Person)
+	 */
+	@Override
+	public Vector<Artikel> artikelSuchen(String bezeichnung, Person p)
+			throws ArticleNonexistantException, AccessRestrictedException, RemoteException {
+		synchronized (artActionKey) {
+			if (istMitarbeiter(p) || istKunde(p)) {
+				return av.sucheArtikel(bezeichnung);
+			} else {
+				throw new AccessRestrictedException(p, "\"Artikel suchen (Bezeichnung)\"");
+			}
+		}
+		
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see domain.ShopRemote#erstelleArtikel(java.lang.String, int, double, int,
+	 * data_objects.Person)
+	 */
+	@Override
+	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, int packungsgroesse, Person p)
+			throws AccessRestrictedException, InvalidAmountException, RemoteException {
+		synchronized (artActionKey) {
+			if (istMitarbeiter(p)) {
+				Artikel art = av.erstelleArtikel(bezeichnung, bestand, preis, packungsgroesse);
+				// Ereignis erzeugen
+				ev.ereignisErstellen(p, Typ.NEU, art, bestand);
+				final Artikel artikelBack = art;
+				for (ShopEventListener listener : listeners) {
+					// notify every listener in a dedicated thread
+					// (a notification should not block another one).
+					Thread t = new Thread(new Runnable() {
+
+						@Override
+						public void run() {
+
+							try {
+								listener.handleArticleChanged(artikelBack);
+								listener.handleEventChanged(null);
+							} catch (RemoteException e) {
+								JOptionPane.showMessageDialog(null, "Übermittlungsfehler bei Listener " + listener.toString());
+							} catch (NullPointerException e) {
+								e.printStackTrace();
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+					});
+					t.start();
+				}
+				return art;
+			} else {
+				throw new AccessRestrictedException(p, "\"Artikel anlegen\"");
+			}
+		}
+		
 	}
 
 	/*
