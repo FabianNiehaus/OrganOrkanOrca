@@ -185,9 +185,15 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 	public Person anmelden(int id, String passwort) throws LoginFailedException, RemoteException {
 
 		if (id >= 1000 && id < 9000) {
-			return kv.anmelden(id, passwort);
+			synchronized (kuActionKey) {
+				return kv.anmelden(id, passwort);
+			}
+			
 		} else if (id >= 9000 && id < 10000) {
-			return mv.anmelden(id, passwort);
+			synchronized (miActionKey) {
+				return mv.anmelden(id, passwort);
+			}
+			
 		} else {
 			throw new LoginFailedException();
 		}
