@@ -160,7 +160,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		this.art = art;
 		artNrField.setText(String.valueOf(art.getArtikelnummer()));
 		bezeichnungField.setText(art.getBezeichnung());
-		preisField.setText(String.valueOf(art.getPreis()) + "�");
+		preisField.setText(String.valueOf(art.getPreis()));
 		if (art instanceof Massengutartikel) {
 			pkggroesseField.setText(String.valueOf(((Massengutartikel) art).getPackungsgroesse()));
 		} else {

@@ -3,30 +3,33 @@ Orkan
 99999.0
 9
 1
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+Als Orkan werden im weiteren Sinn Winde mit Geschwindigkeiten von mindestens 64 kn (117,7 km/h = 32,7 m/s) bezeichnet. Auf der Beaufortskala werden Orkane mit der Stärke 12 klassifiziert. Im engeren Sinn werden darunter außertropische Tiefdruckgebiete verstanden, in denen Winde mit Orkanstärke auftreten.
 pictures/orkan.jpg
 ---BEGINHISTORY---
 190:9
+191:9
 ---ENDHISTORY---
 3
 Orca
 5729.45
 210
 1
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-pictures/orkan.jpg
+Der Orca ist eine Art der Wale aus der Familie der Delfine. Er wird auch  Schwertwal genannt.  Die Namen Killerwal und Mörderwal wurden den Tieren von Walfängern gegeben und nehmen Bezug auf die oft brutal anmutenden Jagdmethoden dieser Raubwale. Die Art ist weltweit verbreitet, bewohnt jedoch bevorzugt küstennahe Gewässer in höheren Breiten.
+pictures/orca.jpg
 ---BEGINHISTORY---
 190:210
+191:210
 ---ENDHISTORY---
 1
 Organ
 1000.0
 36
 1
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-pictures/orkan.jpg
+Ein Organ ist ein spezialisierter Körperteil aus unterschiedlichen Zellen und Geweben. Ein Organ ist eine abgegrenzte Funktionseinheit in einem vielzelligen Lebewesen. Ein Organ geht auf eine eigene Organanlage zurück und durchläuft eine spezifische Organogenese.
+pictures/organ.jpg
 ---BEGINHISTORY---
 190:36
+191:36
 ---ENDHISTORY---
 4
 Pringles
@@ -37,6 +40,7 @@ Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
 pictures/orkan.jpg
 ---BEGINHISTORY---
 190:491
+191:491
 ---ENDHISTORY---
 5
 Test Massengut
@@ -47,4 +51,5 @@ Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
 pictures/orkan.jpg
 ---BEGINHISTORY---
 190:15
+191:15
 ---ENDHISTORY---
