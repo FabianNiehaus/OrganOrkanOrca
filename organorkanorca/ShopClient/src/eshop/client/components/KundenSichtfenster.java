@@ -22,8 +22,8 @@ public class KundenSichtfenster extends Sichtfenster {
 	private static final long	serialVersionUID	= 4821072292018595904L;
 	private PersonenTableModel	model;
 
-	public KundenSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
-		super(server, user, listener);
+	public KundenSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks sichtfensterCallbacks) {
+		super(server, user, sichtfensterCallbacks);
 		auflistung.getSelectionModel().addListSelectionListener(new KundeAnzeigenListener());
 	}
 
@@ -52,7 +52,7 @@ public class KundenSichtfenster extends Sichtfenster {
 		public void valueChanged(ListSelectionEvent e) {
 
 			try {
-				if (auflistung.getSelectedRow() != -1) listener
+				if (auflistung.getSelectedRow() != -1) sichtfensterCallbacks
 						.kundeAnzeigen(server.kundeSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user));
 				return;
 			} catch (RemoteException e1) {

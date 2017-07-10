@@ -15,21 +15,36 @@ import eshop.common.exceptions.AccessRestrictedException;
 import eshop.common.exceptions.ArticleNonexistantException;
 import eshop.common.net.ShopRemote;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ArtikelSichtfenster.
+ */
 public class ArtikelSichtfenster extends Sichtfenster {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long	serialVersionUID			= -5439399681692245672L;
 
+	/** The model. */
 	private ArtikelTableModel model;
 
+	/** The verlauf anzeigen button. */
 	JButton							verlaufAnzeigenButton	= new JButton("Verlauf anzeigen");
-	public ArtikelSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
-		super(server, user, listener);
+	
+	/**
+	 * Instantiates a new artikel sichtfenster.
+	 *
+	 * @param server the server
+	 * @param user the user
+	 * @param sichtfensterCallbacks the sichtfensterCallbacks
+	 */
+	public ArtikelSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks sichtfensterCallbacks) {
+		super(server, user, sichtfensterCallbacks);
 		auflistung.getSelectionModel().addListSelectionListener(new ArtikelAnzeigenListener());
 	}
 
+	/* (non-Javadoc)
+	 * @see eshop.client.util.Sichtfenster#callTableUpdate()
+	 */
 	@Override
 	public void callTableUpdate() {
 
@@ -49,13 +64,27 @@ public class ArtikelSichtfenster extends Sichtfenster {
 		}
 	}
 
+	/**
+	 * The sichtfensterCallbacks interface for receiving artikelAnzeigen events.
+	 * The class that is interested in processing a artikelAnzeigen
+	 * event implements this interface, and the object created
+	 * with that class is registered with a component using the
+	 * component's <code>addArtikelAnzeigenListener<code> method. When
+	 * the artikelAnzeigen event occurs, that object's appropriate
+	 * method is invoked.
+	 *
+	 * @see ArtikelAnzeigenEvent
+	 */
 	class ArtikelAnzeigenListener implements ListSelectionListener {
 
+		/* (non-Javadoc)
+		 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+		 */
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
 
 			try {
-				if (auflistung.getSelectedRow() != -1) listener.artikelAnzeigen(
+				if (auflistung.getSelectedRow() != -1) sichtfensterCallbacks.artikelAnzeigen(
 						server.artikelSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user));
 				return;
 			} catch (RemoteException | ArticleNonexistantException | AccessRestrictedException e1) {

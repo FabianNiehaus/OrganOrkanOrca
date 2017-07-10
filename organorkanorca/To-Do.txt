@@ -1,14 +1,14 @@
 To-Do
 ./ Überarbeitung GUI
-- Ausschlusslogik Methoden
+./ Ausschlusslogik Methoden
 ./ Table Model ein Konstruktor pro Inhaltstyp, Vektor übergeben
 ./ Eventlistener -> Tabelle updaten
 ./ Eventlistener -> Objekt im Warenkorb etc.
-- Gegenstand aus tebelle bei Asuwahl anzeigen
-- Modulbuttons in Tabs
+./ Gegenstand aus tebelle bei Asuwahl anzeigen
+./ Modulbuttons in Tabs
 ./ Logout bei Schließen
 - Eine Suchleiste pro Spalte
-- Verwaltungsbuttons nach unten
+./ Verwaltungsbuttons nach unten
 - Formatierung Schrift, Kästen, etc.
 - DOKUMENTATION
 

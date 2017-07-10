@@ -25,27 +25,63 @@ import eshop.common.data_objects.Person;
 import eshop.common.net.ShopRemote;
 import net.miginfocom.swing.MigLayout;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Sichtfenster.
+ */
 public abstract class Sichtfenster extends JPanel {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long			serialVersionUID		= 8136926280757449267L;
+	
+	/** The action field. */
 	protected JPanel						actionField				= new JPanel(new MigLayout("align 50% 50%"));
+	
+	/** The alle button. */
 	protected JButton						alleButton				= new JButton("Alle");
+	
+	/** The auflistung. */
 	protected JXTable						auflistung				= new JXTable();
+	
+	/** The auflistung container. */
 	protected JScrollPane				auflistungContainer	= new JScrollPane(auflistung);
-	protected SichtfensterCallbacks	listener					= null;
+	
+	/** The sichtfensterCallbacks. */
+	protected SichtfensterCallbacks	sichtfensterCallbacks					= null;
+	
+	/** The overview buttons. */
 	protected JPanel						overviewButtons		= new JPanel();
+	
+	/** The server. */
 	protected ShopRemote					server;
+	
+	/** The suche button. */
 	protected JButton						sucheButton				= new JButton("Suche");
+	
+	/** The suche field. */
 	protected JTextField					sucheField				= new JTextField("Bezeichnung", 30);
+	
+	/** The suche field 2. */
 	protected JTextField					sucheField2				= new JTextField("Artikel Nr.", 30);
+	
+	/** The suche field 3. */
 	protected JTextField					sucheField3				= new JTextField("Einheit", 30);
+	
+	/** The user. */
 	protected Person						user;
 
-	public Sichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
-		this.listener = listener;
+	/**
+	 * Instantiates a new sichtfenster.
+	 *
+	 * @param server
+	 *           the server
+	 * @param user
+	 *           the user
+	 * @param sichtfensterCallbacks
+	 *           the sichtfensterCallbacks
+	 */
+	public Sichtfenster(ShopRemote server, Person user, SichtfensterCallbacks sichtfensterCallbacks) {
+		this.sichtfensterCallbacks = sichtfensterCallbacks;
 		this.user = user;
 		this.server = server;
 		this.setLayout(new MigLayout());
@@ -83,8 +119,14 @@ public abstract class Sichtfenster extends JPanel {
 		});
 	}
 
+	/**
+	 * Call table update.
+	 */
 	public abstract void callTableUpdate();
 
+	/**
+	 * Fit table layout.
+	 */
 	public void fitTableLayout() {
 
 		TableColumnAdjuster tca = new TableColumnAdjuster(auflistung);
@@ -96,24 +138,51 @@ public abstract class Sichtfenster extends JPanel {
 		auflistung.setSortOrder(0, SortOrder.ASCENDING);
 	}
 
+	/**
+	 * Tabelle filtern.
+	 */
 	public void TabelleFiltern() {
 
-		Filter[] filterArray = {new PatternFilter(".*" + sucheField.getText() + ".*", Pattern.CASE_INSENSITIVE, 1)};
+		Filter[] filterArray = {new PatternFilter(".*" + sucheField.getText() + ".*", Pattern.CASE_INSENSITIVE, 0),new PatternFilter(".*" + sucheField2.getText() + ".*", Pattern.CASE_INSENSITIVE, 1),new PatternFilter(".*" + sucheField3.getText() + ".*", Pattern.CASE_INSENSITIVE, 2)};
 		FilterPipeline filters = new FilterPipeline(filterArray);
 		auflistung.setFilters(filters);
 	}
 
+	/**
+	 * Tabellen filter entfernen.
+	 */
 	public void TabellenFilterEntfernen() {
 
 		auflistung.setFilters(null);
 	}
 
+	/**
+	 * The Interface SichtfensterCallbacks.
+	 */
 	public interface SichtfensterCallbacks {
 
+		/**
+		 * Artikel anzeigen.
+		 *
+		 * @param art
+		 *           the artikel
+		 */
 		void artikelAnzeigen(Artikel art);
 
+		/**
+		 * Kunde anzeigen.
+		 *
+		 * @param ku
+		 *           the kunde
+		 */
 		void kundeAnzeigen(Kunde ku);
 
+		/**
+		 * Mitarbeiter anzeigen.
+		 *
+		 * @param mi
+		 *           the mitarbeiter
+		 */
 		void mitarbeiterAnzeigen(Mitarbeiter mi);
 	}
 }

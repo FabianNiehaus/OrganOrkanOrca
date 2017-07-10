@@ -23,182 +23,514 @@ import eshop.common.exceptions.LoginFailedException;
 import eshop.common.exceptions.MaxIDsException;
 import eshop.common.exceptions.PersonNonexistantException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface ShopRemote.
+ */
 public interface ShopRemote extends Remote {
 
-	public void addShopEventListener(ShopEventListener listener) throws RemoteException;
 	/**
-	 * @return Alle in der Artikelverwaltung gespeicherten Artikel
+	 * Adds the shop event listener.
+	 *
+	 * @param shopEventListener
+	 *           the shop event listener
+	 * @throws RemoteException
+	 *            the remote exception
+	 */
+	public void addShopEventListener(ShopEventListener shopEventListener) throws RemoteException;
+	
+	/**
+	 * Alle artikel ausgeben.
+	 *
+	 * @param user
+	 *           the user
+	 * @return the vector
 	 * @throws AccessRestrictedException
+	 *            the access restricted exception
+	 * @throws RemoteException
+	 *            the remote exception
 	 */
-	Vector<Artikel> alleArtikelAusgeben(Person p) throws AccessRestrictedException, RemoteException;
-
-	Vector<Ereignis> alleEreignisseAusgeben(Person p) throws AccessRestrictedException, RemoteException;
+	Vector<Artikel> alleArtikelAusgeben(Person user) throws AccessRestrictedException, RemoteException;
 
 	/**
-	 * @return Alle in der Kundenverwaltung gespeicherten Kunden
+	 * Alle ereignisse ausgeben.
+	 *
+	 * @param user
+	 *           the user
+	 * @return the vector
 	 * @throws AccessRestrictedException
+	 *            the access restricted exception
+	 * @throws RemoteException
+	 *            the remote exception
 	 */
-	Vector<Kunde> alleKundenAusgeben(Person p) throws AccessRestrictedException, RemoteException;
+	Vector<Ereignis> alleEreignisseAusgeben(Person user) throws AccessRestrictedException, RemoteException;
 
 	/**
-	 * @return Alle in der Mitarbeiterverwaltung gespeicherten Mitarbeiter
-	 */
-	Vector<Mitarbeiter> alleMitarbeiterAusgeben(Person p) throws AccessRestrictedException, RemoteException;
-
-	/**
-	 * @return Alle in der Warenkorbverwaltung gespeicherten Warenkörbe
+	 * Alle kunden ausgeben.
+	 *
+	 * @param user
+	 *           the user
+	 * @return the vector
 	 * @throws AccessRestrictedException
+	 *            the access restricted exception
+	 * @throws RemoteException
+	 *            the remote exception
 	 */
-	void alleWarenkoerbeAusgeben(Person p) throws AccessRestrictedException, RemoteException;
+	Vector<Kunde> alleKundenAusgeben(Person user) throws AccessRestrictedException, RemoteException;
 
 	/**
-	 * Anmelden des Nutzers Kunden-ID 1000 - 8999, Mitarbeiter-ID 9000 - 9999
-	 * 
+	 * Alle mitarbeiter ausgeben.
+	 *
+	 * @param user
+	 *           the user
+	 * @return the vector
+	 * @throws AccessRestrictedException
+	 *            the access restricted exception
+	 * @throws RemoteException
+	 *            the remote exception
+	 */
+	Vector<Mitarbeiter> alleMitarbeiterAusgeben(Person user) throws AccessRestrictedException, RemoteException;
+
+	/**
+	 * Alle warenkoerbe ausgeben.
+	 *
+	 * @param user
+	 *           the user
+	 * @throws AccessRestrictedException
+	 *            the access restricted exception
+	 * @throws RemoteException
+	 *            the remote exception
+	 */
+	void alleWarenkoerbeAusgeben(Person user) throws AccessRestrictedException, RemoteException;
+
+	/**
+	 * Anmelden.
+	 *
 	 * @param id
-	 *           Nutzer-ID
+	 *           the id
 	 * @param passwort
-	 *           Nutzer-Passwort
-	 * @return Objekt des Nutzers der Klasse Kunde oder Mitarbeiter
+	 *           the passwort
+	 * @return the person
 	 * @throws LoginFailedException
-	 *            Anmeldung fehlgeschlagen
+	 *            the login failed exception
+	 * @throws RemoteException
+	 *            the remote exception
 	 */
 	Person anmelden(int id, String passwort) throws LoginFailedException, RemoteException;
 
-	Artikel artikelAendern(int artikelnummer, Person p, String bezeichnung, int bestand, String operator, double preis,
+	/**
+	 * Artikel aendern.
+	 *
+	 * @param artikelnummer
+	 *           the artikelnummer
+	 * @param user
+	 *           the user
+	 * @param bezeichnung
+	 *           the bezeichnung
+	 * @param bestand
+	 *           the bestand
+	 * @param operator
+	 *           the operator
+	 * @param preis
+	 *           the preis
+	 * @param packungsgroesse
+	 *           the packungsgroesse
+	 * @return the artikel
+	 * @throws RemoteException
+	 *            the remote exception
+	 * @throws AccessRestrictedException
+	 *            the access restricted exception
+	 * @throws InvalidAmountException
+	 *            the invalid amount exception
+	 * @throws ArticleNonexistantException
+	 *            the article nonexistant exception
+	 */
+	Artikel artikelAendern(int artikelnummer, Person user, String bezeichnung, int bestand, String operator, double preis,
 			int packungsgroesse)
 			throws RemoteException, AccessRestrictedException, InvalidAmountException, ArticleNonexistantException;
 
-	void artikelAusWarenkorbEntfernen(int artikelnummer, Person p)
+	/**
+	 * Artikel aus warenkorb entfernen.
+	 *
+	 * @param artikelnummer
+	 *           the artikelnummer
+	 * @param user
+	 *           the user
+	 * @throws AccessRestrictedException
+	 *            the access restricted exception
+	 * @throws RemoteException
+	 *            the remote exception
+	 * @throws PersonNonexistantException
+	 *            the person nonexistant exception
+	 * @throws ArticleNonexistantException
+	 *            the article nonexistant exception
+	 */
+	void artikelAusWarenkorbEntfernen(int artikelnummer, Person user)
 			throws AccessRestrictedException, RemoteException, PersonNonexistantException, ArticleNonexistantException;
 
-	void artikelInWarenkorbAendern(int artikelnummer, int anz, Person p)
+	/**
+	 * Artikel in warenkorb aendern.
+	 *
+	 * @param artikelnummer
+	 *           the artikelnummer
+	 * @param anz
+	 *           the anz
+	 * @param user
+	 *           the user
+	 * @throws ArticleStockNotSufficientException
+	 *            the article stock not sufficient exception
+	 * @throws BasketNonexistantException
+	 *            the basket nonexistant exception
+	 * @throws AccessRestrictedException
+	 *            the access restricted exception
+	 * @throws InvalidAmountException
+	 *            the invalid amount exception
+	 * @throws RemoteException
+	 *            the remote exception
+	 * @throws ArticleNonexistantException
+	 *            the article nonexistant exception
+	 * @throws PersonNonexistantException
+	 *            the person nonexistant exception
+	 */
+	void artikelInWarenkorbAendern(int artikelnummer, int anz, Person user)
 			throws ArticleStockNotSufficientException, BasketNonexistantException, AccessRestrictedException,
 			InvalidAmountException, RemoteException, ArticleNonexistantException, PersonNonexistantException;
 
-	void artikelInWarenkorbLegen(int artikelnummer, int anz, int id, Person p)
+	/**
+	 * Artikel in warenkorb legen.
+	 *
+	 * @param artikelnummer
+	 *           the artikelnummer
+	 * @param anz
+	 *           the anz
+	 * @param id
+	 *           the id
+	 * @param user
+	 *           the user
+	 * @throws ArticleNonexistantException
+	 *            the article nonexistant exception
+	 * @throws ArticleStockNotSufficientException
+	 *            the article stock not sufficient exception
+	 * @throws AccessRestrictedException
+	 *            the access restricted exception
+	 * @throws InvalidAmountException
+	 *            the invalid amount exception
+	 * @throws ArticleAlreadyInBasketException
+	 *            the article already in basket exception
+	 * @throws RemoteException
+	 *            the remote exception
+	 * @throws PersonNonexistantException
+	 *            the person nonexistant exception
+	 */
+	void artikelInWarenkorbLegen(int artikelnummer, int anz, int id, Person user)
 			throws ArticleNonexistantException, ArticleStockNotSufficientException, AccessRestrictedException,
 			InvalidAmountException, ArticleAlreadyInBasketException, RemoteException, PersonNonexistantException;
 
-	void artikelLoeschen(int artikelnummer, Person p)
+	/**
+	 * Artikel loeschen.
+	 *
+	 * @param artikelnummer
+	 *           the artikelnummer
+	 * @param user
+	 *           the user
+	 * @throws AccessRestrictedException
+	 *            the access restricted exception
+	 * @throws RemoteException
+	 *            the remote exception
+	 * @throws ArticleNonexistantException
+	 *            the article nonexistant exception
+	 */
+	void artikelLoeschen(int artikelnummer, Person user)
 			throws AccessRestrictedException, RemoteException, ArticleNonexistantException;
 
 	/**
-	 * Erlaubt die Suche nach einer Artikelnummer
-	 * 
+	 * Artikel suchen.
+	 *
 	 * @param artikelnummer
-	 *           Artikelnumemr von geuschtem Artikel
-	 * @return Gesuchter Artikel
+	 *           the artikelnummer
+	 * @param user
+	 *           the user
+	 * @return the artikel
 	 * @throws ArticleNonexistantException
+	 *            the article nonexistant exception
 	 * @throws AccessRestrictedException
+	 *            the access restricted exception
+	 * @throws RemoteException
+	 *            the remote exception
 	 */
-	Artikel artikelSuchen(int artikelnummer, Person p)
+	Artikel artikelSuchen(int artikelnummer, Person user)
 			throws ArticleNonexistantException, AccessRestrictedException, RemoteException;
 
 	/**
-	 * Erlaubt die Suche nach einer Artikelbezeichnung
-	 * 
-	 * @param bezeichnung
-	 *           (Teil-)Bezeichnung des gesuchten Artikels
-	 * @return Liste der zur Bezeichnung passenden Artikel
+	 * Artikel suchen.
+	 *
+	 * @param artikelbezeichnung
+	 *           the artikelbezeichnung
+	 * @param user
+	 *           the user
+	 * @return the vector
 	 * @throws ArticleNonexistantException
-	 *            Keine Artikel gefunden
+	 *            the article nonexistant exception
 	 * @throws AccessRestrictedException
+	 *            the access restricted exception
+	 * @throws RemoteException
+	 *            the remote exception
 	 */
-	Vector<Artikel> artikelSuchen(String bezeichnung, Person p)
+	Vector<Artikel> artikelSuchen(String artikelbezeichnung, Person user)
 			throws ArticleNonexistantException, AccessRestrictedException, RemoteException;
 
 	/**
-	 * Erstellt einen neuen Artikel
-	 * 
+	 * Erstelle artikel.
+	 *
 	 * @param bezeichnung
-	 *           Artikelbezeichnung
+	 *           the bezeichnung
 	 * @param bestand
-	 *           Artikelbestamd
+	 *           the bestand
 	 * @param preis
-	 *           Artikelpreis
-	 * @param p
-	 *           Userobjekt
-	 * @return Erstellten Artikel
+	 *           the preis
+	 * @param packungsgroesse
+	 *           the packungsgroesse
+	 * @param user
+	 *           the user
+	 * @return the artikel
 	 * @throws AccessRestrictedException
+	 *            the access restricted exception
 	 * @throws InvalidAmountException
+	 *            the invalid amount exception
+	 * @throws RemoteException
+	 *            the remote exception
 	 */
-	Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, int packungsgroesse, Person p)
+	Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, int packungsgroesse, Person user)
 			throws AccessRestrictedException, InvalidAmountException, RemoteException;
 
 	/**
-	 * Erstellt einen neuen Kunden mit fortlaufender Kundennummer
-	 * 
+	 * Erstelle kunde.
+	 *
 	 * @param firstname
-	 *           Vorname des anzulegenden Kunden
+	 *           the firstname
 	 * @param lastname
-	 *           Nachname des anzulegenden Kunden
+	 *           the lastname
+	 * @param passwort
+	 *           the passwort
+	 * @param address_Street
+	 *           the address street
+	 * @param address_Zip
+	 *           the address zip
+	 * @param address_Town
+	 *           the address town
+	 * @param user
+	 *           the user
+	 * @return the kunde
+	 * @throws MaxIDsException
+	 *            the max I ds exception
 	 * @throws AccessRestrictedException
+	 *            the access restricted exception
 	 * @throws InvalidPersonDataException
+	 *            the invalid person data exception
+	 * @throws RemoteException
+	 *            the remote exception
 	 */
 	Kunde erstelleKunde(String firstname, String lastname, String passwort, String address_Street, String address_Zip,
-			String address_Town, Person p)
+			String address_Town, Person user)
 			throws MaxIDsException, AccessRestrictedException, InvalidPersonDataException, RemoteException;
 
 	/**
-	 * Erstellt einen neuen Mitarbeiter mit fortlaufender Kundennummer
-	 * 
+	 * Erstelle mitatbeiter.
+	 *
 	 * @param firstname
-	 *           Vorname des anzulegenden Kunden
+	 *           the firstname
 	 * @param lastname
-	 *           Nachname des anzulegenden Kunden
+	 *           the lastname
+	 * @param passwort
+	 *           the passwort
+	 * @param address_Street
+	 *           the address street
+	 * @param address_Zip
+	 *           the address zip
+	 * @param address_Town
+	 *           the address town
+	 * @param user
+	 *           the user
+	 * @return the mitarbeiter
+	 * @throws MaxIDsException
+	 *            the max I ds exception
 	 * @throws AccessRestrictedException
+	 *            the access restricted exception
 	 * @throws InvalidPersonDataException
+	 *            the invalid person data exception
+	 * @throws RemoteException
+	 *            the remote exception
 	 */
 	Mitarbeiter erstelleMitatbeiter(String firstname, String lastname, String passwort, String address_Street,
-			String address_Zip, String address_Town, Person p)
+			String address_Zip, String address_Town, Person user)
 			throws MaxIDsException, AccessRestrictedException, InvalidPersonDataException, RemoteException;
 
-	Kunde kundeSuchen(int id, Person p) throws PersonNonexistantException, RemoteException;
+	/**
+	 * Kunde suchen.
+	 *
+	 * @param kundenId
+	 *           the kunden id
+	 * @param user
+	 *           the user
+	 * @return the kunde
+	 * @throws PersonNonexistantException
+	 *            the person nonexistant exception
+	 * @throws RemoteException
+	 *            the remote exception
+	 */
+	Kunde kundeSuchen(int kundenId, Person user) throws PersonNonexistantException, RemoteException;
 
+	/**
+	 * Lade daten.
+	 *
+	 * @throws IOException
+	 *            Signals that an I/O exception has occurred.
+	 * @throws ArticleNonexistantException
+	 *            the article nonexistant exception
+	 * @throws PersonNonexistantException
+	 *            the person nonexistant exception
+	 * @throws InvalidPersonDataException
+	 *            the invalid person data exception
+	 * @throws RemoteException
+	 *            the remote exception
+	 */
 	void ladeDaten() throws IOException, ArticleNonexistantException, PersonNonexistantException,
 			InvalidPersonDataException, RemoteException;
 
-	Mitarbeiter mitarbeiterSuchen(int id, Person p) throws PersonNonexistantException, RemoteException;
+	/**
+	 * Mitarbeiter suchen.
+	 *
+	 * @param mitarbeiterId
+	 *           the mitarbeiter id
+	 * @param user
+	 *           the user
+	 * @return the mitarbeiter
+	 * @throws PersonNonexistantException
+	 *            the person nonexistant exception
+	 * @throws RemoteException
+	 *            the remote exception
+	 */
+	Mitarbeiter mitarbeiterSuchen(int mitarbeiterId, Person user) throws PersonNonexistantException, RemoteException;
 
-	Person personAendern(String typ, Person p, String firstname, String lastname, int id, String passwort,
+	/**
+	 * Person aendern.
+	 *
+	 * @param personenTyp
+	 *           the personen typ
+	 * @param user
+	 *           the user
+	 * @param firstname
+	 *           the firstname
+	 * @param lastname
+	 *           the lastname
+	 * @param personenId
+	 *           the personen id
+	 * @param passwort
+	 *           the passwort
+	 * @param address_Street
+	 *           the address street
+	 * @param address_Zip
+	 *           the address zip
+	 * @param address_Town
+	 *           the address town
+	 * @return the person
+	 * @throws RemoteException
+	 *            the remote exception
+	 * @throws AccessRestrictedException
+	 *            the access restricted exception
+	 * @throws InvalidPersonDataException
+	 *            the invalid person data exception
+	 * @throws PersonNonexistantException
+	 *            the person nonexistant exception
+	 */
+	Person personAendern(String personenTyp, Person user, String firstname, String lastname, int personenId, String passwort,
 			String address_Street, String address_Zip, String address_Town)
 			throws RemoteException, AccessRestrictedException, InvalidPersonDataException, PersonNonexistantException;
 
-	void personLoeschen(Person loeschen, Person p)
+	/**
+	 * Person loeschen.
+	 *
+	 * @param zuloeschendePerson
+	 *           the zuloeschende person
+	 * @param user
+	 *           the user
+	 * @throws AccessRestrictedException
+	 *            the access restricted exception
+	 * @throws RemoteException
+	 *            the remote exception
+	 * @throws InvalidPersonDataException
+	 *            the invalid person data exception
+	 * @throws PersonNonexistantException
+	 *            the person nonexistant exception
+	 */
+	void personLoeschen(Person zuloeschendePerson, Person user)
 			throws AccessRestrictedException, RemoteException, InvalidPersonDataException, PersonNonexistantException;
 
+	/**
+	 * Removes the shop event listener.
+	 *
+	 * @param listener
+	 *           the listener
+	 * @throws RemoteException
+	 *            the remote exception
+	 */
 	public void removeShopEventListener(ShopEventListener listener) throws RemoteException;
 
 	/**
-	 * Schreibt die Daten der Verwaltungen in die Persistenz
-	 * 
+	 * Schreibe daten.
+	 *
 	 * @throws IOException
+	 *            Signals that an I/O exception has occurred.
 	 */
 	void schreibeDaten() throws IOException;
 
-	Warenkorb warenkorbAusgeben(int id, Person p)
+	/**
+	 * Warenkorb ausgeben.
+	 *
+	 * @param id
+	 *           the id
+	 * @param user
+	 *           the user
+	 * @return the warenkorb
+	 * @throws AccessRestrictedException
+	 *            the access restricted exception
+	 * @throws RemoteException
+	 *            the remote exception
+	 * @throws PersonNonexistantException
+	 *            the person nonexistant exception
+	 */
+	Warenkorb warenkorbAusgeben(int id, Person user)
 			throws AccessRestrictedException, RemoteException, PersonNonexistantException;
 
 	/**
-	 * Warenkorb kaufen und Rechnung erstellen
-	 * 
-	 * @param p
-	 *           Userobjekt
-	 * @return Erstellte Rechnung
+	 * Warenkorb kaufen.
+	 *
+	 * @param user
+	 *           the user
+	 * @return the rechnung
 	 * @throws AccessRestrictedException
+	 *            the access restricted exception
 	 * @throws InvalidAmountException
+	 *            the invalid amount exception
+	 * @throws RemoteException
+	 *            the remote exception
 	 * @throws PersonNonexistantException
+	 *            the person nonexistant exception
 	 */
-	Rechnung warenkorbKaufen(Person p)
+	Rechnung warenkorbKaufen(Person user)
 			throws AccessRestrictedException, InvalidAmountException, RemoteException, PersonNonexistantException;
 
 	/**
-	 * Leert den Warenkorb eines Kunden
-	 * 
-	 * @param p
-	 *           Userobjekt
+	 * Warenkorb leeren.
+	 *
+	 * @param user
+	 *           the user
 	 * @throws AccessRestrictedException
+	 *            the access restricted exception
+	 * @throws RemoteException
+	 *            the remote exception
 	 * @throws PersonNonexistantException
+	 *            the person nonexistant exception
 	 */
-	void warenkorbLeeren(Person p) throws AccessRestrictedException, RemoteException, PersonNonexistantException;
+	void warenkorbLeeren(Person user) throws AccessRestrictedException, RemoteException, PersonNonexistantException;
 }
