@@ -68,6 +68,9 @@ public abstract class Sichtfenster extends JPanel {
 		header.setUpdateTableInRealTime(true);
 		header.setReorderingAllowed(false);
 		
+		sucheField.setHorizontalAlignment(JTextField.CENTER);
+		sucheField2.setHorizontalAlignment(JTextField.CENTER);
+		sucheField3.setHorizontalAlignment(JTextField.CENTER);
 
 		sucheField.addFocusListener(new FocusListener(){
 			String text;
