@@ -28,6 +28,7 @@ Bugfixes:
 ./ Handling Artikel löschen
 ./ Fenster ordentlich ersetzen
 ./ Artikel reset bei Fehler Bearbeitung
+./ €-Zeichen aus Preisfeld
 
 
 Nice-To-Have:

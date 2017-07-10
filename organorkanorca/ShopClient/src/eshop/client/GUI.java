@@ -62,7 +62,7 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
 	@Override
 	public void handleArticleChanged(Artikel art) throws RemoteException, InterruptedException {
 
-		Thread.sleep(200);
+		Thread.sleep(400);
 		if (mainwindow != null) mainwindow.handleArticleChanged(art);
 	}
 
@@ -76,14 +76,14 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
 	@Override
 	public void handleStaffChanged(Mitarbeiter mi) throws RemoteException, InterruptedException {
 
-		Thread.sleep(200);
+		Thread.sleep(400);
 		if (mainwindow != null) mainwindow.handleStaffChanged(mi);
 	}
 
 	@Override
 	public void handleUserChanged(Kunde ku) throws RemoteException, InterruptedException {
 
-		Thread.sleep(200);
+		Thread.sleep(400);
 		if (mainwindow != null) mainwindow.handleUserChanged(ku);
 	}
 
