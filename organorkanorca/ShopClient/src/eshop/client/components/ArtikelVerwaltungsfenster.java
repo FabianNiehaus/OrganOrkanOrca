@@ -156,6 +156,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 	 */
 	public void artikelAnzeigen(Artikel art) {
 
+		
 		reset();
 		this.art = art;
 		artNrField.setText(String.valueOf(art.getArtikelnummer()));
