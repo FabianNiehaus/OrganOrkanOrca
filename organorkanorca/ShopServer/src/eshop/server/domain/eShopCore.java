@@ -41,6 +41,7 @@ import eshop.common.util.IO;
  */
 public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 
+	
 	/** The Constant serialVersionUID. */
 	private static final long				serialVersionUID	= -1852260814852420682L;
 	

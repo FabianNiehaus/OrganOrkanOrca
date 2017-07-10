@@ -10,6 +10,7 @@ To-Do
 - Eine Suchleiste pro Spalte
 ./ Verwaltungsbuttons nach unten
 - Formatierung Schrift, Kästen, etc.
+- Farbe für Bestand
 - DOKUMENTATION
 
 Bugfixes:
@@ -25,6 +26,7 @@ Bugfixes:
 ./ Artikelverlauf
 ./ Handling Artikel löschen
 ./ Fenster ordentlich ersetzen
+- Artikel reset bei Fehler Bearbeitung
 
 
 Nice-To-Have:
