@@ -1,5 +1,6 @@
 package eshop.client.components;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,7 +19,7 @@ import eshop.common.exceptions.InvalidPersonDataException;
 import eshop.common.exceptions.PersonNonexistantException;
 import eshop.common.net.ShopRemote;
 import net.miginfocom.swing.MigLayout;
-
+	
 public class ManagementSichtfenster extends Sichtfenster {
 
 	/**
@@ -32,6 +33,7 @@ public class ManagementSichtfenster extends Sichtfenster {
 	public ManagementSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
 		super(server, user, listener);
 		this.setLayout(new MigLayout());
+		actionField.setLayout(new MigLayout());
 		speichernButton.addActionListener(new PersistenceButtonListener());
 		ladenButton.addActionListener(new PersistenceButtonListener());
 		actionField.add(speichernButton, "wrap");

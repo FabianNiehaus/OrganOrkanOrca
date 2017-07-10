@@ -117,8 +117,7 @@ public abstract class Sichtfenster extends JPanel {
 	        	text = sucheField3.getText();
 	        	sucheField3.setText("");
 	        }
-
-	        
+        
 			@Override
 			public void focusLost(FocusEvent e) {
 				// TODO Auto-generated method stub

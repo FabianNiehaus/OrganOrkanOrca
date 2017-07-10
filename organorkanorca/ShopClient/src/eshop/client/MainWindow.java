@@ -182,7 +182,7 @@ public class MainWindow extends JFrame implements SichtfensterCallbacks, Verwalt
 		this.getContentPane().add(new JPanel(), BorderLayout.EAST);
 		this.getContentPane().add(new JPanel(), BorderLayout.SOUTH);
 		this.getContentPane().add(new JPanel(), BorderLayout.WEST);
-		this.setPreferredSize(new Dimension(1024, 800));
+		this.setPreferredSize(new Dimension(1024, 600));
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		this.pack();
 		this.setLocationRelativeTo(null);
