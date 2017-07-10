@@ -8,17 +8,14 @@ import eshop.common.data_objects.Massengutartikel;
 public class ArtikelTableModel extends ShopTableModel {
 
 	/**
-     * 
-     */
-    private static final long serialVersionUID = 7021676013626973075L;
+	  * 
+	  */
+	private static final long serialVersionUID = 7021676013626973075L;
 
 	public ArtikelTableModel(Vector<Artikel> dataVector) {
-		
-		columnNames = new String[]{ "ArtNr.", "Bezeichnung", "Preis", "Einheit", "Bestand" };
+		columnNames = new String[] {"ArtNr.", "Bezeichnung", "Preis", "Einheit", "Bestand"};
 		data = new Object[dataVector.size()][5];
-		
 		int i = 0;
-		
 		for (Artikel art : dataVector) {
 			data[i][0] = art.getArtikelnummer();
 			data[i][1] = art.getBezeichnung();
@@ -31,11 +28,10 @@ public class ArtikelTableModel extends ShopTableModel {
 			data[i][4] = art.getBestand();
 			i++;
 		}
-		
 	}
 
-	protected String[] columnNames;
-	protected Object[][] data;
+	protected String[]	columnNames;
+	protected Object[][]	data;
 
 	@Override
 	public int getColumnCount() {
@@ -61,12 +57,12 @@ public class ArtikelTableModel extends ShopTableModel {
 		return data[arg0][arg1];
 	}
 
-    /*
-     * Don't need to implement this method unless your table's
-     * data can change.
-     */
-    public void setValueAt(Object value, int row, int col) {
-        data[row][col] = value;
-        fireTableCellUpdated(row, col);
-    }
+	/*
+	 * Don't need to implement this method unless your table's data can change.
+	 */
+	public void setValueAt(Object value, int row, int col) {
+
+		data[row][col] = value;
+		fireTableCellUpdated(row, col);
+	}
 }

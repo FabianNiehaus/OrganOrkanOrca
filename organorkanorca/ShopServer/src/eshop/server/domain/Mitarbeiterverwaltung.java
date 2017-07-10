@@ -24,12 +24,12 @@ public class Mitarbeiterverwaltung {
 	 * Logik zur Anmeldung
 	 * 
 	 * @param id
-	 *            Mitarbeiter-ID
+	 *           Mitarbeiter-ID
 	 * @param passwort
-	 *            Mitarbeiter-Passwort
+	 *           Mitarbeiter-Passwort
 	 * @return Angemeldeter Mitarbeiter
 	 * @throws LoginFailedException
-	 *             Login fehlgeschlagen
+	 *            Login fehlgeschlagen
 	 */
 	public Mitarbeiter anmelden(int id, String passwort) throws LoginFailedException {
 
@@ -50,7 +50,7 @@ public class Mitarbeiterverwaltung {
 	 * Fuegt einen neuen Mitarbeiter hinzu
 	 * 
 	 * @param einMa
-	 *            Neuer Mitarbeiter
+	 *           Neuer Mitarbeiter
 	 */
 	public void erstelleMitarbeiter(Mitarbeiter einMa) {
 
@@ -61,17 +61,17 @@ public class Mitarbeiterverwaltung {
 	 * Erstellt einen neuen Mitarbeiter und fuegt in zur verwalteten Liste hinzu
 	 * 
 	 * @param firstname
-	 *            Vorname
+	 *           Vorname
 	 * @param lastname
-	 *            Nachname
+	 *           Nachname
 	 * @param passwort
-	 *            Passwort
+	 *           Passwort
 	 * @param address_Street
-	 *            Straße + Hausnummer
+	 *           Straße + Hausnummer
 	 * @param address_Zip
-	 *            Postleitzahl
+	 *           Postleitzahl
 	 * @param address_Town
-	 *            Stadt
+	 *           Stadt
 	 * @return
 	 * @throws MaxIDsException
 	 * @throws InvalidPersonData
@@ -135,7 +135,7 @@ public class Mitarbeiterverwaltung {
 	 * Entfernt einen Mitarbeiter
 	 * 
 	 * @param einMa
-	 *            Zu entfernender Mitarbeiter
+	 *           Zu entfernender Mitarbeiter
 	 * @return
 	 */
 	public void loescheMitarbeiter(Mitarbeiter einMa) {
@@ -147,7 +147,7 @@ public class Mitarbeiterverwaltung {
 	 * Methode zum Schreiben der Kundendaten in eine Datei.
 	 * 
 	 * @param datei
-	 *            Datei, in die der...
+	 *           Datei, in die der...
 	 * @throws IOException
 	 */
 	public void schreibeDaten(String datei) throws IOException {
@@ -169,10 +169,10 @@ public class Mitarbeiterverwaltung {
 	 * Sucht einen Mitarbeiter anhand seiner ID
 	 * 
 	 * @param id
-	 *            Gesuchte ID
+	 *           Gesuchte ID
 	 * @return Gesuchter Mitarbeiter
 	 * @throws VectorIsEmptyException
-	 *             Mitarbeiterliste leer
+	 *            Mitarbeiterliste leer
 	 */
 	public Mitarbeiter sucheMitarbeiter(int id) throws PersonNonexistantException {
 
@@ -188,12 +188,12 @@ public class Mitarbeiterverwaltung {
 	 * Sucht einen Mitarbeiter anhand Vor- und Nachname
 	 * 
 	 * @param firstname
-	 *            Vorname
+	 *           Vorname
 	 * @param lastname
-	 *            Nachname
+	 *           Nachname
 	 * @return Gesuchter Mitarbeiter
 	 * @throws VectorIsEmptyException
-	 *             Mitarbeiterliste leer
+	 *            Mitarbeiterliste leer
 	 */
 	public Mitarbeiter sucheMitarbeiter(String firstname, String lastname) throws PersonNonexistantException {
 

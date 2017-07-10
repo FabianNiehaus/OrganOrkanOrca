@@ -19,9 +19,9 @@ public class MitarbeiterSichtfenster extends Sichtfenster {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3884938912530629406L;
-	
-	private PersonenTableModel model;
+	private static final long	serialVersionUID	= -3884938912530629406L;
+	private PersonenTableModel	model;
+
 	public MitarbeiterSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
 		super(server, user, listener);
 		auflistung.getSelectionModel().addListSelectionListener(new MitarbeiterAnzeigenListener());
@@ -32,15 +32,15 @@ public class MitarbeiterSichtfenster extends Sichtfenster {
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
 
-		    try {
-			if(auflistung.getSelectedRow()!= -1) listener.mitarbeiterAnzeigen(server.mitarbeiterSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user));
-			return;
-		} catch (RemoteException e1) {
-			JOptionPane.showMessageDialog(MitarbeiterSichtfenster.this, e1.getMessage());
-		} catch (PersonNonexistantException e1) {
-			JOptionPane.showMessageDialog(MitarbeiterSichtfenster.this, e1.getMessage());
-		}
-		    
+			try {
+				if (auflistung.getSelectedRow() != -1) listener.mitarbeiterAnzeigen(
+						server.mitarbeiterSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user));
+				return;
+			} catch (RemoteException e1) {
+				JOptionPane.showMessageDialog(MitarbeiterSichtfenster.this, e1.getMessage());
+			} catch (PersonNonexistantException e1) {
+				JOptionPane.showMessageDialog(MitarbeiterSichtfenster.this, e1.getMessage());
+			}
 		}
 	}
 
@@ -48,15 +48,15 @@ public class MitarbeiterSichtfenster extends Sichtfenster {
 	public void callTableUpdate() {
 
 		try {
-		    	model = new PersonenTableModel(server.alleMitarbeiterAusgeben(user));
-		    	
-		    	SwingUtilities.invokeLater(new Runnable(){public void run(){
-				auflistung.setModel(model);
-				fitTableLayout();
+			model = new PersonenTableModel(server.alleMitarbeiterAusgeben(user));
+			SwingUtilities.invokeLater(new Runnable() {
 
-			}});
+				public void run() {
 
-			
+					auflistung.setModel(model);
+					fitTableLayout();
+				}
+			});
 		} catch (RemoteException | AccessRestrictedException e) {
 			JOptionPane.showMessageDialog(MitarbeiterSichtfenster.this, e.getMessage());
 		}

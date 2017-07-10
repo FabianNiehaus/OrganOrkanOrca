@@ -26,7 +26,7 @@ public class Artikelverwaltung {
 	 * Artikel in Liste der Verwalteten Artikel einfuegen
 	 * 
 	 * @param art
-	 *            Einzufuegender Artikel
+	 *           Einzufuegender Artikel
 	 */
 	public void einfuegen(Artikel art) {
 
@@ -41,12 +41,12 @@ public class Artikelverwaltung {
 	 * Erhöht den Bestand eines Artikels anhand der Artikelnummer
 	 * 
 	 * @param artikelnummer
-	 *            Artikelnummer des gesuchten Artikels
+	 *           Artikelnummer des gesuchten Artikels
 	 * @param bestand
-	 *            Neuer Bestand
+	 *           Neuer Bestand
 	 * @return Gesuchter Artikel
 	 * @throws ArticleNonexistantException
-	 *             Artikelnummer nicht vorhanden
+	 *            Artikelnummer nicht vorhanden
 	 * @throws InvalidAmountException
 	 */
 	public Artikel erhoeheBestand(Artikel art, int bestand) throws InvalidAmountException {
@@ -69,11 +69,11 @@ public class Artikelverwaltung {
 	 * Artikel ein.
 	 * 
 	 * @param bezeichnung
-	 *            Artikelbezeichnung
+	 *           Artikelbezeichnung
 	 * @param bestand
-	 *            Artikelbestand
+	 *           Artikelbestand
 	 * @param preis
-	 *            Artikelpreis
+	 *           Artikelpreis
 	 * @return Erstellter Artikel
 	 * @throws InvalidAmountException
 	 */
@@ -90,11 +90,11 @@ public class Artikelverwaltung {
 			if (bestand % packungsgroesse != 0) {
 				throw new InvalidAmountException(bestand);
 			} else {
-			Massengutartikel art = new Massengutartikel(bezeichnung, getNextID(), bestand, preis, packungsgroesse,
-					null);
-			artikel.add(art);
-			art.aktualisiereBestandsverlauf();
-			return art;
+				Massengutartikel art = new Massengutartikel(bezeichnung, getNextID(), bestand, preis, packungsgroesse,
+						null);
+				artikel.add(art);
+				art.aktualisiereBestandsverlauf();
+				return art;
 			}
 		} else {
 			throw new InvalidAmountException();
@@ -131,7 +131,7 @@ public class Artikelverwaltung {
 	 * Methode zum Einlesen von Artikeln aus einer Datei.
 	 * 
 	 * @param datei
-	 *            Datei, die einzulesenden Artikelbestand enthält
+	 *           Datei, die einzulesenden Artikelbestand enthält
 	 * @throws IOException
 	 */
 	public void liesDaten(String datei) throws IOException {
@@ -160,7 +160,7 @@ public class Artikelverwaltung {
 	 * Methode zum Schreiben der Artikeldaten in eine Datei.
 	 * 
 	 * @param datei
-	 *            Datei, in die der Artikelbestand geschrieben werden soll
+	 *           Datei, in die der Artikelbestand geschrieben werden soll
 	 * @throws IOException
 	 */
 	public void schreibeDaten(String datei) throws IOException {
@@ -183,10 +183,10 @@ public class Artikelverwaltung {
 	 * Sucht anhand der Artikelnummer nach einem Artikel
 	 * 
 	 * @param artikelnummer
-	 *            Artikelnummer des gesuchten Artikels
+	 *           Artikelnummer des gesuchten Artikels
 	 * @return Gesuchter Artikel
 	 * @throws ArticleNonexistantException
-	 *             Artikelnummer nicht vorhanden
+	 *            Artikelnummer nicht vorhanden
 	 */
 	public Artikel sucheArtikel(int artikelnummer) throws ArticleNonexistantException {
 
@@ -202,10 +202,10 @@ public class Artikelverwaltung {
 	 * Sucht anhand einer (Teil-)Bezeichnung nach einem Artikel
 	 * 
 	 * @param bezeichnung
-	 *            Gesuchte (Teil-)bezeichnung
+	 *           Gesuchte (Teil-)bezeichnung
 	 * @return Liste der zur Bezeichnung passenden Artikel
 	 * @throws ArticleNonexistantException
-	 *             Keine Artikel gefunden
+	 *            Keine Artikel gefunden
 	 */
 	public Vector<Artikel> sucheArtikel(String bezeichnung) throws ArticleNonexistantException {
 
@@ -222,18 +222,20 @@ public class Artikelverwaltung {
 			return liste;
 		}
 	}
-	
+
 	public Artikel aendereBezeichnung(Artikel art, String bezeichnung) throws ArticleNonexistantException {
-		if(artikel.contains(art)){
+
+		if (artikel.contains(art)) {
 			art.setBezeichnung(bezeichnung);
 			return art;
 		} else {
 			throw new ArticleNonexistantException(art.getArtikelnummer());
 		}
 	}
-	
+
 	public Artikel aenderePreis(Artikel art, double preis) throws ArticleNonexistantException {
-		if(artikel.contains(art)){
+
+		if (artikel.contains(art)) {
 			art.setPreis(preis);
 			return art;
 		} else {

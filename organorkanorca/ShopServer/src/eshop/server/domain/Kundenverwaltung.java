@@ -21,9 +21,9 @@ public class Kundenverwaltung {
 
 	// Persistenz-Schnittstelle, die f�r die Details des Dateizugriffs
 	// verantwortlich ist
-	private PersistenceManager pm = new FilePersistenceManager();
-	private Vector<Kunde> kunden = new Vector<Kunde>();
-	
+	private PersistenceManager	pm			= new FilePersistenceManager();
+	private Vector<Kunde>		kunden	= new Vector<Kunde>();
+
 	public Kundenverwaltung(Warenkorbverwaltung wv) {
 	}
 
@@ -31,12 +31,12 @@ public class Kundenverwaltung {
 	 * Logik zur Anmeldung
 	 * 
 	 * @param id
-	 *            Benutzer-ID
+	 *           Benutzer-ID
 	 * @param passwort
-	 *            Benutzer-Passwort
+	 *           Benutzer-Passwort
 	 * @return Angemeldeter Benutzer
 	 * @throws LoginFailedException
-	 *             Anmeldung fehlgeschlagen
+	 *            Anmeldung fehlgeschlagen
 	 */
 	public Kunde anmelden(int id, String passwort) throws LoginFailedException {
 
@@ -52,7 +52,7 @@ public class Kundenverwaltung {
 	 * Fuegt einen Kunden hinzu
 	 * 
 	 * @param ku
-	 *            Kunde
+	 *           Kunde
 	 */
 	public void einfuegen(Kunde ku) {
 
@@ -63,19 +63,19 @@ public class Kundenverwaltung {
 	 * Erstellt einen neuen Kunden und fuegt in zur verwalteten Liste hinzu
 	 * 
 	 * @param firstname
-	 *            Vorname
+	 *           Vorname
 	 * @param lastname
-	 *            Nachname
+	 *           Nachname
 	 * @param passwort
-	 *            Passwort
+	 *           Passwort
 	 * @param address_Street
-	 *            Straße + Hausnummer
+	 *           Straße + Hausnummer
 	 * @param address_Zip
-	 *            Postleitzahl
+	 *           Postleitzahl
 	 * @param address_Town
-	 *            Stadt
+	 *           Stadt
 	 * @param wk
-	 *            Zugeordneter Warenkorb
+	 *           Zugeordneter Warenkorb
 	 * @return
 	 * @throws MaxIDsException
 	 * @throws InvalidPersonData
@@ -121,7 +121,7 @@ public class Kundenverwaltung {
 	 * Gibt den zu einem Kunden zugeordneten Warenkorb aus
 	 * 
 	 * @param ku
-	 *            Gewuenschter Kunde
+	 *           Gewuenschter Kunde
 	 * @return Warenkorb des Kunde
 	 */
 	public Warenkorb gibWarenkorbVonKunde(Person ku) {
@@ -133,7 +133,7 @@ public class Kundenverwaltung {
 	 * @author Mathis M�hlenkamp Methode zum Einlesen von Kunden aus einer Datei.
 	 * 
 	 * @param datei
-	 *            Datei, die einzulesenden
+	 *           Datei, die einzulesenden
 	 * @throws IOException
 	 * @throws InvalidPersonDataException
 	 */
@@ -159,7 +159,7 @@ public class Kundenverwaltung {
 	 * Löscht einen Kunden aus der verwalteten Liste
 	 * 
 	 * @param einKunde
-	 *            Zu löschender Kunde
+	 *           Zu löschender Kunde
 	 */
 	public void loescheKunde(Kunde einKunde) {
 
@@ -176,7 +176,7 @@ public class Kundenverwaltung {
 	 * Methode zum Schreiben der Kundendaten in eine Datei.
 	 * 
 	 * @param datei
-	 *            Datei, in die der...
+	 *           Datei, in die der...
 	 * @throws IOException
 	 */
 	public void schreibeDaten(String datei) throws IOException {
@@ -198,7 +198,7 @@ public class Kundenverwaltung {
 	 * Sucht einen Kunden anhand seiner ID
 	 * 
 	 * @param id
-	 *            Kundenid
+	 *           Kundenid
 	 * @return Gesuchter Kunde
 	 */
 	public Kunde sucheKunde(int id) throws PersonNonexistantException {
@@ -215,7 +215,7 @@ public class Kundenverwaltung {
 	 * Prueft, ob ein bestimmter Kunde in der Kundenverwaltung liegt.
 	 * 
 	 * @param art
-	 *            Zu ueberpruefender Kunde
+	 *           Zu ueberpruefender Kunde
 	 * @return Gibt <b>true</b> zurueck, wenn zu pruefender Kunde in der HAsMap
 	 *         Kunde gespeichert ist. Sonst <b>false</b>. suche nach ID oder Name
 	 */

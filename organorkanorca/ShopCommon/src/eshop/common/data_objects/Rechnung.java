@@ -19,21 +19,21 @@ public class Rechnung implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 6681009839157213957L;
-	private Kunde ku;
-	private Date datum;
-	private Warenkorb wk;
-	private double gesamt;
+	private static final long	serialVersionUID	= 6681009839157213957L;
+	private Kunde					ku;
+	private Date					datum;
+	private Warenkorb				wk;
+	private double					gesamt;
 
 	/**
 	 * @param ku
-	 *            Zugehöriger Kunde
+	 *           Zugehöriger Kunde
 	 * @param datum
-	 *            Rechnungsdatum
+	 *           Rechnungsdatum
 	 * @param wk
-	 *            Zugehöriger Warenkorb
+	 *           Zugehöriger Warenkorb
 	 * @param gesamt
-	 *            Gesamtsumme der Rechnung
+	 *           Gesamtsumme der Rechnung
 	 */
 	public Rechnung(Kunde ku, Date datum, Warenkorb wk, double gesamt) {
 		super();

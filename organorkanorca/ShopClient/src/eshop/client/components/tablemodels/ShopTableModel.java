@@ -7,10 +7,9 @@ public class ShopTableModel extends AbstractTableModel {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3784279748338157614L;
-	
-	protected String[] columnNames;
-	protected Object[][] data;
+	private static final long	serialVersionUID	= 3784279748338157614L;
+	protected String[]			columnNames;
+	protected Object[][]			data;
 
 	@Override
 	public int getColumnCount() {
@@ -36,13 +35,12 @@ public class ShopTableModel extends AbstractTableModel {
 		return data[arg0][arg1];
 	}
 
-    /*
-     * Don't need to implement this method unless your table's
-     * data can change.
-     */
-    public void setValueAt(Object value, int row, int col) {
-        data[row][col] = value;
-        fireTableCellUpdated(row, col);
-    }
+	/*
+	 * Don't need to implement this method unless your table's data can change.
+	 */
+	public void setValueAt(Object value, int row, int col) {
 
+		data[row][col] = value;
+		fireTableCellUpdated(row, col);
+	}
 }

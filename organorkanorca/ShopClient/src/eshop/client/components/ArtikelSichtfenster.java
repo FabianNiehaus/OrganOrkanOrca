@@ -15,33 +15,29 @@ import eshop.common.exceptions.ArticleNonexistantException;
 import eshop.common.net.ShopRemote;
 
 public class ArtikelSichtfenster extends Sichtfenster {
-    
-    private ArtikelTableModel model;
-    
-    class ArtikelAnzeigenListener implements ListSelectionListener  {
+
+	private ArtikelTableModel model;
+
+	class ArtikelAnzeigenListener implements ListSelectionListener {
 
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
 
-		    try {
-			if(auflistung.getSelectedRow()!= -1) listener.artikelAnzeigen(
-					server.artikelSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user));
-			return;
-		} catch (RemoteException | ArticleNonexistantException | AccessRestrictedException e1) {
-			JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e1.getMessage());
-		}
-		    
+			try {
+				if (auflistung.getSelectedRow() != -1) listener.artikelAnzeigen(
+						server.artikelSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user));
+				return;
+			} catch (RemoteException | ArticleNonexistantException | AccessRestrictedException e1) {
+				JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e1.getMessage());
+			}
 		}
 	}
-
-	
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5439399681692245672L;
-
-	JButton verlaufAnzeigenButton = new JButton("Verlauf anzeigen");
+	private static final long	serialVersionUID			= -5439399681692245672L;
+	JButton							verlaufAnzeigenButton	= new JButton("Verlauf anzeigen");
 
 	public ArtikelSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
 		super(server, user, listener);
@@ -52,20 +48,17 @@ public class ArtikelSichtfenster extends Sichtfenster {
 	public void callTableUpdate() {
 
 		try {
-				    
 			model = new ArtikelTableModel(server.alleArtikelAusgeben(user));
-			
-			SwingUtilities.invokeLater(new Runnable(){public void run(){
-				auflistung.setModel(model);
-				fitTableLayout();
+			SwingUtilities.invokeLater(new Runnable() {
 
-			}});
-					
-			
+				public void run() {
+
+					auflistung.setModel(model);
+					fitTableLayout();
+				}
+			});
 		} catch (RemoteException | AccessRestrictedException e) {
 			JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e.getMessage());
 		}
 	}
-	
-	
 }

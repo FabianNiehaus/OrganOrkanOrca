@@ -40,7 +40,8 @@ public interface PersistenceManager {
 	/**
 	 * @author Mathis M�hlenkamp
 	 * 
-	 *         Methode zum Einlesen der Kundendaten aus einer externen Datenqulle.
+	 *         Methode zum Einlesen der Kundendaten aus einer externen
+	 *         Datenqulle.
 	 * 
 	 * @return Kunden-Objekt, wenn Einlesen erfolgreich, false null
 	 * @throws InvalidPersonDataException
@@ -64,7 +65,7 @@ public interface PersistenceManager {
 	 * Erstellt neuen Reader fuer jeweiligen Persistenz-Typ
 	 * 
 	 * @param datenquelle
-	 *            Datenquelle des Readers
+	 *           Datenquelle des Readers
 	 * @throws IOException
 	 */
 	public void openForReading(String datenquelle) throws IOException;
@@ -73,7 +74,7 @@ public interface PersistenceManager {
 	 * Erstellt neuen Writer fuer jeweiligen Persistenz-Typ
 	 * 
 	 * @param datenquelle
-	 *            Datenquelle des Writers
+	 *           Datenquelle des Writers
 	 * @throws IOException
 	 */
 	public void openForWriting(String datenquelle) throws IOException;
@@ -82,7 +83,7 @@ public interface PersistenceManager {
 	 * Methode zum Schreiben der Artikeldaten in eine externe Datenquelle.
 	 * 
 	 * @param b
-	 *            Artikel-Objekt, das gespeichert werden soll
+	 *           Artikel-Objekt, das gespeichert werden soll
 	 * @return true, wenn Schreibvorgang erfolgreich, false sonst
 	 */
 	public boolean speichereArtikel(Artikel art) throws IOException;
@@ -93,7 +94,7 @@ public interface PersistenceManager {
 	 * Methode zum Schreiben der Kundendaten in eine externe Datenquelle.
 	 * 
 	 * @param b
-	 *            Kunden-Objekt, das gespeichert werden soll
+	 *           Kunden-Objekt, das gespeichert werden soll
 	 * @return true, wenn Schreibvorgang erfolgreich, false sonst
 	 */
 	public boolean speichereKunde(Kunde art) throws IOException;
@@ -102,7 +103,7 @@ public interface PersistenceManager {
 	 * Methode zum Schreiben der Mitarbeiterdaten in eine externe Datenquelle.
 	 * 
 	 * @param b
-	 *            Mitarbeiter-Objekt, das gespeichert werden soll
+	 *           Mitarbeiter-Objekt, das gespeichert werden soll
 	 * @return true, wenn Schreibvorgang erfolgreich, false sonst
 	 */
 	public boolean speichereMitarbeiter(Mitarbeiter mi) throws IOException;

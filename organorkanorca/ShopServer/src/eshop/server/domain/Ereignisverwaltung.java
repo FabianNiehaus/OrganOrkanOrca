@@ -22,13 +22,13 @@ import eshop.server.persistence.PersistenceManager;
  */
 public class Ereignisverwaltung {
 
-	Kundenverwaltung kv;
-	Mitarbeiterverwaltung mv;
-	Artikelverwaltung av;
+	Kundenverwaltung			kv;
+	Mitarbeiterverwaltung	mv;
+	Artikelverwaltung			av;
 	// Persistenz-Schnittstelle, die fuer die Details des Dateizugriffs
 	// verantwortlich ist
-	private PersistenceManager pm = new FilePersistenceManager();
-	private Vector<Ereignis> ereignisse = new Vector<Ereignis>();
+	private PersistenceManager	pm				= new FilePersistenceManager();
+	private Vector<Ereignis>	ereignisse	= new Vector<Ereignis>();
 
 	public Ereignisverwaltung(Kundenverwaltung kv, Mitarbeiterverwaltung mv, Artikelverwaltung av) {
 		this.kv = kv;
@@ -45,18 +45,18 @@ public class Ereignisverwaltung {
 	 * Erstellt und speichert ein neues Ereignis
 	 * 
 	 * @param wer
-	 *            Person, die die Aktion durchgefuehrt hat
+	 *           Person, die die Aktion durchgefuehrt hat
 	 * @param was
-	 *            Typ der Aktion (EINLAGERUNG, AUSLAGERUNG, KAUF, NEU)
+	 *           Typ der Aktion (EINLAGERUNG, AUSLAGERUNG, KAUF, NEU)
 	 * @param womit
-	 *            Welcher Artikel ist betroffen
+	 *           Welcher Artikel ist betroffen
 	 * @param wieviel
-	 *            Betroffene Stueckzahl
+	 *           Betroffene Stueckzahl
 	 */
 	public Ereignis ereignisErstellen(Person wer, Typ was, Artikel womit, int wieviel) {
 
-	    Ereignis er = new Ereignis(getNextID(), wer, was, womit, wieviel, new Date());
-		    ereignisse.add(er);
+		Ereignis er = new Ereignis(getNextID(), wer, was, womit, wieviel, new Date());
+		ereignisse.add(er);
 		return er;
 	}
 
@@ -113,8 +113,7 @@ public class Ereignisverwaltung {
 					e.printStackTrace();
 				}
 				// Ereignis wird aus dem Vector Elementen erstellt
-				er = new Ereignis((int) info.elementAt(0), p, (Typ) info.elementAt(2), art, (int) info.elementAt(4),
-						date);
+				er = new Ereignis((int) info.elementAt(0), p, (Typ) info.elementAt(2), art, (int) info.elementAt(4), date);
 				// Ereignisse in die Ereignisliste einfuegen
 				einfuegen(er);
 			} while (er.getId() != 0);

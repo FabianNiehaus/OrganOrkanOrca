@@ -17,9 +17,8 @@ public class ArticleNonexistantException extends Exception {
 	public ArticleNonexistantException(String bezeichnung) {
 		super("Der gesuchte Artikel " + bezeichnung + " existiert nicht!");
 	}
-	
-	public ArticleNonexistantException(String bezeichnung, boolean b){
-	    super("Der Artikel " + bezeichnung + " wurde gelöscht");
+
+	public ArticleNonexistantException(String bezeichnung, boolean b) {
+		super("Der Artikel " + bezeichnung + " wurde gelöscht");
 	}
-	
 }

@@ -28,173 +28,158 @@ import net.miginfocom.swing.MigLayout;
 
 public class GUI extends UnicastRemoteObject implements ShopEventListener, WindowListener {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 9030916773132281332L;
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 9030916773132281332L;
+	LoginWindow						loginwindow;
+	MainWindow						mainwindow;
+	private ListenerForLogin	listenerForLogin	= new ListenerForLogin();
+	private ShopRemote			server;
 
-    LoginWindow		     loginwindow;
-    MainWindow		     mainwindow;
-    private ListenerForLogin listenerForLogin = new ListenerForLogin();
-    private ShopRemote	     server;
-
-    public GUI() throws RemoteException {
-	try {
-	    String serviceName = "eShopServer";
-	    Registry registry = LocateRegistry.getRegistry();
-	    server = (ShopRemote) registry.lookup(serviceName);
-	    server.addShopEventListener(this);
-	    loginwindow = new LoginWindow("OrganOrkanOrca server", server, listenerForLogin, this);
-	} catch(RemoteException e) {
-	    JOptionPane.showMessageDialog(null, e.getMessage());
-	} catch(NotBoundException e) {
-	    JOptionPane.showMessageDialog(null, e.getMessage());
+	public GUI() throws RemoteException {
+		try {
+			String serviceName = "eShopServer";
+			Registry registry = LocateRegistry.getRegistry();
+			server = (ShopRemote) registry.lookup(serviceName);
+			server.addShopEventListener(this);
+			loginwindow = new LoginWindow("OrganOrkanOrca server", server, listenerForLogin, this);
+		} catch (RemoteException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+		} catch (NotBoundException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+		}
 	}
-    }
 
-    public static void main(String[] args) {
+	public static void main(String[] args) {
 
-	try {
-	    GUI gui = new GUI();
-	} catch(RemoteException e) {
-	    e.printStackTrace();
+		try {
+			GUI gui = new GUI();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 	}
-    }
 
-    public class ListenerForLogin implements LoginListener {
+	public class ListenerForLogin implements LoginListener {
+
+		@Override
+		public void loginCancelled() {
+
+			loginwindow.dispose();
+		}
+
+		@Override
+		public void logout() {
+
+			loginwindow = new LoginWindow("OrganOrkanOrca server", server, this, GUI.this);
+		}
+
+		@Override
+		public void userLoggedIn(Person user) {
+
+			mainwindow = new MainWindow("OrganOrkanOrca server", user, server, this, GUI.this);
+			loginwindow.dispose();
+		}
+	}
 
 	@Override
-	public void loginCancelled() {
+	public void handleArticleChanged(Artikel art) throws RemoteException, InterruptedException {
 
-	    loginwindow.dispose();
+		Thread.sleep(200);
+		if (mainwindow != null) mainwindow.handleArticleChanged(art);
 	}
 
 	@Override
-	public void logout() {
-	    loginwindow = new LoginWindow("OrganOrkanOrca server", server, this, GUI.this);
+	public void handleEventChanged(Ereignis er) throws RemoteException, InterruptedException {
+
+		Thread.sleep(200);
+		if (mainwindow != null) mainwindow.handleEventChanged(er);
 	}
 
 	@Override
-	public void userLoggedIn(Person user) {
+	public void handleStaffChanged(Mitarbeiter mi) throws RemoteException, InterruptedException {
 
-	    mainwindow = new MainWindow("OrganOrkanOrca server", user, server, this, GUI.this);
-	    loginwindow.dispose();
+		Thread.sleep(200);
+		if (mainwindow != null) mainwindow.handleStaffChanged(mi);
 	}
-    }
 
-    @Override
-    public void handleArticleChanged(Artikel art) throws RemoteException, InterruptedException {
-	
-	Thread.sleep(200);
-	
-	if(mainwindow != null) mainwindow.handleArticleChanged(art);
-	
-    }
-
-    @Override
-    public void handleEventChanged(Ereignis er) throws RemoteException, InterruptedException {
-	
-	Thread.sleep(200);
-
-	if(mainwindow != null) mainwindow.handleEventChanged(er);
-    }
-
-    @Override
-    public void handleStaffChanged(Mitarbeiter mi) throws RemoteException, InterruptedException {
-	
-	Thread.sleep(200);
-
-	if(mainwindow != null) mainwindow.handleStaffChanged(mi);
-    }
-
-    @Override
-    public void handleUserChanged(Kunde ku) throws RemoteException, InterruptedException {
-
-	 Thread.sleep(200);
-	 
-	 if(mainwindow != null) mainwindow.handleUserChanged(ku);
-
-	
-    }
-
-    @Override
-    public void windowActivated(WindowEvent e) {
-
-	// TODO Auto-generated method stub
-	
-    }
-
-    @Override
-    public void windowClosed(WindowEvent e) {
-
-	
-	
-    }
-
-    @Override
-    public void windowClosing(WindowEvent e) {
-
-	JFrame closing = new JFrame("Closing");
-	JButton logout = new JButton("Ausloggen");
-	JButton quit = new JButton("Beenden");
-		
-	logout.addActionListener(new ActionListener(){
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-	    listenerForLogin.logout();
-	    closing.dispose();
+	public void handleUserChanged(Kunde ku) throws RemoteException, InterruptedException {
+
+		Thread.sleep(200);
+		if (mainwindow != null) mainwindow.handleUserChanged(ku);
 	}
-	});	   
-	quit.addActionListener(new ActionListener(){
+
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-	    try {
-		server.removeShopEventListener(GUI.this);
-		System.exit(0);
-	    } catch(RemoteException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	    }
-	    
+	public void windowActivated(WindowEvent e) {
+
+		// TODO Auto-generated method stub
 	}
-	});	 
-	
-	closing.getContentPane().setLayout(new MigLayout("", "30[]30", "30[]15[]30"));
-	
-	closing.getContentPane().add(new JLabel("Möchten Sie sich ausloggen oder das Programm beenden?"),"wrap, span 2");
-	closing.getContentPane().add(logout, "dock center");
-	closing.getContentPane().add(quit, "dock center");
-	
-	closing.pack();
-	closing.setLocationRelativeTo(null);
-	closing.setVisible(true);
-    }
 
-    @Override
-    public void windowDeactivated(WindowEvent e) {
+	@Override
+	public void windowClosed(WindowEvent e) {
 
-	// TODO Auto-generated method stub
-	
-    }
+	}
 
-    @Override
-    public void windowDeiconified(WindowEvent e) {
+	@Override
+	public void windowClosing(WindowEvent e) {
 
-	// TODO Auto-generated method stub
-	
-    }
+		JFrame closing = new JFrame("Closing");
+		JButton logout = new JButton("Ausloggen");
+		JButton quit = new JButton("Beenden");
+		logout.addActionListener(new ActionListener() {
 
-    @Override
-    public void windowIconified(WindowEvent e) {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
 
-	// TODO Auto-generated method stub
-	
-    }
+				listenerForLogin.logout();
+				closing.dispose();
+			}
+		});
+		quit.addActionListener(new ActionListener() {
 
-    @Override
-    public void windowOpened(WindowEvent e) {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
 
-	// TODO Auto-generated method stub
-	
-    }
+				try {
+					server.removeShopEventListener(GUI.this);
+					System.exit(0);
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		closing.getContentPane().setLayout(new MigLayout("", "30[]30", "30[]15[]30"));
+		closing.getContentPane().add(new JLabel("Möchten Sie sich ausloggen oder das Programm beenden?"), "wrap, span 2");
+		closing.getContentPane().add(logout, "dock center");
+		closing.getContentPane().add(quit, "dock center");
+		closing.pack();
+		closing.setLocationRelativeTo(null);
+		closing.setVisible(true);
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+
+		// TODO Auto-generated method stub
+	}
 }

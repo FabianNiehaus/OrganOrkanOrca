@@ -12,12 +12,12 @@ public class Artikel implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8273031240889790935L;
-	private String bezeichnung;
-	private int artikelnummer;
-	private int bestand;
-	private double preis;
-	private Map<Integer, Integer> bestandsverlauf = new LinkedHashMap<>();
+	private static final long		serialVersionUID	= 8273031240889790935L;
+	private String						bezeichnung;
+	private int							artikelnummer;
+	private int							bestand;
+	private double						preis;
+	private Map<Integer, Integer>	bestandsverlauf	= new LinkedHashMap<>();
 
 	/*
 	 * Nocht nicht verwendet private String kategorie; private boolean angebot;
@@ -25,13 +25,13 @@ public class Artikel implements Serializable {
 	 */
 	/**
 	 * @param bezeichnung
-	 *            Bezeichnung / Name des Artikels
+	 *           Bezeichnung / Name des Artikels
 	 * @param artikelnummer
-	 *            Eindeutige Artikelnummer
+	 *           Eindeutige Artikelnummer
 	 * @param bestand
-	 *            Aktueller Bestand des Artikels
+	 *           Aktueller Bestand des Artikels
 	 * @param preis
-	 *            Preis des Artikels
+	 *           Preis des Artikels
 	 */
 	public Artikel(String bezeichnung, int artikelnummer, int bestand, double preis,
 			Map<Integer, Integer> bestandsverlauf) {
@@ -114,7 +114,7 @@ public class Artikel implements Serializable {
 	 * Setzt die Bezeichnung des Artikel
 	 * 
 	 * @param bezeichnung
-	 *            Gewuenschte Artikelbezeichnung
+	 *           Gewuenschte Artikelbezeichnung
 	 */
 	public void setBezeichnung(String bezeichnung) {
 
@@ -131,7 +131,6 @@ public class Artikel implements Serializable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

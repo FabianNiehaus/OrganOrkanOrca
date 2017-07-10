@@ -16,24 +16,24 @@ public abstract class Person implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5177564072380459834L;
-	protected int id;
-	protected String passwort;
-	protected String firstname;
-	protected String lastname;
-	protected String address_Street;
-	protected String address_Zip;
-	protected String address_Town;
+	private static final long	serialVersionUID	= 5177564072380459834L;
+	protected int					id;
+	protected String				passwort;
+	protected String				firstname;
+	protected String				lastname;
+	protected String				address_Street;
+	protected String				address_Zip;
+	protected String				address_Town;
 
 	/**
 	 * Erzeugt eine Persion
 	 * 
 	 * @param firstname
-	 *            Vorname
+	 *           Vorname
 	 * @param lastname
-	 *            Nachname
+	 *           Nachname
 	 * @param id
-	 *            Eindeutige Identifikationsnummer
+	 *           Eindeutige Identifikationsnummer
 	 * @throws InvalidPersonDataException
 	 */
 	public Person(String firstname, String lastname, int id, String passwort, String address_Street, String address_Zip,

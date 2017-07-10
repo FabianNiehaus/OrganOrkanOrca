@@ -40,16 +40,16 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6170535941906530451L;
-	Warenkorb wk;
-	JPanel buttons = new JPanel();
-	JTable warenkorbAuflistung = new JTable();
-	JScrollPane warenkorbAuflistungContainer = new JScrollPane(warenkorbAuflistung);
-	JButton aendernButton = new JButton("Anzahl ändern");
-	JButton artikelEntfernenButton = new JButton("Entfernen");
-	JButton leerenButton = new JButton("Leeren");
-	JButton kaufenButton = new JButton("Kaufen");
-	String[] columnHeaders = { "Artikelnummer", "Artikel", "Preis", "Menge", "Gesamt" };
+	private static final long	serialVersionUID					= -6170535941906530451L;
+	Warenkorb						wk;
+	JPanel							buttons								= new JPanel();
+	JTable							warenkorbAuflistung				= new JTable();
+	JScrollPane						warenkorbAuflistungContainer	= new JScrollPane(warenkorbAuflistung);
+	JButton							aendernButton						= new JButton("Anzahl ändern");
+	JButton							artikelEntfernenButton			= new JButton("Entfernen");
+	JButton							leerenButton						= new JButton("Leeren");
+	JButton							kaufenButton						= new JButton("Kaufen");
+	String[]							columnHeaders						= {"Artikelnummer", "Artikel", "Preis", "Menge", "Gesamt"};
 
 	public WarenkorbVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener) {
 		super(server, user, listener);
@@ -71,45 +71,39 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 		warenkorbAuflistung.setAutoCreateRowSorter(true);
 		warenkorbAuflistung.setModel(new WarenkorbTableModel());
 		this.setVisible(true);
-		
 		warenkorbAufrufen();
 	}
 
 	public void warenkorbAufrufen() {
 
 		try {
-			wk = server.warenkorbAusgeben(user.getId(),user);
+			wk = server.warenkorbAusgeben(user.getId(), user);
 			Map<Artikel, Integer> inhalt = wk.getArtikel();
 			warenkorbAuflistung.setModel(new WarenkorbTableModel(inhalt));
 		} catch (RemoteException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage());
 		} catch (AccessRestrictedException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage());
-		} catch(PersonNonexistantException e) {
-		    JOptionPane.showMessageDialog(this, e.getMessage());
+		} catch (PersonNonexistantException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
 		}
-
 	}
-	
-	public boolean artikelImWarenkorbPruefen(Artikel art) throws RemoteException, AccessRestrictedException, PersonNonexistantException, ArticleNonexistantException{
-	    try{
 
-        	    server.artikelSuchen(art.getArtikelnummer(), user);
-        	    
-        		    for(Map.Entry<Artikel, Integer> ent : wk.getArtikel().entrySet()){
-        			if(ent.getKey().getArtikelnummer() == art.getArtikelnummer()){
-        			    return true;
-        			}
-        		    } 
-        	    
-        	    return false;
-	    } catch (ArticleNonexistantException e) {
-		throw new ArticleNonexistantException(art.getBezeichnung(), true);
-	    }
-	    
-		    
+	public boolean artikelImWarenkorbPruefen(Artikel art)
+			throws RemoteException, AccessRestrictedException, PersonNonexistantException, ArticleNonexistantException {
+
+		try {
+			server.artikelSuchen(art.getArtikelnummer(), user);
+			for (Map.Entry<Artikel, Integer> ent : wk.getArtikel().entrySet()) {
+				if (ent.getKey().getArtikelnummer() == art.getArtikelnummer()) {
+					return true;
+				}
+			}
+			return false;
+		} catch (ArticleNonexistantException e) {
+			throw new ArticleNonexistantException(art.getBezeichnung(), true);
+		}
 	}
-	
 
 	class WarenkorbActionListener implements ActionListener {
 
@@ -128,7 +122,7 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 						} else {
 							throw new InvalidAmountException();
 						}
-						wk = server.warenkorbAusgeben(user.getId(),user);
+						wk = server.warenkorbAusgeben(user.getId(), user);
 						warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
 					}
 				} catch (ArticleStockNotSufficientException e1) {
@@ -145,15 +139,15 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
 				} catch (RemoteException e1) {
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
-				} catch(PersonNonexistantException e1) {
-				    JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
+				} catch (PersonNonexistantException e1) {
+					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
 				}
 			} else if (e.getSource().equals(artikelEntfernenButton)) {
 				try {
 					int row = warenkorbAuflistung.getSelectedRow();
 					if (row != -1) {
 						server.artikelAusWarenkorbEntfernen((int) warenkorbAuflistung.getValueAt(row, 0), user);
-						wk = server.warenkorbAusgeben(user.getId(),user);
+						wk = server.warenkorbAusgeben(user.getId(), user);
 						warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
 					}
 				} catch (AccessRestrictedException e1) {
@@ -162,20 +156,20 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
 				} catch (RemoteException e1) {
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
-				} catch(PersonNonexistantException e1) {
-				    JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
+				} catch (PersonNonexistantException e1) {
+					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
 				}
 			} else if (e.getSource().equals(leerenButton)) {
 				try {
 					server.warenkorbLeeren(user);
-					wk = server.warenkorbAusgeben(user.getId(),user);
+					wk = server.warenkorbAusgeben(user.getId(), user);
 					warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
 				} catch (AccessRestrictedException e1) {
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
 				} catch (RemoteException e1) {
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
-				} catch(PersonNonexistantException e1) {
-				    JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
+				} catch (PersonNonexistantException e1) {
+					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
 				}
 				warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
 				// Warenkorb kaufen
@@ -195,7 +189,7 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 					rechnungsString += re.getWk().toString() + "\n";
 					rechnungsString += "Gesamtbetrag: " + re.getGesamt() + "€";
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, rechnungsString);
-					wk = server.warenkorbAusgeben(user.getId(),user);
+					wk = server.warenkorbAusgeben(user.getId(), user);
 					warenkorbAuflistung.setModel(new WarenkorbTableModel(wk.getArtikel()));
 				} catch (AccessRestrictedException e1) {
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
@@ -203,8 +197,8 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
 				} catch (RemoteException e1) {
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
-				} catch(PersonNonexistantException e1) {
-				    JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
+				} catch (PersonNonexistantException e1) {
+					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
 				}
 			}
 		}
@@ -215,10 +209,10 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 		/**
 		 * 
 		 */
-		private static final long serialVersionUID = 5529552191258522247L;
-		String[] columns = { "Artikelnummer", "Artikel", "Preis", "Menge", "Gesamt" };
-		Vector<Vector<Object>> dataVector = new Vector<>(0);
-		Vector<String> columnIdentifiers = new Vector<>(0);
+		private static final long	serialVersionUID	= 5529552191258522247L;
+		String[]							columns				= {"Artikelnummer", "Artikel", "Preis", "Menge", "Gesamt"};
+		Vector<Vector<Object>>		dataVector			= new Vector<>(0);
+		Vector<String>					columnIdentifiers	= new Vector<>(0);
 
 		public WarenkorbTableModel() {
 			columnIdentifiers = setColumns(columns);
@@ -274,7 +268,6 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 	@Override
 	public void reset() {
 
-	    // TODO Auto-generated method stub
-	    
+		// TODO Auto-generated method stub
 	}
 }

@@ -17,13 +17,13 @@ public class Mitarbeiter extends Person implements Serializable {
 
 	/**
 	 * @param firstname
-	 *            Vorname
+	 *           Vorname
 	 * @param lastname
-	 *            Nachname
+	 *           Nachname
 	 * @param id
-	 *            Eindeutige ID
+	 *           Eindeutige ID
 	 * @param passwort
-	 *            Passwort
+	 *           Passwort
 	 * @throws InvalidPersonDataException
 	 */
 	public Mitarbeiter(String firstname, String lastname, int id, String passwort, String address_Street,

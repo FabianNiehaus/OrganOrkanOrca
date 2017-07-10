@@ -12,7 +12,7 @@ public class VectorIsEmptyException extends Exception {
 
 	/**
 	 * @param vectorName
-	 *            Leerer Vektor
+	 *           Leerer Vektor
 	 */
 	public VectorIsEmptyException(String vectorName) {
 		super("Der Vektor " + vectorName + " ist leer!");

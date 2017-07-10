@@ -23,14 +23,14 @@ public class Warenkorbverwaltung {
 	 * erfolgt nach Position.
 	 * 
 	 * @param aend
-	 *            Zu bearbeitender Warenkorb
+	 *           Zu bearbeitender Warenkorb
 	 * @param position
-	 *            Position des zu verändernden Artikels
+	 *           Position des zu verändernden Artikels
 	 * @param anz
-	 *            Neue Anzahl
+	 *           Neue Anzahl
 	 * @throws InvalidAmountException
 	 * @throws Nicht
-	 *             genug Artikel auf Lager
+	 *            genug Artikel auf Lager
 	 */
 	public void aendereWarenkorb(Warenkorb wk, Artikel art, int anz)
 			throws ArticleStockNotSufficientException, BasketNonexistantException, InvalidAmountException {
@@ -67,7 +67,7 @@ public class Warenkorbverwaltung {
 	 * Gibt den Inhalt eines Warenkorbs aus
 	 * 
 	 * @param wk
-	 *            Gewuenschter Warenkorb
+	 *           Gewuenschter Warenkorb
 	 * @return Alle Artikel mit Anzahl
 	 */
 	public Map<Artikel, Integer> getArtikel(Warenkorb wk) {
@@ -87,7 +87,7 @@ public class Warenkorbverwaltung {
 	 * Gibt einen Warenkorb aus, sofern dieser in der Verwaltung exisitert
 	 * 
 	 * @param wk
-	 *            Gesuchter Warenkorb
+	 *           Gesuchter Warenkorb
 	 * @return Gesuchter Warenkorb
 	 */
 	public Warenkorb getWarenkorb(Warenkorb wk) throws BasketNonexistantException {
@@ -104,7 +104,7 @@ public class Warenkorbverwaltung {
 	 * Leert einen Warenkorb
 	 * 
 	 * @param wk
-	 *            Zu leerender Warenkorb
+	 *           Zu leerender Warenkorb
 	 */
 	public void leereWarenkorb(Warenkorb wk) {
 
@@ -115,11 +115,11 @@ public class Warenkorbverwaltung {
 	 * Fuegt einem Warenkorb einen Artikel hinzu
 	 * 
 	 * @param wk
-	 *            Zu bearbeitender Warenkorb
+	 *           Zu bearbeitender Warenkorb
 	 * @param art
-	 *            Hinzuzufuegender Artikel
+	 *           Hinzuzufuegender Artikel
 	 * @param anz
-	 *            Anzahl des Artikels
+	 *           Anzahl des Artikels
 	 * @throws ArticleStockNotSufficientException
 	 * @throws ArticleAlreadyInBasketException
 	 * @throws InvalidAmountException
@@ -148,7 +148,7 @@ public class Warenkorbverwaltung {
 	 * Löscht einen Warenkorb
 	 * 
 	 * @param wk
-	 *            Zu löschender Warenkorb
+	 *           Zu löschender Warenkorb
 	 */
 	public void loescheWarenkorb(Warenkorb wk) {
 

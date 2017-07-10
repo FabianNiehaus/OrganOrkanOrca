@@ -18,13 +18,13 @@ public class Rechnungsverwaltung {
 	 * Erzeugt eine neue Rechung
 	 * 
 	 * @param ku
-	 *            Zugehöriger Kunde
+	 *           Zugehöriger Kunde
 	 * @param datum
-	 *            Rechnungsdatum
+	 *           Rechnungsdatum
 	 * @param wk
-	 *            Zugehöriger Warenkorb
+	 *           Zugehöriger Warenkorb
 	 * @param gesamt
-	 *            Gesamtsumme der Rechnung
+	 *           Gesamtsumme der Rechnung
 	 * @return Erzeugte Rechnung
 	 */
 	public Rechnung rechnungErzeugen(Kunde ku, Date datum, Warenkorb wk, int gesamt) {

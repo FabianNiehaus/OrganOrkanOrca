@@ -16,26 +16,26 @@ public class Kunde extends Person implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1133891813422452141L;
-	private Warenkorb wk;
+	private static final long	serialVersionUID	= -1133891813422452141L;
+	private Warenkorb				wk;
 
 	/**
 	 * Extra-Konstruktor für Laden aus Persistenz
 	 * 
 	 * @param firstname
-	 *            Vorname
+	 *           Vorname
 	 * @param lastname
-	 *            Nachmane
+	 *           Nachmane
 	 * @param id
-	 *            Eindeutige ID
+	 *           Eindeutige ID
 	 * @param passwort
-	 *            Passwort
+	 *           Passwort
 	 * @param address_Street
-	 *            Adresse + Hausnummer
+	 *           Adresse + Hausnummer
 	 * @param address_Zip
-	 *            Postleitzahl
+	 *           Postleitzahl
 	 * @param address_Town
-	 *            Stadt
+	 *           Stadt
 	 * @throws InvalidPersonDataException
 	 */
 	public Kunde(String firstname, String lastname, int id, String passwort, String address_Street, String address_Zip,
@@ -47,21 +47,21 @@ public class Kunde extends Person implements Serializable {
 	 * Standard-Konstruktor
 	 * 
 	 * @param firstname
-	 *            Vorname
+	 *           Vorname
 	 * @param lastname
-	 *            Nachmane
+	 *           Nachmane
 	 * @param id
-	 *            Eindeutige ID
+	 *           Eindeutige ID
 	 * @param passwort
-	 *            Passwort
+	 *           Passwort
 	 * @param address_Street
-	 *            Adresse + Hausnummer
+	 *           Adresse + Hausnummer
 	 * @param address_Zip
-	 *            Postleitzahl
+	 *           Postleitzahl
 	 * @param address_Town
-	 *            Stadt
+	 *           Stadt
 	 * @param wk
-	 *            Warenkorb
+	 *           Warenkorb
 	 * @throws InvalidPersonDataException
 	 */
 	public Kunde(String firstname, String lastname, int id, String passwort, String address_Street, String address_Zip,
@@ -89,7 +89,6 @@ public class Kunde extends Person implements Serializable {
 	@Override
 	public String toString() {
 
-		return id + ": " + firstname + " " + lastname + " | " + address_Street + " ," + address_Zip + " "
-				+ address_Town;
+		return id + ": " + firstname + " " + lastname + " | " + address_Street + " ," + address_Zip + " " + address_Town;
 	}
 }

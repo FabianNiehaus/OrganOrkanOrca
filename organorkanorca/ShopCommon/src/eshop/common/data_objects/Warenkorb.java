@@ -16,8 +16,8 @@ public class Warenkorb implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1864639903738496743L;
-	private Map<Artikel, Integer> artikel = new LinkedHashMap<>();
+	private static final long		serialVersionUID	= 1864639903738496743L;
+	private Map<Artikel, Integer>	artikel				= new LinkedHashMap<>();
 
 	public Warenkorb() {
 		super();
@@ -28,11 +28,11 @@ public class Warenkorb implements Serializable {
 	 * erfolgt (nutzerfreundlich) ueber die Position des Artikels im Warenkorb.
 	 * 
 	 * @param pos
-	 *            Position des Artikels im Warenkorb
+	 *           Position des Artikels im Warenkorb
 	 * @param anz
-	 *            Neue Anzahl (muss größer 0 sein)
+	 *           Neue Anzahl (muss größer 0 sein)
 	 * @throws Nicht
-	 *             genug Artikel auf Lager
+	 *            genug Artikel auf Lager
 	 */
 	public void aendereAnzahl(Artikel art, int anz) {
 
@@ -76,9 +76,9 @@ public class Warenkorb implements Serializable {
 	 * Prueft, ob genug Bestand von einem Artikel verfuegbar ist
 	 * 
 	 * @param art
-	 *            Gewuenschter Artikel
+	 *           Gewuenschter Artikel
 	 * @param anz
-	 *            Gewuenschte Anzahl
+	 *           Gewuenschte Anzahl
 	 */
 	private void pruefeBestand(Artikel art, int anz) throws ArticleStockNotSufficientException {
 
@@ -99,12 +99,12 @@ public class Warenkorb implements Serializable {
 	 * Legt einen Artikel im Warenkorb ab
 	 * 
 	 * @param art
-	 *            Gewuenschter Artikel
+	 *           Gewuenschter Artikel
 	 * @param anz
-	 *            Gewuenschte Anzahl (muss größer 0 sein)
+	 *           Gewuenschte Anzahl (muss größer 0 sein)
 	 * @throws ArticleAlreadyInBasketException
 	 * @throws Nicht
-	 *             genug Artikel auf Lager
+	 *            genug Artikel auf Lager
 	 */
 	public void speichereArtikel(Artikel art, int anz)
 			throws ArticleStockNotSufficientException, ArticleAlreadyInBasketException {
@@ -125,7 +125,7 @@ public class Warenkorb implements Serializable {
 	 * Prueft, ob ein bestimmter Artikel in diesem Warenkorb liegt.
 	 * 
 	 * @param art
-	 *            Zu ueberpruefender Artikel
+	 *           Zu ueberpruefender Artikel
 	 * @return Gibt <b>true</b> zurueck, wenn zu pruefender Artikel in der HAsMap
 	 *         artikel gespeichert ist. Sonst <b>false</b>.
 	 */
@@ -143,7 +143,6 @@ public class Warenkorb implements Serializable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

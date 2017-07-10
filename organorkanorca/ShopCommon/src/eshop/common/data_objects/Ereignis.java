@@ -13,23 +13,23 @@ public class Ereignis implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1817043294145890221L;
-	private int id;
-	private Person wer;
-	private Date wann;
-	private Typ was;
-	private Artikel womit;
-	private int wieviel;
+	private static final long	serialVersionUID	= -1817043294145890221L;
+	private int						id;
+	private Person					wer;
+	private Date					wann;
+	private Typ						was;
+	private Artikel				womit;
+	private int						wieviel;
 
 	/**
 	 * @param wer
-	 *            Person, die die Aktion durchgefuehrt hat
+	 *           Person, die die Aktion durchgefuehrt hat
 	 * @param was
-	 *            Typ der Aktion (EINLAGERUNG, AUSLAGERUNG, KAUF, NEU)
+	 *           Typ der Aktion (EINLAGERUNG, AUSLAGERUNG, KAUF, NEU)
 	 * @param womit
-	 *            Welcher Artikel ist betroffen
+	 *           Welcher Artikel ist betroffen
 	 * @param wieviel
-	 *            Betroffene Stueckzahl
+	 *           Betroffene Stueckzahl
 	 */
 	public Ereignis(int id, Person wer, Typ was, Artikel womit, int wieviel, Date wann) {
 		super();
@@ -103,7 +103,6 @@ public class Ereignis implements Serializable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -111,7 +110,7 @@ public class Ereignis implements Serializable {
 
 		// Formatierungsvorlage fuer Datum
 		DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-		return dateFormat.format(wann) + " | " + wer.getId() + ": " + wer.getLastname() + " " + wer.getLastname()
-				+ " | " + was + " | " + womit.getArtikelnummer() + ": " + womit.getBezeichnung() + " | " + wieviel;
+		return dateFormat.format(wann) + " | " + wer.getId() + ": " + wer.getLastname() + " " + wer.getLastname() + " | "
+				+ was + " | " + womit.getArtikelnummer() + ": " + womit.getBezeichnung() + " | " + wieviel;
 	}
 }

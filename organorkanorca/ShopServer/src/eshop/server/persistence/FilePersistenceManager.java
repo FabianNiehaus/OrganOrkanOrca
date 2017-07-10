@@ -31,19 +31,17 @@ import eshop.common.exceptions.InvalidPersonDataException;
  */
 public class FilePersistenceManager implements PersistenceManager {
 
-	private BufferedReader reader = null;
-	private PrintWriter writer = null;
+	private BufferedReader	reader	= null;
+	private PrintWriter		writer	= null;
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see persistence.PersistenceManager#close()
 	 */
 	@Override
 	public boolean close() {
 
-		if (writer != null)
-			writer.close();
+		if (writer != null) writer.close();
 		if (reader != null) {
 			try {
 				reader.close();
@@ -92,10 +90,10 @@ public class FilePersistenceManager implements PersistenceManager {
 			if (liesZeile().equals("---BEGINHISTORY---")) {
 				String content = liesZeile();
 				while (!content.equals("---ENDHISTORY---")) {
-				    String[] contents = content.split(":");
-				    bestandsverlauf.put(Integer.parseInt(contents[0]), Integer.parseInt(contents[1]));
-				    reader.mark(30);
-				    content = liesZeile();
+					String[] contents = content.split(":");
+					bestandsverlauf.put(Integer.parseInt(contents[0]), Integer.parseInt(contents[1]));
+					reader.mark(30);
+					content = liesZeile();
 				}
 			} else {
 				reader.reset();
@@ -213,19 +211,16 @@ public class FilePersistenceManager implements PersistenceManager {
 	 */
 	private String liesZeile() throws IOException {
 
-		if (reader != null)
-			try {
-				return reader.readLine();
-			} catch (IOException ie) {
-				return "";
-			}
-		else
+		if (reader != null) try {
+			return reader.readLine();
+		} catch (IOException ie) {
 			return "";
+		}
+		else return "";
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see persistence.PersistenceManager#openForReading(java.lang.String)
 	 */
 	@Override
@@ -240,7 +235,6 @@ public class FilePersistenceManager implements PersistenceManager {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see persistence.PersistenceManager#openForWriting(java.lang.String)
 	 */
 	@Override
@@ -259,12 +253,11 @@ public class FilePersistenceManager implements PersistenceManager {
 	 * Schreibt eine Zeile
 	 * 
 	 * @param daten
-	 *            Zu schreibende Zeile als String
+	 *           Zu schreibende Zeile als String
 	 */
 	private void schreibeZeile(String daten) {
 
-		if (writer != null)
-			writer.println(daten);
+		if (writer != null) writer.println(daten);
 	}
 
 	/**
@@ -273,7 +266,7 @@ public class FilePersistenceManager implements PersistenceManager {
 	 * codiert abgelegt.
 	 * 
 	 * @param art
-	 *            Artikel-Objekt, das gespeichert werden soll
+	 *           Artikel-Objekt, das gespeichert werden soll
 	 * @return true, wenn Schreibvorgang erfolgreich, false sonst
 	 */
 	@Override

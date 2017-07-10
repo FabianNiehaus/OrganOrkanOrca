@@ -24,32 +24,31 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3593841333668075281L;
+	private static final long	serialVersionUID	= 3593841333668075281L;
+	Person							p;
+	JPanel							detailArea			= new JPanel();
+	JLabel							persNrLabel			= new JLabel("ID:");
+	JTextField						persNrField			= new JTextField(15);
+	JLabel							vornameLabel		= new JLabel("Vorname:");
+	JTextField						vornameField		= new JTextField(15);
+	JLabel							nachnameLabel		= new JLabel("Nachname:");
+	JTextField						nachnameField		= new JTextField(15);
+	JLabel							strasseLabel		= new JLabel("Straße:");
+	JTextField						strasseField		= new JTextField(15);
+	JLabel							ortLabel				= new JLabel("Stadt");
+	JTextField						ortField				= new JTextField(15);
+	JLabel							zipLabel				= new JLabel("PLZ:");
+	JTextField						zipField				= new JTextField(15);
+	JLabel							passwordLabel		= new JLabel("Passwort:");
+	JTextField						passwordField		= new JTextField("*********", 15);
+	JPanel							buttons				= new JPanel();
+	JButton							neuAnlegenButton	= new JButton("Neu");
+	JButton							aendernButton		= new JButton("Ändern");
+	JButton							loeschenButton		= new JButton("Löschen");
+	String							typ					= "";
 
-	Person p;
-	JPanel detailArea = new JPanel();
-	JLabel persNrLabel = new JLabel("ID:");
-	JTextField persNrField = new JTextField(15);
-	JLabel vornameLabel = new JLabel("Vorname:");
-	JTextField vornameField = new JTextField(15);
-	JLabel nachnameLabel = new JLabel("Nachname:");
-	JTextField nachnameField = new JTextField(15);
-	JLabel strasseLabel = new JLabel("Straße:");
-	JTextField strasseField = new JTextField(15);
-	JLabel ortLabel = new JLabel("Stadt");
-	JTextField ortField = new JTextField(15);
-	JLabel zipLabel = new JLabel("PLZ:");
-	JTextField zipField = new JTextField(15);
-	JLabel passwordLabel = new JLabel("Passwort:");
-	JTextField passwordField = new JTextField("*********", 15);
-	JPanel buttons = new JPanel();
-	JButton neuAnlegenButton = new JButton("Neu");
-	JButton aendernButton = new JButton("Ändern");
-	JButton loeschenButton = new JButton("Löschen");
-	String typ = "";
-
-	public PersonenVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener,
-			String titel, String personenTyp) {
+	public PersonenVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener, String titel,
+			String personenTyp) {
 		super(server, user, listener);
 		this.setLayout(new MigLayout());
 		detailArea.setLayout(new MigLayout());
@@ -69,11 +68,9 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		detailArea.add(passwordLabel);
 		detailArea.add(passwordField);
 		this.add(detailArea, "wrap");
-		
 		buttons.add(neuAnlegenButton, "wrap 10, w 100!");
 		buttons.add(aendernButton, "wrap 10, w 100!");
 		buttons.add(loeschenButton, "wrap 10, w 100!");
-		
 		aendernButton.addActionListener(new PersonBearbeitenListener(personenTyp));
 		neuAnlegenButton.addActionListener(new PersonNeuAnlegenListener(personenTyp));
 		loeschenButton.addActionListener(new PersonLoeschenListener());
@@ -90,8 +87,7 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 
 	public void personAnzeigen(Person p) {
 
-	    reset();
-	    
+		reset();
 		this.p = p;
 		persNrField.setText(String.valueOf(p.getId()));
 		vornameField.setText(p.getFirstname());
@@ -106,7 +102,6 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		ortField.setEditable(false);
 		zipField.setEditable(false);
 		passwordField.setEditable(false);
-		
 	}
 
 	public class PersonBearbeitenListener implements ActionListener {
@@ -143,14 +138,11 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 					String address_Town = ortField.getText();
 					String address_Zip = zipField.getText();
 					String passwort = passwordField.getText();
-					
-					p = server.personAendern(typ, p, firstname, lastname, p.getId(), passwort,
-			address_Street, address_Zip, address_Town);
-
+					p = server.personAendern(typ, p, firstname, lastname, p.getId(), passwort, address_Street, address_Zip,
+							address_Town);
 					// Buttons anpassen
 					aendernButton.setText("Ändern");
 					isBeingChanged = false;
-					
 				} catch (InvalidPersonDataException e1) {
 					JOptionPane.showMessageDialog(PersonenVerwaltungsfenster.this, e1.getMessage());
 					personAnzeigen(p);
@@ -189,7 +181,7 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 
 	public class PersonNeuAnlegenListener implements ActionListener {
 
-		public PersonNeuAnlegenListener(String personenTyp){
+		public PersonNeuAnlegenListener(String personenTyp) {
 			if (personenTyp.equals("Kunde")) {
 				typ = "kunde";
 			} else if (personenTyp.equals("Mitarbeiter")) {
@@ -219,7 +211,6 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 				// Buttons anpassen
 				neuAnlegenButton.setText("OK");
 				isBeingCreated = true;
-				
 			} else if (e.getSource().equals(neuAnlegenButton) && isBeingCreated) {
 				try {
 					String firstname = vornameField.getText();
@@ -229,8 +220,8 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 					String address_Zip = zipField.getText();
 					String passwort = passwordField.getText();
 					if (typ.equals("kunde")) {
-						p = server.erstelleKunde(firstname, lastname, passwort, address_Street, address_Zip,
-								address_Town, user);
+						p = server.erstelleKunde(firstname, lastname, passwort, address_Street, address_Zip, address_Town,
+								user);
 					} else if (typ.equals("mitarbeiter")) {
 						p = server.erstelleMitatbeiter(firstname, lastname, passwort, address_Street, address_Zip,
 								address_Town, user);
@@ -252,13 +243,15 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 			}
 		}
 	}
-	
-	public Person getPerson(){
+
+	public Person getPerson() {
+
 		return p;
 	}
-	
-	public void reset(){
-	    this.p = null;
+
+	public void reset() {
+
+		this.p = null;
 		persNrField.setText("");
 		vornameField.setText("");
 		nachnameField.setText("");
@@ -266,14 +259,12 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		ortField.setText("");
 		zipField.setText("");
 		passwordField.setText("");
-		
 		vornameField.setEditable(false);
 		nachnameField.setEditable(false);
 		strasseField.setEditable(false);
 		ortField.setEditable(false);
 		zipField.setEditable(false);
 		passwordField.setEditable(false);
-		
 		neuAnlegenButton.setText("Neu");
 		isBeingCreated = false;
 		aendernButton.setText("Ändern");

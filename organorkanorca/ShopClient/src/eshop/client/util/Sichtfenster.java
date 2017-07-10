@@ -32,95 +32,80 @@ public abstract class Sichtfenster extends JPanel {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8136926280757449267L;
+	private static final long			serialVersionUID		= 8136926280757449267L;
+	protected SichtfensterCallbacks	listener					= null;
+	protected Person						user;
+	protected ShopRemote					server;
+	protected JPanel						overviewButtons		= new JPanel();
+	protected JButton						alleButton				= new JButton("Alle");
+	protected JButton						sucheButton				= new JButton("Suche");
+	protected JTextField					sucheField				= new JTextField(30);
+	protected JPanel						actionField				= new JPanel(new MigLayout("align 50% 50%"));
+	protected JXTable						auflistung				= new JXTable();
+	protected JScrollPane				auflistungContainer	= new JScrollPane(auflistung);
 
-	protected SichtfensterCallbacks listener = null;	
-
-	protected Person user;
-	protected ShopRemote server;
-	protected JPanel overviewButtons = new JPanel();
-	protected JButton alleButton = new JButton("Alle");
-	protected JButton sucheButton = new JButton("Suche");
-	protected JTextField sucheField = new JTextField(30);
-	protected JPanel actionField = new JPanel(new MigLayout("align 50% 50%"));
-	protected JXTable auflistung = new JXTable();
-	protected JScrollPane auflistungContainer = new JScrollPane(auflistung);
-
-    public Sichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
-	this.listener = listener;
-	this.user = user;
-	this.server = server;
-	this.setLayout(new MigLayout());
-	this.add(overviewButtons, "dock west");
-	//this.add(actionField);
-	this.add(auflistungContainer,"wrap, w 100%");
-	
-	overviewButtons.setLayout(new MigLayout());
-	overviewButtons.add(alleButton, "wrap 10,w 100!");
-	overviewButtons.add(sucheField, "wrap 10,w 100!");
-	overviewButtons.add(sucheButton, "wrap 10, w 100!");
-	overviewButtons.add(actionField, "wrap 10, w 100!");
-	overviewButtons.setVisible(true);
-	actionField.setBackground(Color.CYAN);
-
-	auflistung.setAutoCreateRowSorter(true);
-		
+	public Sichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
+		this.listener = listener;
+		this.user = user;
+		this.server = server;
+		this.setLayout(new MigLayout());
+		this.add(overviewButtons, "dock west");
+		this.add(auflistungContainer, "wrap, w 100%");
+		overviewButtons.setLayout(new MigLayout());
+		overviewButtons.add(alleButton, "wrap 10,w 100!");
+		overviewButtons.add(sucheField, "wrap 10,w 100!");
+		overviewButtons.add(sucheButton, "wrap 10, w 100!");
+		overviewButtons.add(actionField, "wrap 10, w 100!");
+		overviewButtons.setVisible(true);
+		actionField.setBackground(Color.CYAN);
+		auflistung.setAutoCreateRowSorter(true);
 		callTableUpdate();
-
 		auflistung.setHorizontalScrollEnabled(true);
-		//auflistung.setPreferredScrollableViewportSize(new Dimension(500, 70));
-		//auflistung.setFillsViewportHeight(true);
 		auflistung.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
 		JTableHeader header = auflistung.getTableHeader();
 		header.setUpdateTableInRealTime(true);
-		header.setReorderingAllowed(false);	
-		
+		header.setReorderingAllowed(false);
 		alleButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+
 				TabellenFilterEntfernen();
-				
 			}
 		});
-		
 		sucheButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+
 				TabelleFiltern();
-				
 			}
 		});
-		
-		
-
-    }
+	}
 
 	public abstract void callTableUpdate();
-	
-	public void fitTableLayout(){
-	    TableColumnAdjuster tca = new TableColumnAdjuster(auflistung, 30);
-	    tca.adjustColumns(SwingConstants.CENTER);
-	    
-	    //auflistung.setSortOrder(1, SortOrder.ASCENDING);
-	    auflistung.setSortOrder(0, SortOrder.ASCENDING);
-	}
-	
-	public void TabelleFiltern() {
-	    	    
-	    Filter[] filterArray = {new PatternFilter(".*"+sucheField.getText()+".*", Pattern.CASE_INSENSITIVE, 1)};
-	    
-	    FilterPipeline filters = new FilterPipeline(filterArray);
-	    
-	    auflistung.setFilters(filters);
 
+	public void fitTableLayout() {
+
+		TableColumnAdjuster tca = new TableColumnAdjuster(auflistung);
+		tca.adjustColumns(SwingConstants.CENTER);
+		int columnWidth = auflistung.getWidth() / auflistung.getColumnCount();
+		for (int i = 0; i < auflistung.getColumnCount(); i++) {
+			auflistung.getColumn(i).setWidth(columnWidth);
+		}
+		auflistung.setSortOrder(0, SortOrder.ASCENDING);
+	}
+
+	public void TabelleFiltern() {
+
+		Filter[] filterArray = {new PatternFilter(".*" + sucheField.getText() + ".*", Pattern.CASE_INSENSITIVE, 1)};
+		FilterPipeline filters = new FilterPipeline(filterArray);
+		auflistung.setFilters(filters);
 	}
 
 	public void TabellenFilterEntfernen() {
-	    auflistung.setFilters(null);
-		
+
+		auflistung.setFilters(null);
 	}
 
 	public interface SichtfensterCallbacks {
@@ -131,5 +116,4 @@ public abstract class Sichtfenster extends JPanel {
 
 		void kundeAnzeigen(Kunde ku);
 	}
-
 }
