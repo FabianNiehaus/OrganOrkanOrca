@@ -73,9 +73,10 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		this.add(detailArea, "w 100%, h 200!, wrap");
 		detailArea.setBackground(Color.WHITE);
 		detailArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-		buttons.add(neuAnlegenButton, "wrap 10, w 100!");
-		buttons.add(aendernButton, "wrap 10, w 100!");
-		buttons.add(loeschenButton, "wrap 10, w 100!");
+		buttons.setLayout(new MigLayout());
+		buttons.add(neuAnlegenButton, "w 100!");
+		buttons.add(aendernButton, "w 100!");
+		buttons.add(loeschenButton, "w 100!");
 		aendernButton.addActionListener(new PersonBearbeitenListener(personenTyp));
 		neuAnlegenButton.addActionListener(new PersonNeuAnlegenListener(personenTyp));
 		loeschenButton.addActionListener(new PersonLoeschenListener());
