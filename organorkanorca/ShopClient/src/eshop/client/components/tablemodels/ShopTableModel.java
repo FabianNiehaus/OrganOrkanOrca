@@ -38,6 +38,7 @@ public class ShopTableModel extends AbstractTableModel {
 	/*
 	 * Don't need to implement this method unless your table's data can change.
 	 */
+	@Override
 	public void setValueAt(Object value, int row, int col) {
 
 		data[row][col] = value;

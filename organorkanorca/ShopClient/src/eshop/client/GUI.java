@@ -21,7 +21,6 @@ import eshop.common.data_objects.Ereignis;
 import eshop.common.data_objects.Kunde;
 import eshop.common.data_objects.Mitarbeiter;
 import eshop.common.data_objects.Person;
-import eshop.common.exceptions.InvalidPersonDataException;
 import eshop.common.net.ShopEventListener;
 import eshop.common.net.ShopRemote;
 import net.miginfocom.swing.MigLayout;
@@ -32,9 +31,9 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
 	 * 
 	 */
 	private static final long	serialVersionUID	= 9030916773132281332L;
+	private ListenerForLogin	listenerForLogin	= new ListenerForLogin();
 	LoginWindow						loginwindow;
 	MainWindow						mainwindow;
-	private ListenerForLogin	listenerForLogin	= new ListenerForLogin();
 	private ShopRemote			server;
 
 	public GUI() throws RemoteException {
@@ -57,28 +56,6 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
 			GUI gui = new GUI();
 		} catch (RemoteException e) {
 			e.printStackTrace();
-		}
-	}
-
-	public class ListenerForLogin implements LoginListener {
-
-		@Override
-		public void loginCancelled() {
-
-			loginwindow.dispose();
-		}
-
-		@Override
-		public void logout() {
-
-			loginwindow = new LoginWindow("OrganOrkanOrca server", server, this, GUI.this);
-		}
-
-		@Override
-		public void userLoggedIn(Person user) {
-
-			mainwindow = new MainWindow("OrganOrkanOrca server", user, server, this, GUI.this);
-			loginwindow.dispose();
 		}
 	}
 
@@ -181,5 +158,27 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
 	public void windowOpened(WindowEvent e) {
 
 		// TODO Auto-generated method stub
+	}
+
+	public class ListenerForLogin implements LoginListener {
+
+		@Override
+		public void loginCancelled() {
+
+			loginwindow.dispose();
+		}
+
+		@Override
+		public void logout() {
+
+			loginwindow = new LoginWindow("OrganOrkanOrca server", server, this, GUI.this);
+		}
+
+		@Override
+		public void userLoggedIn(Person user) {
+
+			mainwindow = new MainWindow("OrganOrkanOrca server", user, server, this, GUI.this);
+			loginwindow.dispose();
+		}
 	}
 }

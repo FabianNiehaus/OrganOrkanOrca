@@ -15,11 +15,11 @@ public class Ereignis implements Serializable {
 	 */
 	private static final long	serialVersionUID	= -1817043294145890221L;
 	private int						id;
-	private Person					wer;
 	private Date					wann;
 	private Typ						was;
-	private Artikel				womit;
+	private Person					wer;
 	private int						wieviel;
+	private Artikel				womit;
 
 	/**
 	 * @param wer

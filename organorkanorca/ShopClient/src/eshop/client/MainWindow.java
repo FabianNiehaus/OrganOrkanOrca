@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.WindowConstants;
 
 import eshop.client.components.ArtikelSichtfenster;
 import eshop.client.components.ArtikelVerwaltungsfenster;
@@ -39,28 +40,25 @@ public class MainWindow extends JFrame implements SichtfensterCallbacks, Verwalt
 	 * 
 	 */
 	private static final long		serialVersionUID	= 251175113124520728L;
-	Person								user;
-	ShopRemote							server;
-	LoginListener						loginListener;
-	JTabbedPane							tabbedPane			= new JTabbedPane();
-	JPanel								moduleButtons		= new JPanel();
 	JButton								artikelButton		= new JButton("Artikel");
-	JButton								kundenButton		= new JButton("Kunden");
-	JButton								mitarbeiterButton	= new JButton("Mitarbeiter");
-	JButton								shopButton			= new JButton("Shop");
-	JButton								logoutButton		= new JButton("Logout");
-	KundenSichtfenster				kundensichtfenster;
 	ArtikelSichtfenster				artikelsichtfenster;
-	MitarbeiterSichtfenster			mitarbeitersichtfenster;
-	ManagementSichtfenster			managementsichtfenster;
-	WarenkorbVerwaltungsfenster	warenkorbverwaltungsfenster;
 	ArtikelVerwaltungsfenster		artikelverwaltungsfenster;
+	JButton								kundenButton		= new JButton("Kunden");
+	KundenSichtfenster				kundensichtfenster;
 	PersonenVerwaltungsfenster		kundenverwaltungsfenster;
+	LoginListener						loginListener;
+	JButton								logoutButton		= new JButton("Logout");
+	ManagementSichtfenster			managementsichtfenster;
+	JButton								mitarbeiterButton	= new JButton("Mitarbeiter");
+	MitarbeiterSichtfenster			mitarbeitersichtfenster;
 	PersonenVerwaltungsfenster		mitarbeiterverwaltungsfenster;
+	JPanel								moduleButtons		= new JPanel();
+	ShopRemote							server;
+	JButton								shopButton			= new JButton("Shop");
+	JTabbedPane							tabbedPane			= new JTabbedPane();
+	Person								user;
+	WarenkorbVerwaltungsfenster	warenkorbverwaltungsfenster;
 
-	/*
-	 * double prefWidth = 0; double maxWidthLeft = 0; double maxWidthRight = 0;
-	 */
 	public MainWindow(String titel, Person user, ShopRemote server, LoginListener loginListener,
 			WindowListener windowListener) {
 		super(titel);
@@ -118,49 +116,6 @@ public class MainWindow extends JFrame implements SichtfensterCallbacks, Verwalt
 		artikelsichtfenster.callTableUpdate();
 	}
 
-	public void initialize() {
-
-		this.getContentPane().setLayout(new BorderLayout());
-		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-		if (user instanceof Kunde) {
-			artikelsichtfenster = new ArtikelSichtfenster(server, user, this);
-			artikelverwaltungsfenster = new ArtikelVerwaltungsfenster(server, user, this);
-			warenkorbverwaltungsfenster = new WarenkorbVerwaltungsfenster(server, user, this);
-			tabbedPane.addTab("Artikel", null, new ContentPanel(artikelsichtfenster, artikelverwaltungsfenster));
-			tabbedPane.addTab("Warenkorb", null, warenkorbverwaltungsfenster);
-		} else if (user instanceof Mitarbeiter) {
-			artikelsichtfenster = new ArtikelSichtfenster(server, user, this);
-			artikelverwaltungsfenster = new ArtikelVerwaltungsfenster(server, user, this);
-			kundensichtfenster = new KundenSichtfenster(server, user, this);
-			kundenverwaltungsfenster = new PersonenVerwaltungsfenster(server, user, this, "Kundenverwaltung", "Kunde");
-			mitarbeitersichtfenster = new MitarbeiterSichtfenster(server, user, this);
-			mitarbeiterverwaltungsfenster = new PersonenVerwaltungsfenster(server, user, this, "Mitarbeiterverwaltung",
-					"Mitarbeiter");
-			managementsichtfenster = new ManagementSichtfenster(server, user, this);
-			tabbedPane.addTab("Artikel", null, new ContentPanel(artikelsichtfenster, artikelverwaltungsfenster));
-			tabbedPane.addTab("Kunden", null, new ContentPanel(kundensichtfenster, kundenverwaltungsfenster));
-			tabbedPane.addTab("Mitarbeiter", null,
-					new ContentPanel(mitarbeitersichtfenster, mitarbeiterverwaltungsfenster));
-			tabbedPane.addTab("Management", null, managementsichtfenster);
-		}
-		this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
-		this.getContentPane().add(new JPanel(), BorderLayout.NORTH);
-		this.getContentPane().add(new JPanel(), BorderLayout.EAST);
-		this.getContentPane().add(new JPanel(), BorderLayout.SOUTH);
-		this.getContentPane().add(new JPanel(), BorderLayout.WEST);
-		this.setPreferredSize(new Dimension(1024, 800));
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		this.pack();
-		this.setLocationRelativeTo(null);
-		this.setVisible(true);
-	}
-
-	@Override
-	public void mitarbeiterAnzeigen(Mitarbeiter mi) {
-
-		mitarbeiterverwaltungsfenster.personAnzeigen(mi);
-	}
-
 	public void handleEventChanged(Ereignis er) {
 
 		managementsichtfenster.callTableUpdate();
@@ -195,9 +150,52 @@ public class MainWindow extends JFrame implements SichtfensterCallbacks, Verwalt
 		kundensichtfenster.callTableUpdate();
 	}
 
+	public void initialize() {
+
+		this.getContentPane().setLayout(new BorderLayout());
+		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+		if (user instanceof Kunde) {
+			artikelsichtfenster = new ArtikelSichtfenster(server, user, this);
+			artikelverwaltungsfenster = new ArtikelVerwaltungsfenster(server, user, this);
+			warenkorbverwaltungsfenster = new WarenkorbVerwaltungsfenster(server, user, this);
+			tabbedPane.addTab("Artikel", null, new ContentPanel(artikelsichtfenster, artikelverwaltungsfenster));
+			tabbedPane.addTab("Warenkorb", null, warenkorbverwaltungsfenster);
+		} else if (user instanceof Mitarbeiter) {
+			artikelsichtfenster = new ArtikelSichtfenster(server, user, this);
+			artikelverwaltungsfenster = new ArtikelVerwaltungsfenster(server, user, this);
+			kundensichtfenster = new KundenSichtfenster(server, user, this);
+			kundenverwaltungsfenster = new PersonenVerwaltungsfenster(server, user, this, "Kundenverwaltung", "Kunde");
+			mitarbeitersichtfenster = new MitarbeiterSichtfenster(server, user, this);
+			mitarbeiterverwaltungsfenster = new PersonenVerwaltungsfenster(server, user, this, "Mitarbeiterverwaltung",
+					"Mitarbeiter");
+			managementsichtfenster = new ManagementSichtfenster(server, user, this);
+			tabbedPane.addTab("Artikel", null, new ContentPanel(artikelsichtfenster, artikelverwaltungsfenster));
+			tabbedPane.addTab("Kunden", null, new ContentPanel(kundensichtfenster, kundenverwaltungsfenster));
+			tabbedPane.addTab("Mitarbeiter", null,
+					new ContentPanel(mitarbeitersichtfenster, mitarbeiterverwaltungsfenster));
+			tabbedPane.addTab("Management", null, managementsichtfenster);
+		}
+		this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
+		this.getContentPane().add(new JPanel(), BorderLayout.NORTH);
+		this.getContentPane().add(new JPanel(), BorderLayout.EAST);
+		this.getContentPane().add(new JPanel(), BorderLayout.SOUTH);
+		this.getContentPane().add(new JPanel(), BorderLayout.WEST);
+		this.setPreferredSize(new Dimension(1024, 800));
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		this.pack();
+		this.setLocationRelativeTo(null);
+		this.setVisible(true);
+	}
+
 	@Override
 	public void kundeAnzeigen(Kunde ku) {
 
 		kundenverwaltungsfenster.personAnzeigen(ku);
+	}
+
+	@Override
+	public void mitarbeiterAnzeigen(Mitarbeiter mi) {
+
+		mitarbeiterverwaltungsfenster.personAnzeigen(mi);
 	}
 }

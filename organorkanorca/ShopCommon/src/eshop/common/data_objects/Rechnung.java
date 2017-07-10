@@ -20,10 +20,10 @@ public class Rechnung implements Serializable {
 	 * 
 	 */
 	private static final long	serialVersionUID	= 6681009839157213957L;
-	private Kunde					ku;
 	private Date					datum;
-	private Warenkorb				wk;
 	private double					gesamt;
+	private Kunde					ku;
+	private Warenkorb				wk;
 
 	/**
 	 * @param ku

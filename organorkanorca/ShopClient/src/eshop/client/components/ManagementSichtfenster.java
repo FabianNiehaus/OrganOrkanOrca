@@ -8,6 +8,7 @@ import java.rmi.RemoteException;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+
 import eshop.client.components.tablemodels.EreignisTableModel;
 import eshop.client.util.Sichtfenster;
 import eshop.common.data_objects.Person;
@@ -23,17 +24,29 @@ public class ManagementSichtfenster extends Sichtfenster {
 	 * 
 	 */
 	private static final long	serialVersionUID	= -4495211746151221729L;
+	JButton							ladenButton			= new JButton("Bestandsdaten importieren");
 	private EreignisTableModel	model;
 	JButton							speichernButton	= new JButton("Bestandsdaten speichern");
-	JButton							ladenButton			= new JButton("Bestandsdaten importieren");
 
 	public ManagementSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
 		super(server, user, listener);
 		speichernButton.addActionListener(new PersistenceButtonListener());
 		ladenButton.addActionListener(new PersistenceButtonListener());
-		actionField.add(speichernButton);
+		actionField.add(speichernButton, "wrap");
 		actionField.add(ladenButton);
 		setPreferredSize(new Dimension(900, 400));
+	}
+
+	@Override
+	public void callTableUpdate() {
+
+		try {
+			model = new EreignisTableModel(server.alleEreignisseAusgeben(user));
+			auflistung.setModel(model);
+			fitTableLayout();
+		} catch (RemoteException | AccessRestrictedException e) {
+			JOptionPane.showMessageDialog(ManagementSichtfenster.this, e.getMessage());
+		}
 	}
 
 	class PersistenceButtonListener implements ActionListener {
@@ -57,18 +70,6 @@ public class ManagementSichtfenster extends Sichtfenster {
 					JOptionPane.showMessageDialog(ManagementSichtfenster.this, e1.getMessage());
 				}
 			}
-		}
-	}
-
-	@Override
-	public void callTableUpdate() {
-
-		try {
-			model = new EreignisTableModel(server.alleEreignisseAusgeben(user));
-			auflistung.setModel(model);
-			fitTableLayout();
-		} catch (RemoteException | AccessRestrictedException e) {
-			JOptionPane.showMessageDialog(ManagementSichtfenster.this, e.getMessage());
 		}
 	}
 }

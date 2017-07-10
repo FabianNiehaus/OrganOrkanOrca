@@ -37,13 +37,13 @@ import javax.swing.table.TableModel;
  */
 public class TableColumnAdjuster implements PropertyChangeListener, TableModelListener {
 
-	private JTable								table;
-	private int									spacing;
-	private boolean							isColumnHeaderIncluded;
-	private boolean							isColumnDataIncluded;
-	private boolean							isOnlyAdjustLarger;
-	private boolean							isDynamicAdjustment;
 	private Map<TableColumn, Integer>	columnSizes	= new HashMap<TableColumn, Integer>();
+	private boolean							isColumnDataIncluded;
+	private boolean							isColumnHeaderIncluded;
+	private boolean							isDynamicAdjustment;
+	private boolean							isOnlyAdjustLarger;
+	private int									spacing;
+	private JTable								table;
 
 	/*
 	 * Specify the table and use default spacing
@@ -359,8 +359,8 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 		  * 
 		  */
 		private static final long	serialVersionUID	= 5635874354402328455L;
-		private boolean				isSelectedColumn;
 		private boolean				isAdjust;
+		private boolean				isSelectedColumn;
 
 		public ColumnAction(boolean isSelectedColumn, boolean isAdjust) {
 			this.isSelectedColumn = isSelectedColumn;

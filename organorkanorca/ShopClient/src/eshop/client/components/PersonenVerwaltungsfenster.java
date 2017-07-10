@@ -1,9 +1,11 @@
 package eshop.client.components;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -25,49 +27,53 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 	 * 
 	 */
 	private static final long	serialVersionUID	= 3593841333668075281L;
-	Person							p;
-	JPanel							detailArea			= new JPanel();
-	JLabel							persNrLabel			= new JLabel("ID:");
-	JTextField						persNrField			= new JTextField(15);
-	JLabel							vornameLabel		= new JLabel("Vorname:");
-	JTextField						vornameField		= new JTextField(15);
-	JLabel							nachnameLabel		= new JLabel("Nachname:");
-	JTextField						nachnameField		= new JTextField(15);
-	JLabel							strasseLabel		= new JLabel("Straße:");
-	JTextField						strasseField		= new JTextField(15);
-	JLabel							ortLabel				= new JLabel("Stadt");
-	JTextField						ortField				= new JTextField(15);
-	JLabel							zipLabel				= new JLabel("PLZ:");
-	JTextField						zipField				= new JTextField(15);
-	JLabel							passwordLabel		= new JLabel("Passwort:");
-	JTextField						passwordField		= new JTextField("*********", 15);
-	JPanel							buttons				= new JPanel();
-	JButton							neuAnlegenButton	= new JButton("Neu");
 	JButton							aendernButton		= new JButton("Ändern");
+	JPanel							buttons				= new JPanel();
+	JPanel							detailArea			= new JPanel();
 	JButton							loeschenButton		= new JButton("Löschen");
+	JTextField						nachnameField		= new JTextField(15);
+	JLabel							nachnameLabel		= new JLabel("Nachname:");
+	JButton							neuAnlegenButton	= new JButton("Neu");
+	JTextField						ortField				= new JTextField(15);
+	JLabel							ortLabel				= new JLabel("Stadt");
+	Person							p;
+	JTextField						passwordField		= new JTextField("*********", 15);
+	JLabel							passwordLabel		= new JLabel("Passwort:");
+	JTextField						persNrField			= new JTextField(15);
+	JLabel							persNrLabel			= new JLabel("ID:");
+	JTextField						strasseField		= new JTextField(15);
+	JLabel							strasseLabel		= new JLabel("Straße:");
 	String							typ					= "";
+	JTextField						vornameField		= new JTextField(15);
+	JLabel							vornameLabel		= new JLabel("Vorname:");
+	JTextField						zipField				= new JTextField(15);
+	JLabel							zipLabel				= new JLabel("PLZ:");
 
 	public PersonenVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener, String titel,
 			String personenTyp) {
 		super(server, user, listener);
-		this.setLayout(new MigLayout());
-		detailArea.setLayout(new MigLayout());
-		this.add(new JLabel(titel), "span 2, align center, wrap");
+		this.setLayout(new MigLayout("", "114[]0"));
+		detailArea.setLayout(new MigLayout("", "[]10[]"));
+		detailArea.add(new JLabel(titel), "wrap 10!, span 2");
 		detailArea.add(persNrLabel);
-		detailArea.add(persNrField, "wrap");
-		detailArea.add(vornameLabel);
-		detailArea.add(vornameField, "wrap");
-		detailArea.add(nachnameLabel);
-		detailArea.add(nachnameField, "wrap");
-		detailArea.add(strasseLabel);
-		detailArea.add(strasseField, "wrap");
-		detailArea.add(ortLabel);
-		detailArea.add(ortField, "wrap");
-		detailArea.add(zipLabel);
-		detailArea.add(zipField, "wrap");
+		detailArea.add(persNrField, "wrap 10!");
 		detailArea.add(passwordLabel);
 		detailArea.add(passwordField);
-		this.add(detailArea, "wrap");
+		detailArea.add(vornameLabel);
+		detailArea.add(vornameField, "");
+		detailArea.add(nachnameLabel);
+		detailArea.add(nachnameField, "wrap 10!");
+		detailArea.add(strasseLabel);
+		detailArea.add(strasseField, "");
+		detailArea.add(ortLabel);
+		detailArea.add(ortField, "wrap 10!");
+		detailArea.add(zipLabel);
+		detailArea.add(zipField, "");
+		detailArea.add(passwordLabel);
+		detailArea.add(passwordField);
+		this.add(detailArea, "w 100%, h 200!, wrap");
+		detailArea.setBackground(Color.WHITE);
+		detailArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 		buttons.add(neuAnlegenButton, "wrap 10, w 100!");
 		buttons.add(aendernButton, "wrap 10, w 100!");
 		buttons.add(loeschenButton, "wrap 10, w 100!");
@@ -83,6 +89,11 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		zipField.setEditable(false);
 		passwordField.setEditable(false);
 		this.setVisible(true);
+	}
+
+	public Person getPerson() {
+
+		return p;
 	}
 
 	public void personAnzeigen(Person p) {
@@ -102,6 +113,29 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		ortField.setEditable(false);
 		zipField.setEditable(false);
 		passwordField.setEditable(false);
+	}
+
+	@Override
+	public void reset() {
+
+		this.p = null;
+		persNrField.setText("");
+		vornameField.setText("");
+		nachnameField.setText("");
+		strasseField.setText("");
+		ortField.setText("");
+		zipField.setText("");
+		passwordField.setText("");
+		vornameField.setEditable(false);
+		nachnameField.setEditable(false);
+		strasseField.setEditable(false);
+		ortField.setEditable(false);
+		zipField.setEditable(false);
+		passwordField.setEditable(false);
+		neuAnlegenButton.setText("Neu");
+		isBeingCreated = false;
+		aendernButton.setText("Ändern");
+		isBeingChanged = false;
 	}
 
 	public class PersonBearbeitenListener implements ActionListener {
@@ -242,32 +276,5 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 				}
 			}
 		}
-	}
-
-	public Person getPerson() {
-
-		return p;
-	}
-
-	public void reset() {
-
-		this.p = null;
-		persNrField.setText("");
-		vornameField.setText("");
-		nachnameField.setText("");
-		strasseField.setText("");
-		ortField.setText("");
-		zipField.setText("");
-		passwordField.setText("");
-		vornameField.setEditable(false);
-		nachnameField.setEditable(false);
-		strasseField.setEditable(false);
-		ortField.setEditable(false);
-		zipField.setEditable(false);
-		passwordField.setEditable(false);
-		neuAnlegenButton.setText("Neu");
-		isBeingCreated = false;
-		aendernButton.setText("Ändern");
-		isBeingChanged = false;
 	}
 }

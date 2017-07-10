@@ -17,13 +17,13 @@ public abstract class Person implements Serializable {
 	 * 
 	 */
 	private static final long	serialVersionUID	= 5177564072380459834L;
-	protected int					id;
-	protected String				passwort;
-	protected String				firstname;
-	protected String				lastname;
 	protected String				address_Street;
-	protected String				address_Zip;
 	protected String				address_Town;
+	protected String				address_Zip;
+	protected String				firstname;
+	protected int					id;
+	protected String				lastname;
+	protected String				passwort;
 
 	/**
 	 * Erzeugt eine Persion

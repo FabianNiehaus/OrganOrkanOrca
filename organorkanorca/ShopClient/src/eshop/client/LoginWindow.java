@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
 import eshop.client.util.LoginListener;
 import eshop.common.data_objects.Kunde;
@@ -30,16 +31,16 @@ public class LoginWindow extends JFrame {
 	 * 
 	 */
 	private static final long	serialVersionUID		= -5042186875268113945L;
-	JTabbedPane						tabbedPane				= new JTabbedPane();
-	JLabel							benutzerLabel			= new JLabel("Benutzer");
-	JLabel							passwortLabel			= new JLabel("Passwort");
-	JTextField						benutzerField			= new JTextField(10);
-	JPasswordField					passwortField			= new JPasswordField(10);
-	JLabel							headerLabel				= new JLabel("Willkommen bei OrganOrkanOrca");
 	JButton							anmeldenButton			= new JButton("Login");
+	JTextField						benutzerField			= new JTextField(10);
+	JLabel							benutzerLabel			= new JLabel("Benutzer");
+	JLabel							headerLabel				= new JLabel("Willkommen bei OrganOrkanOrca");
+	private LoginListener		loginListener			= null;
+	JPasswordField					passwortField			= new JPasswordField(10);
+	JLabel							passwortLabel			= new JLabel("Passwort");
 	JButton							registrierenButton	= new JButton("Registrieren");
 	private ShopRemote			server					= null;
-	private LoginListener		loginListener			= null;
+	JTabbedPane						tabbedPane				= new JTabbedPane();
 
 	public LoginWindow(String titel, ShopRemote server, LoginListener listener, WindowListener windowListener) {
 		super(titel);
@@ -70,7 +71,7 @@ public class LoginWindow extends JFrame {
 		this.getContentPane().add(tabbedPane);
 		anmeldenButton.addActionListener(new LoginButtonListener());
 		registrierenButton.addActionListener(new LoginNeuerNutzerAnlegenListener());
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		this.pack();
 		this.setLocationRelativeTo(null);

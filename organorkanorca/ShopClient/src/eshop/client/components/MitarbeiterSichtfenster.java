@@ -27,6 +27,25 @@ public class MitarbeiterSichtfenster extends Sichtfenster {
 		auflistung.getSelectionModel().addListSelectionListener(new MitarbeiterAnzeigenListener());
 	}
 
+	@Override
+	public void callTableUpdate() {
+
+		try {
+			model = new PersonenTableModel(server.alleMitarbeiterAusgeben(user));
+			SwingUtilities.invokeLater(new Runnable() {
+
+				@Override
+				public void run() {
+
+					auflistung.setModel(model);
+					fitTableLayout();
+				}
+			});
+		} catch (RemoteException | AccessRestrictedException e) {
+			JOptionPane.showMessageDialog(MitarbeiterSichtfenster.this, e.getMessage());
+		}
+	}
+
 	class MitarbeiterAnzeigenListener implements ListSelectionListener {
 
 		@Override
@@ -41,24 +60,6 @@ public class MitarbeiterSichtfenster extends Sichtfenster {
 			} catch (PersonNonexistantException e1) {
 				JOptionPane.showMessageDialog(MitarbeiterSichtfenster.this, e1.getMessage());
 			}
-		}
-	}
-
-	@Override
-	public void callTableUpdate() {
-
-		try {
-			model = new PersonenTableModel(server.alleMitarbeiterAusgeben(user));
-			SwingUtilities.invokeLater(new Runnable() {
-
-				public void run() {
-
-					auflistung.setModel(model);
-					fitTableLayout();
-				}
-			});
-		} catch (RemoteException | AccessRestrictedException e) {
-			JOptionPane.showMessageDialog(MitarbeiterSichtfenster.this, e.getMessage());
 		}
 	}
 }

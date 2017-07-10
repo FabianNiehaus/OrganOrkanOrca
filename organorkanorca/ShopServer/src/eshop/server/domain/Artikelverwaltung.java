@@ -16,11 +16,31 @@ import eshop.server.persistence.PersistenceManager;
  */
 public class Artikelverwaltung {
 
+	// Vektor zur Speicherug der Artikel
+	private Vector<Artikel> artikel = new Vector<Artikel>(0);
 	// Persistenz-Schnittstelle, die fuer die Details des Dateizugriffs
 	// verantwortlich ist
 	private PersistenceManager pm = new FilePersistenceManager();
-	// Vektor zur Speicherug der Artikel
-	private Vector<Artikel> artikel = new Vector<Artikel>(0);
+
+	public Artikel aendereBezeichnung(Artikel art, String bezeichnung) throws ArticleNonexistantException {
+
+		if (artikel.contains(art)) {
+			art.setBezeichnung(bezeichnung);
+			return art;
+		} else {
+			throw new ArticleNonexistantException(art.getArtikelnummer());
+		}
+	}
+
+	public Artikel aenderePreis(Artikel art, double preis) throws ArticleNonexistantException {
+
+		if (artikel.contains(art)) {
+			art.setPreis(preis);
+			return art;
+		} else {
+			throw new ArticleNonexistantException(art.getArtikelnummer());
+		}
+	}
 
 	/**
 	 * Artikel in Liste der Verwalteten Artikel einfuegen
@@ -220,26 +240,6 @@ public class Artikelverwaltung {
 			throw new ArticleNonexistantException(bezeichnung);
 		} else {
 			return liste;
-		}
-	}
-
-	public Artikel aendereBezeichnung(Artikel art, String bezeichnung) throws ArticleNonexistantException {
-
-		if (artikel.contains(art)) {
-			art.setBezeichnung(bezeichnung);
-			return art;
-		} else {
-			throw new ArticleNonexistantException(art.getArtikelnummer());
-		}
-	}
-
-	public Artikel aenderePreis(Artikel art, double preis) throws ArticleNonexistantException {
-
-		if (artikel.contains(art)) {
-			art.setPreis(preis);
-			return art;
-		} else {
-			throw new ArticleNonexistantException(art.getArtikelnummer());
 		}
 	}
 }

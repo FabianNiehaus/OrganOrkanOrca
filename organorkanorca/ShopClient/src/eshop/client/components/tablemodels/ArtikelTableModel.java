@@ -12,6 +12,9 @@ public class ArtikelTableModel extends ShopTableModel {
 	  */
 	private static final long serialVersionUID = 7021676013626973075L;
 
+	protected String[]	columnNames;
+
+	protected Object[][]	data;
 	public ArtikelTableModel(Vector<Artikel> dataVector) {
 		columnNames = new String[] {"ArtNr.", "Bezeichnung", "Preis", "Einheit", "Bestand"};
 		data = new Object[dataVector.size()][5];
@@ -29,9 +32,6 @@ public class ArtikelTableModel extends ShopTableModel {
 			i++;
 		}
 	}
-
-	protected String[]	columnNames;
-	protected Object[][]	data;
 
 	@Override
 	public int getColumnCount() {
@@ -60,6 +60,7 @@ public class ArtikelTableModel extends ShopTableModel {
 	/*
 	 * Don't need to implement this method unless your table's data can change.
 	 */
+	@Override
 	public void setValueAt(Object value, int row, int col) {
 
 		data[row][col] = value;

@@ -8,8 +8,8 @@ import net.miginfocom.swing.MigLayout;
 
 public class ContentPanel extends JPanel {
 
-	JPanel	upperArea	= new JPanel(new MigLayout());
 	JPanel	lowerArea	= new JPanel(new MigLayout());
+	JPanel	upperArea	= new JPanel(new MigLayout());
 
 	public ContentPanel(JPanel upperAreaContent, JPanel lowerAreaContent) {
 		setLayout(new MigLayout());

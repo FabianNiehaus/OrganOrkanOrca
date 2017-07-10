@@ -9,8 +9,8 @@ import java.io.InputStreamReader;
 
 public class IO {
 
-	public static BufferedReader	input		= new BufferedReader(new InputStreamReader(System.in));
 	public static String				eingabe	= "";
+	public static BufferedReader	input		= new BufferedReader(new InputStreamReader(System.in));
 
 	public static void print(char s) {
 

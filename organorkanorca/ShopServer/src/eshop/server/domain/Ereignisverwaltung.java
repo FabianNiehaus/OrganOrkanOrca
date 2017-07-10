@@ -22,13 +22,13 @@ import eshop.server.persistence.PersistenceManager;
  */
 public class Ereignisverwaltung {
 
+	Artikelverwaltung			av;
+	private Vector<Ereignis>	ereignisse	= new Vector<Ereignis>();
 	Kundenverwaltung			kv;
 	Mitarbeiterverwaltung	mv;
-	Artikelverwaltung			av;
 	// Persistenz-Schnittstelle, die fuer die Details des Dateizugriffs
 	// verantwortlich ist
 	private PersistenceManager	pm				= new FilePersistenceManager();
-	private Vector<Ereignis>	ereignisse	= new Vector<Ereignis>();
 
 	public Ereignisverwaltung(Kundenverwaltung kv, Mitarbeiterverwaltung mv, Artikelverwaltung av) {
 		this.kv = kv;

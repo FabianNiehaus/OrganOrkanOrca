@@ -27,6 +27,9 @@ public interface ShopRemote extends Remote {
 
 	public void addShopEventListener(ShopEventListener listener) throws RemoteException;
 
+	Artikel aendereArtikelBestand(Artikel art, int bestand, String operator, Person p)
+			throws AccessRestrictedException, InvalidAmountException, RemoteException;
+
 	/**
 	 * @return Alle in der Artikelverwaltung gespeicherten Artikel
 	 * @throws AccessRestrictedException
@@ -65,12 +68,30 @@ public interface ShopRemote extends Remote {
 	 */
 	Person anmelden(int id, String passwort) throws LoginFailedException, RemoteException;
 
+	Artikel artikelAendern(int artikelnummer, Person p, String bezeichnung, int bestand, String operator, double preis,
+			int packungsgroesse)
+			throws RemoteException, AccessRestrictedException, InvalidAmountException, ArticleNonexistantException;
+
+	void artikelAusWarenkorbEntfernen(int artikelnummer, Person p)
+			throws AccessRestrictedException, RemoteException, PersonNonexistantException, ArticleNonexistantException;
+
 	/**
 	 * @param art
 	 * @param p
 	 * @return
 	 */
 	public boolean artikelInWarenkorb(Artikel art, Person p) throws RemoteException;
+
+	void artikelInWarenkorbAendern(int artikelnummer, int anz, Person p)
+			throws ArticleStockNotSufficientException, BasketNonexistantException, AccessRestrictedException,
+			InvalidAmountException, RemoteException, ArticleNonexistantException, PersonNonexistantException;
+
+	void artikelInWarenkorbLegen(int artikelnummer, int anz, int id, Person p)
+			throws ArticleNonexistantException, ArticleStockNotSufficientException, AccessRestrictedException,
+			InvalidAmountException, ArticleAlreadyInBasketException, RemoteException, PersonNonexistantException;
+
+	void artikelLoeschen(int artikelnummer, Person p)
+			throws AccessRestrictedException, RemoteException, ArticleNonexistantException;
 
 	/**
 	 * Erlaubt die Suche nach einer Artikelnummer
@@ -150,6 +171,10 @@ public interface ShopRemote extends Remote {
 
 	Mitarbeiter mitarbeiterSuchen(int id, Person p) throws PersonNonexistantException, RemoteException;
 
+	Person personAendern(String typ, Person p, String firstname, String lastname, int id, String passwort,
+			String address_Street, String address_Zip, String address_Town)
+			throws RemoteException, AccessRestrictedException, InvalidPersonDataException, PersonNonexistantException;
+
 	void personLoeschen(Person loeschen, Person p)
 			throws AccessRestrictedException, RemoteException, InvalidPersonDataException, PersonNonexistantException;
 
@@ -161,6 +186,9 @@ public interface ShopRemote extends Remote {
 	 * @throws IOException
 	 */
 	void schreibeDaten() throws IOException;
+
+	Warenkorb warenkorbAusgeben(int id, Person p)
+			throws AccessRestrictedException, RemoteException, PersonNonexistantException;
 
 	/**
 	 * Warenkorb kaufen und Rechnung erstellen
@@ -184,32 +212,4 @@ public interface ShopRemote extends Remote {
 	 * @throws PersonNonexistantException
 	 */
 	void warenkorbLeeren(Person p) throws AccessRestrictedException, RemoteException, PersonNonexistantException;
-
-	Artikel artikelAendern(int artikelnummer, Person p, String bezeichnung, int bestand, String operator, double preis,
-			int packungsgroesse)
-			throws RemoteException, AccessRestrictedException, InvalidAmountException, ArticleNonexistantException;
-
-	Artikel aendereArtikelBestand(Artikel art, int bestand, String operator, Person p)
-			throws AccessRestrictedException, InvalidAmountException, RemoteException;
-
-	Person personAendern(String typ, Person p, String firstname, String lastname, int id, String passwort,
-			String address_Street, String address_Zip, String address_Town)
-			throws RemoteException, AccessRestrictedException, InvalidPersonDataException, PersonNonexistantException;
-
-	void artikelLoeschen(int artikelnummer, Person p)
-			throws AccessRestrictedException, RemoteException, ArticleNonexistantException;
-
-	Warenkorb warenkorbAusgeben(int id, Person p)
-			throws AccessRestrictedException, RemoteException, PersonNonexistantException;
-
-	void artikelInWarenkorbLegen(int artikelnummer, int anz, int id, Person p)
-			throws ArticleNonexistantException, ArticleStockNotSufficientException, AccessRestrictedException,
-			InvalidAmountException, ArticleAlreadyInBasketException, RemoteException, PersonNonexistantException;
-
-	void artikelInWarenkorbAendern(int artikelnummer, int anz, Person p)
-			throws ArticleStockNotSufficientException, BasketNonexistantException, AccessRestrictedException,
-			InvalidAmountException, RemoteException, ArticleNonexistantException, PersonNonexistantException;
-
-	void artikelAusWarenkorbEntfernen(int artikelnummer, Person p)
-			throws AccessRestrictedException, RemoteException, PersonNonexistantException, ArticleNonexistantException;
 }

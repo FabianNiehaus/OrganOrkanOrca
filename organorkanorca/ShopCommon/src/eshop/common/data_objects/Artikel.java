@@ -13,11 +13,11 @@ public class Artikel implements Serializable {
 	 * 
 	 */
 	private static final long		serialVersionUID	= 8273031240889790935L;
-	private String						bezeichnung;
 	private int							artikelnummer;
 	private int							bestand;
-	private double						preis;
 	private Map<Integer, Integer>	bestandsverlauf	= new LinkedHashMap<>();
+	private String						bezeichnung;
+	private double						preis;
 
 	/*
 	 * Nocht nicht verwendet private String kategorie; private boolean angebot;
