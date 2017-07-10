@@ -102,8 +102,8 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
 	public void windowClosing(WindowEvent e) {
 
 		JFrame closing = new JFrame("Closing");
-		JButton logout = new JButton("Ausloggen");
-		JButton quit = new JButton("Beenden");
+		JButton logout = new JButton("Neu anmelden");
+		JButton quit = new JButton("Schließen");
 		logout.addActionListener(new ActionListener() {
 
 			@Override
@@ -128,9 +128,9 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
 			}
 		});
 		closing.getContentPane().setLayout(new MigLayout("", "30[]30", "30[]15[]30"));
-		closing.getContentPane().add(new JLabel("Möchten Sie sich ausloggen oder das Programm beenden?"), "wrap, span 2");
-		closing.getContentPane().add(logout, "dock center");
-		closing.getContentPane().add(quit, "dock center");
+		closing.getContentPane().add(new JLabel("Möchten Sie sich neu anmelden oder das Programm schließen?"), "wrap, span 2");
+		closing.getContentPane().add(logout, "left, w 150!");
+		closing.getContentPane().add(quit, "right, w 150!");
 		closing.pack();
 		closing.setLocationRelativeTo(null);
 		closing.setVisible(true);

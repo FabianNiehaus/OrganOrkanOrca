@@ -254,6 +254,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 				if (!artNrField.getText().equals("")) {
 					setInputFieldsColor(Color.LIGHT_GRAY);
 					setInputFieldsEditable(true);
+					bestandField.setToolTipText("<html>Bestand erhöhen/verringern mit +<Zuwachs> und -<Abgang>.<br>Bestand auf Null setzen mit 0.</html>");
 					aendernButton.setText("OK");
 					isBeingChanged = true;
 				}
@@ -290,6 +291,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 								setInputFieldsColor(Color.WHITE);
 								setInputFieldsEditable(false);
 								setStores(art);
+								bestandField.setToolTipText("");
 							} catch (AccessRestrictedException e1) {
 								JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this, e1.getMessage());
 							} catch (InvalidAmountException e1) {
