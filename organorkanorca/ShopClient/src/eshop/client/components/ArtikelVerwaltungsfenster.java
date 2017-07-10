@@ -433,6 +433,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 				ChartFrame chartFrame = new ChartFrame("Bestandsverlauf", chart);
 				chartFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				chartFrame.pack();
+				chartFrame.setResizable(false);
 				chartFrame.setLocationRelativeTo(null);
 				chartFrame.setVisible(true);
 			} catch (ArrayIndexOutOfBoundsException e1) {

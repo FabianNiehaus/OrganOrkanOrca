@@ -191,6 +191,7 @@ public class MainWindow extends JFrame implements SichtfensterCallbacks, Verwalt
 		this.setPreferredSize(new Dimension(1024, 600));
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		this.pack();
+		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 	}
