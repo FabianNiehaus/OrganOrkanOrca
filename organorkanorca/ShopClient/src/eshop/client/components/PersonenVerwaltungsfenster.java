@@ -27,22 +27,22 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 	 * 
 	 */
 	private static final long	serialVersionUID	= 3593841333668075281L;
-	JButton							aendernButton		= new JButton("Ã„ndern");
+	JButton							aendernButton		= new JButton("Ändern");
 	JPanel							buttons				= new JPanel();
 	JPanel							detailArea			= new JPanel();
-	JButton							loeschenButton		= new JButton("LÃ¶schen");
+	JButton							loeschenButton		= new JButton("Löschen");
 	JTextField						nachnameField		= new JTextField(15);
 	JLabel							nachnameLabel		= new JLabel("Nachname:");
 	JButton							neuAnlegenButton	= new JButton("Neu");
 	JTextField						ortField				= new JTextField(15);
-	JLabel							ortLabel				= new JLabel("Stadt");
+	JLabel							ortLabel				= new JLabel("Stadt:");
 	Person							p;
 	JTextField						passwordField		= new JTextField("*********", 15);
 	JLabel							passwordLabel		= new JLabel("Passwort:");
 	JTextField						persNrField			= new JTextField(15);
 	JLabel							persNrLabel			= new JLabel("ID:");
 	JTextField						strasseField		= new JTextField(15);
-	JLabel							strasseLabel		= new JLabel("StraÃŸe:");
+	JLabel							strasseLabel		= new JLabel("Straße:");
 	String							typ					= "";
 	JTextField						vornameField		= new JTextField(15);
 	JLabel							vornameLabel		= new JLabel("Vorname:");
@@ -56,21 +56,20 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		detailArea.setLayout(new MigLayout("", "[]10[]"));
 		detailArea.add(new JLabel(titel), "wrap 10!, span 2");
 		detailArea.add(persNrLabel);
-		detailArea.add(persNrField, "wrap 10!");
-		detailArea.add(passwordLabel);
-		detailArea.add(passwordField);
+		detailArea.add(persNrField, "");
 		detailArea.add(vornameLabel);
 		detailArea.add(vornameField, "");
-		detailArea.add(nachnameLabel);
-		detailArea.add(nachnameField, "wrap 10!");
 		detailArea.add(strasseLabel);
-		detailArea.add(strasseField, "");
-		detailArea.add(ortLabel);
-		detailArea.add(ortField, "wrap 10!");
-		detailArea.add(zipLabel);
-		detailArea.add(zipField, "");
+		detailArea.add(strasseField, "wrap 10!");
 		detailArea.add(passwordLabel);
 		detailArea.add(passwordField);
+		detailArea.add(nachnameLabel);
+		detailArea.add(nachnameField);
+		detailArea.add(ortLabel);
+		detailArea.add(ortField, "wrap 10!");
+		detailArea.add(zipLabel, "cell 4 3");
+		detailArea.add(zipField, "cell 5 3");
+
 		this.add(detailArea, "w 100%, h 200!, wrap");
 		detailArea.setBackground(Color.WHITE);
 		detailArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
@@ -80,7 +79,7 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		aendernButton.addActionListener(new PersonBearbeitenListener(personenTyp));
 		neuAnlegenButton.addActionListener(new PersonNeuAnlegenListener(personenTyp));
 		loeschenButton.addActionListener(new PersonLoeschenListener());
-		this.add(buttons, "align center");
+		this.add(buttons, "right");
 		persNrField.setEditable(false);
 		vornameField.setEditable(false);
 		nachnameField.setEditable(false);
@@ -134,7 +133,7 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		passwordField.setEditable(false);
 		neuAnlegenButton.setText("Neu");
 		isBeingCreated = false;
-		aendernButton.setText("Ã„ndern");
+		aendernButton.setText("Ändern");
 		isBeingChanged = false;
 	}
 

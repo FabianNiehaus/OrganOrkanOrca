@@ -2,6 +2,7 @@ package eshop.client;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.HeadlessException;
 import java.awt.event.WindowListener;
 import java.rmi.RemoteException;
@@ -154,6 +155,7 @@ public class MainWindow extends JFrame implements SichtfensterCallbacks, Verwalt
 
 		this.getContentPane().setLayout(new BorderLayout());
 		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+		tabbedPane.setFont(new Font("Arial", Font.BOLD , 17));
 		if (user instanceof Kunde) {
 			artikelsichtfenster = new ArtikelSichtfenster(server, user, this);
 			artikelverwaltungsfenster = new ArtikelVerwaltungsfenster(server, user, this);

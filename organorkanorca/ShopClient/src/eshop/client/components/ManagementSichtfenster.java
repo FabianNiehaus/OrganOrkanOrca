@@ -17,6 +17,7 @@ import eshop.common.exceptions.ArticleNonexistantException;
 import eshop.common.exceptions.InvalidPersonDataException;
 import eshop.common.exceptions.PersonNonexistantException;
 import eshop.common.net.ShopRemote;
+import net.miginfocom.swing.MigLayout;
 
 public class ManagementSichtfenster extends Sichtfenster {
 
@@ -30,11 +31,12 @@ public class ManagementSichtfenster extends Sichtfenster {
 
 	public ManagementSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
 		super(server, user, listener);
+		this.setLayout(new MigLayout());
 		speichernButton.addActionListener(new PersistenceButtonListener());
 		ladenButton.addActionListener(new PersistenceButtonListener());
 		actionField.add(speichernButton, "wrap");
 		actionField.add(ladenButton);
-		setPreferredSize(new Dimension(900, 400));
+		//setPreferredSize(new Dimension(900, 400));
 	}
 
 	@Override

@@ -43,13 +43,13 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 	 * 
 	 */
 	private static final long	serialVersionUID		= -107879108721906207L;
-	JButton							aendernButton			= new JButton("ï¿½ndern");
+	JButton							aendernButton			= new JButton("Ändern");
 	JTextField						anzahlField				= new JTextField(3);
 	Artikel							art;
 	JTextField						artNrField				= new JTextField(15);
 	JLabel							artNrLabel				= new JLabel("Artikel Nr.:");
 	JTextField						bestandField			= new JTextField(15);
-	JLabel							bestandLabel			= new JLabel("Verfï¿½gbar:");
+	JLabel							bestandLabel			= new JLabel("Verfügbar:");
 	int								bestandStore			= 0;
 	JTextField						bezeichnungField		= new JTextField("Bezeichnung", 12);
 	String							bezeichnungStore		= "";
@@ -58,18 +58,18 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 	JLabel							imageLabel				= new JLabel();
 	JTextArea						infoArea					= new JTextArea();
 	JLabel							infoLabel				= new JLabel("Informationen:");
-	JButton							inWarenkorbButton		= new JButton("Hinzufï¿½gen");
+	JButton							inWarenkorbButton		= new JButton("Hinzufügen");
 	JPanel							kundenButtons			= new JPanel();
-	JButton							loeschenButton			= new JButton("Lï¿½schen");
+	JButton							loeschenButton			= new JButton("Löschen");
 	JPanel							mitarbeiterButtons	= new JPanel();
 	JButton							neuAnlegenButton		= new JButton("Neu");
 	int								packungsgroesseStore	= 0;
 	JPanel							picture					= new JPanel();
 	JTextField						pkggroesseField		= new JTextField(15);
-	JLabel							pkggroesseLabel		= new JLabel("Packungsgrï¿½ï¿½e:");
+	JLabel							pkggroesseLabel		= new JLabel("Packungsgröße:");
 	JTextField						preisField				= new JTextField("Preis", 15);
 	double							preisStore				= 0;
-	JLabel							stueckLabel				= new JLabel("Stï¿½ck");
+	JLabel							stueckLabel				= new JLabel("Stück");
 
 	public ArtikelVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener) {
 		super(server, user, listener);
@@ -89,7 +89,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		detailArea.add(pkggroesseLabel, "right");
 		detailArea.add(pkggroesseField, "w 30!, wrap 5!");
 		detailArea.add(infoLabel, "wrap");
-		detailArea.add(infoArea, "w 100%, span 7 0");
+		detailArea.add(infoArea, "w 100:650:900, span 7 0");
 		detailArea.setBackground(Color.WHITE);
 		detailArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 		ImageIcon image = new ImageIcon("pictures/orkan.jpg");
@@ -115,8 +115,8 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		infoArea.setLineWrap(true);
 		infoArea.setWrapStyleWord(true);
 		infoArea.setText("Als Orkan werden im weiteren Sinn Winde mit Geschwindigkeiten von mindestens "
-				+ "64 kn (117,7 km/h = 32,7 m/s) bezeichnet. Orkane kï¿½nnen "
-				+ "massive Verwï¿½stungen anrichten und bilden auf See eine Gefahr fï¿½r den Schiffsverkehr.");
+				+ "64 kn (117,7 km/h = 32,7 m/s) bezeichnet. Orkane können "
+				+ "massive Verwüstungen anrichten und bilden auf See eine Gefahr für den Schiffsverkehr.");
 		mitarbeiterButtons.add(neuAnlegenButton, "w 100!");
 		mitarbeiterButtons.add(aendernButton, "w 100!");
 		mitarbeiterButtons.add(loeschenButton, "w 100!");
@@ -141,6 +141,9 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		this.setVisible(true);
 	}
 
+	/**
+	 * @param art
+	 */
 	public void artikelAnzeigen(Artikel art) {
 
 		this.art = art;
