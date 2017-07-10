@@ -55,7 +55,7 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 	public WarenkorbVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener) {
 		super(server, user, listener);
 		this.setLayout(new MigLayout("", "114[]0"));
-		this.add(new JLabel("Warenkorbverwaltung"), "wrap");
+		//this.add(new JLabel("Warenkorbverwaltung"), "wrap");
 		this.add(warenkorbAuflistungContainer, "wrap");
 
 		aendernButton.addActionListener(new WarenkorbActionListener());
