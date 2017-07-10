@@ -12,18 +12,17 @@ public abstract class Verwaltungsfenster extends JPanel {
 	/**
 	  * 
 	  */
-	private static final long serialVersionUID = -1766082173934041583L;
-
-	protected boolean								isBeingChanged	= false;
-
-	protected boolean								isBeingCreated	= false;
-	protected VerwaltungsfensterCallbacks	listener			= null;
+	private static final long					serialVersionUID	= -1766082173934041583L;
+	protected boolean								isBeingChanged		= false;
+	protected boolean								isBeingCreated		= false;
 	protected ShopRemote							server;
 	protected Person								user;
-	public Verwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener) {
+	protected VerwaltungsfensterCallbacks	verwaltungsfensterCallbacks;
+
+	public Verwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks verwaltungsfensterCallbacks) {
 		this.server = server;
 		this.user = user;
-		this.listener = listener;
+		this.verwaltungsfensterCallbacks = verwaltungsfensterCallbacks;
 		setPreferredSize(new Dimension(900, 400));
 	}
 
@@ -31,7 +30,8 @@ public abstract class Verwaltungsfenster extends JPanel {
 
 	public interface VerwaltungsfensterCallbacks {
 
-		public void artikelInWarenkorb();
+		public void warenkorbAktualisieren();
 		
+		public boolean istWarenkorbLeer();
 	}
 }

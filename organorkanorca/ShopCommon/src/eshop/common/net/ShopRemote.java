@@ -38,7 +38,7 @@ public interface ShopRemote extends Remote {
 	 *            the remote exception
 	 */
 	public void addShopEventListener(ShopEventListener shopEventListener) throws RemoteException;
-	
+
 	/**
 	 * Alle artikel ausgeben.
 	 *
@@ -145,8 +145,8 @@ public interface ShopRemote extends Remote {
 	 * @throws ArticleNonexistantException
 	 *            the article nonexistant exception
 	 */
-	Artikel artikelAendern(int artikelnummer, Person user, String bezeichnung, int bestand, String operator, double preis,
-			int packungsgroesse)
+	Artikel artikelAendern(int artikelnummer, Person user, String bezeichnung, int bestand, String operator,
+			double preis, int packungsgroesse)
 			throws RemoteException, AccessRestrictedException, InvalidAmountException, ArticleNonexistantException;
 
 	/**
@@ -443,8 +443,8 @@ public interface ShopRemote extends Remote {
 	 * @throws PersonNonexistantException
 	 *            the person nonexistant exception
 	 */
-	Person personAendern(String personenTyp, Person user, String firstname, String lastname, int personenId, String passwort,
-			String address_Street, String address_Zip, String address_Town)
+	Person personAendern(String personenTyp, Person user, String firstname, String lastname, int personenId,
+			String passwort, String address_Street, String address_Zip, String address_Town)
 			throws RemoteException, AccessRestrictedException, InvalidPersonDataException, PersonNonexistantException;
 
 	/**

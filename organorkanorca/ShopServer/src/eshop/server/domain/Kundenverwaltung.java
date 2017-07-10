@@ -19,10 +19,10 @@ import eshop.server.persistence.PersistenceManager;
  */
 public class Kundenverwaltung {
 
-	private Vector<Kunde>		kunden	= new Vector<Kunde>();
+	private Vector<Kunde> kunden = new Vector<Kunde>();
 	// Persistenz-Schnittstelle, die f�r die Details des Dateizugriffs
 	// verantwortlich ist
-	private PersistenceManager	pm			= new FilePersistenceManager();
+	private PersistenceManager pm = new FilePersistenceManager();
 
 	public Kundenverwaltung(Warenkorbverwaltung wv) {
 	}

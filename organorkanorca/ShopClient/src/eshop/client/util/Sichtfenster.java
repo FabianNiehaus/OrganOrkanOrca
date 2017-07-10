@@ -34,41 +34,29 @@ import net.miginfocom.swing.MigLayout;
 public abstract class Sichtfenster extends JPanel {
 
 	/** The Constant serialVersionUID. */
-	private static final long			serialVersionUID		= 8136926280757449267L;
-	
+	private static final long			serialVersionUID			= 8136926280757449267L;
 	/** The action field. */
-	protected JPanel						actionField				= new JPanel(new MigLayout("align 50% 50%"));
-	
+	protected JPanel						actionField					= new JPanel(new MigLayout("align 50% 50%"));
 	/** The alle button. */
-	protected JButton						alleButton				= new JButton("Alle");
-	
+	protected JButton						alleButton					= new JButton("Alle");
 	/** The auflistung. */
-	protected JXTable						auflistung				= new JXTable();
-	
+	protected JXTable						auflistung					= new JXTable();
 	/** The auflistung container. */
-	protected JScrollPane				auflistungContainer	= new JScrollPane(auflistung);
-	
-	/** The sichtfensterCallbacks. */
-	protected SichtfensterCallbacks	sichtfensterCallbacks					= null;
-	
+	protected JScrollPane				auflistungContainer		= new JScrollPane(auflistung);
 	/** The overview buttons. */
-	protected JPanel						overviewButtons		= new JPanel();
-	
+	protected JPanel						overviewButtons			= new JPanel();
 	/** The server. */
 	protected ShopRemote					server;
-	
+	/** The sichtfensterCallbacks. */
+	protected SichtfensterCallbacks	sichtfensterCallbacks	= null;
 	/** The suche button. */
-	protected JButton						sucheButton				= new JButton("Suche");
-	
+	protected JButton						sucheButton					= new JButton("Suche");
 	/** The suche field. */
-	protected JTextField					sucheField				= new JTextField("Bezeichnung", 30);
-	
+	protected JTextField					sucheField					= new JTextField("Bezeichnung", 30);
 	/** The suche field 2. */
-	protected JTextField					sucheField2				= new JTextField("Artikel Nr.", 30);
-	
+	protected JTextField					sucheField2					= new JTextField("Artikel Nr.", 30);
 	/** The suche field 3. */
-	protected JTextField					sucheField3				= new JTextField("Einheit", 30);
-	
+	protected JTextField					sucheField3					= new JTextField("Einheit", 30);
 	/** The user. */
 	protected Person						user;
 
@@ -103,67 +91,69 @@ public abstract class Sichtfenster extends JPanel {
 		JTableHeader header = auflistung.getTableHeader();
 		header.setUpdateTableInRealTime(true);
 		header.setReorderingAllowed(false);
-		
-		sucheField.setHorizontalAlignment(JTextField.CENTER);
-		sucheField2.setHorizontalAlignment(JTextField.CENTER);
-		sucheField3.setHorizontalAlignment(JTextField.CENTER);
+		sucheField.setHorizontalAlignment(SwingConstants.CENTER);
+		sucheField2.setHorizontalAlignment(SwingConstants.CENTER);
+		sucheField3.setHorizontalAlignment(SwingConstants.CENTER);
+		sucheField.addFocusListener(new FocusListener() {
 
-		sucheField.addFocusListener(new FocusListener(){
 			String text;
-	        @Override
-	        public void focusGained(FocusEvent e){
-	        	text = sucheField.getText();
-	        	sucheField.setText("");
-	        }
 
-	        
+			@Override
+			public void focusGained(FocusEvent e) {
+
+				text = sucheField.getText();
+				sucheField.setText("");
+			}
+
 			@Override
 			public void focusLost(FocusEvent e) {
+
 				// TODO Auto-generated method stub
-				if(sucheField.getText().equals("")){
+				if (sucheField.getText().equals("")) {
 					sucheField.setText("Bezeichnung");
 				}
-				
 			}
-	    });
-		
-		sucheField2.addFocusListener(new FocusListener(){
-			String text;
-	        @Override
-	        public void focusGained(FocusEvent e){
-	        	text = sucheField2.getText();
-	        	sucheField2.setText("");
-	        }
+		});
+		sucheField2.addFocusListener(new FocusListener() {
 
-	        
+			String text;
+
+			@Override
+			public void focusGained(FocusEvent e) {
+
+				text = sucheField2.getText();
+				sucheField2.setText("");
+			}
+
 			@Override
 			public void focusLost(FocusEvent e) {
+
 				// TODO Auto-generated method stub
-				if(sucheField2.getText().equals("")){
+				if (sucheField2.getText().equals("")) {
 					sucheField2.setText("Artikel Nr.");
 				}
-				
 			}
-	    });
-		
-		sucheField3.addFocusListener(new FocusListener(){
+		});
+		sucheField3.addFocusListener(new FocusListener() {
+
 			String text;
-	        @Override
-	        public void focusGained(FocusEvent e){
-	        	text = sucheField3.getText();
-	        	sucheField3.setText("");
-	        }
-        
+
+			@Override
+			public void focusGained(FocusEvent e) {
+
+				text = sucheField3.getText();
+				sucheField3.setText("");
+			}
+
 			@Override
 			public void focusLost(FocusEvent e) {
+
 				// TODO Auto-generated method stub
-				if(sucheField3.getText().equals("")){
+				if (sucheField3.getText().equals("")) {
 					sucheField3.setText("Einheit");
 				}
-				
 			}
-	    });
-		
+		});
 		alleButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -206,7 +196,9 @@ public abstract class Sichtfenster extends JPanel {
 	 */
 	public void TabelleFiltern() {
 
-		Filter[] filterArray = {new PatternFilter(".*" + sucheField.getText() + ".*", Pattern.CASE_INSENSITIVE, 0),new PatternFilter(".*" + sucheField2.getText() + ".*", Pattern.CASE_INSENSITIVE, 1),new PatternFilter(".*" + sucheField3.getText() + ".*", Pattern.CASE_INSENSITIVE, 2)};
+		Filter[] filterArray = {new PatternFilter(".*" + sucheField.getText() + ".*", Pattern.CASE_INSENSITIVE, 0),
+				new PatternFilter(".*" + sucheField2.getText() + ".*", Pattern.CASE_INSENSITIVE, 1),
+				new PatternFilter(".*" + sucheField3.getText() + ".*", Pattern.CASE_INSENSITIVE, 2)};
 		FilterPipeline filters = new FilterPipeline(filterArray);
 		auflistung.setFilters(filters);
 	}
@@ -232,6 +224,8 @@ public abstract class Sichtfenster extends JPanel {
 		 */
 		void artikelAnzeigen(Artikel art);
 
+		void artikelAusWarenkorbAnzeigen(Artikel art, int anzahl);
+
 		/**
 		 * Kunde anzeigen.
 		 *
@@ -247,7 +241,5 @@ public abstract class Sichtfenster extends JPanel {
 		 *           the mitarbeiter
 		 */
 		void mitarbeiterAnzeigen(Mitarbeiter mi);
-
-		void artikelAusWarenkorbAnzeigen(Artikel art, int anzahl);
 	}
 }

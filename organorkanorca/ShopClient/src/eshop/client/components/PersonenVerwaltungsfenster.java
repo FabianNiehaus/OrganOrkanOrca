@@ -36,11 +36,11 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 	JButton							neuAnlegenButton	= new JButton("Neu");
 	JTextField						ortField				= new JTextField(15);
 	JLabel							ortLabel				= new JLabel("Stadt:");
-	Person							personStore;
 	JTextField						passwordField		= new JTextField("*********", 15);
 	JLabel							passwordLabel		= new JLabel("Passwort:");
 	JTextField						persNrField			= new JTextField(15);
 	JLabel							persNrLabel			= new JLabel("ID:");
+	Person							personStore;
 	JTextField						strasseField		= new JTextField(15);
 	JLabel							strasseLabel		= new JLabel("Straße:");
 	String							typ					= "";
@@ -49,8 +49,8 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 	JTextField						zipField				= new JTextField(15);
 	JLabel							zipLabel				= new JLabel("PLZ:");
 
-	public PersonenVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks verwaltungsfensterCallbacks, String titel,
-			String personenTyp) {
+	public PersonenVerwaltungsfenster(ShopRemote server, Person user,
+			VerwaltungsfensterCallbacks verwaltungsfensterCallbacks, String titel, String personenTyp) {
 		super(server, user, verwaltungsfensterCallbacks);
 		this.setLayout(new MigLayout("", "114[]0"));
 		detailArea.setLayout(new MigLayout("", "[]10[]"));
@@ -69,7 +69,6 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		detailArea.add(ortField, "wrap 10!");
 		detailArea.add(zipLabel, "cell 4 3");
 		detailArea.add(zipField, "cell 5 3");
-
 		this.add(detailArea, "w 100%, h 200!, wrap");
 		detailArea.setBackground(Color.WHITE);
 		detailArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
@@ -89,6 +88,17 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		zipField.setEditable(false);
 		passwordField.setEditable(false);
 		this.setVisible(true);
+	}
+
+	private void clearInputFields() {
+
+		persNrField.setText("");
+		vornameField.setText("");
+		nachnameField.setText("");
+		strasseField.setText("");
+		ortField.setText("");
+		zipField.setText("");
+		passwordField.setText("");
 	}
 
 	public Person getPerson() {
@@ -127,6 +137,16 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		isBeingChanged = false;
 	}
 
+	private void setInputFieldsEditable(boolean editable) {
+
+		vornameField.setEditable(editable);
+		nachnameField.setEditable(editable);
+		strasseField.setEditable(editable);
+		ortField.setEditable(editable);
+		zipField.setEditable(editable);
+		passwordField.setEditable(editable);
+	}
+
 	public class PersonBearbeitenListener implements ActionListener {
 
 		public PersonBearbeitenListener(String personenTyp) {
@@ -154,8 +174,8 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 					String address_Town = ortField.getText();
 					String address_Zip = zipField.getText();
 					String passwort = passwordField.getText();
-					personStore = server.personAendern(typ, personStore, firstname, lastname, personStore.getId(), passwort, address_Street, address_Zip,
-							address_Town);
+					personStore = server.personAendern(typ, personStore, firstname, lastname, personStore.getId(), passwort,
+							address_Street, address_Zip, address_Town);
 					setInputFieldsEditable(false);
 					aendernButton.setText("Ändern");
 					isBeingChanged = false;
@@ -174,7 +194,6 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 				}
 			}
 		}
-
 	}
 
 	public class PersonLoeschenListener implements ActionListener {
@@ -224,8 +243,8 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 					String address_Zip = zipField.getText();
 					String passwort = passwordField.getText();
 					if (typ.equals("kunde")) {
-						personStore = server.erstelleKunde(firstname, lastname, passwort, address_Street, address_Zip, address_Town,
-								user);
+						personStore = server.erstelleKunde(firstname, lastname, passwort, address_Street, address_Zip,
+								address_Town, user);
 					} else if (typ.equals("mitarbeiter")) {
 						personStore = server.erstelleMitatbeiter(firstname, lastname, passwort, address_Street, address_Zip,
 								address_Town, user);
@@ -247,29 +266,5 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 				}
 			}
 		}
-
-		
-	}
-	
-	private void clearInputFields() {
-
-		persNrField.setText("");
-		vornameField.setText("");
-		nachnameField.setText("");
-		strasseField.setText("");
-		ortField.setText("");
-		zipField.setText("");
-		passwordField.setText("");
-	}
-	
-
-	private void setInputFieldsEditable(boolean editable) {
-
-		vornameField.setEditable(editable);
-		nachnameField.setEditable(editable);
-		strasseField.setEditable(editable);
-		ortField.setEditable(editable);
-		zipField.setEditable(editable);
-		passwordField.setEditable(editable);
 	}
 }

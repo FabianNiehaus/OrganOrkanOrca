@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -17,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
 import eshop.client.util.Verwaltungsfenster;
 import eshop.common.data_objects.Artikel;
 import eshop.common.data_objects.Massengutartikel;
@@ -38,7 +38,10 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 	 */
 	private static final long	serialVersionUID		= -107879108721906207L;
 	JButton							aendernButton			= new JButton("Anzahl ändern");
+	JPanel							aktionsButtons			= new JPanel();
 	JTextField						anzahlField				= new JTextField(3);
+	JLabel							anzahlLabel				= new JLabel("Im Warenkorb:");
+	int								anzahlStore				= 0;
 	Artikel							art;
 	JTextField						artNrField				= new JTextField(15);
 	JLabel							artNrLabel				= new JLabel("Artikel Nr.:");
@@ -52,22 +55,19 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 	JLabel							imageLabel				= new JLabel();
 	JTextArea						infoArea					= new JTextArea();
 	JLabel							infoLabel				= new JLabel("Informationen:");
-	JButton							leerenButton			= new JButton("Warenkorb leeren");
-	JPanel							aktionsButtons			= new JPanel();
-	JButton							loeschenButton			= new JButton("Artikel löschen");
 	JButton							kaufenButton			= new JButton("Alles kaufen");
+	JButton							leerenButton			= new JButton("Warenkorb leeren");
+	JButton							loeschenButton			= new JButton("Artikel löschen");
 	int								packungsgroesseStore	= 0;
 	JPanel							picture					= new JPanel();
 	JTextField						pkggroesseField		= new JTextField(15);
 	JLabel							pkggroesseLabel		= new JLabel("Packungsgröße:");
 	JTextField						preisField				= new JTextField("Preis", 15);
 	double							preisStore				= 0;
-	JLabel							anzahlLabel				= new JLabel("Stück");
-	int							anzahlStore				= 0;
-	
 
-	public WarenkorbVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener) {
-		super(server, user, listener);
+	public WarenkorbVerwaltungsfenster(ShopRemote server, Person user,
+			VerwaltungsfensterCallbacks verwaltungsfensterCallbacks) {
+		super(server, user, verwaltungsfensterCallbacks);
 		this.setLayout(new MigLayout("", "114[]0"));
 		detailArea.setLayout(new MigLayout("", "[]10[]"));
 		buttonArea.setLayout(new MigLayout());
@@ -102,15 +102,14 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 		bestandField.setBorder(null);
 		// Hintergrund der Felder ausblenden
 		setInputFieldsColor(null);
-		
 		infoArea.setLineWrap(true);
 		infoArea.setWrapStyleWord(true);
 		infoArea.setText("Als Orkan werden im weiteren Sinn Winde mit Geschwindigkeiten von mindestens "
 				+ "64 kn (117,7 km/h = 32,7 m/s) bezeichnet. Orkane k�nnen "
 				+ "massive Verw�stungen anrichten und bilden auf See eine Gefahr f�r den Schiffsverkehr.");
 		
-		aktionsButtons.add(anzahlField, "w 30!");
 		aktionsButtons.add(anzahlLabel);
+		aktionsButtons.add(anzahlField, "w 40!");
 		aktionsButtons.add(aendernButton);
 		aktionsButtons.add(loeschenButton);
 		aktionsButtons.add(kaufenButton);
@@ -119,11 +118,8 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 		kaufenButton.addActionListener(new WarenkorbActionListener());
 		loeschenButton.addActionListener(new WarenkorbActionListener());
 		leerenButton.addActionListener(new WarenkorbActionListener());
-
 		buttonArea = aktionsButtons;
-	
 		setInputFieldsEditable(false);
-		
 		this.add(detailArea, "w 100%, h 200!, wrap");
 		this.add(buttonArea, "right");
 		this.setVisible(true);
@@ -133,12 +129,12 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 	 * @param art
 	 */
 	public void artikelAnzeigen(Artikel art, int anzahl) {
-		
+
 		reset();
-		
+		this.art = art;
 		artNrField.setText(String.valueOf(art.getArtikelnummer()));
 		bezeichnungField.setText(art.getBezeichnung());
-		preisField.setText(String.valueOf(art.getPreis())+"�");
+		preisField.setText(String.valueOf(art.getPreis()) + "�");
 		if (art instanceof Massengutartikel) {
 			pkggroesseField.setText(String.valueOf(((Massengutartikel) art).getPackungsgroesse()));
 		} else {
@@ -147,6 +143,15 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 		bestandField.setText(String.valueOf(art.getBestand()));
 		anzahlField.setText(String.valueOf(anzahl));
 		setStores(art, anzahl);
+	}
+
+	private void clearInputFields() {
+
+		bezeichnungField.setText("");
+		preisField.setText("");
+		pkggroesseField.setText("");
+		bestandField.setText("");
+		anzahlField.setText("");
 	}
 
 	public Artikel getArtikel() {
@@ -158,15 +163,8 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 	public void reset() {
 
 		this.art = null;
-		
 		clearInputFields();
 		setInputFieldsColor(Color.WHITE);
-
-		aendernButton.setText("Andern");
-		isBeingChanged = false;
-		kaufenButton.setText("Neu");
-		isBeingCreated = false;
-		
 		resetStores();
 	}
 
@@ -178,8 +176,24 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 		bestandStore = 0;
 	}
 
+	private void setInputFieldsColor(Color color) {
+
+		bezeichnungField.setBackground(color);
+		preisField.setBackground(color);
+		pkggroesseField.setBackground(color);
+		bestandField.setBackground(color);
+	}
+
+	private void setInputFieldsEditable(boolean editable) {
+
+		bezeichnungField.setEditable(editable);
+		preisField.setEditable(editable);
+		pkggroesseField.setEditable(editable);
+		bestandField.setEditable(editable);
+	}
+
 	public void setStores(Artikel art, int anzahl) {
-		
+
 		bezeichnungStore = art.getBezeichnung();
 		preisStore = art.getPreis();
 		if (art instanceof Massengutartikel) {
@@ -199,12 +213,13 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 			// Anzahl eines Artikels im Warenkorn ändern
 			if (e.getSource().equals(aendernButton)) {
 				try {
-						int anz = Integer.parseInt(anzahlField.getText());
-						if (anz > 0) {
-							server.artikelInWarenkorbAendern(art.getArtikelnummer(), anz, user);
-						} else {
-							throw new InvalidAmountException();
-						}
+					int anz = Integer.parseInt(anzahlField.getText());
+					if (anz > 0) {
+						server.artikelInWarenkorbAendern(art.getArtikelnummer(), anz, user);
+						verwaltungsfensterCallbacks.warenkorbAktualisieren();
+					} else {
+						throw new InvalidAmountException();
+					}
 				} catch (ArticleStockNotSufficientException e1) {
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
 				} catch (BasketNonexistantException e1) {
@@ -224,7 +239,8 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 				}
 			} else if (e.getSource().equals(loeschenButton)) {
 				try {
-						server.artikelAusWarenkorbEntfernen(art.getArtikelnummer(), user);
+					server.artikelAusWarenkorbEntfernen(art.getArtikelnummer(), user);
+					verwaltungsfensterCallbacks.warenkorbAktualisieren();
 				} catch (AccessRestrictedException e1) {
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
 				} catch (ArticleNonexistantException e1) {
@@ -237,6 +253,7 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 			} else if (e.getSource().equals(leerenButton)) {
 				try {
 					server.warenkorbLeeren(user);
+					verwaltungsfensterCallbacks.warenkorbAktualisieren();
 				} catch (AccessRestrictedException e1) {
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
 				} catch (RemoteException e1) {
@@ -246,7 +263,7 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 				}
 			} else if (e.getSource().equals(kaufenButton)) {
 				try {
-					// Formatierungsvorlage fuer Datum
+					if(!verwaltungsfensterCallbacks.istWarenkorbLeer()){
 					DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 					Rechnung re = server.warenkorbKaufen(user);
 					String rechnungsString = "";
@@ -260,6 +277,8 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 					rechnungsString += re.getWk().toString() + "\n";
 					rechnungsString += "Gesamtbetrag: " + re.getGesamt() + "€";
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, rechnungsString);
+					verwaltungsfensterCallbacks.warenkorbAktualisieren();
+					}
 				} catch (AccessRestrictedException e1) {
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, e1.getMessage());
 				} catch (InvalidAmountException e1) {
@@ -271,30 +290,5 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 				}
 			}
 		}
-	}
-	
-	private void setInputFieldsEditable(boolean editable) {
-
-		bezeichnungField.setEditable(editable);
-		preisField.setEditable(editable);
-		pkggroesseField.setEditable(editable);
-		bestandField.setEditable(editable);
-	}
-
-	private void setInputFieldsColor(Color color) {
-
-		bezeichnungField.setBackground(color);
-		preisField.setBackground(color);
-		pkggroesseField.setBackground(color);
-		bestandField.setBackground(color);
-	}
-	
-	private void clearInputFields() {
-
-		bezeichnungField.setText("");
-		preisField.setText("");
-		pkggroesseField.setText("");
-		bestandField.setText("");
-		anzahlField.setText("");
 	}
 }

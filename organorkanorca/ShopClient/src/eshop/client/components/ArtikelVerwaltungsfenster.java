@@ -42,38 +42,39 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 	/**
 	 * 
 	 */
-	private static final long	serialVersionUID		= -107879108721906207L;
-	JButton							aendernButton			= new JButton("�ndern");
-	JTextField						anzahlField				= new JTextField(3);
+	private static final long	serialVersionUID			= -107879108721906207L;
+	JButton							aendernButton				= new JButton("�ndern");
+	JTextField						anzahlField					= new JTextField(3);
 	Artikel							art;
-	JTextField						artNrField				= new JTextField(15);
-	JLabel							artNrLabel				= new JLabel("Artikel Nr.:");
-	JTextField						bestandField			= new JTextField(15);
-	JLabel							bestandLabel			= new JLabel("Verf�gbar:");
-	int								bestandStore			= 0;
-	JTextField						bezeichnungField		= new JTextField("Bezeichnung", 12);
-	String							bezeichnungStore		= "";
-	JPanel							buttonArea				= new JPanel();
-	JPanel							detailArea				= new JPanel();
-	JLabel							imageLabel				= new JLabel();
-	JTextArea						infoArea					= new JTextArea();
-	JLabel							infoLabel				= new JLabel("Informationen:");
-	JButton							inWarenkorbButton		= new JButton("Hinzuf�gen");
-	JPanel							kundenButtons			= new JPanel();
-	JButton							loeschenButton			= new JButton("L�schen");
-	JPanel							mitarbeiterButtons	= new JPanel();
-	JButton							neuAnlegenButton		= new JButton("Neu");
-	int								packungsgroesseStore	= 0;
-	JPanel							picture					= new JPanel();
-	JTextField						pkggroesseField		= new JTextField(15);
-	JLabel							pkggroesseLabel		= new JLabel("Packungsgr��e:");
-	JTextField						preisField				= new JTextField("Preis", 15);
-	double							preisStore				= 0;
-	JLabel							stueckLabel				= new JLabel("St�ck");
-	
+	JTextField						artNrField					= new JTextField(15);
+	JLabel							artNrLabel					= new JLabel("Artikel Nr.:");
+	JTextField						bestandField				= new JTextField(15);
+	JLabel							bestandLabel				= new JLabel("Verf�gbar:");
+	int								bestandStore				= 0;
+	JTextField						bezeichnungField			= new JTextField("Bezeichnung", 12);
+	String							bezeichnungStore			= "";
+	JPanel							buttonArea					= new JPanel();
+	JPanel							detailArea					= new JPanel();
+	JLabel							imageLabel					= new JLabel();
+	JTextArea						infoArea						= new JTextArea();
+	JLabel							infoLabel					= new JLabel("Informationen:");
+	JButton							inWarenkorbButton			= new JButton("Hinzufügen");
+	JPanel							kundenButtons				= new JPanel();
+	JButton							loeschenButton				= new JButton("L�schen");
+	JPanel							mitarbeiterButtons		= new JPanel();
+	JButton							neuAnlegenButton			= new JButton("Neu");
+	int								packungsgroesseStore		= 0;
+	JPanel							picture						= new JPanel();
+	JTextField						pkggroesseField			= new JTextField(15);
+	JLabel							pkggroesseLabel			= new JLabel("Packungsgr��e:");
+	JTextField						preisField					= new JTextField("Preis", 15);
+	double							preisStore					= 0;
+	JLabel							stueckLabel					= new JLabel("St�ck");
+	JButton							verlaufAnzeigenButton	= new JButton("Verlauf anzeigen");
 
-	public ArtikelVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener) {
-		super(server, user, listener);
+	public ArtikelVerwaltungsfenster(ShopRemote server, Person user,
+			VerwaltungsfensterCallbacks verwaltungsfensterCallbacks) {
+		super(server, user, verwaltungsfensterCallbacks);
 		this.setLayout(new MigLayout("", "114[]0"));
 		detailArea.setLayout(new MigLayout("", "[]10[]"));
 		buttonArea.setLayout(new MigLayout());
@@ -101,33 +102,29 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		// detailArea.setBorder(BorderFactory.createTitledBorder("Artikeldetails:"));
 		bezeichnungField.setFont(new Font("Arial", Font.BOLD, 20));
 		preisField.setFont(new Font("Arial", Font.BOLD, 14));
-		// Border der Felder ausblenden
 		bezeichnungField.setBorder(null);
 		preisField.setBorder(null);
 		artNrField.setBorder(null);
 		pkggroesseField.setBorder(null);
 		bestandField.setBorder(null);
-		// Hintergrund der Felder ausblenden
-		bezeichnungField.setBackground(null);
-		preisField.setBackground(null);
-		artNrField.setBackground(null);
-		pkggroesseField.setBackground(null);
-		bestandField.setBackground(null);
-		
+		setInputFieldsColor(null);
 		infoArea.setLineWrap(true);
 		infoArea.setWrapStyleWord(true);
 		infoArea.setText("Als Orkan werden im weiteren Sinn Winde mit Geschwindigkeiten von mindestens "
 				+ "64 kn (117,7 km/h = 32,7 m/s) bezeichnet. Orkane k�nnen "
 				+ "massive Verw�stungen anrichten und bilden auf See eine Gefahr f�r den Schiffsverkehr.");
+		mitarbeiterButtons.add(verlaufAnzeigenButton);
 		mitarbeiterButtons.add(neuAnlegenButton, "w 100!");
 		mitarbeiterButtons.add(aendernButton, "w 100!");
 		mitarbeiterButtons.add(loeschenButton, "w 100!");
 		kundenButtons.add(anzahlField, "split 2, w 30!");
 		kundenButtons.add(stueckLabel, "w 40!");
 		kundenButtons.add(inWarenkorbButton, "w 100!");
+		verlaufAnzeigenButton.addActionListener(new VerlaufAnzeigenListener());
 		aendernButton.addActionListener(new ArtikelBearbeitenListener());
 		neuAnlegenButton.addActionListener(new ArtikelNeuAnlegenListener());
 		loeschenButton.addActionListener(new ArtikelLoeschenListener());
+		inWarenkorbButton.addActionListener(new ArtikelInWarenkorbListener());
 		if (user instanceof Kunde) {
 			buttonArea = kundenButtons;
 		} else {
@@ -147,13 +144,12 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 	 * @param art
 	 */
 	public void artikelAnzeigen(Artikel art) {
-		
+
 		reset();
-		
 		this.art = art;
 		artNrField.setText(String.valueOf(art.getArtikelnummer()));
 		bezeichnungField.setText(art.getBezeichnung());
-		preisField.setText(String.valueOf(art.getPreis())+"�");
+		preisField.setText(String.valueOf(art.getPreis()) + "�");
 		if (art instanceof Massengutartikel) {
 			pkggroesseField.setText(String.valueOf(((Massengutartikel) art).getPackungsgroesse()));
 		} else {
@@ -161,6 +157,14 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		}
 		bestandField.setText(String.valueOf(art.getBestand()));
 		setStores(art);
+	}
+
+	private void clearInputFields() {
+
+		bezeichnungField.setText("");
+		preisField.setText("");
+		pkggroesseField.setText("");
+		bestandField.setText("");
 	}
 
 	public Artikel getArtikel() {
@@ -172,15 +176,12 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 	public void reset() {
 
 		this.art = null;
-		
 		clearInputFields();
 		setInputFieldsColor(Color.WHITE);
-
 		aendernButton.setText("Andern");
 		isBeingChanged = false;
 		neuAnlegenButton.setText("Neu");
 		isBeingCreated = false;
-		
 		resetStores();
 	}
 
@@ -190,6 +191,22 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		preisStore = 0;
 		packungsgroesseStore = 0;
 		bestandStore = 0;
+	}
+
+	private void setInputFieldsColor(Color color) {
+
+		bezeichnungField.setBackground(color);
+		preisField.setBackground(color);
+		pkggroesseField.setBackground(color);
+		bestandField.setBackground(color);
+	}
+
+	private void setInputFieldsEditable(boolean editable) {
+
+		bezeichnungField.setEditable(editable);
+		preisField.setEditable(editable);
+		pkggroesseField.setEditable(editable);
+		bestandField.setEditable(editable);
 	}
 
 	public void setStores(Artikel art) {
@@ -209,7 +226,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
-			if (e.getSource().equals(aendernButton) && !isBeingChanged && !isBeingCreated ) {
+			if (e.getSource().equals(aendernButton) && !isBeingChanged && !isBeingCreated) {
 				if (!artNrField.getText().equals("")) {
 					setInputFieldsColor(Color.LIGHT_GRAY);
 					setInputFieldsEditable(true);
@@ -268,11 +285,9 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 				}
 			}
 		}
-
-	
 	}
 
-	class ArtikelInWarenkorbListener implements ActionListener {
+	private class ArtikelInWarenkorbListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -280,8 +295,9 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 			try {
 				server.artikelInWarenkorbLegen(art.getArtikelnummer(), Integer.parseInt(anzahlField.getText()),
 						user.getId(), user);
-				listener.artikelInWarenkorb();
 				anzahlField.setText("");
+				verwaltungsfensterCallbacks.warenkorbAktualisieren();
+				JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this, "Artikel zum Warenkorb hinzugefügt");
 			} catch (NumberFormatException e1) {
 				JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this, "Keine gueltige Anzahl!");
 			} catch (ArticleNonexistantException e1) {
@@ -304,7 +320,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		}
 	}
 
-	public class ArtikelLoeschenListener implements ActionListener {
+	private class ArtikelLoeschenListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -321,7 +337,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		}
 	}
 
-	public class ArtikelNeuAnlegenListener implements ActionListener {
+	private class ArtikelNeuAnlegenListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -368,11 +384,9 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 				}
 			}
 		}
-
-		
 	}
 
-	class VerlaufAnzeigenListener implements ActionListener {
+	private class VerlaufAnzeigenListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -393,34 +407,11 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 				ChartFrame chartFrame = new ChartFrame("Bestandsverlauf", chart);
 				chartFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				chartFrame.pack();
+				chartFrame.setLocationRelativeTo(null);
 				chartFrame.setVisible(true);
 			} catch (ArrayIndexOutOfBoundsException e1) {
 				JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this, "Es muss ein Artikel ausgewählt werden!");
 			}
 		}
-	}
-	
-	private void setInputFieldsEditable(boolean editable) {
-
-		bezeichnungField.setEditable(editable);
-		preisField.setEditable(editable);
-		pkggroesseField.setEditable(editable);
-		bestandField.setEditable(editable);
-	}
-
-	private void setInputFieldsColor(Color color) {
-
-		bezeichnungField.setBackground(color);
-		preisField.setBackground(color);
-		pkggroesseField.setBackground(color);
-		bestandField.setBackground(color);
-	}
-	
-	private void clearInputFields() {
-
-		bezeichnungField.setText("");
-		preisField.setText("");
-		pkggroesseField.setText("");
-		bestandField.setText("");
 	}
 }

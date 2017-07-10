@@ -2,6 +2,7 @@ package eshop.client.components.tablemodels;
 
 import java.util.Map;
 import java.util.Map.Entry;
+
 import eshop.common.data_objects.Artikel;
 import eshop.common.data_objects.Massengutartikel;
 
@@ -10,25 +11,22 @@ public class WarenkorbTableModel extends ShopTableModel {
 	/**
 	  * 
 	  */
-	private static final long serialVersionUID = 7021676013626973075L;
+	private static final long	serialVersionUID	= 7021676013626973075L;
+	protected String[]			columnNames;
+	protected Object[][]			data;
 
-	protected String[]	columnNames;
-
-	protected Object[][]	data;
 	public WarenkorbTableModel(Map<Artikel, Integer> dataMap) {
-		columnNames = new String[] {"ArtNr.", "Bezeichnung", "Einzelpreis", "Im Warenkorb", "Gesamtpreis", "Einheit", "Bestand"};
+		columnNames = new String[] {"ArtNr.", "Bezeichnung", "Einzelpreis", "Im Warenkorb", "Gesamtpreis", "Einheit",
+				"Bestand"};
 		data = new Object[dataMap.size()][7];
 		int i = 0;
-		for (Entry<Artikel,Integer> ent: dataMap.entrySet()) {
-			
+		for (Entry<Artikel, Integer> ent : dataMap.entrySet()) {
 			Artikel art = ent.getKey();
-			
 			data[i][0] = art.getArtikelnummer();
 			data[i][1] = art.getBezeichnung();
 			data[i][2] = art.getPreis();
 			data[i][3] = ent.getValue();
 			data[i][4] = art.getPreis() * ent.getValue();
-			
 			if (art instanceof Massengutartikel) {
 				data[i][5] = ((Massengutartikel) art).getPackungsgroesse();
 			} else {

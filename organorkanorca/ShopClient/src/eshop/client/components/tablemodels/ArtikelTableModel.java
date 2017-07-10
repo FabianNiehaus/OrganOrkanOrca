@@ -10,11 +10,10 @@ public class ArtikelTableModel extends ShopTableModel {
 	/**
 	  * 
 	  */
-	private static final long serialVersionUID = 7021676013626973075L;
+	private static final long	serialVersionUID	= 7021676013626973075L;
+	protected String[]			columnNames;
+	protected Object[][]			data;
 
-	protected String[]	columnNames;
-
-	protected Object[][]	data;
 	public ArtikelTableModel(Vector<Artikel> dataVector) {
 		columnNames = new String[] {"ArtNr.", "Bezeichnung", "Preis", "Einheit", "Bestand"};
 		data = new Object[dataVector.size()][5];

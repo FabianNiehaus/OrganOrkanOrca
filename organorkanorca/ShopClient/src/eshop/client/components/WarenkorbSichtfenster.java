@@ -23,11 +23,10 @@ import eshop.common.net.ShopRemote;
 public class WarenkorbSichtfenster extends Sichtfenster {
 
 	/** The Constant serialVersionUID. */
-	private static final long	serialVersionUID			= -5439399681692245672L;
-
+	private static final long		serialVersionUID	= -5439399681692245672L;
 	/** The model. */
-	private WarenkorbTableModel model;
-	
+	private WarenkorbTableModel	model;
+
 	/**
 	 * Instantiates a new warenkorb sichtfenster.
 	 *
@@ -43,7 +42,27 @@ public class WarenkorbSichtfenster extends Sichtfenster {
 		auflistung.getSelectionModel().addListSelectionListener(new ArtikelAusWarenkorbAnzeigenListener());
 	}
 
-	/* (non-Javadoc)
+	public boolean artikelImWarenkorbPruefen(Artikel art)
+			throws AccessRestrictedException, PersonNonexistantException, ArticleNonexistantException {
+
+		for (int i = 0; i < auflistung.getRowCount(); i++) {
+			if ((Integer) auflistung.getValueAt(i, 0) == art.getArtikelnummer()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean istWarenkorbLeer(){
+		if(auflistung.getRowCount() == 0){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see eshop.client.util.Sichtfenster#callTableUpdate()
 	 */
 	@Override
@@ -80,30 +99,23 @@ public class WarenkorbSichtfenster extends Sichtfenster {
 	 */
 	class ArtikelAusWarenkorbAnzeigenListener implements ListSelectionListener {
 
-		/* (non-Javadoc)
-		 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.
+		 * ListSelectionEvent)
 		 */
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
 
 			try {
 				if (auflistung.getSelectedRow() != -1) sichtfensterCallbacks.artikelAusWarenkorbAnzeigen(
-						server.artikelSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user), (int) auflistung.getValueAt(auflistung.getSelectedRow(), 7));
+						server.artikelSuchen((int) auflistung.getValueAt(auflistung.getSelectedRow(), 0), user),
+						(int) auflistung.getValueAt(auflistung.getSelectedRow(), 3));
 				return;
 			} catch (RemoteException | ArticleNonexistantException | AccessRestrictedException e1) {
 				JOptionPane.showMessageDialog(WarenkorbSichtfenster.this, e1.getMessage());
 			}
 		}
-	}
-	
-	public boolean artikelImWarenkorbPruefen(Artikel art)
-			throws RemoteException, AccessRestrictedException, PersonNonexistantException, ArticleNonexistantException {
-
-			for (int i = 0; i < auflistung.getRowCount(); i++) {
-				if ((Integer)auflistung.getValueAt(i, 0) == art.getArtikelnummer()) {
-					return true;
-				}
-			}
-			return false;
 	}
 }

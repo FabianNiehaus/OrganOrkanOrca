@@ -23,26 +23,28 @@ public class ArtikelSichtfenster extends Sichtfenster {
 
 	/** The Constant serialVersionUID. */
 	private static final long	serialVersionUID			= -5439399681692245672L;
-
 	/** The model. */
-	private ArtikelTableModel model;
-
+	private ArtikelTableModel	model;
 	/** The verlauf anzeigen button. */
 	JButton							verlaufAnzeigenButton	= new JButton("Verlauf anzeigen");
-	
+
 	/**
 	 * Instantiates a new artikel sichtfenster.
 	 *
-	 * @param server the server
-	 * @param user the user
-	 * @param sichtfensterCallbacks the sichtfensterCallbacks
+	 * @param server
+	 *           the server
+	 * @param user
+	 *           the user
+	 * @param sichtfensterCallbacks
+	 *           the sichtfensterCallbacks
 	 */
 	public ArtikelSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks sichtfensterCallbacks) {
 		super(server, user, sichtfensterCallbacks);
 		auflistung.getSelectionModel().addListSelectionListener(new ArtikelAnzeigenListener());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see eshop.client.util.Sichtfenster#callTableUpdate()
 	 */
 	@Override
@@ -66,19 +68,21 @@ public class ArtikelSichtfenster extends Sichtfenster {
 
 	/**
 	 * The sichtfensterCallbacks interface for receiving artikelAnzeigen events.
-	 * The class that is interested in processing a artikelAnzeigen
-	 * event implements this interface, and the object created
-	 * with that class is registered with a component using the
-	 * component's <code>addArtikelAnzeigenListener<code> method. When
-	 * the artikelAnzeigen event occurs, that object's appropriate
-	 * method is invoked.
+	 * The class that is interested in processing a artikelAnzeigen event
+	 * implements this interface, and the object created with that class is
+	 * registered with a component using the component's
+	 * <code>addArtikelAnzeigenListener<code> method. When the artikelAnzeigen
+	 * event occurs, that object's appropriate method is invoked.
 	 *
 	 * @see ArtikelAnzeigenEvent
 	 */
 	class ArtikelAnzeigenListener implements ListSelectionListener {
 
-		/* (non-Javadoc)
-		 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.
+		 * ListSelectionEvent)
 		 */
 		@Override
 		public void valueChanged(ListSelectionEvent e) {

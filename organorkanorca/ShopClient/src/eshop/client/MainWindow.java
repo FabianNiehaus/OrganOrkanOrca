@@ -59,8 +59,8 @@ public class MainWindow extends JFrame implements SichtfensterCallbacks, Verwalt
 	JButton								shopButton			= new JButton("Shop");
 	JTabbedPane							tabbedPane			= new JTabbedPane();
 	Person								user;
-	WarenkorbVerwaltungsfenster	warenkorbverwaltungsfenster;
 	WarenkorbSichtfenster			warenkorbsichtfenster;
+	WarenkorbVerwaltungsfenster	warenkorbverwaltungsfenster;
 
 	public MainWindow(String titel, Person user, ShopRemote server, LoginListener loginListener,
 			WindowListener windowListener) {
@@ -79,41 +79,40 @@ public class MainWindow extends JFrame implements SichtfensterCallbacks, Verwalt
 	}
 
 	@Override
-	public void artikelInWarenkorb() {
+	public void artikelAusWarenkorbAnzeigen(Artikel art, int anzahl) {
 
-		warenkorbsichtfenster.callTableUpdate();
-		
+		warenkorbverwaltungsfenster.artikelAnzeigen(art, anzahl);
 	}
 
 	public void handleArticleChanged(Artikel art) {
 
-		if (user instanceof Kunde) {
-			try {
-				if (warenkorbsichtfenster.artikelImWarenkorbPruefen(art)) {
-					JOptionPane.showMessageDialog(warenkorbverwaltungsfenster,
-							"Artikel \"" + art.getBezeichnung() + "\" wurde geändert. Bitte Warenkorb überprüfen!");
+		if(art != null){
+			if (user instanceof Kunde) {
+				try {
+					if (warenkorbsichtfenster.artikelImWarenkorbPruefen(art)) {
+						JOptionPane.showMessageDialog(warenkorbverwaltungsfenster,
+								"Artikel \"" + art.getBezeichnung() + "\" wurde geändert. Bitte Warenkorb überprüfen!");
+						warenkorbverwaltungsfenster.reset();
+					}
+				} catch (HeadlessException e) {
+					JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e.getMessage());
+				} catch (ArticleNonexistantException e) {
+					JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, "Ein Artikel im Warenkorb wurde gelöscht!");
 					warenkorbverwaltungsfenster.reset();
+				} catch (AccessRestrictedException e) {
+					JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e.getMessage());
+				} catch (PersonNonexistantException e) {
+					JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e.getMessage());
 				}
-			} catch (RemoteException e) {
-				JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e.getMessage());
-			} catch (HeadlessException e) {
-				JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e.getMessage());
-			} catch (ArticleNonexistantException e) {
-				JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, "Ein Artikel im Warenkorb wurde gelöscht!");
-				warenkorbverwaltungsfenster.reset();
-			} catch (AccessRestrictedException e) {
-				JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e.getMessage());
-			} catch (PersonNonexistantException e) {
-				JOptionPane.showMessageDialog(warenkorbverwaltungsfenster, e.getMessage());
-			}
-		} else if (user instanceof Mitarbeiter) {
-			if (artikelverwaltungsfenster.getArtikel().getArtikelnummer() == art.getArtikelnummer()) {
-				if (art.getBezeichnung().equals("deleted!")) {
-					JOptionPane.showMessageDialog(artikelverwaltungsfenster, "Der ausgewählte Artikel wurde gelöscht!");
-					artikelverwaltungsfenster.reset();
-				} else {
-					JOptionPane.showMessageDialog(artikelverwaltungsfenster, "Der ausgewählte Artikel wurde geändert!");
-					artikelverwaltungsfenster.artikelAnzeigen(art);
+			} else if (user instanceof Mitarbeiter) {
+				if (artikelverwaltungsfenster.getArtikel().getArtikelnummer() == art.getArtikelnummer()) {
+					if (art.getBezeichnung().equals("deleted!")) {
+						JOptionPane.showMessageDialog(artikelverwaltungsfenster, "Der ausgewählte Artikel wurde gelöscht!");
+						artikelverwaltungsfenster.reset();
+					} else {
+						JOptionPane.showMessageDialog(artikelverwaltungsfenster, "Der ausgewählte Artikel wurde geändert!");
+						artikelverwaltungsfenster.artikelAnzeigen(art);
+					}
 				}
 			}
 		}
@@ -122,7 +121,7 @@ public class MainWindow extends JFrame implements SichtfensterCallbacks, Verwalt
 
 	public void handleEventChanged(Ereignis er) {
 
-		managementsichtfenster.callTableUpdate();
+		if (managementsichtfenster != null) managementsichtfenster.callTableUpdate();
 	}
 
 	public void handleStaffChanged(Mitarbeiter mi) {
@@ -158,14 +157,14 @@ public class MainWindow extends JFrame implements SichtfensterCallbacks, Verwalt
 
 		this.getContentPane().setLayout(new BorderLayout());
 		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-		tabbedPane.setFont(new Font("Arial", Font.BOLD , 17));
+		tabbedPane.setFont(new Font("Arial", Font.BOLD, 17));
 		if (user instanceof Kunde) {
 			artikelsichtfenster = new ArtikelSichtfenster(server, user, this);
 			artikelverwaltungsfenster = new ArtikelVerwaltungsfenster(server, user, this);
 			warenkorbsichtfenster = new WarenkorbSichtfenster(server, user, this);
 			warenkorbverwaltungsfenster = new WarenkorbVerwaltungsfenster(server, user, this);
 			tabbedPane.addTab("Artikel", null, new ContentPanel(artikelsichtfenster, artikelverwaltungsfenster));
-			tabbedPane.addTab("Warenkorb", null, new ContentPanel(warenkorbsichtfenster,warenkorbverwaltungsfenster));
+			tabbedPane.addTab("Warenkorb", null, new ContentPanel(warenkorbsichtfenster, warenkorbverwaltungsfenster));
 		} else if (user instanceof Mitarbeiter) {
 			artikelsichtfenster = new ArtikelSichtfenster(server, user, this);
 			artikelverwaltungsfenster = new ArtikelVerwaltungsfenster(server, user, this);
@@ -206,9 +205,15 @@ public class MainWindow extends JFrame implements SichtfensterCallbacks, Verwalt
 	}
 
 	@Override
-	public void artikelAusWarenkorbAnzeigen(Artikel art, int anzahl) {
+	public void warenkorbAktualisieren() {
 
-		warenkorbverwaltungsfenster.artikelAnzeigen(art, anzahl);
-		
+		warenkorbsichtfenster.callTableUpdate();
+	}
+
+	@Override
+	public boolean istWarenkorbLeer() {
+
+		return warenkorbsichtfenster.istWarenkorbLeer();
+				
 	}
 }
