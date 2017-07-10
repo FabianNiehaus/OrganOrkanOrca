@@ -32,10 +32,10 @@ public class ManagementSichtfenster extends Sichtfenster {
 		super(server, user, listener);
 		speichernButton.addActionListener(new PersistenceButtonListener());
 		ladenButton.addActionListener(new PersistenceButtonListener());
-		actionField.add(speichernButton);
+		actionField.add(speichernButton, "wrap");
 		actionField.add(ladenButton);
 		
-		setPreferredSize(new Dimension(900,400));
+		//setPreferredSize(new Dimension(900,400));
 	}
 
 	class PersistenceButtonListener implements ActionListener {

@@ -1,6 +1,7 @@
 package eshop.client.components;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,6 +9,8 @@ import java.rmi.RemoteException;
 import java.util.Calendar;
 import java.util.Map.Entry;
 
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -44,26 +47,31 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 
 	Artikel		      art;
 	    
-	    JPanel		      detailArea		  = new JPanel(new MigLayout());
-	    JPanel			buttonArea = new JPanel(new MigLayout());
-	    JPanel		      mitarbeiterButtons	  = new JPanel(new MigLayout());
-	    JPanel	kundenButtons = new JPanel(new MigLayout());
-	    JPanel		      picture			  = new JPanel();
-	    
-	    JTextField		      bezeichnungField		  = new JTextField(15);
-	    JTextField		      preisField		  = new JTextField(15);
+	    JPanel		      detailArea		  = new JPanel();
+	    JPanel			buttonArea = new JPanel();
+	    JPanel		      mitarbeiterButtons	  = new JPanel();
+	    JPanel	kundenButtons = new JPanel();
+	    JPanel		      picture			  = new JPanel();			
+	    JTextField		      bezeichnungField		  = new JTextField("Bezeichnung",12);
+	    JTextField		      preisField		  = new JTextField("Preis",15);
 	    JLabel		      infoLabel			  = new JLabel("Informationen:");
 	    JTextArea		      infoArea			  = new JTextArea();
 	    JTextField		      anzahlField		  = new JTextField(3);
-	    JLabel		      stueckLabel		  = new JLabel("StÃ¼ck");
-	    JTextField		      pkggroesseField		  = new JTextField("PackungsgrÃ¶ÃŸe",15);
-	    JTextField		      artNrField		  = new JTextField("Artikelnummer",15);
-	    JTextField		      bestandField		  = new JTextField("Bestand",15);
+	    JLabel		      stueckLabel		  = new JLabel("Stück");
+	    JTextField		      pkggroesseField		  = new JTextField(15);
+	    JTextField		      artNrField		  = new JTextField(15);
+	    JTextField		      bestandField		  = new JTextField(15);
 	    
-	    JButton		      inWarenkorbButton		  = new JButton("HinzufÃ¼gen");
+	    JLabel				artNrLabel 		= new JLabel("Artikel Nr.:");
+	    JLabel				pkggroesseLabel 		= new JLabel("Packungsgröße:");
+	    JLabel				bestandLabel 		= new JLabel("Verfügbar:");
+	    
+	    JButton		      inWarenkorbButton		  = new JButton("Hinzufügen");
 	    JButton		      neuAnlegenButton		  = new JButton("Neu");
-	    JButton		      aendernButton		  = new JButton("Ã„ndern");
-	    JButton		      loeschenButton		  = new JButton("LÃ¶schen");
+	    JButton		      aendernButton		  = new JButton("Ändern");
+	    JButton		      loeschenButton		  = new JButton("Löschen");
+	    
+	    JLabel imageLabel = new JLabel();
 	
 	 String bezeichnungStore = "";
 	    double preisStore = 0;
@@ -72,18 +80,68 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 
 	public ArtikelVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener) {
 		super(server, user, listener);
+		//detailArea.setPreferredSize(new Dimension(700,230));
 		
-		detailArea.add(new JLabel("Artikeldetails:"),"wrap");
-		detailArea.add(picture, "w 160!,h 120!");
-		detailArea.add(bezeichnungField, "split 2");
-		detailArea.add(artNrField, "wrap");
-		detailArea.add(preisField, "split 3");
-		detailArea.add(pkggroesseField);
-		detailArea.add(bestandField, "wrap");
+		//linker Abstand der DetailArea
+		this.setLayout(new MigLayout("","114[]0"));
+		detailArea.setLayout(new MigLayout("","[]10[]"));
+		buttonArea.setLayout(new MigLayout());
+		mitarbeiterButtons.setLayout(new MigLayout());
+		kundenButtons.setLayout(new MigLayout());
+		
+		detailArea.add(new JLabel("Artikeldetails:"),"wrap 10!");
+		detailArea.add(picture, "w 160!,h 120!, span 2 4");
+		detailArea.add(bezeichnungField, "wrap");
+		
+		detailArea.add(preisField, "w 70!");
+		
+		detailArea.add(artNrLabel, "right");
+		detailArea.add(artNrField, "w 30!");
+		
+		detailArea.add(bestandLabel,"right");
+		detailArea.add(bestandField, "w 30!");
+
+		detailArea.add(pkggroesseLabel, "right");
+		detailArea.add(pkggroesseField, "w 30!, wrap 5!");
+		
 		detailArea.add(infoLabel, "wrap");
-		detailArea.add(infoArea, "w 100%");
+		detailArea.add(infoArea, "w 100%, span 7 0");
 			
-		picture.setBackground(Color.lightGray);
+		
+		detailArea.setBackground(Color.WHITE);
+		detailArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+		
+		//Bilder noch implementieren
+		ImageIcon image = new ImageIcon("pictures/orkan.jpg");
+		picture.setBackground(Color.white);
+		picture.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+		imageLabel.setIcon(image);
+		picture.add(imageLabel);
+
+		
+		//detailArea.setBorder(BorderFactory.createTitledBorder("Artikeldetails:"));
+		bezeichnungField.setFont(new Font("Arial", Font.BOLD, 20));
+		preisField.setFont(new Font("Arial", Font.BOLD, 14));
+		
+		//Border der Felder ausblenden
+		bezeichnungField.setBorder(null);
+		preisField.setBorder(null);
+		artNrField.setBorder(null);
+		pkggroesseField.setBorder(null);
+		bestandField.setBorder(null);
+		
+		//Hintergrund der Felder ausblenden
+		bezeichnungField.setBackground(null);
+		preisField.setBackground(null);
+		artNrField.setBackground(null);
+		pkggroesseField.setBackground(null);
+		bestandField.setBackground(null);
+		
+		infoArea.setLineWrap(true);
+		infoArea.setWrapStyleWord(true);
+		infoArea.setText("Als Orkan werden im weiteren Sinn Winde mit Geschwindigkeiten von mindestens "
+				+ "64 kn (117,7 km/h = 32,7 m/s) bezeichnet. Orkane können "
+				+ "massive Verwüstungen anrichten und bilden auf See eine Gefahr für den Schiffsverkehr.");
 		
 		mitarbeiterButtons.add(neuAnlegenButton, "w 100!");
 		mitarbeiterButtons.add(aendernButton, "w 100!");
@@ -92,6 +150,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		kundenButtons.add(anzahlField, "split 2, w 30!");
 		kundenButtons.add(stueckLabel, "w 40!");
 		kundenButtons.add(inWarenkorbButton, "w 100!");
+		//detailArea.add(buttonArea);
 		
 		aendernButton.addActionListener(new ArtikelBearbeitenListener());
 		neuAnlegenButton.addActionListener(new ArtikelNeuAnlegenListener());
@@ -109,15 +168,13 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		pkggroesseField.setEditable(false);
 		bestandField.setEditable(false);
 		
-		this.add(detailArea,"wrap");
-		this.add(buttonArea,"wrap");
 		
-		detailArea.setBackground(Color.WHITE);
-		bezeichnungField.setFont(new Font("Arial", Font.BOLD, 30));
-		preisField.setFont(new Font("Arial", Font.BOLD, 15));
-		infoArea.setSize(600, 100);
-		infoArea.setLineWrap(true);
-		infoArea.setWrapStyleWord(true);
+		//buttonArea.setBackground(Color.LIGHT_GRAY);
+		this.add(detailArea,"w 100%, h 200!, wrap");
+		this.add(buttonArea, "right");
+	
+		
+
 		
 		this.setVisible(true);
 	}
@@ -127,7 +184,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		this.art = art;
 		artNrField.setText(String.valueOf(art.getArtikelnummer()));
 		bezeichnungField.setText(art.getBezeichnung());
-		preisField.setText(String.valueOf(art.getPreis()));
+		preisField.setText(String.valueOf(art.getPreis())+"€");
 		if (art instanceof Massengutartikel) {
 			pkggroesseField.setText(String.valueOf(((Massengutartikel) art).getPackungsgroesse()));
 		} else {
@@ -148,6 +205,10 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 
 			if (e.getSource().equals(aendernButton) && !isBeingChanged) {
 				if (!artNrField.getText().equals("")) {
+					bezeichnungField.setBackground(Color.LIGHT_GRAY);
+					preisField.setBackground(Color.LIGHT_GRAY);
+					pkggroesseField.setBackground(Color.LIGHT_GRAY);
+					bestandField.setBackground(Color.LIGHT_GRAY);
 					// Felder editierbar machen
 					bezeichnungField.setEditable(true);
 					preisField.setEditable(true);

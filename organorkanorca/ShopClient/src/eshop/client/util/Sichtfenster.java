@@ -1,10 +1,12 @@
 package eshop.client.util;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.regex.Pattern;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 
 import javax.swing.JPanel;
@@ -41,7 +43,10 @@ public abstract class Sichtfenster extends JPanel {
 	protected JPanel overviewButtons = new JPanel();
 	protected JButton alleButton = new JButton("Alle");
 	protected JButton sucheButton = new JButton("Suche");
-	protected JTextField sucheField = new JTextField(30);
+	protected JTextField sucheField = new JTextField("Bezeichnung",30);
+	protected JTextField sucheField2 = new JTextField("Artikel Nr.",30);
+	protected JTextField sucheField3 = new JTextField("Einheit",30);
+	
 	protected JPanel actionField = new JPanel(new MigLayout("align 50% 50%"));
 	protected JXTable auflistung = new JXTable();
 	protected JScrollPane auflistungContainer = new JScrollPane(auflistung);
@@ -53,16 +58,19 @@ public abstract class Sichtfenster extends JPanel {
 	this.setLayout(new MigLayout());
 	this.add(overviewButtons, "dock west");
 	//this.add(actionField);
-	this.add(auflistungContainer,"wrap, w 100%");
-	
+	this.add(auflistungContainer,"wrap, w 100%, h 200!");
+
 	overviewButtons.setLayout(new MigLayout());
 	overviewButtons.add(alleButton, "wrap 10,w 100!");
 	overviewButtons.add(sucheField, "wrap 10,w 100!");
+	overviewButtons.add(sucheField2, "wrap 10,w 100!");
+	overviewButtons.add(sucheField3, "wrap 10,w 100!");
 	overviewButtons.add(sucheButton, "wrap 10, w 100!");
 	overviewButtons.add(actionField, "wrap 10, w 100!");
 	overviewButtons.setVisible(true);
-	actionField.setBackground(Color.CYAN);
 
+	//sucheField.setBorder(BorderFactory.createTitledBorder("Bezeichung"));
+	
 	auflistung.setAutoCreateRowSorter(true);
 		
 		callTableUpdate();
@@ -97,6 +105,10 @@ public abstract class Sichtfenster extends JPanel {
 		
 		
 
+    }
+    
+    public void FocusListenerhinzufügen(){
+    	
     }
 
 	public abstract void callTableUpdate();

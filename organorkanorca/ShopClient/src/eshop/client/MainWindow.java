@@ -164,7 +164,7 @@ public class MainWindow extends JFrame
 	this.getContentPane().add(new JPanel(),BorderLayout.SOUTH);
 	this.getContentPane().add(new JPanel(),BorderLayout.WEST);
 	
-	this.setPreferredSize(new Dimension(1024,800));
+	this.setPreferredSize(new Dimension(900,600));
 	this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	this.pack();
 	this.setLocationRelativeTo(null);

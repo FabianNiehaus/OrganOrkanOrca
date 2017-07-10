@@ -1,9 +1,11 @@
 package eshop.client.components;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -34,9 +36,9 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 	JTextField vornameField = new JTextField(15);
 	JLabel nachnameLabel = new JLabel("Nachname:");
 	JTextField nachnameField = new JTextField(15);
-	JLabel strasseLabel = new JLabel("StraÃŸe:");
+	JLabel strasseLabel = new JLabel("Straße:");
 	JTextField strasseField = new JTextField(15);
-	JLabel ortLabel = new JLabel("Stadt");
+	JLabel ortLabel = new JLabel("Stadt:");
 	JTextField ortField = new JTextField(15);
 	JLabel zipLabel = new JLabel("PLZ:");
 	JTextField zipField = new JTextField(15);
@@ -44,31 +46,38 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 	JTextField passwordField = new JTextField("*********", 15);
 	JPanel buttons = new JPanel();
 	JButton neuAnlegenButton = new JButton("Neu");
-	JButton aendernButton = new JButton("Ã„ndern");
-	JButton loeschenButton = new JButton("LÃ¶schen");
+	JButton aendernButton = new JButton("Ändern");
+	JButton loeschenButton = new JButton("Löschen");
 	String typ = "";
 
 	public PersonenVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener,
 			String titel, String personenTyp) {
 		super(server, user, listener);
-		this.setLayout(new MigLayout());
-		detailArea.setLayout(new MigLayout());
-		this.add(new JLabel(titel), "span 2, align center, wrap");
+		this.setLayout(new MigLayout("","114[]0"));
+		detailArea.setLayout(new MigLayout("","[]10[]"));
+		//this.add(new JLabel(titel), "span 2, align center, wrap");
+		detailArea.add(new JLabel(titel),"wrap 10!, span 2");
 		detailArea.add(persNrLabel);
-		detailArea.add(persNrField, "wrap");
-		detailArea.add(vornameLabel);
-		detailArea.add(vornameField, "wrap");
-		detailArea.add(nachnameLabel);
-		detailArea.add(nachnameField, "wrap");
-		detailArea.add(strasseLabel);
-		detailArea.add(strasseField, "wrap");
-		detailArea.add(ortLabel);
-		detailArea.add(ortField, "wrap");
-		detailArea.add(zipLabel);
-		detailArea.add(zipField, "wrap");
+		detailArea.add(persNrField, "wrap 10!");
 		detailArea.add(passwordLabel);
 		detailArea.add(passwordField);
-		this.add(detailArea, "wrap");
+		detailArea.add(vornameLabel);
+		detailArea.add(vornameField, "");
+		detailArea.add(nachnameLabel);
+		detailArea.add(nachnameField, "wrap 10!");
+		detailArea.add(strasseLabel);
+		detailArea.add(strasseField, "");
+		detailArea.add(ortLabel);
+		detailArea.add(ortField, "wrap 10!");
+		detailArea.add(zipLabel);
+		detailArea.add(zipField, "");
+		detailArea.add(passwordLabel);
+		detailArea.add(passwordField);
+		this.add(detailArea, "w 100%, h 200!, wrap");
+		
+		detailArea.setBackground(Color.WHITE);
+		detailArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+		
 		
 		buttons.add(neuAnlegenButton, "wrap 10, w 100!");
 		buttons.add(aendernButton, "wrap 10, w 100!");
@@ -77,7 +86,7 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		aendernButton.addActionListener(new PersonBearbeitenListener(personenTyp));
 		neuAnlegenButton.addActionListener(new PersonNeuAnlegenListener(personenTyp));
 		loeschenButton.addActionListener(new PersonLoeschenListener());
-		this.add(buttons, "align center");
+		this.add(buttons, "right");
 		persNrField.setEditable(false);
 		vornameField.setEditable(false);
 		nachnameField.setEditable(false);
@@ -151,7 +160,7 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 					// Bearbeiteten Kunden anzeigen
 					personAnzeigen(p);
 					// Buttons anpassen
-					aendernButton.setText("Ã„ndern");
+					aendernButton.setText("Ändern");
 					isBeingChanged = false;
 					
 				} catch (InvalidPersonDataException e1) {
@@ -298,7 +307,7 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		
 		neuAnlegenButton.setText("Neu");
 		isBeingCreated = false;
-		aendernButton.setText("Ã„ndern");
+		aendernButton.setText("Ändern");
 		isBeingChanged = false;
 	}
 }
