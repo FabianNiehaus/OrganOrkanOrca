@@ -3,7 +3,7 @@ Orkan
 99999.0
 9
 1
-Als Orkan werden im weiteren Sinn Winde mit Geschwindigkeiten von mindestens 64 kn (117,7 km/h = 32,7 m/s) bezeichnet. Auf der Beaufortskala werden Orkane mit der Stärke 12 klassifiziert. Im engeren Sinn werden darunter außertropische Tiefdruckgebiete verstanden, in denen Winde mit Orkanstärke auftreten.
+Als Orkan werden im weiteren Sinn Winde mit Geschwindigkeiten von mindestens 64 kn (117,7 km/h = 32,7 m/s) bezeichnet. Auf der Beaufortskala werden Orkane mit der StÃ¤rke 12 klassifiziert. Im engeren Sinn werden darunter auÃŸertropische Tiefdruckgebiete verstanden, in denen Winde mit OrkanstÃ¤rke auftreten.
 pictures/orkan.jpg
 ---BEGINHISTORY---
 190:9
@@ -14,7 +14,7 @@ Orca
 5729.45
 210
 1
-Der Orca ist eine Art der Wale aus der Familie der Delfine. Er wird auch  Schwertwal genannt.  Die Namen Killerwal und Mörderwal wurden den Tieren von Walfängern gegeben und nehmen Bezug auf die oft brutal anmutenden Jagdmethoden dieser Raubwale. Die Art ist weltweit verbreitet, bewohnt jedoch bevorzugt küstennahe Gewässer in höheren Breiten.
+Der Orca ist eine Art der Wale aus der Familie der Delfine. Er wird auch  Schwertwal genannt.  Die Namen Killerwal und MÃ¶rderwal wurden den Tieren von WalfÃ¤ngern gegeben und nehmen Bezug auf die oft brutal anmutenden Jagdmethoden dieser Raubwale. Die Art ist weltweit verbreitet, bewohnt jedoch bevorzugt kÃ¼stennahe GewÃ¤sser in hÃ¶heren Breiten.
 pictures/orca.jpg
 ---BEGINHISTORY---
 190:210
@@ -25,7 +25,7 @@ Organ
 1000.0
 36
 1
-Ein Organ ist ein spezialisierter Körperteil aus unterschiedlichen Zellen und Geweben. Ein Organ ist eine abgegrenzte Funktionseinheit in einem vielzelligen Lebewesen. Ein Organ geht auf eine eigene Organanlage zurück und durchläuft eine spezifische Organogenese.
+Ein Organ ist ein spezialisierter KÃ¶rperteil aus unterschiedlichen Zellen und Geweben. Ein Organ ist eine abgegrenzte Funktionseinheit in einem vielzelligen Lebewesen. Ein Organ geht auf eine eigene Organanlage zurÃ¼ck und durchlÃ¤uft eine spezifische Organogenese.
 pictures/organ.jpg
 ---BEGINHISTORY---
 190:36
