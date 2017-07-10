@@ -1,5 +1,6 @@
 package eshop.client.components;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
@@ -53,9 +54,10 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 
 	public WarenkorbVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener) {
 		super(server, user, listener);
-		this.setLayout(new MigLayout());
-		this.add(new JLabel("Warenkorbverwaltung"), "align center, wrap");
+		this.setLayout(new MigLayout("", "114[]0"));
+		this.add(new JLabel("Warenkorbverwaltung"), "wrap");
 		this.add(warenkorbAuflistungContainer, "wrap");
+
 		aendernButton.addActionListener(new WarenkorbActionListener());
 		artikelEntfernenButton.addActionListener(new WarenkorbActionListener());
 		leerenButton.addActionListener(new WarenkorbActionListener());

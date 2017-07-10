@@ -70,6 +70,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 	JTextField						preisField				= new JTextField("Preis", 15);
 	double							preisStore				= 0;
 	JLabel							stueckLabel				= new JLabel("Stück");
+	
 
 	public ArtikelVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener) {
 		super(server, user, listener);
@@ -112,6 +113,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		artNrField.setBackground(null);
 		pkggroesseField.setBackground(null);
 		bestandField.setBackground(null);
+		
 		infoArea.setLineWrap(true);
 		infoArea.setWrapStyleWord(true);
 		infoArea.setText("Als Orkan werden im weiteren Sinn Winde mit Geschwindigkeiten von mindestens "
@@ -149,7 +151,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		this.art = art;
 		artNrField.setText(String.valueOf(art.getArtikelnummer()));
 		bezeichnungField.setText(art.getBezeichnung());
-		preisField.setText(String.valueOf(art.getPreis()));
+		preisField.setText(String.valueOf(art.getPreis())+"€");
 		if (art instanceof Massengutartikel) {
 			pkggroesseField.setText(String.valueOf(((Massengutartikel) art).getPackungsgroesse()));
 		} else {
