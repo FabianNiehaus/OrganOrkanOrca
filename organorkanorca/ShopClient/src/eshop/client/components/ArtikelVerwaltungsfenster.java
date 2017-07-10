@@ -43,13 +43,13 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 	 * 
 	 */
 	private static final long	serialVersionUID		= -107879108721906207L;
-	JButton							aendernButton			= new JButton("Ändern");
+	JButton							aendernButton			= new JButton("ï¿½ndern");
 	JTextField						anzahlField				= new JTextField(3);
 	Artikel							art;
 	JTextField						artNrField				= new JTextField(15);
 	JLabel							artNrLabel				= new JLabel("Artikel Nr.:");
 	JTextField						bestandField			= new JTextField(15);
-	JLabel							bestandLabel			= new JLabel("Verfügbar:");
+	JLabel							bestandLabel			= new JLabel("Verfï¿½gbar:");
 	int								bestandStore			= 0;
 	JTextField						bezeichnungField		= new JTextField("Bezeichnung", 12);
 	String							bezeichnungStore		= "";
@@ -58,18 +58,18 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 	JLabel							imageLabel				= new JLabel();
 	JTextArea						infoArea					= new JTextArea();
 	JLabel							infoLabel				= new JLabel("Informationen:");
-	JButton							inWarenkorbButton		= new JButton("Hinzufügen");
+	JButton							inWarenkorbButton		= new JButton("Hinzufï¿½gen");
 	JPanel							kundenButtons			= new JPanel();
-	JButton							loeschenButton			= new JButton("Löschen");
+	JButton							loeschenButton			= new JButton("Lï¿½schen");
 	JPanel							mitarbeiterButtons	= new JPanel();
 	JButton							neuAnlegenButton		= new JButton("Neu");
 	int								packungsgroesseStore	= 0;
 	JPanel							picture					= new JPanel();
 	JTextField						pkggroesseField		= new JTextField(15);
-	JLabel							pkggroesseLabel		= new JLabel("Packungsgröße:");
+	JLabel							pkggroesseLabel		= new JLabel("Packungsgrï¿½ï¿½e:");
 	JTextField						preisField				= new JTextField("Preis", 15);
 	double							preisStore				= 0;
-	JLabel							stueckLabel				= new JLabel("Stück");
+	JLabel							stueckLabel				= new JLabel("Stï¿½ck");
 	
 
 	public ArtikelVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener) {
@@ -117,8 +117,8 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		infoArea.setLineWrap(true);
 		infoArea.setWrapStyleWord(true);
 		infoArea.setText("Als Orkan werden im weiteren Sinn Winde mit Geschwindigkeiten von mindestens "
-				+ "64 kn (117,7 km/h = 32,7 m/s) bezeichnet. Orkane können "
-				+ "massive Verwüstungen anrichten und bilden auf See eine Gefahr für den Schiffsverkehr.");
+				+ "64 kn (117,7 km/h = 32,7 m/s) bezeichnet. Orkane kï¿½nnen "
+				+ "massive Verwï¿½stungen anrichten und bilden auf See eine Gefahr fï¿½r den Schiffsverkehr.");
 		mitarbeiterButtons.add(neuAnlegenButton, "w 100!");
 		mitarbeiterButtons.add(aendernButton, "w 100!");
 		mitarbeiterButtons.add(loeschenButton, "w 100!");
@@ -147,11 +147,13 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 	 * @param art
 	 */
 	public void artikelAnzeigen(Artikel art) {
-
+		
+		reset();
+		
 		this.art = art;
 		artNrField.setText(String.valueOf(art.getArtikelnummer()));
 		bezeichnungField.setText(art.getBezeichnung());
-		preisField.setText(String.valueOf(art.getPreis())+"€");
+		preisField.setText(String.valueOf(art.getPreis())+"ï¿½");
 		if (art instanceof Massengutartikel) {
 			pkggroesseField.setText(String.valueOf(((Massengutartikel) art).getPackungsgroesse()));
 		} else {
@@ -170,15 +172,15 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 	public void reset() {
 
 		this.art = null;
-		artNrField.setText("");
-		bezeichnungField.setText("");
-		preisField.setText("");
-		pkggroesseField.setText("");
-		bestandField.setText("");
-		bezeichnungField.setEditable(false);
-		preisField.setEditable(false);
-		pkggroesseField.setEditable(false);
-		bestandField.setEditable(false);
+		
+		clearInputFields();
+		setInputFieldsColor(Color.WHITE);
+
+		aendernButton.setText("Andern");
+		isBeingChanged = false;
+		neuAnlegenButton.setText("Neu");
+		isBeingCreated = false;
+		
 		resetStores();
 	}
 
@@ -207,19 +209,10 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
-			if (e.getSource().equals(aendernButton) && !isBeingChanged) {
+			if (e.getSource().equals(aendernButton) && !isBeingChanged && !isBeingCreated ) {
 				if (!artNrField.getText().equals("")) {
-					//Hintergrund setzen
-					bezeichnungField.setBackground(Color.LIGHT_GRAY);
-					preisField.setBackground(Color.LIGHT_GRAY);
-					pkggroesseField.setBackground(Color.LIGHT_GRAY);
-					bestandField.setBackground(Color.LIGHT_GRAY);
-					// Felder editierbar machen
-					bezeichnungField.setEditable(true);
-					preisField.setEditable(true);
-					pkggroesseField.setEditable(true);
-					bestandField.setEditable(true);
-					// Buttons anpassen
+					setInputFieldsColor(Color.LIGHT_GRAY);
+					setInputFieldsEditable(true);
 					aendernButton.setText("OK");
 					isBeingChanged = true;
 				}
@@ -252,16 +245,8 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 								artikelAnzeigen(art);
 								aendernButton.setText("Andern");
 								isBeingChanged = false;
-								//
-								bezeichnungField.setBackground(Color.WHITE);
-								preisField.setBackground(Color.WHITE);
-								pkggroesseField.setBackground(Color.WHITE);
-								bestandField.setBackground(Color.WHITE);
-								// Felder editierbar machen
-								bezeichnungField.setEditable(false);
-								preisField.setEditable(false);
-								pkggroesseField.setEditable(false);
-								bestandField.setEditable(false);
+								setInputFieldsColor(Color.WHITE);
+								setInputFieldsEditable(false);
 								setStores(art);
 							} catch (AccessRestrictedException e1) {
 								JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this, e1.getMessage());
@@ -283,6 +268,8 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 				}
 			}
 		}
+
+	
 	}
 
 	class ArtikelInWarenkorbListener implements ActionListener {
@@ -339,26 +326,11 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
-			if (e.getSource().equals(neuAnlegenButton) && !isBeingCreated) {
-				// Artikelnummer ausblenden, kann nicht neu angegeben werden
+			if (e.getSource().equals(neuAnlegenButton) && !isBeingCreated && !isBeingChanged) {
 				artNrField.setVisible(false);
-				//
-				bezeichnungField.setBackground(Color.LIGHT_GRAY);
-				preisField.setBackground(Color.LIGHT_GRAY);
-				pkggroesseField.setBackground(Color.LIGHT_GRAY);
-				bestandField.setBackground(Color.LIGHT_GRAY);
-				// Felder editierbar machen
-				// Alle Felder leeren
-				bezeichnungField.setText("");
-				preisField.setText("");
-				pkggroesseField.setText("");
-				bestandField.setText("");
-				// Felder editierbar machen
-				bezeichnungField.setEditable(true);
-				preisField.setEditable(true);
-				pkggroesseField.setEditable(true);
-				bestandField.setEditable(true);
-				// Buttons anpassen
+				setInputFieldsColor(Color.LIGHT_GRAY);
+				clearInputFields();
+				setInputFieldsEditable(true);
 				neuAnlegenButton.setText("OK");
 				isBeingCreated = true;
 			} else if (e.getSource().equals(neuAnlegenButton) && isBeingCreated) {
@@ -371,21 +343,10 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 							int packungsgroesse = Integer.parseInt(pkggroesseField.getText());
 							try {
 								Artikel art = server.erstelleArtikel(bezeichnung, bestand, preis, packungsgroesse, user);
-								// Neu erstellten Artikel anzeigen
 								artikelAnzeigen(art);
-								// Artikelnummer wieder anzeigen
 								artNrField.setVisible(true);
-								//
-								bezeichnungField.setBackground(Color.WHITE);
-								preisField.setBackground(Color.WHITE);
-								pkggroesseField.setBackground(Color.WHITE);
-								bestandField.setBackground(Color.WHITE);
-								// Felder editierbar machen
-								bezeichnungField.setEditable(false);
-								preisField.setEditable(false);
-								pkggroesseField.setEditable(false);
-								bestandField.setEditable(false);
-								// Buttons anpassen
+								setInputFieldsColor(Color.WHITE);
+								setInputFieldsEditable(false);
 								neuAnlegenButton.setText("Neu");
 								isBeingCreated = false;
 								setStores(art);
@@ -407,6 +368,8 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 				}
 			}
 		}
+
+		
 	}
 
 	class VerlaufAnzeigenListener implements ActionListener {
@@ -435,5 +398,29 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 				JOptionPane.showMessageDialog(ArtikelVerwaltungsfenster.this, "Es muss ein Artikel ausgewÃ¤hlt werden!");
 			}
 		}
+	}
+	
+	private void setInputFieldsEditable(boolean editable) {
+
+		bezeichnungField.setEditable(editable);
+		preisField.setEditable(editable);
+		pkggroesseField.setEditable(editable);
+		bestandField.setEditable(editable);
+	}
+
+	private void setInputFieldsColor(Color color) {
+
+		bezeichnungField.setBackground(color);
+		preisField.setBackground(color);
+		pkggroesseField.setBackground(color);
+		bestandField.setBackground(color);
+	}
+	
+	private void clearInputFields() {
+
+		bezeichnungField.setText("");
+		preisField.setText("");
+		pkggroesseField.setText("");
+		bestandField.setText("");
 	}
 }

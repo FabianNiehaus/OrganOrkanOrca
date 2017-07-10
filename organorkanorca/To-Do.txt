@@ -26,7 +26,7 @@ Bugfixes:
 ./ Artikelverlauf
 ./ Handling Artikel löschen
 ./ Fenster ordentlich ersetzen
-- Artikel reset bei Fehler Bearbeitung
+./ Artikel reset bei Fehler Bearbeitung
 
 
 Nice-To-Have:

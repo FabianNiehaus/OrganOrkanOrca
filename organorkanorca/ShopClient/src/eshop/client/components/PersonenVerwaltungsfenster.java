@@ -27,31 +27,31 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 	 * 
 	 */
 	private static final long	serialVersionUID	= 3593841333668075281L;
-	JButton							aendernButton		= new JButton("Ändern");
+	JButton							aendernButton		= new JButton("Ã„ndern");
 	JPanel							buttons				= new JPanel();
 	JPanel							detailArea			= new JPanel();
-	JButton							loeschenButton		= new JButton("Löschen");
+	JButton							loeschenButton		= new JButton("LÃ¶schen");
 	JTextField						nachnameField		= new JTextField(15);
 	JLabel							nachnameLabel		= new JLabel("Nachname:");
 	JButton							neuAnlegenButton	= new JButton("Neu");
 	JTextField						ortField				= new JTextField(15);
 	JLabel							ortLabel				= new JLabel("Stadt:");
-	Person							p;
+	Person							personStore;
 	JTextField						passwordField		= new JTextField("*********", 15);
 	JLabel							passwordLabel		= new JLabel("Passwort:");
 	JTextField						persNrField			= new JTextField(15);
 	JLabel							persNrLabel			= new JLabel("ID:");
 	JTextField						strasseField		= new JTextField(15);
-	JLabel							strasseLabel		= new JLabel("Straße:");
+	JLabel							strasseLabel		= new JLabel("StraÃŸe:");
 	String							typ					= "";
 	JTextField						vornameField		= new JTextField(15);
 	JLabel							vornameLabel		= new JLabel("Vorname:");
 	JTextField						zipField				= new JTextField(15);
 	JLabel							zipLabel				= new JLabel("PLZ:");
 
-	public PersonenVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks listener, String titel,
+	public PersonenVerwaltungsfenster(ShopRemote server, Person user, VerwaltungsfensterCallbacks verwaltungsfensterCallbacks, String titel,
 			String personenTyp) {
-		super(server, user, listener);
+		super(server, user, verwaltungsfensterCallbacks);
 		this.setLayout(new MigLayout("", "114[]0"));
 		detailArea.setLayout(new MigLayout("", "[]10[]"));
 		detailArea.add(new JLabel(titel), "wrap 10!, span 2");
@@ -93,19 +93,19 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 
 	public Person getPerson() {
 
-		return p;
+		return personStore;
 	}
 
-	public void personAnzeigen(Person p) {
+	public void personAnzeigen(Person personStore) {
 
 		reset();
-		this.p = p;
-		persNrField.setText(String.valueOf(p.getId()));
-		vornameField.setText(p.getFirstname());
-		nachnameField.setText(p.getLastname());
-		strasseField.setText(p.getAddress_Street());
-		ortField.setText(p.getAddress_Town());
-		zipField.setText(p.getAddress_Zip());
+		this.personStore = personStore;
+		persNrField.setText(String.valueOf(personStore.getId()));
+		vornameField.setText(personStore.getFirstname());
+		nachnameField.setText(personStore.getLastname());
+		strasseField.setText(personStore.getAddress_Street());
+		ortField.setText(personStore.getAddress_Town());
+		zipField.setText(personStore.getAddress_Zip());
 		passwordField.setText("*********");
 		vornameField.setEditable(false);
 		nachnameField.setEditable(false);
@@ -118,23 +118,12 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 	@Override
 	public void reset() {
 
-		this.p = null;
-		persNrField.setText("");
-		vornameField.setText("");
-		nachnameField.setText("");
-		strasseField.setText("");
-		ortField.setText("");
-		zipField.setText("");
-		passwordField.setText("");
-		vornameField.setEditable(false);
-		nachnameField.setEditable(false);
-		strasseField.setEditable(false);
-		ortField.setEditable(false);
-		zipField.setEditable(false);
-		passwordField.setEditable(false);
+		this.personStore = null;
+		clearInputFields();
+		setInputFieldsEditable(false);
 		neuAnlegenButton.setText("Neu");
 		isBeingCreated = false;
-		aendernButton.setText("Ändern");
+		aendernButton.setText("Ã„ndern");
 		isBeingChanged = false;
 	}
 
@@ -151,16 +140,9 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
-			if (e.getSource().equals(aendernButton) && !isBeingChanged) {
+			if (e.getSource().equals(aendernButton) && !isBeingChanged && !isBeingCreated) {
 				if (!persNrField.getText().equals("")) {
-					// Felder editierbar machen
-					vornameField.setEditable(true);
-					nachnameField.setEditable(true);
-					strasseField.setEditable(true);
-					ortField.setEditable(true);
-					zipField.setEditable(true);
-					passwordField.setEditable(true);
-					// Buttons anpassen
+					setInputFieldsEditable(true);
 					aendernButton.setText("OK");
 					isBeingChanged = true;
 				}
@@ -172,26 +154,27 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 					String address_Town = ortField.getText();
 					String address_Zip = zipField.getText();
 					String passwort = passwordField.getText();
-					p = server.personAendern(typ, p, firstname, lastname, p.getId(), passwort, address_Street, address_Zip,
+					personStore = server.personAendern(typ, personStore, firstname, lastname, personStore.getId(), passwort, address_Street, address_Zip,
 							address_Town);
-					// Buttons anpassen
+					setInputFieldsEditable(false);
 					aendernButton.setText("Ã„ndern");
 					isBeingChanged = false;
 				} catch (InvalidPersonDataException e1) {
 					JOptionPane.showMessageDialog(PersonenVerwaltungsfenster.this, e1.getMessage());
-					personAnzeigen(p);
+					personAnzeigen(personStore);
 				} catch (RemoteException e1) {
 					JOptionPane.showMessageDialog(PersonenVerwaltungsfenster.this, e1.getMessage());
-					personAnzeigen(p);
+					personAnzeigen(personStore);
 				} catch (AccessRestrictedException e1) {
 					JOptionPane.showMessageDialog(PersonenVerwaltungsfenster.this, e1.getMessage());
-					personAnzeigen(p);
+					personAnzeigen(personStore);
 				} catch (PersonNonexistantException e1) {
 					JOptionPane.showMessageDialog(PersonenVerwaltungsfenster.this, e1.getMessage());
-					personAnzeigen(p);
+					personAnzeigen(personStore);
 				}
 			}
 		}
+
 	}
 
 	public class PersonLoeschenListener implements ActionListener {
@@ -200,7 +183,7 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		public void actionPerformed(ActionEvent e) {
 
 			try {
-				server.personLoeschen(p, user);
+				server.personLoeschen(personStore, user);
 			} catch (AccessRestrictedException e1) {
 				JOptionPane.showMessageDialog(PersonenVerwaltungsfenster.this, e1.getMessage());
 			} catch (RemoteException e1) {
@@ -226,23 +209,10 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
-			if (e.getSource().equals(neuAnlegenButton) && !isBeingCreated) {
+			if (e.getSource().equals(neuAnlegenButton) && !isBeingCreated && !isBeingChanged) {
 				// Alle Felder leeren
-				persNrField.setText("");
-				vornameField.setText("");
-				nachnameField.setText("");
-				strasseField.setText("");
-				ortField.setText("");
-				zipField.setText("");
-				passwordField.setText("");
-				// Felder editierbar machen
-				vornameField.setEditable(true);
-				nachnameField.setEditable(true);
-				strasseField.setEditable(true);
-				ortField.setEditable(true);
-				zipField.setEditable(true);
-				passwordField.setEditable(true);
-				// Buttons anpassen
+				clearInputFields();
+				setInputFieldsEditable(true);
 				neuAnlegenButton.setText("OK");
 				isBeingCreated = true;
 			} else if (e.getSource().equals(neuAnlegenButton) && isBeingCreated) {
@@ -254,12 +224,13 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 					String address_Zip = zipField.getText();
 					String passwort = passwordField.getText();
 					if (typ.equals("kunde")) {
-						p = server.erstelleKunde(firstname, lastname, passwort, address_Street, address_Zip, address_Town,
+						personStore = server.erstelleKunde(firstname, lastname, passwort, address_Street, address_Zip, address_Town,
 								user);
 					} else if (typ.equals("mitarbeiter")) {
-						p = server.erstelleMitatbeiter(firstname, lastname, passwort, address_Street, address_Zip,
+						personStore = server.erstelleMitatbeiter(firstname, lastname, passwort, address_Street, address_Zip,
 								address_Town, user);
 					}
+					setInputFieldsEditable(false);
 					neuAnlegenButton.setText("Neu");
 					isBeingCreated = false;
 				} catch (InvalidPersonDataException e1) {
@@ -276,5 +247,29 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 				}
 			}
 		}
+
+		
+	}
+	
+	private void clearInputFields() {
+
+		persNrField.setText("");
+		vornameField.setText("");
+		nachnameField.setText("");
+		strasseField.setText("");
+		ortField.setText("");
+		zipField.setText("");
+		passwordField.setText("");
+	}
+	
+
+	private void setInputFieldsEditable(boolean editable) {
+
+		vornameField.setEditable(editable);
+		nachnameField.setEditable(editable);
+		strasseField.setEditable(editable);
+		ortField.setEditable(editable);
+		zipField.setEditable(editable);
+		passwordField.setEditable(editable);
 	}
 }
