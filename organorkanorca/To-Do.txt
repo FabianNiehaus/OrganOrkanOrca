@@ -31,7 +31,6 @@ Bugfixes:
 ./ €-Zeichen aus Preisfeld
 - layout Artikelverwaltung
 - Anzeige Bild
-- Anzeige Ereignis
 
 
 Nice-To-Have:
