@@ -18,6 +18,7 @@ public class Artikel implements Serializable {
 	private Map<Integer, Integer>	bestandsverlauf	= new LinkedHashMap<>();
 	private String						bezeichnung;
 	private double						preis;
+	private String artikelinfo;
 
 	/*
 	 * Nocht nicht verwendet private String kategorie; private boolean angebot;
@@ -34,12 +35,25 @@ public class Artikel implements Serializable {
 	 *           Preis des Artikels
 	 */
 	public Artikel(String bezeichnung, int artikelnummer, int bestand, double preis,
-			Map<Integer, Integer> bestandsverlauf) {
+			Map<Integer, Integer> bestandsverlauf, String artikelinfo) {
 		this.bezeichnung = bezeichnung;
 		this.artikelnummer = artikelnummer;
 		this.bestand = bestand;
 		this.preis = preis;
 		this.bestandsverlauf = bestandsverlauf;
+		this.artikelinfo = artikelinfo;
+	}
+
+	
+	public String getArtikelinfo() {
+	
+		return artikelinfo;
+	}
+
+	
+	public void setArtikelinfo(String artikelinfo) {
+	
+		this.artikelinfo = artikelinfo;
 	}
 
 	public void aktualisiereBestandsverlauf() {

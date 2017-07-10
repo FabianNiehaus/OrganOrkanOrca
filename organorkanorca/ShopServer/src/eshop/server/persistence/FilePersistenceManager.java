@@ -69,6 +69,7 @@ public class FilePersistenceManager implements PersistenceManager {
 		int bestand = 0;
 		int packungsgroesse = 0;
 		Map<Integer, Integer> bestandsverlauf = new LinkedHashMap<>();
+		String artikelinfo = "";
 		// Lies Artikelnummer
 		try {
 			artikelnummer = Integer.parseInt(liesZeile());
@@ -84,6 +85,8 @@ public class FilePersistenceManager implements PersistenceManager {
 		bestand = Integer.parseInt(liesZeile());
 		// Lies Packungsgröße
 		packungsgroesse = Integer.parseInt(liesZeile());
+		// Lies Artikelinfo
+		artikelinfo = liesZeile();
 		// Lies Bestandshistory
 		try {
 			reader.mark(400);
@@ -101,9 +104,9 @@ public class FilePersistenceManager implements PersistenceManager {
 		} catch (NullPointerException e) {
 		}
 		if (packungsgroesse == 1) {
-			return new Artikel(bezeichnung, artikelnummer, bestand, preis, bestandsverlauf);
+			return new Artikel(bezeichnung, artikelnummer, bestand, preis, bestandsverlauf, artikelinfo);
 		} else {
-			return new Massengutartikel(bezeichnung, artikelnummer, bestand, preis, packungsgroesse, bestandsverlauf);
+			return new Massengutartikel(bezeichnung, artikelnummer, bestand, preis, packungsgroesse, bestandsverlauf, artikelinfo);
 		}
 	}
 

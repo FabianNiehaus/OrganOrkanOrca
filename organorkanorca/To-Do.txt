@@ -12,6 +12,7 @@ To-Do
 - Formatierung Schrift, Kästen, etc.
 - Farbe für Bestand
 - DOKUMENTATION
+- Artikel-Informationen
 
 Bugfixes:
 ./ Kunde + Mitarbeiter bearbeiten / löschen -> Tabelle aktualisieren

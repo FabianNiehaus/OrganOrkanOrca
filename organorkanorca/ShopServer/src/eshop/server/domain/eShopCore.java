@@ -232,7 +232,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 	 */
 	@Override
 	public Artikel artikelAendern(int artikelnummer, Person person, String bezeichnung, int bestand, String operator,
-			double preis, int packungsgroesse)
+			double preis, int packungsgroesse, String artikelinfo)
 			throws RemoteException, AccessRestrictedException, InvalidAmountException, ArticleNonexistantException {
 
 		synchronized (artActionKey) {
@@ -242,7 +242,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 			if (packungsgroesse > 1 && packungsgroesse != ((Massengutartikel) art).getPackungsgroesse()) {
 				int tmpBestand = art.getBestand();
 				artikelLoeschen(art.getArtikelnummer(), person);
-				art = erstelleArtikel(bezeichnung, tmpBestand, preis, packungsgroesse, person);
+				art = erstelleArtikel(bezeichnung, tmpBestand, preis, packungsgroesse, person, artikelinfo);
 			}
 			artikelBestandAendern(art, bestand, operator, person);
 			final Artikel artBack = art;
@@ -484,12 +484,12 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 	 * data_objects.Person)
 	 */
 	@Override
-	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, int packungsgroesse, Person person)
+	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, int packungsgroesse, Person person, String artikelinfo)
 			throws AccessRestrictedException, InvalidAmountException, RemoteException {
 
 		synchronized (artActionKey) {
 			if (istMitarbeiter(person)) {
-				Artikel art = av.erstelleArtikel(bezeichnung, bestand, preis, packungsgroesse);
+				Artikel art = av.erstelleArtikel(bezeichnung, bestand, preis, packungsgroesse, artikelinfo);
 				// Ereignis erzeugen
 				ev.ereignisErstellen(person, Typ.NEU, art, bestand);
 				final Artikel artikelBack = art;

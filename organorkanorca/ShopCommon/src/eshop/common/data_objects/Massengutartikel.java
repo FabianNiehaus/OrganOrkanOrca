@@ -12,8 +12,8 @@ public class Massengutartikel extends Artikel implements Serializable {
 	private int						packungsgroesse;
 
 	public Massengutartikel(String bezeichnung, int artikelnummer, int bestand, double preis, int packungsgroesse,
-			Map<Integer, Integer> bestandsverlauf) {
-		super(bezeichnung, artikelnummer, bestand, preis, bestandsverlauf);
+			Map<Integer, Integer> bestandsverlauf, String artikelinfo) {
+		super(bezeichnung, artikelnummer, bestand, preis, bestandsverlauf, artikelinfo);
 		// TODO Auto-generated constructor stub
 		this.packungsgroesse = packungsgroesse;
 	}

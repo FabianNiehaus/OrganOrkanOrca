@@ -14,9 +14,12 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
+import javax.swing.border.Border;
+import javax.swing.text.DefaultCaret;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartFrame;
@@ -71,6 +74,8 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 	double							preisStore					= 0;
 	JLabel							stueckLabel					= new JLabel("St�ck");
 	JButton							verlaufAnzeigenButton	= new JButton("Verlauf anzeigen");
+	JScrollPane						infoAreaContainer			= new JScrollPane(infoArea);
+	String infoStore = "";
 
 	public ArtikelVerwaltungsfenster(ShopRemote server, Person user,
 			VerwaltungsfensterCallbacks verwaltungsfensterCallbacks) {
@@ -91,7 +96,9 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		detailArea.add(pkggroesseLabel, "right");
 		detailArea.add(pkggroesseField, "w 30!, wrap 5!");
 		detailArea.add(infoLabel, "wrap");
-		detailArea.add(infoArea, "w 100:650:900, span 7 0");
+		detailArea.add(infoAreaContainer, "w 100:650:900, h 50, span 7 0");
+		DefaultCaret caret = (DefaultCaret) infoArea.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 		detailArea.setBackground(Color.WHITE);
 		detailArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 		ImageIcon image = new ImageIcon("pictures/orkan.jpg");
@@ -102,17 +109,11 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		// detailArea.setBorder(BorderFactory.createTitledBorder("Artikeldetails:"));
 		bezeichnungField.setFont(new Font("Arial", Font.BOLD, 20));
 		preisField.setFont(new Font("Arial", Font.BOLD, 14));
-		bezeichnungField.setBorder(null);
-		preisField.setBorder(null);
-		artNrField.setBorder(null);
-		pkggroesseField.setBorder(null);
-		bestandField.setBorder(null);
+		setInputFieldsBorder(null);
 		setInputFieldsColor(null);
+		setInputFieldsEditable(false);
 		infoArea.setLineWrap(true);
 		infoArea.setWrapStyleWord(true);
-		infoArea.setText("Als Orkan werden im weiteren Sinn Winde mit Geschwindigkeiten von mindestens "
-				+ "64 kn (117,7 km/h = 32,7 m/s) bezeichnet. Orkane k�nnen "
-				+ "massive Verw�stungen anrichten und bilden auf See eine Gefahr f�r den Schiffsverkehr.");
 		mitarbeiterButtons.add(verlaufAnzeigenButton);
 		mitarbeiterButtons.add(neuAnlegenButton, "w 100!");
 		mitarbeiterButtons.add(aendernButton, "w 100!");
@@ -140,6 +141,16 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		this.setVisible(true);
 	}
 
+	private void setInputFieldsBorder(Border border) {
+
+		bezeichnungField.setBorder(border);
+		preisField.setBorder(border);
+		artNrField.setBorder(border);
+		pkggroesseField.setBorder(border);
+		bestandField.setBorder(border);
+		infoAreaContainer.setBorder(border);
+	}
+
 	/**
 	 * @param art
 	 */
@@ -156,6 +167,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 			pkggroesseField.setText("1");
 		}
 		bestandField.setText(String.valueOf(art.getBestand()));
+		infoArea.setText(art.getArtikelinfo());
 		setStores(art);
 	}
 
@@ -165,6 +177,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		preisField.setText("");
 		pkggroesseField.setText("");
 		bestandField.setText("");
+		infoArea.setText("");
 	}
 
 	public Artikel getArtikel() {
@@ -191,6 +204,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		preisStore = 0;
 		packungsgroesseStore = 0;
 		bestandStore = 0;
+		infoStore = "";
 	}
 
 	private void setInputFieldsColor(Color color) {
@@ -199,6 +213,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		preisField.setBackground(color);
 		pkggroesseField.setBackground(color);
 		bestandField.setBackground(color);
+		infoArea.setBackground(color);
 	}
 
 	private void setInputFieldsEditable(boolean editable) {
@@ -207,6 +222,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		preisField.setEditable(editable);
 		pkggroesseField.setEditable(editable);
 		bestandField.setEditable(editable);
+		infoArea.setEditable(editable);
 	}
 
 	public void setStores(Artikel art) {
@@ -219,6 +235,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 			packungsgroesseStore = 1;
 		}
 		bestandStore = art.getBestand();
+		infoStore = art.getArtikelinfo();
 	}
 
 	public class ArtikelBearbeitenListener implements ActionListener {
@@ -235,6 +252,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 				}
 			} else if (e.getSource().equals(aendernButton) && isBeingChanged) {
 				String bezeichnung = bezeichnungField.getText();
+				String artikelinfo = infoArea.getText().replace("\n", "").replace("\r", "");;
 				try {
 					int bestand = 0;
 					String zeile = bestandField.getText();
@@ -258,7 +276,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 							int packungsgroesse = Integer.parseInt(pkggroesseField.getText());
 							try {
 								art = server.artikelAendern(art.getArtikelnummer(), user, bezeichnung, bestand, operator, preis,
-										packungsgroesse);
+										packungsgroesse, artikelinfo);
 								artikelAnzeigen(art);
 								aendernButton.setText("Andern");
 								isBeingChanged = false;
@@ -351,6 +369,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 				isBeingCreated = true;
 			} else if (e.getSource().equals(neuAnlegenButton) && isBeingCreated) {
 				String bezeichnung = bezeichnungField.getText();
+				String artikelinfo = infoArea.getText().replace("\n", "").replace("\r", "");;
 				try {
 					int bestand = Integer.parseInt(bestandField.getText());
 					try {
@@ -358,7 +377,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 						try {
 							int packungsgroesse = Integer.parseInt(pkggroesseField.getText());
 							try {
-								Artikel art = server.erstelleArtikel(bezeichnung, bestand, preis, packungsgroesse, user);
+								Artikel art = server.erstelleArtikel(bezeichnung, bestand, preis, packungsgroesse, user, artikelinfo);
 								artikelAnzeigen(art);
 								artNrField.setVisible(true);
 								setInputFieldsColor(Color.WHITE);

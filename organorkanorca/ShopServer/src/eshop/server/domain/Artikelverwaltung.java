@@ -97,11 +97,11 @@ public class Artikelverwaltung {
 	 * @return Erstellter Artikel
 	 * @throws InvalidAmountException
 	 */
-	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, int packungsgroesse)
+	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, int packungsgroesse, String artikelinfo)
 			throws InvalidAmountException {
 
 		if (packungsgroesse == 1) {
-			Artikel art = new Artikel(bezeichnung, getNextID(), bestand, preis, null);
+			Artikel art = new Artikel(bezeichnung, getNextID(), bestand, preis, null, artikelinfo);
 			artikel.add(art);
 			art.aktualisiereBestandsverlauf();
 			return art;
@@ -111,7 +111,7 @@ public class Artikelverwaltung {
 				throw new InvalidAmountException(bestand);
 			} else {
 				Massengutartikel art = new Massengutartikel(bezeichnung, getNextID(), bestand, preis, packungsgroesse,
-						null);
+						null, artikelinfo);
 				artikel.add(art);
 				art.aktualisiereBestandsverlauf();
 				return art;
