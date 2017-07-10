@@ -19,6 +19,7 @@ public class Artikel implements Serializable {
 	private String						bezeichnung;
 	private double						preis;
 	private String artikelinfo;
+	private String picture;
 
 	/*
 	 * Nocht nicht verwendet private String kategorie; private boolean angebot;
@@ -35,13 +36,14 @@ public class Artikel implements Serializable {
 	 *           Preis des Artikels
 	 */
 	public Artikel(String bezeichnung, int artikelnummer, int bestand, double preis,
-			Map<Integer, Integer> bestandsverlauf, String artikelinfo) {
+			Map<Integer, Integer> bestandsverlauf, String artikelinfo, String picture) {
 		this.bezeichnung = bezeichnung;
 		this.artikelnummer = artikelnummer;
 		this.bestand = bestand;
 		this.preis = preis;
 		this.bestandsverlauf = bestandsverlauf;
 		this.artikelinfo = artikelinfo;
+		this.setPicture(picture);
 	}
 
 	
@@ -151,5 +153,17 @@ public class Artikel implements Serializable {
 	public String toString() {
 
 		return artikelnummer + " | " + bezeichnung + " | " + preis + " | " + bestand;
+	}
+
+
+	public String getPicture() {
+
+		return picture;
+	}
+
+
+	public void setPicture(String picture) {
+
+		this.picture = picture;
 	}
 }

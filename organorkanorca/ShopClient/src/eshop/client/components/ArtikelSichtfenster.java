@@ -1,12 +1,24 @@
 package eshop.client.components;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.rmi.RemoteException;
+import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
+
+import org.jdesktop.swingx.decorator.ColorHighlighter;
+import org.jdesktop.swingx.decorator.ComponentAdapter;
+import org.jdesktop.swingx.decorator.Filter;
+import org.jdesktop.swingx.decorator.FilterPipeline;
+import org.jdesktop.swingx.decorator.HighlightPredicate;
+import org.jdesktop.swingx.decorator.PatternFilter;
 
 import eshop.client.components.tablemodels.ArtikelTableModel;
 import eshop.client.util.Sichtfenster;
@@ -39,7 +51,7 @@ public class ArtikelSichtfenster extends Sichtfenster {
 	 *           the sichtfensterCallbacks
 	 */
 	public ArtikelSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks sichtfensterCallbacks) {
-		super(server, user, sichtfensterCallbacks);
+		super(server, user, sichtfensterCallbacks, new String[]{"Artikelnummer","Bezeichnung","Preis","Einheit","Bestand"});
 		auflistung.getSelectionModel().addListSelectionListener(new ArtikelAnzeigenListener());
 	}
 
@@ -95,5 +107,57 @@ public class ArtikelSichtfenster extends Sichtfenster {
 				JOptionPane.showMessageDialog(ArtikelSichtfenster.this, e1.getMessage());
 			}
 		}
+	}
+	
+	public void TabelleFiltern() {
+		
+		if(sucheField1.getText().equals(sucheFieldNames[0])){
+			sucheField1.setText("");
+		}
+		if(sucheField2.getText().equals(sucheFieldNames[1])){
+			sucheField2.setText("");
+		}
+		if(sucheField3.getText().equals(sucheFieldNames[2])){
+			sucheField3.setText("");
+		}
+		if(sucheField4.getText().equals(sucheFieldNames[3])){
+			sucheField4.setText("");
+		}
+		if(sucheField5.getText().equals(sucheFieldNames[4])){
+			sucheField5.setText("");
+		}
+
+		Filter[] filterArray = {new PatternFilter(".*" + sucheField1.getText() + ".*", Pattern.CASE_INSENSITIVE, 0),
+				new PatternFilter(".*" + sucheField2.getText() + ".*", Pattern.CASE_INSENSITIVE, 1),
+				new PatternFilter(".*" + sucheField3.getText() + ".*", Pattern.CASE_INSENSITIVE, 2),
+				new PatternFilter(".*" + sucheField4.getText() + ".*", Pattern.CASE_INSENSITIVE, 3),
+				new PatternFilter(".*" + sucheField5.getText() + ".*", Pattern.CASE_INSENSITIVE, 4)};
+		FilterPipeline filters = new FilterPipeline(filterArray);
+		auflistung.setFilters(filters);
+	}
+
+	@Override
+	public void initializeHighlighting() {	
+		
+		final HighlightPredicate predicate1 = new HighlightPredicate() {
+			public boolean isHighlighted(Component renderer, ComponentAdapter adapter) {
+				return (int)adapter.getValue(4) == 0;
+			}        
+		};
+		final HighlightPredicate predicate2 = new HighlightPredicate() {
+			public boolean isHighlighted(Component renderer, ComponentAdapter adapter) {
+				return (int)adapter.getValue(4) < 10 && !((int)adapter.getValue(4) == 0);
+			}        
+		};
+		final HighlightPredicate predicate3 = new HighlightPredicate() {
+			public boolean isHighlighted(Component renderer, ComponentAdapter adapter) {
+				return (int)adapter.getValue(4) >= 10;
+			}        
+		};
+		ColorHighlighter highlighter1= new ColorHighlighter(predicate1, new Color(192,192,192,128), Color.GRAY);
+		ColorHighlighter highlighter2= new ColorHighlighter(predicate2, new Color(255,200,0,64), null);
+		ColorHighlighter highlighter3= new ColorHighlighter(predicate3, new Color(0,255,0,64), null);
+		auflistung.setHighlighters(new ColorHighlighter[]{highlighter1, highlighter2, highlighter3});
+		
 	}
 }

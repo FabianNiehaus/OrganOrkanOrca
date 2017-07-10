@@ -101,7 +101,7 @@ public class Artikelverwaltung {
 			throws InvalidAmountException {
 
 		if (packungsgroesse == 1) {
-			Artikel art = new Artikel(bezeichnung, getNextID(), bestand, preis, null, artikelinfo);
+			Artikel art = new Artikel(bezeichnung, getNextID(), bestand, preis, null, artikelinfo,"pictures/orkan.jpg");
 			artikel.add(art);
 			art.aktualisiereBestandsverlauf();
 			return art;
@@ -111,7 +111,7 @@ public class Artikelverwaltung {
 				throw new InvalidAmountException(bestand);
 			} else {
 				Massengutartikel art = new Massengutartikel(bezeichnung, getNextID(), bestand, preis, packungsgroesse,
-						null, artikelinfo);
+						null, artikelinfo,"pictures/orkan.jpg");
 				artikel.add(art);
 				art.aktualisiereBestandsverlauf();
 				return art;

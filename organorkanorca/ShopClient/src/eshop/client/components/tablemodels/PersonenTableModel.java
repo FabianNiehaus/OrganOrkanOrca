@@ -12,7 +12,7 @@ public class PersonenTableModel extends ShopTableModel {
 	private static final long serialVersionUID = 6108669637836557607L;
 
 	public PersonenTableModel(Vector<? extends Person> dataVector) {
-		columnNames = new String[] {"KundenNr.", "Vorname", "Nachname", "Straße", "PLZ", "Ort"};
+		columnNames = new String[] {"ID", "Vorname", "Nachname", "Straße", "PLZ", "Ort"};
 		data = new Object[dataVector.size()][6];
 		int i = 0;
 		for (Person p : dataVector) {

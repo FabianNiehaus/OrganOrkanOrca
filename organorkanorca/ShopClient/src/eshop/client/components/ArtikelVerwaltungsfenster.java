@@ -433,4 +433,6 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 			}
 		}
 	}
+	
+	
 }

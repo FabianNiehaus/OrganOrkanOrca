@@ -4,9 +4,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+
+import org.jdesktop.swingx.decorator.Filter;
+import org.jdesktop.swingx.decorator.FilterPipeline;
+import org.jdesktop.swingx.decorator.PatternFilter;
 
 import eshop.client.components.tablemodels.EreignisTableModel;
 import eshop.client.util.Sichtfenster;
@@ -29,7 +34,7 @@ public class ManagementSichtfenster extends Sichtfenster {
 	JButton							speichernButton	= new JButton("Bestandsdaten speichern");
 
 	public ManagementSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks listener) {
-		super(server, user, listener);
+		super(server, user, listener, new String[]{"Datum","Aktion","ArtikelNr","Bezeichnung","Person (Name)"});
 		this.setLayout(new MigLayout());
 		actionField.setLayout(new MigLayout());
 		speichernButton.addActionListener(new PersistenceButtonListener());
@@ -73,5 +78,41 @@ public class ManagementSichtfenster extends Sichtfenster {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void TabelleFiltern() {
+
+		if(sucheField1.getText().equals(sucheFieldNames[0])){
+			sucheField1.setText("");
+		}
+		if(sucheField2.getText().equals(sucheFieldNames[1])){
+			sucheField2.setText("");
+		}
+		if(sucheField3.getText().equals(sucheFieldNames[2])){
+			sucheField3.setText("");
+		}
+		if(sucheField4.getText().equals(sucheFieldNames[3])){
+			sucheField4.setText("");
+		}
+		if(sucheField5.getText().equals(sucheFieldNames[4])){
+			sucheField5.setText("");
+		}
+
+		Filter[] filterArray = {new PatternFilter(".*" + sucheField1.getText() + ".*", Pattern.CASE_INSENSITIVE, 0),
+				new PatternFilter(".*" + sucheField2.getText() + ".*", Pattern.CASE_INSENSITIVE, 2),
+				new PatternFilter(".*" + sucheField3.getText() + ".*", Pattern.CASE_INSENSITIVE, 3),
+				new PatternFilter(".*" + sucheField4.getText() + ".*", Pattern.CASE_INSENSITIVE, 4),
+				new PatternFilter(".*" + sucheField5.getText() + ".*", Pattern.CASE_INSENSITIVE, 6)};
+		FilterPipeline filters = new FilterPipeline(filterArray);
+		auflistung.setFilters(filters);
+		
+	}
+
+	@Override
+	public void initializeHighlighting() {
+
+		// TODO Auto-generated method stub
+		
 	}
 }

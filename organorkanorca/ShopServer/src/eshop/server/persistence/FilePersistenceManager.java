@@ -70,6 +70,7 @@ public class FilePersistenceManager implements PersistenceManager {
 		int packungsgroesse = 0;
 		Map<Integer, Integer> bestandsverlauf = new LinkedHashMap<>();
 		String artikelinfo = "";
+		String picture = "";
 		// Lies Artikelnummer
 		try {
 			artikelnummer = Integer.parseInt(liesZeile());
@@ -87,6 +88,8 @@ public class FilePersistenceManager implements PersistenceManager {
 		packungsgroesse = Integer.parseInt(liesZeile());
 		// Lies Artikelinfo
 		artikelinfo = liesZeile();
+		//Lies Bild
+		picture = liesZeile();
 		// Lies Bestandshistory
 		try {
 			reader.mark(400);
@@ -104,9 +107,9 @@ public class FilePersistenceManager implements PersistenceManager {
 		} catch (NullPointerException e) {
 		}
 		if (packungsgroesse == 1) {
-			return new Artikel(bezeichnung, artikelnummer, bestand, preis, bestandsverlauf, artikelinfo);
+			return new Artikel(bezeichnung, artikelnummer, bestand, preis, bestandsverlauf, artikelinfo,picture);
 		} else {
-			return new Massengutartikel(bezeichnung, artikelnummer, bestand, preis, packungsgroesse, bestandsverlauf, artikelinfo);
+			return new Massengutartikel(bezeichnung, artikelnummer, bestand, preis, packungsgroesse, bestandsverlauf, artikelinfo,picture);
 		}
 	}
 
@@ -291,6 +294,11 @@ public class FilePersistenceManager implements PersistenceManager {
 		} else {
 			schreibeZeile(String.valueOf(1));
 		}
+		//Schreibe Artikelinfo
+		schreibeZeile(art.getArtikelinfo());
+		//Schreibe Bild
+		schreibeZeile(art.getPicture());
+		//Schreibe History
 		schreibeZeile("---BEGINHISTORY---");
 		// Bestandhistory schreiben
 		for (Entry<Integer, Integer> ent : art.getBestandsverlauf().entrySet()) {

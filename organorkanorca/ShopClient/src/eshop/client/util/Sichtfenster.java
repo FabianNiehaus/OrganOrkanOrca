@@ -1,5 +1,7 @@
 package eshop.client.util;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -13,11 +15,16 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
 
 import org.jdesktop.swingx.JXTable;
+import org.jdesktop.swingx.decorator.ColorHighlighter;
+import org.jdesktop.swingx.decorator.ComponentAdapter;
 import org.jdesktop.swingx.decorator.Filter;
 import org.jdesktop.swingx.decorator.FilterPipeline;
+import org.jdesktop.swingx.decorator.HighlightPredicate;
 import org.jdesktop.swingx.decorator.PatternFilter;
+import org.jdesktop.swingx.decorator.PatternPredicate;
 import org.jdesktop.swingx.decorator.SortOrder;
 
 import eshop.common.data_objects.Artikel;
@@ -52,14 +59,18 @@ public abstract class Sichtfenster extends JPanel {
 	/** The suche button. */
 	protected JButton						sucheButton					= new JButton("Suche");
 	/** The suche field. */
-	protected JTextField					sucheField					= new JTextField("Bezeichnung", 30);
+	protected JTextField					sucheField1					= new JTextField("", 30);
 	/** The suche field 2. */
-	protected JTextField					sucheField2					= new JTextField("Artikel Nr.", 30);
+	protected JTextField					sucheField2					= new JTextField("", 30);
 	/** The suche field 3. */
-	protected JTextField					sucheField3					= new JTextField("Einheit", 30);
+	protected JTextField					sucheField3					= new JTextField("", 30);
+	/** The suche field 3. */
+	protected JTextField					sucheField4					= new JTextField("", 30);
+	/** The suche field 3. */
+	protected JTextField					sucheField5					= new JTextField("", 30);
 	/** The user. */
 	protected Person						user;
-
+	protected String[] sucheFieldNames = new String[5];
 	/**
 	 * Instantiates a new sichtfenster.
 	 *
@@ -70,20 +81,25 @@ public abstract class Sichtfenster extends JPanel {
 	 * @param sichtfensterCallbacks
 	 *           the sichtfensterCallbacks
 	 */
-	public Sichtfenster(ShopRemote server, Person user, SichtfensterCallbacks sichtfensterCallbacks) {
+	public Sichtfenster(ShopRemote server, Person user, SichtfensterCallbacks sichtfensterCallbacks, String[] sucheFieldNames) {
+		this.sucheFieldNames = sucheFieldNames;
 		this.sichtfensterCallbacks = sichtfensterCallbacks;
 		this.user = user;
 		this.server = server;
 		this.setLayout(new MigLayout());
 		this.add(overviewButtons, "dock west");
-		this.add(auflistungContainer, "wrap, w 100%, h 200!");
-		overviewButtons.setLayout(new MigLayout());
-		overviewButtons.add(alleButton, "wrap 10,w 100!");
-		overviewButtons.add(sucheField, "wrap 10,w 100!");
-		overviewButtons.add(sucheField2, "wrap 10,w 100!");
-		overviewButtons.add(sucheField3, "wrap 10,w 100!");
-		overviewButtons.add(sucheButton, "wrap 10, w 100!");
-		overviewButtons.setVisible(true);
+		this.add(auflistungContainer, "wrap, w 100%, h 230!");
+		
+		initializeSearchbar(sucheFieldNames);
+		initializeAuflistung();
+		
+	}
+	
+
+	   
+
+	private void initializeAuflistung() {
+
 		auflistung.setAutoCreateRowSorter(true);
 		callTableUpdate();
 		auflistung.setHorizontalScrollEnabled(true);
@@ -91,38 +107,56 @@ public abstract class Sichtfenster extends JPanel {
 		JTableHeader header = auflistung.getTableHeader();
 		header.setUpdateTableInRealTime(true);
 		header.setReorderingAllowed(false);
-		sucheField.setHorizontalAlignment(SwingConstants.CENTER);
+		initializeHighlighting();
+	}
+
+	private void initializeSearchbar(String[] sucheFieldNames) {
+
+		overviewButtons.setLayout(new MigLayout());
+		overviewButtons.add(alleButton, "wrap 10,w 100!");
+		overviewButtons.add(sucheField1, "wrap 10,w 100!");
+		overviewButtons.add(sucheField2, "wrap 10,w 100!");
+		overviewButtons.add(sucheField3, "wrap 10,w 100!");
+		overviewButtons.add(sucheField4, "wrap 10,w 100!");
+		overviewButtons.add(sucheField5, "wrap 10,w 100!");
+		overviewButtons.add(sucheButton, "wrap 10, w 100!");
+		overviewButtons.setVisible(true);
+		sucheField1.setHorizontalAlignment(SwingConstants.CENTER);
 		sucheField2.setHorizontalAlignment(SwingConstants.CENTER);
 		sucheField3.setHorizontalAlignment(SwingConstants.CENTER);
-		sucheField.addFocusListener(new FocusListener() {
-
-			String text;
+		sucheField4.setHorizontalAlignment(SwingConstants.CENTER);
+		sucheField5.setHorizontalAlignment(SwingConstants.CENTER);
+		sucheField1.setText(sucheFieldNames[0]);
+		sucheField2.setText(sucheFieldNames[1]);
+		sucheField3.setText(sucheFieldNames[2]);
+		sucheField4.setText(sucheFieldNames[3]);
+		sucheField5.setText(sucheFieldNames[4]);
+		sucheField1.addFocusListener(new FocusListener() {
 
 			@Override
 			public void focusGained(FocusEvent e) {
 
-				text = sucheField.getText();
-				sucheField.setText("");
+				if(sucheField1.getText().equals(sucheFieldNames[0])){
+					sucheField1.setText("");
+				}
 			}
 
 			@Override
 			public void focusLost(FocusEvent e) {
 
-				// TODO Auto-generated method stub
-				if (sucheField.getText().equals("")) {
-					sucheField.setText("Bezeichnung");
+				if (sucheField1.getText().equals("")) {
+					sucheField1.setText(sucheFieldNames[0]);
 				}
 			}
 		});
 		sucheField2.addFocusListener(new FocusListener() {
 
-			String text;
-
 			@Override
 			public void focusGained(FocusEvent e) {
 
-				text = sucheField2.getText();
+				if(sucheField2.getText().equals(sucheFieldNames[1])){
 				sucheField2.setText("");
+				}
 			}
 
 			@Override
@@ -130,19 +164,18 @@ public abstract class Sichtfenster extends JPanel {
 
 				// TODO Auto-generated method stub
 				if (sucheField2.getText().equals("")) {
-					sucheField2.setText("Artikel Nr.");
+					sucheField2.setText(sucheFieldNames[1]);
 				}
 			}
 		});
 		sucheField3.addFocusListener(new FocusListener() {
 
-			String text;
-
 			@Override
 			public void focusGained(FocusEvent e) {
 
-				text = sucheField3.getText();
-				sucheField3.setText("");
+				if(sucheField3.getText().equals(sucheFieldNames[2])){
+					sucheField3.setText("");
+				}
 			}
 
 			@Override
@@ -150,7 +183,44 @@ public abstract class Sichtfenster extends JPanel {
 
 				// TODO Auto-generated method stub
 				if (sucheField3.getText().equals("")) {
-					sucheField3.setText("Einheit");
+					sucheField3.setText(sucheFieldNames[2]);
+				}
+			}
+		});
+		sucheField4.addFocusListener(new FocusListener() {
+
+			@Override
+			public void focusGained(FocusEvent e) {
+
+				if(sucheField4.getText().equals(sucheFieldNames[3])){
+					sucheField4.setText("");
+				}
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+
+				// TODO Auto-generated method stub
+				if (sucheField4.getText().equals("")) {
+					sucheField4.setText(sucheFieldNames[3]);
+				}
+			}
+		});
+		sucheField5.addFocusListener(new FocusListener() {
+
+			@Override
+			public void focusGained(FocusEvent e) {
+
+				if(sucheField5.getText().equals(sucheFieldNames[4])){
+					sucheField5.setText("");
+				}
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+
+				if (sucheField5.getText().equals("")) {
+					sucheField5.setText(sucheFieldNames[4]);
 				}
 			}
 		});
@@ -171,6 +241,8 @@ public abstract class Sichtfenster extends JPanel {
 			}
 		});
 	}
+	
+	public abstract void initializeHighlighting();
 
 	/**
 	 * Call table update.
@@ -194,14 +266,7 @@ public abstract class Sichtfenster extends JPanel {
 	/**
 	 * Tabelle filtern.
 	 */
-	public void TabelleFiltern() {
-
-		Filter[] filterArray = {new PatternFilter(".*" + sucheField.getText() + ".*", Pattern.CASE_INSENSITIVE, 0),
-				new PatternFilter(".*" + sucheField2.getText() + ".*", Pattern.CASE_INSENSITIVE, 1),
-				new PatternFilter(".*" + sucheField3.getText() + ".*", Pattern.CASE_INSENSITIVE, 2)};
-		FilterPipeline filters = new FilterPipeline(filterArray);
-		auflistung.setFilters(filters);
-	}
+	public abstract void TabelleFiltern();
 
 	/**
 	 * Tabellen filter entfernen.
@@ -209,6 +274,12 @@ public abstract class Sichtfenster extends JPanel {
 	public void TabellenFilterEntfernen() {
 
 		auflistung.setFilters(null);
+		sucheField1.setText(sucheFieldNames[0]);
+		sucheField2.setText(sucheFieldNames[1]);
+		sucheField3.setText(sucheFieldNames[2]);
+		sucheField4.setText(sucheFieldNames[3]);
+		sucheField5.setText(sucheFieldNames[4]);
+		
 	}
 
 	/**
