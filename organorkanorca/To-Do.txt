@@ -29,6 +29,9 @@ Bugfixes:
 ./ Fenster ordentlich ersetzen
 ./ Artikel reset bei Fehler Bearbeitung
 ./ €-Zeichen aus Preisfeld
+- layout Artikelverwaltung
+- Anzeige Bild
+- Anzeige Ereignis
 
 
 Nice-To-Have:
