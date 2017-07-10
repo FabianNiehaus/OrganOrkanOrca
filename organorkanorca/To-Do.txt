@@ -10,7 +10,7 @@ To-Do
 ./ Eine Suchleiste pro Spalte
 ./ Verwaltungsbuttons nach unten
 - Formatierung Schrift, Kästen, etc.
-- Farbe für Bestand
+./ Farbe für Bestand
 - DOKUMENTATION
 ./ Artikel-Informationen
 

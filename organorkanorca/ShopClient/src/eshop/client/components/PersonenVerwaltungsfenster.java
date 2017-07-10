@@ -54,7 +54,7 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		super(server, user, verwaltungsfensterCallbacks);
 		this.setLayout(new MigLayout("", "114[]0"));
 		detailArea.setLayout(new MigLayout("", "[]10[]"));
-		detailArea.add(new JLabel(titel), "wrap 10!, span 2");
+		detailArea.add(new JLabel(titel), "wrap 20!, span 2");
 		detailArea.add(persNrLabel);
 		detailArea.add(persNrField, "");
 		detailArea.add(vornameLabel);

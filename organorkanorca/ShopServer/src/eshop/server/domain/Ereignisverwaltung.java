@@ -137,4 +137,14 @@ public class Ereignisverwaltung {
 		// Persistenz-Schnittstelle wieder schließen
 		pm.close();
 	}
+	
+	public Ereignis sucheEreignis(int ereignisID) throws ArticleNonexistantException {
+
+		for (Ereignis er : ereignisse) {
+			if (er.getId() == ereignisID) {
+				return er;
+			}
+		}
+		throw new ArticleNonexistantException(ereignisID);
+	}
 }

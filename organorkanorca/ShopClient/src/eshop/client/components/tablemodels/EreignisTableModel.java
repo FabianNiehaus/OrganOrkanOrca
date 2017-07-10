@@ -26,7 +26,7 @@ public class EreignisTableModel extends ShopTableModel {
 			data[i][4] = er.getWomit().getBezeichnung();
 			data[i][5] = er.getWieviel();
 			data[i][6] = er.getWer().getId();
-			data[i][7] = er.getWer().getFirstname() + " " + er.getWer().getLastname();
+			data[i][7] = er.getWer().getFirstname().substring(0, 1) + ". " + er.getWer().getLastname();
 			i++;
 		}
 	}

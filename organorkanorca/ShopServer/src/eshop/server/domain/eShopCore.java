@@ -459,6 +459,23 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 			}
 		}
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see domain.ShopRemote#artikelSuchen(int, data_objects.Person)
+	 */
+	@Override
+	public Ereignis ereignisSuchen(int ereignisID, Person person)
+			throws ArticleNonexistantException, AccessRestrictedException, RemoteException {
+
+		synchronized (person) {
+			if (istMitarbeiter(person) || istKunde(person)) {
+				return ev.sucheEreignis(ereignisID);
+			} else {
+				throw new AccessRestrictedException(person, "\"Artikel suchen (Artikelnummer)\"");
+			}
+		}
+	}
 
 	/*
 	 * (non-Javadoc)
