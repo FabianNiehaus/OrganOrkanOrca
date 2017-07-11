@@ -483,9 +483,9 @@ public interface ShopRemote extends Remote {
 			double preis, int packungsgroesse, String artikelinfo)
 			throws RemoteException, AccessRestrictedException, InvalidAmountException, ArticleNonexistantException;
 
-	Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, int packungsgroesse, Person person,
-			String artikelinfo) throws AccessRestrictedException, InvalidAmountException, RemoteException;
-
 	Ereignis ereignisSuchen(int ereignisID, Person person)
 			throws ArticleNonexistantException, AccessRestrictedException, RemoteException;
+
+	Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, int packungsgroesse, Person person,
+			String artikelinfo, String picture) throws AccessRestrictedException, InvalidAmountException, RemoteException;
 }

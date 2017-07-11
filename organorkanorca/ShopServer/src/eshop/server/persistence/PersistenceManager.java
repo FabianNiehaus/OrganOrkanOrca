@@ -35,7 +35,7 @@ public interface PersistenceManager {
 	 */
 	public Artikel ladeArtikel() throws IOException;
 
-	public Vector<Object> ladeEreignis() throws IOException;
+	public Ereignis ladeEreignis() throws IOException;
 
 	/**
 	 * @author Mathis M�hlenkamp

@@ -227,4 +227,20 @@ public class MainWindow extends JFrame implements SichtfensterCallbacks, Verwalt
 		return warenkorbsichtfenster.istWarenkorbLeer();
 				
 	}
+	
+	public void handleAllChanged(){
+		
+		if(artikelsichtfenster != null) artikelsichtfenster.callTableUpdate();
+		if(warenkorbsichtfenster != null) warenkorbsichtfenster.callTableUpdate();
+		if(kundensichtfenster != null) kundensichtfenster.callTableUpdate();
+		if(mitarbeitersichtfenster != null) mitarbeitersichtfenster.callTableUpdate();
+		if(managementsichtfenster != null) managementsichtfenster.callTableUpdate();
+		
+		if(artikelverwaltungsfenster != null) artikelverwaltungsfenster.reset();
+		if(warenkorbverwaltungsfenster != null) warenkorbverwaltungsfenster.reset();
+		if(kundenverwaltungsfenster != null) kundenverwaltungsfenster.reset();
+		if(mitarbeiterverwaltungsfenster != null) mitarbeiterverwaltungsfenster.reset();
+		if(managementverwaltungsfenster != null) managementverwaltungsfenster.reset();
+		
+	}
 }

@@ -118,11 +118,11 @@ public class ManagementVerwaltungsfenster extends Verwaltungsfenster {
 		datumField.setText(dateFormat.format(er.getWann()));	
 		eventNrField.setText(String.valueOf(er.getId()));
 		aktionField.setText(String.valueOf(er.getTyp()));
-		artikelNrField.setText(String.valueOf(er.getWomit().getArtikelnummer()));
-		artikelBezField.setText(er.getWomit().getBezeichnung());
+		artikelNrField.setText(String.valueOf(er.getWomit_Nr()));
+		artikelBezField.setText(er.getWomit_Bezeichnung());
 		mengeField.setText(String.valueOf(er.getWieviel()));
-		idField.setText(String.valueOf(er.getWer().getId()));
-		nameField.setText(er.getWer().getFirstname().substring(0, 1) + ". " + er.getWer().getLastname());
+		idField.setText(String.valueOf(er.getWer_Id()));
+		nameField.setText(er.getWer_Name());
 	}
 
 	@Override

@@ -17,4 +17,7 @@ public interface ShopEventListener extends Remote {
 	public void handleStaffChanged(Mitarbeiter mi) throws RemoteException, InterruptedException;
 
 	public void handleUserChanged(Kunde ku) throws RemoteException, InterruptedException;
+	
+	public void handleAllChanged() throws RemoteException, InterruptedException;
+	
 }

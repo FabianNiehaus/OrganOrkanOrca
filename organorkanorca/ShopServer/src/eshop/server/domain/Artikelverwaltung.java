@@ -1,7 +1,10 @@
 package eshop.server.domain;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import eshop.common.data_objects.Artikel;
@@ -97,11 +100,15 @@ public class Artikelverwaltung {
 	 * @return Erstellter Artikel
 	 * @throws InvalidAmountException
 	 */
-	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, int packungsgroesse, String artikelinfo)
+	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, int packungsgroesse, String artikelinfo, String picture)
 			throws InvalidAmountException {
 
+		if (picture.equals("")){
+			picture = "pictures/orkan.jpg";
+		}
+		
 		if (packungsgroesse == 1) {
-			Artikel art = new Artikel(bezeichnung, getNextID(), bestand, preis, null, artikelinfo,"pictures/orkan.jpg");
+			Artikel art = new Artikel(bezeichnung, getNextID(), bestand, preis, new LinkedHashMap<Integer,Integer>(), artikelinfo,picture);
 			artikel.add(art);
 			art.aktualisiereBestandsverlauf();
 			return art;
@@ -111,7 +118,7 @@ public class Artikelverwaltung {
 				throw new InvalidAmountException(bestand);
 			} else {
 				Massengutartikel art = new Massengutartikel(bezeichnung, getNextID(), bestand, preis, packungsgroesse,
-						null, artikelinfo,"pictures/orkan.jpg");
+						new LinkedHashMap<Integer,Integer>(), artikelinfo,"pictures/orkan.jpg");
 				artikel.add(art);
 				art.aktualisiereBestandsverlauf();
 				return art;

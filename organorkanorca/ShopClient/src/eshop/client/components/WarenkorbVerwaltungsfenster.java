@@ -275,7 +275,7 @@ public class WarenkorbVerwaltungsfenster extends Verwaltungsfenster {
 					rechnungsString += re.getKu().getAddress_Zip() + " " + re.getKu().getAddress_Town() + "\n\n";
 					rechnungsString += "Warenkorb" + "\n";
 					rechnungsString += re.getWk().toString() + "\n";
-					rechnungsString += "Gesamtbetrag: " + re.getGesamt() + "€";
+					rechnungsString += "Gesamtbetrag: " + String.format("%.2f", re.getGesamt()) + "€";
 					JOptionPane.showMessageDialog(WarenkorbVerwaltungsfenster.this, rechnungsString);
 					verwaltungsfensterCallbacks.warenkorbAktualisieren();
 					}

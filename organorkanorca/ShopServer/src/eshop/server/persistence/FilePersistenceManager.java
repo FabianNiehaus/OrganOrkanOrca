@@ -8,7 +8,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -114,13 +116,14 @@ public class FilePersistenceManager implements PersistenceManager {
 	}
 
 	@Override
-	public Vector<Object> ladeEreignis() throws IOException {
+	public Ereignis ladeEreignis() throws IOException {
 
-		Vector<Object> ret = new Vector<Object>(6);
 		int id = 0;
-		int werId = 0;
+		int wer_Id = 0;
+		String wer_Name = "";
 		Typ was = null;
-		int womitId = 0;
+		int womit_Nr = 0;
+		String womit_Bezeichnung = "";
 		int wieviel = 0;
 		String wann;
 		try {
@@ -129,18 +132,23 @@ public class FilePersistenceManager implements PersistenceManager {
 			// Abbruch wenn Leerzeile -> keine Ereignisse mehr vorhanden
 			return null;
 		}
-		werId = Integer.parseInt(liesZeile());
+		wer_Id = Integer.parseInt(liesZeile());
+		wer_Name = liesZeile();
 		was = Typ.valueOf(liesZeile());
-		womitId = Integer.parseInt(liesZeile());
+		womit_Nr = Integer.parseInt(liesZeile());
+		womit_Bezeichnung = liesZeile();
 		wieviel = Integer.parseInt(liesZeile());
 		wann = liesZeile();
-		ret.add(id);
-		ret.add(werId);
-		ret.add(was);
-		ret.add(womitId);
-		ret.add(wieviel);
-		ret.add(wann);
-		return ret;
+		
+		Date date = null;
+		DateFormat formatter = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+		try {
+			date = formatter.parse((String) wann);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return new Ereignis(id, wer_Id, wer_Name, was, womit_Nr, womit_Bezeichnung, wieviel, date);
 	}
 
 	/**
@@ -313,9 +321,11 @@ public class FilePersistenceManager implements PersistenceManager {
 
 		// Schreibe
 		schreibeZeile(String.valueOf(er.getId()));
-		schreibeZeile(String.valueOf(er.getWer().getId()));
+		schreibeZeile(String.valueOf(er.getWer_Id()));
+		schreibeZeile(String.valueOf(er.getWer_Name()));
 		schreibeZeile(String.valueOf(er.getTyp()));
-		schreibeZeile(String.valueOf(er.getWomit().getArtikelnummer()));
+		schreibeZeile(String.valueOf(er.getWomit_Nr()));
+		schreibeZeile(String.valueOf(er.getWomit_Bezeichnung()));
 		schreibeZeile(String.valueOf(er.getWieviel()));
 		// Datum wird richtig formatiert
 		DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");

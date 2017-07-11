@@ -12,7 +12,6 @@ import org.jdesktop.swingx.decorator.Filter;
 import org.jdesktop.swingx.decorator.FilterPipeline;
 import org.jdesktop.swingx.decorator.PatternFilter;
 
-import eshop.client.components.ArtikelSichtfenster.ArtikelAnzeigenListener;
 import eshop.client.components.tablemodels.EreignisTableModel;
 import eshop.client.util.Sichtfenster;
 import eshop.common.data_objects.Person;

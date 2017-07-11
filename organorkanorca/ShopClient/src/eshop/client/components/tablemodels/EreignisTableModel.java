@@ -15,19 +15,22 @@ public class EreignisTableModel extends ShopTableModel {
 
 	public EreignisTableModel(Vector<Ereignis> dataVector) {
 		columnNames = new String[] {"Datum", "Event-Nr.", "Aktion", "ArtikelNr.", "ArtikelBez.", "Menge", "ID", "Name"};
-		data = new Object[dataVector.size()][8];
-		int i = 0;
-		DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-		for (Ereignis er : dataVector) {
-			data[i][0] = dateFormat.format(er.getWann());
-			data[i][1] = er.getId();
-			data[i][2] = er.getTyp();
-			data[i][3] = er.getWomit().getArtikelnummer();
-			data[i][4] = er.getWomit().getBezeichnung();
-			data[i][5] = er.getWieviel();
-			data[i][6] = er.getWer().getId();
-			data[i][7] = er.getWer().getFirstname().substring(0, 1) + ". " + er.getWer().getLastname();
-			i++;
+		if (dataVector.elementAt(0) != null) {
+			data = new Object[dataVector.size()][8];
+			int i = 0;
+			DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+			for (Ereignis er : dataVector) {
+				System.out.println(i);
+				data[i][0] = dateFormat.format(er.getWann());
+				data[i][1] = er.getId();
+				data[i][2] = er.getTyp();
+				data[i][3] = er.getWomit_Nr();
+				data[i][4] = er.getWomit_Bezeichnung();
+				data[i][5] = er.getWieviel();
+				data[i][6] = er.getWer_Id();
+				data[i][7] = er.getWer_Name();
+				i++;
+			}
 		}
 	}
 }

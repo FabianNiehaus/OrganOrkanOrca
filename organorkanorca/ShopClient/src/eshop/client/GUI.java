@@ -45,8 +45,10 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
 			loginwindow = new LoginWindow("OrganOrkanOrca server", server, listenerForLogin, this);
 		} catch (RemoteException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
+			System.exit(0);
 		} catch (NotBoundException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
+			System.exit(0);
 		}
 	}
 
@@ -180,5 +182,13 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
 			mainwindow = new MainWindow("OrganOrkanOrca server", user, server, this, GUI.this);
 			loginwindow.dispose();
 		}
+	}
+
+	@Override
+	public void handleAllChanged() throws RemoteException, InterruptedException {
+
+		Thread.sleep(400);
+		if (mainwindow != null) mainwindow.handleAllChanged();
+		
 	}
 }

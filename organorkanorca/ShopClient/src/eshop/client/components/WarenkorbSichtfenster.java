@@ -3,7 +3,11 @@ package eshop.client.components;
 import java.rmi.RemoteException;
 import java.util.regex.Pattern;
 
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -31,6 +35,11 @@ public class WarenkorbSichtfenster extends Sichtfenster {
 	private static final long		serialVersionUID	= -5439399681692245672L;
 	/** The model. */
 	private WarenkorbTableModel	model;
+	JLabel gesamtLabel = new JLabel("Gesamtpreis");
+	JTextField gesamtField = new JTextField(10);
+	JLabel euroLabel = new JLabel("\u20ac");
+	JPanel gesamtPanel = new JPanel();
+
 
 	/**
 	 * Instantiates a new warenkorb sichtfenster.
@@ -45,6 +54,17 @@ public class WarenkorbSichtfenster extends Sichtfenster {
 	public WarenkorbSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks sichtfensterCallbacks) {
 		super(server, user, sichtfensterCallbacks, new String[]{"Artikelnummer","Bezeichnung","Einzelreis","Im Warenkorb","Gesamtpreis"});
 		auflistung.getSelectionModel().addListSelectionListener(new ArtikelAusWarenkorbAnzeigenListener());
+		
+		this.remove(auflistungContainer);
+		this.add(auflistungContainer, "wrap, w 100%, h 200!, span 3");
+		
+		gesamtField.setHorizontalAlignment(SwingConstants.RIGHT);
+		
+		gesamtPanel.add(gesamtLabel);
+		gesamtPanel.add(gesamtField);
+		gesamtPanel.add(euroLabel);
+		this.add(gesamtPanel, "right");
+		
 	}
 
 	public boolean artikelImWarenkorbPruefen(Artikel art)
@@ -81,6 +101,7 @@ public class WarenkorbSichtfenster extends Sichtfenster {
 				public void run() {
 
 					auflistung.setModel(model);
+					gesamtField.setText(String.format("%.2f",model.getGesamtpreis()));
 					fitTableLayout();
 				}
 			});

@@ -27,7 +27,7 @@ public class Rechnungsverwaltung {
 	 *           Gesamtsumme der Rechnung
 	 * @return Erzeugte Rechnung
 	 */
-	public Rechnung rechnungErzeugen(Kunde ku, Date datum, Warenkorb wk, int gesamt) {
+	public Rechnung rechnungErzeugen(Kunde ku, Date datum, Warenkorb wk, double gesamt) {
 
 		Rechnung re = new Rechnung(ku, datum, wk, gesamt);
 		rechnungen.add(re);

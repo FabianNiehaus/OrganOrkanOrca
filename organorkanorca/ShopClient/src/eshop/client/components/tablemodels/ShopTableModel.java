@@ -8,8 +8,8 @@ public class ShopTableModel extends AbstractTableModel {
 	 * 
 	 */
 	private static final long	serialVersionUID	= 3784279748338157614L;
-	protected String[]			columnNames;
-	protected Object[][]			data;
+	protected String[]			columnNames = new String[]{};
+	protected Object[][]			data = new Object[][]{};
 
 	@Override
 	public int getColumnCount() {

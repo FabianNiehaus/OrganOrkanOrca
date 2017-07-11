@@ -17,9 +17,11 @@ public class Ereignis implements Serializable {
 	private int						id;
 	private Date					wann;
 	private Typ						was;
-	private Person					wer;
+	private String					wer_Name;
+	private int						wer_Id;
 	private int						wieviel;
-	private Artikel				womit;
+	private int						womit_Nr;
+	private String					womit_Bezeichnung;
 
 	/**
 	 * @param wer
@@ -31,12 +33,15 @@ public class Ereignis implements Serializable {
 	 * @param wieviel
 	 *           Betroffene Stueckzahl
 	 */
-	public Ereignis(int id, Person wer, Typ was, Artikel womit, int wieviel, Date wann) {
+	public Ereignis(int id, int wer_Id, String wer_Name, Typ was, int womit_Nr, String womit_Bezeichnung, int wieviel,
+			Date wann) {
 		super();
 		this.id = id;
-		this.wer = wer;
+		this.wer_Id = wer_Id;
+		this.wer_Name = wer_Name;
 		this.was = was;
-		this.womit = womit;
+		this.womit_Nr = womit_Nr;
+		this.womit_Bezeichnung = womit_Bezeichnung;
 		this.wieviel = wieviel;
 		this.wann = wann;
 	}
@@ -56,19 +61,9 @@ public class Ereignis implements Serializable {
 		return wann;
 	}
 
-	public Person getWer() {
-
-		return wer;
-	}
-
 	public int getWieviel() {
 
 		return wieviel;
-	}
-
-	public Artikel getWomit() {
-
-		return womit;
 	}
 
 	public void setId(int id) {
@@ -86,19 +81,9 @@ public class Ereignis implements Serializable {
 		this.was = was;
 	}
 
-	public void setWer(Person wer) {
-
-		this.wer = wer;
-	}
-
 	public void setWieviel(int wieviel) {
 
 		this.wieviel = wieviel;
-	}
-
-	public void setWomit(Artikel womit) {
-
-		this.womit = womit;
 	}
 
 	/*
@@ -110,7 +95,47 @@ public class Ereignis implements Serializable {
 
 		// Formatierungsvorlage fuer Datum
 		DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-		return dateFormat.format(wann) + " | " + wer.getId() + ": " + wer.getLastname() + " " + wer.getLastname() + " | "
-				+ was + " | " + womit.getArtikelnummer() + ": " + womit.getBezeichnung() + " | " + wieviel;
+		return dateFormat.format(wann) + " | " + wer_Id + ": " + wer_Name + " | " + was + " | " + womit_Nr + ": "
+				+ womit_Bezeichnung + " | " + wieviel;
+	}
+
+	public String getWer_Name() {
+
+		return wer_Name;
+	}
+
+	public void setWer_Name(String wer_Name) {
+
+		this.wer_Name = wer_Name;
+	}
+
+	public int getWer_Id() {
+
+		return wer_Id;
+	}
+
+	public void setWer_Id(int wer_Id) {
+
+		this.wer_Id = wer_Id;
+	}
+
+	public int getWomit_Nr() {
+
+		return womit_Nr;
+	}
+
+	public void setWomit_Nr(int womit_Nr) {
+
+		this.womit_Nr = womit_Nr;
+	}
+
+	public String getWomit_Bezeichnung() {
+
+		return womit_Bezeichnung;
+	}
+
+	public void setWomit_Bezeichnung(String womit_Bezeichnung) {
+
+		this.womit_Bezeichnung = womit_Bezeichnung;
 	}
 }

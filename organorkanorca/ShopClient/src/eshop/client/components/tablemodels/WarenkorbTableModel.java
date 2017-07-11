@@ -14,11 +14,13 @@ public class WarenkorbTableModel extends ShopTableModel {
 	private static final long	serialVersionUID	= 7021676013626973075L;
 	protected String[]			columnNames;
 	protected Object[][]			data;
+	private double gesamtpreis;
 
 	public WarenkorbTableModel(Map<Artikel, Integer> dataMap) {
 		columnNames = new String[] {"ArtNr.", "Bezeichnung", "Einzelpreis", "Im Warenkorb", "Gesamtpreis", "Einheit",
 				"Bestand"};
 		data = new Object[dataMap.size()][7];
+		gesamtpreis = 0;
 		int i = 0;
 		for (Entry<Artikel, Integer> ent : dataMap.entrySet()) {
 			Artikel art = ent.getKey();
@@ -27,6 +29,7 @@ public class WarenkorbTableModel extends ShopTableModel {
 			data[i][2] = art.getPreis();
 			data[i][3] = ent.getValue();
 			data[i][4] = art.getPreis() * ent.getValue();
+			gesamtpreis += art.getPreis() * ent.getValue();
 			if (art instanceof Massengutartikel) {
 				data[i][5] = ((Massengutartikel) art).getPackungsgroesse();
 			} else {
@@ -69,5 +72,9 @@ public class WarenkorbTableModel extends ShopTableModel {
 
 		data[row][col] = value;
 		fireTableCellUpdated(row, col);
+	}
+	
+	public double getGesamtpreis(){
+		return gesamtpreis;
 	}
 }

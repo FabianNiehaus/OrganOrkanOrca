@@ -106,15 +106,12 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		artNrField.setHorizontalAlignment(SwingConstants.RIGHT);
 		bestandField.setHorizontalAlignment(SwingConstants.RIGHT);
 		pkggroesseField.setHorizontalAlignment(SwingConstants.RIGHT);
-		DefaultCaret caret = (DefaultCaret) infoArea.getCaret();
-		caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 		detailArea.setBackground(Color.WHITE);
 		detailArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 		picture.setBackground(Color.white);
 		picture.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 		imageLabel.setIcon(new ImageIcon("pictures/orkan.jpg"));
 		picture.add(imageLabel);
-		// detailArea.setBorder(BorderFactory.createTitledBorder("Artikeldetails:"));
 		bezeichnungField.setFont(new Font("Arial", Font.BOLD, 20));
 		preisLabel.setFont(new Font("Arial", Font.BOLD, 14));
 		preisField.setFont(new Font("Arial", Font.BOLD, 14));
@@ -179,6 +176,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 		bestandField.setText(String.valueOf(art.getBestand()));
 		infoArea.setText(art.getArtikelinfo());
 		imageLabel.setIcon(new ImageIcon(art.getPicture()));
+		infoArea.setCaretPosition(0);
 		setStores(art);
 	}
 
@@ -392,7 +390,7 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 						try {
 							int packungsgroesse = Integer.parseInt(pkggroesseField.getText());
 							try {
-								Artikel art = server.erstelleArtikel(bezeichnung, bestand, preis, packungsgroesse, user, artikelinfo);
+								Artikel art = server.erstelleArtikel(bezeichnung, bestand, preis, packungsgroesse, user, artikelinfo,"");
 								artikelAnzeigen(art);
 								artNrField.setVisible(true);
 								setInputFieldsColor(Color.WHITE);
