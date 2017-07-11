@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -45,6 +47,9 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
 	
 	/** The server. */
 	private ShopRemote			server;
+	
+	/** The host. */
+	private String host;
 
 	/**
 	 * Instantiates a new gui.
@@ -54,8 +59,11 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
 	 */
 	public GUI() throws RemoteException {
 		try {
+			
+			host = JOptionPane.showInputDialog("Bitte Server angeben",InetAddress.getLocalHost().getHostAddress());
+			
 			String serviceName = "eShopServer";
-			Registry registry = LocateRegistry.getRegistry();
+			Registry registry = LocateRegistry.getRegistry(host);
 			server = (ShopRemote) registry.lookup(serviceName);
 			server.addShopEventListener(this);
 			loginwindow = new LoginWindow("OrganOrkanOrca eShop", server, listenerForLogin, this);
@@ -63,6 +71,9 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
 			JOptionPane.showMessageDialog(null, e.getMessage());
 			System.exit(0);
 		} catch (NotBoundException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+			System.exit(0);
+		} catch (UnknownHostException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 			System.exit(0);
 		}
