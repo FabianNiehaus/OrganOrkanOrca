@@ -1,9 +1,6 @@
 package eshop.server.domain;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
@@ -17,27 +14,41 @@ import eshop.common.exceptions.PersonNonexistantException;
 import eshop.server.persistence.FilePersistenceManager;
 import eshop.server.persistence.PersistenceManager;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author Fabian Niehaus Klasse zur Verwaltung von Ereignissen
+ * The Class Ereignisverwaltung.
  */
 public class Ereignisverwaltung {
 
-	private Artikelverwaltung				av;
-	private Vector<Ereignis>	ereignisse;
-	private Kundenverwaltung				kv;
-	private Mitarbeiterverwaltung		mv;
+	/** The Artikelverwaltung. */
+	private Artikelverwaltung		av;
+	
+	/** The ereignisse. */
+	private Vector<Ereignis>		ereignisse;
+	
+	/** The Kundenverwaltung. */
+	private Kundenverwaltung		kv;
+	
+	/** The Mitarbeiterverwaltung. */
+	private Mitarbeiterverwaltung	mv;
 	// Persistenz-Schnittstelle, die fuer die Details des Dateizugriffs
+	/** The pm. */
 	// verantwortlich ist
 	private PersistenceManager pm = new FilePersistenceManager();
 
+	/**
+	 * Einfuegen.
+	 *
+	 * @param er
+	 *           the er
+	 */
 	public void einfuegen(Ereignis er) {
 
 		if (ereignisse == null) {
-			ereignisse	= new Vector<Ereignis>(1);
+			ereignisse = new Vector<Ereignis>(1);
 			ereignisse.add(0, null);
 		}
-		
-		if(ereignisse.elementAt(0) == null){
+		if (ereignisse.elementAt(0) == null) {
 			ereignisse.add(0, er);
 			ereignisse.remove(1);
 		} else {
@@ -46,38 +57,42 @@ public class Ereignisverwaltung {
 	}
 
 	/**
-	 * Erstellt und speichert ein neues Ereignis
-	 * 
+	 * Ereignis erstellen.
+	 *
 	 * @param wer
-	 *           Person, die die Aktion durchgefuehrt hat
+	 *           the wer
 	 * @param was
-	 *           Typ der Aktion (EINLAGERUNG, AUSLAGERUNG, KAUF, NEU)
+	 *           the was
 	 * @param womit
-	 *           Welcher Artikel ist betroffen
+	 *           the womit
 	 * @param wieviel
-	 *           Betroffene Stueckzahl
+	 *           the wieviel
+	 * @return the ereignis
 	 */
 	public Ereignis ereignisErstellen(Person wer, Typ was, Artikel womit, int wieviel) {
 
 		String wer_Name = wer.getFirstname().substring(0, 1) + ". " + wer.getLastname();
 		Ereignis er = new Ereignis(getNextID(), wer.getId(), wer_Name, was, womit.getArtikelnummer(),
 				womit.getBezeichnung(), wieviel, new Date());
-		
 		einfuegen(er);
-		
 		return er;
 	}
 
 	/**
-	 * Gibt alle gespeicherten Ereignisse aus
-	 * 
-	 * @return Ereignisse
+	 * Gets the ereignisse.
+	 *
+	 * @return the ereignisse
 	 */
 	public Vector<Ereignis> getEreignisse() {
 
 		return ereignisse;
 	}
 
+	/**
+	 * Gets the next ID.
+	 *
+	 * @return the next ID
+	 */
 	public int getNextID() {
 
 		int hoechsteID = 0;
@@ -91,6 +106,18 @@ public class Ereignisverwaltung {
 		return hoechsteID + 1;
 	}
 
+	/**
+	 * Lies daten.
+	 *
+	 * @param datei
+	 *           the datei
+	 * @throws IOException
+	 *            Signals that an I/O exception has occurred.
+	 * @throws ArticleNonexistantException
+	 *            the article nonexistant exception
+	 * @throws PersonNonexistantException
+	 *            the person nonexistant exception
+	 */
 	public void liesDaten(String datei) throws IOException, ArticleNonexistantException, PersonNonexistantException {
 
 		// PersistenzManager f�r Lesevorgänge öffnen
@@ -99,7 +126,7 @@ public class Ereignisverwaltung {
 		try {
 			do {
 				er = pm.ladeEreignis();
-				if(er != null)einfuegen(er);
+				if (er != null) einfuegen(er);
 			} while (er.getId() != 0);
 		} catch (NullPointerException npe) {
 		}
@@ -107,6 +134,14 @@ public class Ereignisverwaltung {
 		pm.close();
 	}
 
+	/**
+	 * Schreibe daten.
+	 *
+	 * @param datei
+	 *           the datei
+	 * @throws IOException
+	 *            Signals that an I/O exception has occurred.
+	 */
 	public void schreibeDaten(String datei) throws IOException {
 
 		// PersistenzManager fuer Schreibvorgänge öffnen
@@ -122,6 +157,15 @@ public class Ereignisverwaltung {
 		pm.close();
 	}
 
+	/**
+	 * Suche ereignis.
+	 *
+	 * @param ereignisID
+	 *           the ereignis ID
+	 * @return the ereignis
+	 * @throws ArticleNonexistantException
+	 *            the article nonexistant exception
+	 */
 	public Ereignis sucheEreignis(int ereignisID) throws ArticleNonexistantException {
 
 		for (Ereignis er : ereignisse) {

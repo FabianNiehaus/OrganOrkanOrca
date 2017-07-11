@@ -21,34 +21,92 @@ import eshop.common.exceptions.PersonNonexistantException;
 import eshop.common.net.ShopRemote;
 import net.miginfocom.swing.MigLayout;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PersonenVerwaltungsfenster.
+ */
 public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long	serialVersionUID	= 3593841333668075281L;
+	
+	/** The aendern button. */
 	JButton							aendernButton		= new JButton("Ändern");
+	
+	/** The buttons. */
 	JPanel							buttons				= new JPanel();
+	
+	/** The detail area. */
 	JPanel							detailArea			= new JPanel();
+	
+	/** The loeschen button. */
 	JButton							loeschenButton		= new JButton("Löschen");
+	
+	/** The nachname field. */
 	JTextField						nachnameField		= new JTextField(15);
+	
+	/** The nachname label. */
 	JLabel							nachnameLabel		= new JLabel("Nachname:");
+	
+	/** The neu anlegen button. */
 	JButton							neuAnlegenButton	= new JButton("Neu");
+	
+	/** The ort field. */
 	JTextField						ortField				= new JTextField(15);
+	
+	/** The ort label. */
 	JLabel							ortLabel				= new JLabel("Stadt:");
+	
+	/** The password field. */
 	JTextField						passwordField		= new JTextField("*********", 15);
+	
+	/** The password label. */
 	JLabel							passwordLabel		= new JLabel("Passwort:");
+	
+	/** The pers nr field. */
 	JTextField						persNrField			= new JTextField(15);
+	
+	/** The pers nr label. */
 	JLabel							persNrLabel			= new JLabel("ID:");
+	
+	/** The person store. */
 	Person							personStore;
+	
+	/** The strasse field. */
 	JTextField						strasseField		= new JTextField(15);
+	
+	/** The strasse label. */
 	JLabel							strasseLabel		= new JLabel("Straße:");
+	
+	/** The typ. */
 	String							typ					= "";
+	
+	/** The vorname field. */
 	JTextField						vornameField		= new JTextField(15);
+	
+	/** The vorname label. */
 	JLabel							vornameLabel		= new JLabel("Vorname:");
+	
+	/** The zip field. */
 	JTextField						zipField				= new JTextField(15);
+	
+	/** The zip label. */
 	JLabel							zipLabel				= new JLabel("PLZ:");
 
+	/**
+	 * Instantiates a new personen verwaltungsfenster.
+	 *
+	 * @param server
+	 *           the server
+	 * @param user
+	 *           the user
+	 * @param verwaltungsfensterCallbacks
+	 *           the verwaltungsfenster callbacks
+	 * @param titel
+	 *           the titel
+	 * @param personenTyp
+	 *           the personen typ
+	 */
 	public PersonenVerwaltungsfenster(ShopRemote server, Person user,
 			VerwaltungsfensterCallbacks verwaltungsfensterCallbacks, String titel, String personenTyp) {
 		super(server, user, verwaltungsfensterCallbacks);
@@ -90,6 +148,9 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		this.setVisible(true);
 	}
 
+	/**
+	 * Clear input fields.
+	 */
 	private void clearInputFields() {
 
 		persNrField.setText("");
@@ -101,11 +162,22 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		passwordField.setText("");
 	}
 
+	/**
+	 * Gets the person.
+	 *
+	 * @return the person
+	 */
 	public Person getPerson() {
 
 		return personStore;
 	}
 
+	/**
+	 * Person anzeigen.
+	 *
+	 * @param personStore
+	 *           the person store
+	 */
 	public void personAnzeigen(Person personStore) {
 
 		reset();
@@ -125,6 +197,9 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		passwordField.setEditable(false);
 	}
 
+	/* (non-Javadoc)
+	 * @see eshop.client.util.Verwaltungsfenster#reset()
+	 */
 	@Override
 	public void reset() {
 
@@ -137,6 +212,12 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		isBeingChanged = false;
 	}
 
+	/**
+	 * Sets the input fields editable.
+	 *
+	 * @param editable
+	 *           the new input fields editable
+	 */
 	private void setInputFieldsEditable(boolean editable) {
 
 		vornameField.setEditable(editable);
@@ -147,8 +228,24 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		passwordField.setEditable(editable);
 	}
 
+	/**
+	 * The listener interface for receiving personBearbeiten events. The class
+	 * that is interested in processing a personBearbeiten event implements this
+	 * interface, and the object created with that class is registered with a
+	 * component using the component's <code>addPersonBearbeitenListener<code>
+	 * method. When the personBearbeiten event occurs, that object's appropriate
+	 * method is invoked.
+	 *
+	 * @see PersonBearbeitenEvent
+	 */
 	public class PersonBearbeitenListener implements ActionListener {
 
+		/**
+		 * Instantiates a new person bearbeiten listener.
+		 *
+		 * @param personenTyp
+		 *           the personen typ
+		 */
 		public PersonBearbeitenListener(String personenTyp) {
 			if (personenTyp.equals("kunde")) {
 				typ = "kunde";
@@ -157,6 +254,9 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 			}
 		}
 
+		/* (non-Javadoc)
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
@@ -196,8 +296,21 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		}
 	}
 
+	/**
+	 * The listener interface for receiving personLoeschen events. The class that
+	 * is interested in processing a personLoeschen event implements this
+	 * interface, and the object created with that class is registered with a
+	 * component using the component's <code>addPersonLoeschenListener<code>
+	 * method. When the personLoeschen event occurs, that object's appropriate
+	 * method is invoked.
+	 *
+	 * @see PersonLoeschenEvent
+	 */
 	public class PersonLoeschenListener implements ActionListener {
 
+		/* (non-Javadoc)
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
@@ -215,8 +328,24 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 		}
 	}
 
+	/**
+	 * The listener interface for receiving personNeuAnlegen events. The class
+	 * that is interested in processing a personNeuAnlegen event implements this
+	 * interface, and the object created with that class is registered with a
+	 * component using the component's <code>addPersonNeuAnlegenListener<code>
+	 * method. When the personNeuAnlegen event occurs, that object's appropriate
+	 * method is invoked.
+	 *
+	 * @see PersonNeuAnlegenEvent
+	 */
 	public class PersonNeuAnlegenListener implements ActionListener {
 
+		/**
+		 * Instantiates a new person neu anlegen listener.
+		 *
+		 * @param personenTyp
+		 *           the personen typ
+		 */
 		public PersonNeuAnlegenListener(String personenTyp) {
 			if (personenTyp.equals("Kunde")) {
 				typ = "kunde";
@@ -225,6 +354,9 @@ public class PersonenVerwaltungsfenster extends Verwaltungsfenster {
 			}
 		}
 
+		/* (non-Javadoc)
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 

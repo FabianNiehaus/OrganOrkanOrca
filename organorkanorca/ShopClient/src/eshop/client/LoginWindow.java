@@ -25,23 +25,57 @@ import eshop.common.exceptions.MaxIDsException;
 import eshop.common.net.ShopRemote;
 import net.miginfocom.swing.MigLayout;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class LoginWindow.
+ */
 public class LoginWindow extends JFrame {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long	serialVersionUID		= -5042186875268113945L;
+	
+	/** The anmelden button. */
 	JButton							anmeldenButton			= new JButton("Login");
+	
+	/** The benutzer field. */
 	JTextField						benutzerField			= new JTextField(10);
+	
+	/** The benutzer label. */
 	JLabel							benutzerLabel			= new JLabel("Benutzer");
+	
+	/** The header label. */
 	JLabel							headerLabel				= new JLabel("Willkommen bei OrganOrkanOrca");
+	
+	/** The login listener. */
 	private LoginListener		loginListener			= null;
+	
+	/** The passwort field. */
 	JPasswordField					passwortField			= new JPasswordField(10);
+	
+	/** The passwort label. */
 	JLabel							passwortLabel			= new JLabel("Passwort");
+	
+	/** The registrieren button. */
 	JButton							registrierenButton	= new JButton("Registrieren");
+	
+	/** The server. */
 	private ShopRemote			server					= null;
+	
+	/** The tabbed pane. */
 	JTabbedPane						tabbedPane				= new JTabbedPane();
 
+	/**
+	 * Instantiates a new login window.
+	 *
+	 * @param titel
+	 *           the titel
+	 * @param server
+	 *           the server
+	 * @param listener
+	 *           the listener
+	 * @param windowListener
+	 *           the window listener
+	 */
 	public LoginWindow(String titel, ShopRemote server, LoginListener listener, WindowListener windowListener) {
 		super(titel);
 		this.server = server;
@@ -79,11 +113,23 @@ public class LoginWindow extends JFrame {
 		this.setVisible(true);
 	}
 
+	/**
+	 * Benutzer id auslesen.
+	 *
+	 * @return the int
+	 * @throws NumberFormatException
+	 *            the number format exception
+	 */
 	public int benutzerIdAuslesen() throws NumberFormatException {
 
 		return Integer.parseInt(benutzerField.getText());
 	}
 
+	/**
+	 * Passwort auslesen.
+	 *
+	 * @return the string
+	 */
 	public String passwortAuslesen() {
 
 		char[] pw = passwortField.getPassword();
@@ -91,8 +137,20 @@ public class LoginWindow extends JFrame {
 		return new String(pw);
 	}
 
+	/**
+	 * The listener interface for receiving loginButton events. The class that is
+	 * interested in processing a loginButton event implements this interface,
+	 * and the object created with that class is registered with a component
+	 * using the component's <code>addLoginButtonListener<code> method. When the
+	 * loginButton event occurs, that object's appropriate method is invoked.
+	 *
+	 * @see LoginButtonEvent
+	 */
 	private class LoginButtonListener implements ActionListener {
 
+		/* (non-Javadoc)
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
@@ -107,8 +165,22 @@ public class LoginWindow extends JFrame {
 		}
 	}
 
+	/**
+	 * The listener interface for receiving loginMitarbeiterUmgehen events. The
+	 * class that is interested in processing a loginMitarbeiterUmgehen event
+	 * implements this interface, and the object created with that class is
+	 * registered with a component using the component's
+	 * <code>addLoginMitarbeiterUmgehenListener<code> method. When the
+	 * loginMitarbeiterUmgehen event occurs, that object's appropriate method is
+	 * invoked.
+	 *
+	 * @see LoginMitarbeiterUmgehenEvent
+	 */
 	private class LoginMitarbeiterUmgehenListener implements ActionListener {
 
+		/* (non-Javadoc)
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
@@ -121,8 +193,22 @@ public class LoginWindow extends JFrame {
 		}
 	}
 
+	/**
+	 * The listener interface for receiving loginNeuerNutzerAnlegen events. The
+	 * class that is interested in processing a loginNeuerNutzerAnlegen event
+	 * implements this interface, and the object created with that class is
+	 * registered with a component using the component's
+	 * <code>addLoginNeuerNutzerAnlegenListener<code> method. When the
+	 * loginNeuerNutzerAnlegen event occurs, that object's appropriate method is
+	 * invoked.
+	 *
+	 * @see LoginNeuerNutzerAnlegenEvent
+	 */
 	private class LoginNeuerNutzerAnlegenListener implements ActionListener {
 
+		/* (non-Javadoc)
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
@@ -171,8 +257,21 @@ public class LoginWindow extends JFrame {
 		}
 	}
 
+	/**
+	 * The listener interface for receiving loginUserUmgehen events. The class
+	 * that is interested in processing a loginUserUmgehen event implements this
+	 * interface, and the object created with that class is registered with a
+	 * component using the component's <code>addLoginUserUmgehenListener<code>
+	 * method. When the loginUserUmgehen event occurs, that object's appropriate
+	 * method is invoked.
+	 *
+	 * @see LoginUserUmgehenEvent
+	 */
 	private class LoginUserUmgehenListener implements ActionListener {
 
+		/* (non-Javadoc)
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 

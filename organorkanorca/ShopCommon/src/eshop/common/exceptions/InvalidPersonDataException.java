@@ -1,16 +1,35 @@
 package eshop.common.exceptions;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class InvalidPersonDataException.
+ */
 public class InvalidPersonDataException extends Exception {
 
-	/**
-	  * 
-	  */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -5794550176553643715L;
 
+	/**
+	 * Instantiates a new invalid person data exception.
+	 *
+	 * @param id
+	 *           the id
+	 * @param object
+	 *           the object
+	 */
 	public InvalidPersonDataException(int id, String object) {
 		super(determineOutput(id, object));
 	}
 
+	/**
+	 * Determine output.
+	 *
+	 * @param id
+	 *           the id
+	 * @param object
+	 *           the object
+	 * @return the string
+	 */
 	private static String determineOutput(int id, String object) {
 
 		switch (id) {

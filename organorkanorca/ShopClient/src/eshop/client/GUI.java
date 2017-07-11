@@ -25,24 +25,40 @@ import eshop.common.net.ShopEventListener;
 import eshop.common.net.ShopRemote;
 import net.miginfocom.swing.MigLayout;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GUI.
+ */
 public class GUI extends UnicastRemoteObject implements ShopEventListener, WindowListener {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long	serialVersionUID	= 9030916773132281332L;
+	
+	/** The listener for login. */
 	private ListenerForLogin	listenerForLogin	= new ListenerForLogin();
+	
+	/** The loginwindow. */
 	LoginWindow						loginwindow;
+	
+	/** The mainwindow. */
 	MainWindow						mainwindow;
+	
+	/** The server. */
 	private ShopRemote			server;
 
+	/**
+	 * Instantiates a new gui.
+	 *
+	 * @throws RemoteException
+	 *            the remote exception
+	 */
 	public GUI() throws RemoteException {
 		try {
 			String serviceName = "eShopServer";
 			Registry registry = LocateRegistry.getRegistry();
 			server = (ShopRemote) registry.lookup(serviceName);
 			server.addShopEventListener(this);
-			loginwindow = new LoginWindow("OrganOrkanOrca server", server, listenerForLogin, this);
+			loginwindow = new LoginWindow("OrganOrkanOrca eShop", server, listenerForLogin, this);
 		} catch (RemoteException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 			System.exit(0);
@@ -52,6 +68,12 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
 		}
 	}
 
+	/**
+	 * The main method.
+	 *
+	 * @param args
+	 *           the arguments
+	 */
 	public static void main(String[] args) {
 
 		try {
@@ -61,6 +83,19 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see eshop.common.net.ShopEventListener#handleAllChanged()
+	 */
+	@Override
+	public void handleAllChanged() throws RemoteException, InterruptedException {
+
+		Thread.sleep(400);
+		if (mainwindow != null) mainwindow.handleAllChanged();
+	}
+
+	/* (non-Javadoc)
+	 * @see eshop.common.net.ShopEventListener#handleArticleChanged(eshop.common.data_objects.Artikel)
+	 */
 	@Override
 	public void handleArticleChanged(Artikel art) throws RemoteException, InterruptedException {
 
@@ -68,6 +103,9 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
 		if (mainwindow != null) mainwindow.handleArticleChanged(art);
 	}
 
+	/* (non-Javadoc)
+	 * @see eshop.common.net.ShopEventListener#handleEventChanged(eshop.common.data_objects.Ereignis)
+	 */
 	@Override
 	public void handleEventChanged(Ereignis er) throws RemoteException, InterruptedException {
 
@@ -75,6 +113,9 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
 		if (mainwindow != null) mainwindow.handleEventChanged(er);
 	}
 
+	/* (non-Javadoc)
+	 * @see eshop.common.net.ShopEventListener#handleStaffChanged(eshop.common.data_objects.Mitarbeiter)
+	 */
 	@Override
 	public void handleStaffChanged(Mitarbeiter mi) throws RemoteException, InterruptedException {
 
@@ -82,6 +123,9 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
 		if (mainwindow != null) mainwindow.handleStaffChanged(mi);
 	}
 
+	/* (non-Javadoc)
+	 * @see eshop.common.net.ShopEventListener#handleUserChanged(eshop.common.data_objects.Kunde)
+	 */
 	@Override
 	public void handleUserChanged(Kunde ku) throws RemoteException, InterruptedException {
 
@@ -89,17 +133,26 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
 		if (mainwindow != null) mainwindow.handleUserChanged(ku);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.WindowListener#windowActivated(java.awt.event.WindowEvent)
+	 */
 	@Override
 	public void windowActivated(WindowEvent e) {
 
 		// TODO Auto-generated method stub
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.WindowListener#windowClosed(java.awt.event.WindowEvent)
+	 */
 	@Override
 	public void windowClosed(WindowEvent e) {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.WindowListener#windowClosing(java.awt.event.WindowEvent)
+	 */
 	@Override
 	public void windowClosing(WindowEvent e) {
 
@@ -130,7 +183,8 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
 			}
 		});
 		closing.getContentPane().setLayout(new MigLayout("", "30[]30", "30[]15[]30"));
-		closing.getContentPane().add(new JLabel("Möchten Sie sich neu anmelden oder das Programm schließen?"), "wrap, span 2");
+		closing.getContentPane().add(new JLabel("Möchten Sie sich neu anmelden oder das Programm schließen?"),
+				"wrap, span 2");
 		closing.getContentPane().add(logout, "left, w 150!");
 		closing.getContentPane().add(quit, "right, w 150!");
 		closing.pack();
@@ -138,57 +192,73 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
 		closing.setVisible(true);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.WindowListener#windowDeactivated(java.awt.event.WindowEvent)
+	 */
 	@Override
 	public void windowDeactivated(WindowEvent e) {
 
 		// TODO Auto-generated method stub
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.WindowListener#windowDeiconified(java.awt.event.WindowEvent)
+	 */
 	@Override
 	public void windowDeiconified(WindowEvent e) {
 
 		// TODO Auto-generated method stub
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.WindowListener#windowIconified(java.awt.event.WindowEvent)
+	 */
 	@Override
 	public void windowIconified(WindowEvent e) {
 
 		// TODO Auto-generated method stub
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.WindowListener#windowOpened(java.awt.event.WindowEvent)
+	 */
 	@Override
 	public void windowOpened(WindowEvent e) {
 
 		// TODO Auto-generated method stub
 	}
 
+	/**
+	 * The Class ListenerForLogin.
+	 */
 	public class ListenerForLogin implements LoginListener {
 
+		/* (non-Javadoc)
+		 * @see eshop.client.util.LoginListener#loginCancelled()
+		 */
 		@Override
 		public void loginCancelled() {
 
 			loginwindow.dispose();
 		}
 
+		/* (non-Javadoc)
+		 * @see eshop.client.util.LoginListener#logout()
+		 */
 		@Override
 		public void logout() {
 
 			loginwindow = new LoginWindow("OrganOrkanOrca server", server, this, GUI.this);
 		}
 
+		/* (non-Javadoc)
+		 * @see eshop.client.util.LoginListener#userLoggedIn(eshop.common.data_objects.Person)
+		 */
 		@Override
 		public void userLoggedIn(Person user) {
 
 			mainwindow = new MainWindow("OrganOrkanOrca server", user, server, this, GUI.this);
 			loginwindow.dispose();
 		}
-	}
-
-	@Override
-	public void handleAllChanged() throws RemoteException, InterruptedException {
-
-		Thread.sleep(400);
-		if (mainwindow != null) mainwindow.handleAllChanged();
-		
 	}
 }

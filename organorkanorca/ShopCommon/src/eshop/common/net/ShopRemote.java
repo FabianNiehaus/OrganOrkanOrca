@@ -119,6 +119,39 @@ public interface ShopRemote extends Remote {
 	Person anmelden(int id, String passwort) throws LoginFailedException, RemoteException;
 
 	/**
+	 * Artikel aendern.
+	 *
+	 * @param artikelnummer
+	 *           the artikelnummer
+	 * @param person
+	 *           the person
+	 * @param bezeichnung
+	 *           the bezeichnung
+	 * @param bestand
+	 *           the bestand
+	 * @param operator
+	 *           the operator
+	 * @param preis
+	 *           the preis
+	 * @param packungsgroesse
+	 *           the packungsgroesse
+	 * @param artikelinfo
+	 *           the artikelinfo
+	 * @return the artikel
+	 * @throws RemoteException
+	 *            the remote exception
+	 * @throws AccessRestrictedException
+	 *            the access restricted exception
+	 * @throws InvalidAmountException
+	 *            the invalid amount exception
+	 * @throws ArticleNonexistantException
+	 *            the article nonexistant exception
+	 */
+	Artikel artikelAendern(int artikelnummer, Person person, String bezeichnung, int bestand, String operator,
+			double preis, int packungsgroesse, String artikelinfo)
+			throws RemoteException, AccessRestrictedException, InvalidAmountException, ArticleNonexistantException;
+
+	/**
 	 * Artikel aus warenkorb entfernen.
 	 *
 	 * @param artikelnummer
@@ -247,6 +280,52 @@ public interface ShopRemote extends Remote {
 	 */
 	Vector<Artikel> artikelSuchen(String artikelbezeichnung, Person user)
 			throws ArticleNonexistantException, AccessRestrictedException, RemoteException;
+
+	/**
+	 * Ereignis suchen.
+	 *
+	 * @param ereignisID
+	 *           the ereignis ID
+	 * @param person
+	 *           the person
+	 * @return the ereignis
+	 * @throws ArticleNonexistantException
+	 *            the article nonexistant exception
+	 * @throws AccessRestrictedException
+	 *            the access restricted exception
+	 * @throws RemoteException
+	 *            the remote exception
+	 */
+	Ereignis ereignisSuchen(int ereignisID, Person person)
+			throws ArticleNonexistantException, AccessRestrictedException, RemoteException;
+
+	/**
+	 * Erstelle artikel.
+	 *
+	 * @param bezeichnung
+	 *           the bezeichnung
+	 * @param bestand
+	 *           the bestand
+	 * @param preis
+	 *           the preis
+	 * @param packungsgroesse
+	 *           the packungsgroesse
+	 * @param person
+	 *           the person
+	 * @param artikelinfo
+	 *           the artikelinfo
+	 * @param picture
+	 *           the picture
+	 * @return the artikel
+	 * @throws AccessRestrictedException
+	 *            the access restricted exception
+	 * @throws InvalidAmountException
+	 *            the invalid amount exception
+	 * @throws RemoteException
+	 *            the remote exception
+	 */
+	Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, int packungsgroesse, Person person,
+			String artikelinfo, String picture) throws AccessRestrictedException, InvalidAmountException, RemoteException;
 
 	/**
 	 * Erstelle kunde.
@@ -478,14 +557,4 @@ public interface ShopRemote extends Remote {
 	 *            the person nonexistant exception
 	 */
 	void warenkorbLeeren(Person user) throws AccessRestrictedException, RemoteException, PersonNonexistantException;
-
-	Artikel artikelAendern(int artikelnummer, Person person, String bezeichnung, int bestand, String operator,
-			double preis, int packungsgroesse, String artikelinfo)
-			throws RemoteException, AccessRestrictedException, InvalidAmountException, ArticleNonexistantException;
-
-	Ereignis ereignisSuchen(int ereignisID, Person person)
-			throws ArticleNonexistantException, AccessRestrictedException, RemoteException;
-
-	Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, int packungsgroesse, Person person,
-			String artikelinfo, String picture) throws AccessRestrictedException, InvalidAmountException, RemoteException;
 }

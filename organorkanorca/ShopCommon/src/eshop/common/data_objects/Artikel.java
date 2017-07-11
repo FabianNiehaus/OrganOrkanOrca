@@ -7,33 +7,57 @@ import java.util.Map;
 
 import eshop.common.exceptions.InvalidAmountException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Artikel.
+ */
 public class Artikel implements Serializable {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long		serialVersionUID	= 8273031240889790935L;
+	
+	/** The artikelnummer. */
 	private int							artikelnummer;
+	
+	/** The bestand. */
 	private int							bestand;
+	
+	/** The bestandsverlauf. */
 	private Map<Integer, Integer>	bestandsverlauf	= new LinkedHashMap<>();
+	
+	/** The bezeichnung. */
 	private String						bezeichnung;
+	
+	/** The preis. */
 	private double						preis;
-	private String artikelinfo;
-	private String picture;
+	
+	/** The artikelinfo. */
+	private String						artikelinfo;
+	
+	/** The picture. */
+	private String						picture;
 
 	/*
 	 * Nocht nicht verwendet private String kategorie; private boolean angebot;
 	 * private int bewertung;
 	 */
 	/**
+	 * Instantiates a new artikel.
+	 *
 	 * @param bezeichnung
-	 *           Bezeichnung / Name des Artikels
+	 *           the bezeichnung
 	 * @param artikelnummer
-	 *           Eindeutige Artikelnummer
+	 *           the artikelnummer
 	 * @param bestand
-	 *           Aktueller Bestand des Artikels
+	 *           the bestand
 	 * @param preis
-	 *           Preis des Artikels
+	 *           the preis
+	 * @param bestandsverlauf
+	 *           the bestandsverlauf
+	 * @param artikelinfo
+	 *           the artikelinfo
+	 * @param picture
+	 *           the picture
 	 */
 	public Artikel(String bezeichnung, int artikelnummer, int bestand, double preis,
 			Map<Integer, Integer> bestandsverlauf, String artikelinfo, String picture) {
@@ -46,18 +70,9 @@ public class Artikel implements Serializable {
 		this.setPicture(picture);
 	}
 
-	
-	public String getArtikelinfo() {
-	
-		return artikelinfo;
-	}
-
-	
-	public void setArtikelinfo(String artikelinfo) {
-	
-		this.artikelinfo = artikelinfo;
-	}
-
+	/**
+	 * Aktualisiere bestandsverlauf.
+	 */
 	public void aktualisiereBestandsverlauf() {
 
 		if (bestandsverlauf.size() >= 30) {
@@ -68,7 +83,19 @@ public class Artikel implements Serializable {
 	}
 
 	/**
-	 * @return
+	 * Gets the artikelinfo.
+	 *
+	 * @return the artikelinfo
+	 */
+	public String getArtikelinfo() {
+
+		return artikelinfo;
+	}
+
+	/**
+	 * Gets the artikelnummer.
+	 *
+	 * @return the artikelnummer
 	 */
 	public int getArtikelnummer() {
 
@@ -76,20 +103,29 @@ public class Artikel implements Serializable {
 	}
 
 	/**
-	 * @return
+	 * Gets the bestand.
+	 *
+	 * @return the bestand
 	 */
 	public int getBestand() {
 
 		return bestand;
 	}
 
+	/**
+	 * Gets the bestandsverlauf.
+	 *
+	 * @return the bestandsverlauf
+	 */
 	public Map<Integer, Integer> getBestandsverlauf() {
 
 		return bestandsverlauf;
 	}
 
 	/**
-	 * @return Gibt die Bezeichnung des Artikels aus
+	 * Gets the bezeichnung.
+	 *
+	 * @return the bezeichnung
 	 */
 	public String getBezeichnung() {
 
@@ -97,7 +133,19 @@ public class Artikel implements Serializable {
 	}
 
 	/**
-	 * @return
+	 * Gets the picture.
+	 *
+	 * @return the picture
+	 */
+	public String getPicture() {
+
+		return picture;
+	}
+
+	/**
+	 * Gets the preis.
+	 *
+	 * @return the preis
 	 */
 	public double getPreis() {
 
@@ -105,7 +153,21 @@ public class Artikel implements Serializable {
 	}
 
 	/**
+	 * Sets the artikelinfo.
+	 *
+	 * @param artikelinfo
+	 *           the new artikelinfo
+	 */
+	public void setArtikelinfo(String artikelinfo) {
+
+		this.artikelinfo = artikelinfo;
+	}
+
+	/**
+	 * Sets the artikelnummer.
+	 *
 	 * @param artikelnummer
+	 *           the new artikelnummer
 	 */
 	public void setArtikelnummer(int artikelnummer) {
 
@@ -113,8 +175,12 @@ public class Artikel implements Serializable {
 	}
 
 	/**
+	 * Sets the bestand.
+	 *
 	 * @param bestand
+	 *           the new bestand
 	 * @throws InvalidAmountException
+	 *            the invalid amount exception
 	 */
 	public void setBestand(int bestand) throws InvalidAmountException {
 
@@ -127,10 +193,10 @@ public class Artikel implements Serializable {
 	}
 
 	/**
-	 * Setzt die Bezeichnung des Artikel
-	 * 
+	 * Sets the bezeichnung.
+	 *
 	 * @param bezeichnung
-	 *           Gewuenschte Artikelbezeichnung
+	 *           the new bezeichnung
 	 */
 	public void setBezeichnung(String bezeichnung) {
 
@@ -138,7 +204,21 @@ public class Artikel implements Serializable {
 	}
 
 	/**
+	 * Sets the picture.
+	 *
+	 * @param picture
+	 *           the new picture
+	 */
+	public void setPicture(String picture) {
+
+		this.picture = picture;
+	}
+
+	/**
+	 * Sets the preis.
+	 *
 	 * @param preis
+	 *           the new preis
 	 */
 	public void setPreis(double preis) {
 
@@ -153,17 +233,5 @@ public class Artikel implements Serializable {
 	public String toString() {
 
 		return artikelnummer + " | " + bezeichnung + " | " + preis + " | " + bestand;
-	}
-
-
-	public String getPicture() {
-
-		return picture;
-	}
-
-
-	public void setPicture(String picture) {
-
-		this.picture = picture;
 	}
 }

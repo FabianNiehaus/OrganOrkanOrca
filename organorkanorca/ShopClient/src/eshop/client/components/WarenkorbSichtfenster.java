@@ -33,13 +33,21 @@ public class WarenkorbSichtfenster extends Sichtfenster {
 
 	/** The Constant serialVersionUID. */
 	private static final long		serialVersionUID	= -5439399681692245672L;
+	
 	/** The model. */
 	private WarenkorbTableModel	model;
-	JLabel gesamtLabel = new JLabel("Gesamtpreis");
-	JTextField gesamtField = new JTextField(10);
-	JLabel euroLabel = new JLabel("\u20ac");
-	JPanel gesamtPanel = new JPanel();
-
+	
+	/** The gesamt label. */
+	JLabel								gesamtLabel			= new JLabel("Gesamtpreis");
+	
+	/** The gesamt field. */
+	JTextField							gesamtField			= new JTextField(10);
+	
+	/** The euro label. */
+	JLabel								euroLabel			= new JLabel("\u20ac");
+	
+	/** The gesamt panel. */
+	JPanel								gesamtPanel			= new JPanel();
 
 	/**
 	 * Instantiates a new warenkorb sichtfenster.
@@ -52,21 +60,31 @@ public class WarenkorbSichtfenster extends Sichtfenster {
 	 *           the sichtfenster callbacks
 	 */
 	public WarenkorbSichtfenster(ShopRemote server, Person user, SichtfensterCallbacks sichtfensterCallbacks) {
-		super(server, user, sichtfensterCallbacks, new String[]{"Artikelnummer","Bezeichnung","Einzelreis","Im Warenkorb","Gesamtpreis"});
+		super(server, user, sichtfensterCallbacks,
+				new String[] {"Artikelnummer", "Bezeichnung", "Einzelreis", "Im Warenkorb", "Gesamtpreis"});
 		auflistung.getSelectionModel().addListSelectionListener(new ArtikelAusWarenkorbAnzeigenListener());
-		
 		this.remove(auflistungContainer);
 		this.add(auflistungContainer, "wrap, w 100%, h 200!, span 3");
-		
 		gesamtField.setHorizontalAlignment(SwingConstants.RIGHT);
-		
 		gesamtPanel.add(gesamtLabel);
 		gesamtPanel.add(gesamtField);
 		gesamtPanel.add(euroLabel);
 		this.add(gesamtPanel, "right");
-		
 	}
 
+	/**
+	 * Artikel im warenkorb pruefen.
+	 *
+	 * @param art
+	 *           the artikel
+	 * @return true, if successful
+	 * @throws AccessRestrictedException
+	 *            the access restricted exception
+	 * @throws PersonNonexistantException
+	 *            the person nonexistant exception
+	 * @throws ArticleNonexistantException
+	 *            the article nonexistant exception
+	 */
 	public boolean artikelImWarenkorbPruefen(Artikel art)
 			throws AccessRestrictedException, PersonNonexistantException, ArticleNonexistantException {
 
@@ -76,14 +94,6 @@ public class WarenkorbSichtfenster extends Sichtfenster {
 			}
 		}
 		return false;
-	}
-	
-	public boolean istWarenkorbLeer(){
-		if(auflistung.getRowCount() == 0){
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	/*
@@ -101,7 +111,7 @@ public class WarenkorbSichtfenster extends Sichtfenster {
 				public void run() {
 
 					auflistung.setModel(model);
-					gesamtField.setText(String.format("%.2f",model.getGesamtpreis()));
+					gesamtField.setText(String.format("%.2f", model.getGesamtpreis()));
 					fitTableLayout();
 				}
 			});
@@ -110,6 +120,59 @@ public class WarenkorbSichtfenster extends Sichtfenster {
 		} catch (PersonNonexistantException e) {
 			JOptionPane.showMessageDialog(WarenkorbSichtfenster.this, e.getMessage());
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see eshop.client.util.Sichtfenster#initializeHighlighting()
+	 */
+	@Override
+	public void initializeHighlighting() {
+
+		// TODO Auto-generated method stub
+	}
+
+	/**
+	 * Checks if is t warenkorb leer.
+	 *
+	 * @return true, if is t warenkorb leer
+	 */
+	public boolean istWarenkorbLeer() {
+
+		if (auflistung.getRowCount() == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see eshop.client.util.Sichtfenster#TabelleFiltern()
+	 */
+	@Override
+	public void TabelleFiltern() {
+
+		if (sucheField1.getText().equals(sucheFieldNames[0])) {
+			sucheField1.setText("");
+		}
+		if (sucheField2.getText().equals(sucheFieldNames[1])) {
+			sucheField2.setText("");
+		}
+		if (sucheField3.getText().equals(sucheFieldNames[2])) {
+			sucheField3.setText("");
+		}
+		if (sucheField4.getText().equals(sucheFieldNames[3])) {
+			sucheField4.setText("");
+		}
+		if (sucheField5.getText().equals(sucheFieldNames[4])) {
+			sucheField5.setText("");
+		}
+		Filter[] filterArray = {new PatternFilter(".*" + sucheField1.getText() + ".*", Pattern.CASE_INSENSITIVE, 0),
+				new PatternFilter(".*" + sucheField2.getText() + ".*", Pattern.CASE_INSENSITIVE, 1),
+				new PatternFilter(".*" + sucheField3.getText() + ".*", Pattern.CASE_INSENSITIVE, 2),
+				new PatternFilter(".*" + sucheField4.getText() + ".*", Pattern.CASE_INSENSITIVE, 3),
+				new PatternFilter(".*" + sucheField5.getText() + ".*", Pattern.CASE_INSENSITIVE, 4)};
+		FilterPipeline filters = new FilterPipeline(filterArray);
+		auflistung.setFilters(filters);
 	}
 
 	/**
@@ -143,41 +206,5 @@ public class WarenkorbSichtfenster extends Sichtfenster {
 				JOptionPane.showMessageDialog(WarenkorbSichtfenster.this, e1.getMessage());
 			}
 		}
-	}
-
-	@Override
-	public void TabelleFiltern() {
-
-		if(sucheField1.getText().equals(sucheFieldNames[0])){
-			sucheField1.setText("");
-		}
-		if(sucheField2.getText().equals(sucheFieldNames[1])){
-			sucheField2.setText("");
-		}
-		if(sucheField3.getText().equals(sucheFieldNames[2])){
-			sucheField3.setText("");
-		}
-		if(sucheField4.getText().equals(sucheFieldNames[3])){
-			sucheField4.setText("");
-		}
-		if(sucheField5.getText().equals(sucheFieldNames[4])){
-			sucheField5.setText("");
-		}
-
-		Filter[] filterArray = {new PatternFilter(".*" + sucheField1.getText() + ".*", Pattern.CASE_INSENSITIVE, 0),
-				new PatternFilter(".*" + sucheField2.getText() + ".*", Pattern.CASE_INSENSITIVE, 1),
-				new PatternFilter(".*" + sucheField3.getText() + ".*", Pattern.CASE_INSENSITIVE, 2),
-				new PatternFilter(".*" + sucheField4.getText() + ".*", Pattern.CASE_INSENSITIVE, 3),
-				new PatternFilter(".*" + sucheField5.getText() + ".*", Pattern.CASE_INSENSITIVE, 4)};
-		FilterPipeline filters = new FilterPipeline(filterArray);
-		auflistung.setFilters(filters);
-		
-	}
-
-	@Override
-	public void initializeHighlighting() {
-
-		// TODO Auto-generated method stub
-		
 	}
 }

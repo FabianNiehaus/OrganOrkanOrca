@@ -7,45 +7,53 @@ import java.util.Map;
 import eshop.common.exceptions.ArticleAlreadyInBasketException;
 import eshop.common.exceptions.ArticleStockNotSufficientException;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author FabianNiehaus
- *
+ * The Class Warenkorb.
  */
 public class Warenkorb implements Serializable {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long		serialVersionUID	= 1864639903738496743L;
+	
+	/** The artikel. */
 	private Map<Artikel, Integer>	artikel				= new LinkedHashMap<>();
 
+	/**
+	 * Instantiates a new warenkorb.
+	 */
 	public Warenkorb() {
 		super();
 	}
 
 	/**
-	 * Dient zur Änderung der Anzahl eines Artikels im Warenkorb. Der Zugriff
-	 * erfolgt (nutzerfreundlich) ueber die Position des Artikels im Warenkorb.
-	 * 
-	 * @param pos
-	 *           Position des Artikels im Warenkorb
+	 * Aendere anzahl.
+	 *
+	 * @param art
+	 *           the artikel
 	 * @param anz
-	 *           Neue Anzahl (muss größer 0 sein)
-	 * @throws Nicht
-	 *            genug Artikel auf Lager
+	 *           the anz
 	 */
 	public void aendereAnzahl(Artikel art, int anz) {
 
 		artikel.replace(art, anz);
 	}
 
+	/**
+	 * Copy.
+	 *
+	 * @param wk
+	 *           the wk
+	 */
 	public void copy(Warenkorb wk) {
 
 		artikel.putAll(wk.getArtikel());
 	}
 
 	/**
-	 * @return Gibt die LinkedHashMap mit Artikeln und Anzahl zurueck
+	 * Gets the artikel.
+	 *
+	 * @return the artikel
 	 */
 	public Map<Artikel, Integer> getArtikel() {
 
@@ -53,7 +61,7 @@ public class Warenkorb implements Serializable {
 	}
 
 	/**
-	 * Leert Warenkorb, indem Artikelliste verworfen wird
+	 * Leere warkenkorb.
 	 */
 	public void leereWarkenkorb() {
 
@@ -61,9 +69,10 @@ public class Warenkorb implements Serializable {
 	}
 
 	/**
-	 * Entfernt einen Artikel aus dem Warenkorb
-	 * 
+	 * Loesche artikel.
+	 *
 	 * @param art
+	 *           the artikel
 	 */
 	public void loescheArtikel(Artikel art) {
 
@@ -73,12 +82,14 @@ public class Warenkorb implements Serializable {
 	}
 
 	/**
-	 * Prueft, ob genug Bestand von einem Artikel verfuegbar ist
-	 * 
+	 * Pruefe bestand.
+	 *
 	 * @param art
-	 *           Gewuenschter Artikel
+	 *           the artikel
 	 * @param anz
-	 *           Gewuenschte Anzahl
+	 *           the anz
+	 * @throws ArticleStockNotSufficientException
+	 *            the article stock not sufficient exception
 	 */
 	private void pruefeBestand(Artikel art, int anz) throws ArticleStockNotSufficientException {
 
@@ -87,6 +98,12 @@ public class Warenkorb implements Serializable {
 		}
 	}
 
+	/**
+	 * Sets the artikel.
+	 *
+	 * @param map
+	 *           the map
+	 */
 	public void setArtikel(Map<Artikel, Integer> map) {
 
 		for (Map.Entry<Artikel, Integer> ent : map.entrySet()) {
@@ -96,15 +113,16 @@ public class Warenkorb implements Serializable {
 	}
 
 	/**
-	 * Legt einen Artikel im Warenkorb ab
-	 * 
+	 * Speichere artikel.
+	 *
 	 * @param art
-	 *           Gewuenschter Artikel
+	 *           the artikel
 	 * @param anz
-	 *           Gewuenschte Anzahl (muss größer 0 sein)
+	 *           the anz
+	 * @throws ArticleStockNotSufficientException
+	 *            the article stock not sufficient exception
 	 * @throws ArticleAlreadyInBasketException
-	 * @throws Nicht
-	 *            genug Artikel auf Lager
+	 *            the article already in basket exception
 	 */
 	public void speichereArtikel(Artikel art, int anz)
 			throws ArticleStockNotSufficientException, ArticleAlreadyInBasketException {
@@ -122,12 +140,11 @@ public class Warenkorb implements Serializable {
 	}
 
 	/**
-	 * Prueft, ob ein bestimmter Artikel in diesem Warenkorb liegt.
-	 * 
+	 * Suche artikel.
+	 *
 	 * @param art
-	 *           Zu ueberpruefender Artikel
-	 * @return Gibt <b>true</b> zurueck, wenn zu pruefender Artikel in der HAsMap
-	 *         artikel gespeichert ist. Sonst <b>false</b>.
+	 *           the artikel
+	 * @return true, if successful
 	 */
 	public boolean sucheArtikel(Artikel art) {
 

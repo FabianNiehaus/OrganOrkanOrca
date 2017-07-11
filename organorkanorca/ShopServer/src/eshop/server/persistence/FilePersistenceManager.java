@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Vector;
 
 import eshop.common.data_objects.Artikel;
 import eshop.common.data_objects.Ereignis;
@@ -24,16 +23,16 @@ import eshop.common.data_objects.Mitarbeiter;
 import eshop.common.data_objects.Typ;
 import eshop.common.exceptions.InvalidPersonDataException;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author teschke
- *
- *         Realisierung einer Schnittstelle zur persistenten Speicherung von
- *         Daten in Dateien.
- * @see bib.local.persistence.PersistenceManager
+ * The Class FilePersistenceManager.
  */
 public class FilePersistenceManager implements PersistenceManager {
 
+	/** The reader. */
 	private BufferedReader	reader	= null;
+	
+	/** The writer. */
 	private PrintWriter		writer	= null;
 
 	/*
@@ -55,12 +54,8 @@ public class FilePersistenceManager implements PersistenceManager {
 		return true;
 	}
 
-	/**
-	 * Methode zum Einlesen der Artikeldaten aus einer externen Datenquelle. Das
-	 * Verfuegbarkeitsattribut ist in der Datenquelle (Datei) als "t" oder "f"
-	 * codiert abgelegt.
-	 * 
-	 * @return Artikel-Objekt, wenn Einlesen erfolgreich, false null
+	/* (non-Javadoc)
+	 * @see eshop.server.persistence.PersistenceManager#ladeArtikel()
 	 */
 	@Override
 	public Artikel ladeArtikel() throws IOException {
@@ -90,7 +85,7 @@ public class FilePersistenceManager implements PersistenceManager {
 		packungsgroesse = Integer.parseInt(liesZeile());
 		// Lies Artikelinfo
 		artikelinfo = liesZeile();
-		//Lies Bild
+		// Lies Bild
 		picture = liesZeile();
 		// Lies Bestandshistory
 		try {
@@ -109,12 +104,16 @@ public class FilePersistenceManager implements PersistenceManager {
 		} catch (NullPointerException e) {
 		}
 		if (packungsgroesse == 1) {
-			return new Artikel(bezeichnung, artikelnummer, bestand, preis, bestandsverlauf, artikelinfo,picture);
+			return new Artikel(bezeichnung, artikelnummer, bestand, preis, bestandsverlauf, artikelinfo, picture);
 		} else {
-			return new Massengutartikel(bezeichnung, artikelnummer, bestand, preis, packungsgroesse, bestandsverlauf, artikelinfo,picture);
+			return new Massengutartikel(bezeichnung, artikelnummer, bestand, preis, packungsgroesse, bestandsverlauf,
+					artikelinfo, picture);
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see eshop.server.persistence.PersistenceManager#ladeEreignis()
+	 */
 	@Override
 	public Ereignis ladeEreignis() throws IOException {
 
@@ -139,21 +138,18 @@ public class FilePersistenceManager implements PersistenceManager {
 		womit_Bezeichnung = liesZeile();
 		wieviel = Integer.parseInt(liesZeile());
 		wann = liesZeile();
-		
 		Date date = null;
 		DateFormat formatter = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 		try {
-			date = formatter.parse((String) wann);
+			date = formatter.parse(wann);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		
 		return new Ereignis(id, wer_Id, wer_Name, was, womit_Nr, womit_Bezeichnung, wieviel, date);
 	}
 
-	/**
-	 * @author Mathis M�hlenkamp
-	 * @throws InvalidPersonDataException
+	/* (non-Javadoc)
+	 * @see eshop.server.persistence.PersistenceManager#ladeKunde()
 	 */
 	@Override
 	public Kunde ladeKunde() throws IOException, InvalidPersonDataException {
@@ -184,9 +180,8 @@ public class FilePersistenceManager implements PersistenceManager {
 		return new Kunde(firstname, lastname, id, passwort, address_Street, address_Zip, address_Town);
 	}
 
-	/**
-	 * @author Mathis M�hlenkamp
-	 * @throws InvalidPersonData
+	/* (non-Javadoc)
+	 * @see eshop.server.persistence.PersistenceManager#ladeMitarbeiter()
 	 */
 	@Override
 	public Mitarbeiter ladeMitarbeiter() throws IOException, InvalidPersonDataException {
@@ -218,10 +213,11 @@ public class FilePersistenceManager implements PersistenceManager {
 	}
 
 	/**
-	 * Liest eine Zeile aus
-	 * 
-	 * @return Inhalt der Zeile als String
+	 * Lies zeile.
+	 *
+	 * @return the string
 	 * @throws IOException
+	 *            Signals that an I/O exception has occurred.
 	 */
 	private String liesZeile() throws IOException {
 
@@ -264,24 +260,18 @@ public class FilePersistenceManager implements PersistenceManager {
 	}
 
 	/**
-	 * Schreibt eine Zeile
-	 * 
+	 * Schreibe zeile.
+	 *
 	 * @param daten
-	 *           Zu schreibende Zeile als String
+	 *           the daten
 	 */
 	private void schreibeZeile(String daten) {
 
 		if (writer != null) writer.println(daten);
 	}
 
-	/**
-	 * Methode zum Schreiben der Artikeldaten in eine externe Datenquelle. Das
-	 * Verfuegbarkeitsattribut wird in der Datenquelle (Datei) als "t" oder "f"
-	 * codiert abgelegt.
-	 * 
-	 * @param art
-	 *           Artikel-Objekt, das gespeichert werden soll
-	 * @return true, wenn Schreibvorgang erfolgreich, false sonst
+	/* (non-Javadoc)
+	 * @see eshop.server.persistence.PersistenceManager#speichereArtikel(eshop.common.data_objects.Artikel)
 	 */
 	@Override
 	public boolean speichereArtikel(Artikel art) throws IOException {
@@ -302,11 +292,11 @@ public class FilePersistenceManager implements PersistenceManager {
 		} else {
 			schreibeZeile(String.valueOf(1));
 		}
-		//Schreibe Artikelinfo
+		// Schreibe Artikelinfo
 		schreibeZeile(art.getArtikelinfo());
-		//Schreibe Bild
+		// Schreibe Bild
 		schreibeZeile(art.getPicture());
-		//Schreibe History
+		// Schreibe History
 		schreibeZeile("---BEGINHISTORY---");
 		// Bestandhistory schreiben
 		for (Entry<Integer, Integer> ent : art.getBestandsverlauf().entrySet()) {
@@ -316,6 +306,9 @@ public class FilePersistenceManager implements PersistenceManager {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see eshop.server.persistence.PersistenceManager#speichereEreignis(eshop.common.data_objects.Ereignis)
+	 */
 	@Override
 	public boolean speichereEreignis(Ereignis er) throws IOException {
 
@@ -333,6 +326,9 @@ public class FilePersistenceManager implements PersistenceManager {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see eshop.server.persistence.PersistenceManager#speichereKunde(eshop.common.data_objects.Kunde)
+	 */
 	@Override
 	public boolean speichereKunde(Kunde ku) throws IOException {
 
@@ -351,6 +347,9 @@ public class FilePersistenceManager implements PersistenceManager {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see eshop.server.persistence.PersistenceManager#speichereMitarbeiter(eshop.common.data_objects.Mitarbeiter)
+	 */
 	@Override
 	public boolean speichereMitarbeiter(Mitarbeiter mi) throws IOException {
 

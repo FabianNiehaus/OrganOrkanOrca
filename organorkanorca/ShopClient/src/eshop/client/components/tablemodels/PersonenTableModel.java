@@ -4,13 +4,21 @@ import java.util.Vector;
 
 import eshop.common.data_objects.Person;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PersonenTableModel.
+ */
 public class PersonenTableModel extends ShopTableModel {
 
-	/**
-	  * 
-	  */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 6108669637836557607L;
 
+	/**
+	 * Instantiates a new personen table model.
+	 *
+	 * @param dataVector
+	 *           the data vector
+	 */
 	public PersonenTableModel(Vector<? extends Person> dataVector) {
 		columnNames = new String[] {"ID", "Vorname", "Nachname", "Straße", "PLZ", "Ort"};
 		data = new Object[dataVector.size()][6];

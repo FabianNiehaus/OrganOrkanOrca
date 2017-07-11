@@ -1,1 +1,10 @@
+eshop.client
+eshop.client.components
+eshop.client.components.tablemodels
+eshop.client.util
+eshop.common.data_objects
+eshop.common.exceptions
+eshop.common.net
+eshop.common.util
 eshop.server.domain
+eshop.server.persistence

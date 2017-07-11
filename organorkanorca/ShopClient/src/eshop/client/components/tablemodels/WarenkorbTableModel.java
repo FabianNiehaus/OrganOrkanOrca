@@ -6,16 +6,30 @@ import java.util.Map.Entry;
 import eshop.common.data_objects.Artikel;
 import eshop.common.data_objects.Massengutartikel;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class WarenkorbTableModel.
+ */
 public class WarenkorbTableModel extends ShopTableModel {
 
-	/**
-	  * 
-	  */
+	/** The Constant serialVersionUID. */
 	private static final long	serialVersionUID	= 7021676013626973075L;
+	
+	/** The column names. */
 	protected String[]			columnNames;
+	
+	/** The data. */
 	protected Object[][]			data;
-	private double gesamtpreis;
+	
+	/** The gesamtpreis. */
+	private double					gesamtpreis;
 
+	/**
+	 * Instantiates a new warenkorb table model.
+	 *
+	 * @param dataMap
+	 *           the data map
+	 */
 	public WarenkorbTableModel(Map<Artikel, Integer> dataMap) {
 		columnNames = new String[] {"ArtNr.", "Bezeichnung", "Einzelpreis", "Im Warenkorb", "Gesamtpreis", "Einheit",
 				"Bestand"};
@@ -40,30 +54,63 @@ public class WarenkorbTableModel extends ShopTableModel {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see eshop.client.components.tablemodels.ShopTableModel#getColumnCount()
+	 */
 	@Override
 	public int getColumnCount() {
 
 		return columnNames.length;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see eshop.client.components.tablemodels.ShopTableModel#getColumnName(int)
+	 */
 	@Override
 	public String getColumnName(int column) {
 
 		return columnNames[column];
 	}
 
+	/**
+	 * Gets the gesamtpreis.
+	 *
+	 * @return the gesamtpreis
+	 */
+	public double getGesamtpreis() {
+
+		return gesamtpreis;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see eshop.client.components.tablemodels.ShopTableModel#getRowCount()
+	 */
 	@Override
 	public int getRowCount() {
 
 		return data.length;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see eshop.client.components.tablemodels.ShopTableModel#getValueAt(int,
+	 * int)
+	 */
 	@Override
 	public Object getValueAt(int arg0, int arg1) {
 
 		return data[arg0][arg1];
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * eshop.client.components.tablemodels.ShopTableModel#setValueAt(java.lang.
+	 * Object, int, int)
+	 */
 	/*
 	 * Don't need to implement this method unless your table's data can change.
 	 */
@@ -72,9 +119,5 @@ public class WarenkorbTableModel extends ShopTableModel {
 
 		data[row][col] = value;
 		fireTableCellUpdated(row, col);
-	}
-	
-	public double getGesamtpreis(){
-		return gesamtpreis;
 	}
 }

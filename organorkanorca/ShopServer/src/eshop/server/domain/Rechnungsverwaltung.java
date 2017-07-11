@@ -7,25 +7,27 @@ import eshop.common.data_objects.Kunde;
 import eshop.common.data_objects.Rechnung;
 import eshop.common.data_objects.Warenkorb;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author Fabian Niehaus Klasse zur Verwaltung von Rechnungen
+ * The Class Rechnungsverwaltung.
  */
 public class Rechnungsverwaltung {
 
+	/** The rechnungen. */
 	private Vector<Rechnung> rechnungen = new Vector<Rechnung>();
 
 	/**
-	 * Erzeugt eine neue Rechung
-	 * 
+	 * Rechnung erzeugen.
+	 *
 	 * @param ku
-	 *           Zugehöriger Kunde
+	 *           the kunde
 	 * @param datum
-	 *           Rechnungsdatum
+	 *           the datum
 	 * @param wk
-	 *           Zugehöriger Warenkorb
+	 *           the wk
 	 * @param gesamt
-	 *           Gesamtsumme der Rechnung
-	 * @return Erzeugte Rechnung
+	 *           the gesamt
+	 * @return the rechnung
 	 */
 	public Rechnung rechnungErzeugen(Kunde ku, Date datum, Warenkorb wk, double gesamt) {
 

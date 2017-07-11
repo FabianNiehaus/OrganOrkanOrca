@@ -1,10 +1,8 @@
 package eshop.server.domain;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Vector;
 
 import eshop.common.data_objects.Artikel;
@@ -14,17 +12,31 @@ import eshop.common.exceptions.InvalidAmountException;
 import eshop.server.persistence.FilePersistenceManager;
 import eshop.server.persistence.PersistenceManager;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author Fabian Niehaus Klasse zur Verwaltung von Artikeln
+ * The Class Artikelverwaltung.
  */
 public class Artikelverwaltung {
 
+	/** The artikel. */
 	// Vektor zur Speicherug der Artikel
 	private Vector<Artikel> artikel = new Vector<Artikel>(0);
 	// Persistenz-Schnittstelle, die fuer die Details des Dateizugriffs
+	/** The pm. */
 	// verantwortlich ist
 	private PersistenceManager pm = new FilePersistenceManager();
 
+	/**
+	 * Aendere bezeichnung.
+	 *
+	 * @param art
+	 *           the artikel
+	 * @param bezeichnung
+	 *           the bezeichnung
+	 * @return the artikel
+	 * @throws ArticleNonexistantException
+	 *            the article nonexistant exception
+	 */
 	public Artikel aendereBezeichnung(Artikel art, String bezeichnung) throws ArticleNonexistantException {
 
 		if (artikel.contains(art)) {
@@ -35,6 +47,17 @@ public class Artikelverwaltung {
 		}
 	}
 
+	/**
+	 * Aendere preis.
+	 *
+	 * @param art
+	 *           the artikel
+	 * @param preis
+	 *           the preis
+	 * @return the artikel
+	 * @throws ArticleNonexistantException
+	 *            the article nonexistant exception
+	 */
 	public Artikel aenderePreis(Artikel art, double preis) throws ArticleNonexistantException {
 
 		if (artikel.contains(art)) {
@@ -46,10 +69,10 @@ public class Artikelverwaltung {
 	}
 
 	/**
-	 * Artikel in Liste der Verwalteten Artikel einfuegen
-	 * 
+	 * Einfuegen.
+	 *
 	 * @param art
-	 *           Einzufuegender Artikel
+	 *           the artikel
 	 */
 	public void einfuegen(Artikel art) {
 
@@ -61,16 +84,15 @@ public class Artikelverwaltung {
 	}
 
 	/**
-	 * Erhöht den Bestand eines Artikels anhand der Artikelnummer
-	 * 
-	 * @param artikelnummer
-	 *           Artikelnummer des gesuchten Artikels
+	 * Erhoehe bestand.
+	 *
+	 * @param art
+	 *           the artikel
 	 * @param bestand
-	 *           Neuer Bestand
-	 * @return Gesuchter Artikel
-	 * @throws ArticleNonexistantException
-	 *            Artikelnummer nicht vorhanden
+	 *           the bestand
+	 * @return the artikel
 	 * @throws InvalidAmountException
+	 *            the invalid amount exception
 	 */
 	public Artikel erhoeheBestand(Artikel art, int bestand) throws InvalidAmountException {
 
@@ -88,27 +110,33 @@ public class Artikelverwaltung {
 	}
 
 	/**
-	 * Erstellt einen neuen Artikel und fuegt ihn in die Liste der verwalteten
-	 * Artikel ein.
-	 * 
+	 * Erstelle artikel.
+	 *
 	 * @param bezeichnung
-	 *           Artikelbezeichnung
+	 *           the bezeichnung
 	 * @param bestand
-	 *           Artikelbestand
+	 *           the bestand
 	 * @param preis
-	 *           Artikelpreis
-	 * @return Erstellter Artikel
+	 *           the preis
+	 * @param packungsgroesse
+	 *           the packungsgroesse
+	 * @param artikelinfo
+	 *           the artikelinfo
+	 * @param picture
+	 *           the picture
+	 * @return the artikel
 	 * @throws InvalidAmountException
+	 *            the invalid amount exception
 	 */
-	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, int packungsgroesse, String artikelinfo, String picture)
-			throws InvalidAmountException {
+	public Artikel erstelleArtikel(String bezeichnung, int bestand, double preis, int packungsgroesse,
+			String artikelinfo, String picture) throws InvalidAmountException {
 
-		if (picture.equals("")){
+		if (picture.equals("")) {
 			picture = "pictures/orkan.jpg";
 		}
-		
 		if (packungsgroesse == 1) {
-			Artikel art = new Artikel(bezeichnung, getNextID(), bestand, preis, new LinkedHashMap<Integer,Integer>(), artikelinfo,picture);
+			Artikel art = new Artikel(bezeichnung, getNextID(), bestand, preis, new LinkedHashMap<Integer, Integer>(),
+					artikelinfo, picture);
 			artikel.add(art);
 			art.aktualisiereBestandsverlauf();
 			return art;
@@ -118,7 +146,7 @@ public class Artikelverwaltung {
 				throw new InvalidAmountException(bestand);
 			} else {
 				Massengutartikel art = new Massengutartikel(bezeichnung, getNextID(), bestand, preis, packungsgroesse,
-						new LinkedHashMap<Integer,Integer>(), artikelinfo,"pictures/orkan.jpg");
+						new LinkedHashMap<Integer, Integer>(), artikelinfo, "pictures/orkan.jpg");
 				artikel.add(art);
 				art.aktualisiereBestandsverlauf();
 				return art;
@@ -129,9 +157,9 @@ public class Artikelverwaltung {
 	}
 
 	/**
-	 * Gibt alle verwalteten Artikel zurueck
-	 * 
-	 * @return Verwatlete Artikel
+	 * Gets the artikel.
+	 *
+	 * @return the artikel
 	 */
 	public Vector<Artikel> getArtikel() {
 
@@ -139,9 +167,9 @@ public class Artikelverwaltung {
 	}
 
 	/**
-	 * Erzeugt die nächste zu verwendende Artikelnummer
-	 * 
-	 * @return Nächste Artikelnummer
+	 * Gets the next ID.
+	 *
+	 * @return the next ID
 	 */
 	public int getNextID() {
 
@@ -155,11 +183,12 @@ public class Artikelverwaltung {
 	}
 
 	/**
-	 * Methode zum Einlesen von Artikeln aus einer Datei.
-	 * 
+	 * Lies daten.
+	 *
 	 * @param datei
-	 *           Datei, die einzulesenden Artikelbestand enthält
+	 *           the datei
 	 * @throws IOException
+	 *            Signals that an I/O exception has occurred.
 	 */
 	public void liesDaten(String datei) throws IOException {
 
@@ -178,17 +207,24 @@ public class Artikelverwaltung {
 		pm.close();
 	}
 
+	/**
+	 * Loeschen.
+	 *
+	 * @param art
+	 *           the artikel
+	 */
 	public void loeschen(Artikel art) {
 
 		artikel.remove(art);
 	}
 
 	/**
-	 * Methode zum Schreiben der Artikeldaten in eine Datei.
-	 * 
+	 * Schreibe daten.
+	 *
 	 * @param datei
-	 *           Datei, in die der Artikelbestand geschrieben werden soll
+	 *           the datei
 	 * @throws IOException
+	 *            Signals that an I/O exception has occurred.
 	 */
 	public void schreibeDaten(String datei) throws IOException {
 
@@ -207,13 +243,13 @@ public class Artikelverwaltung {
 	}
 
 	/**
-	 * Sucht anhand der Artikelnummer nach einem Artikel
-	 * 
+	 * Suche artikel.
+	 *
 	 * @param artikelnummer
-	 *           Artikelnummer des gesuchten Artikels
-	 * @return Gesuchter Artikel
+	 *           the artikelnummer
+	 * @return the artikel
 	 * @throws ArticleNonexistantException
-	 *            Artikelnummer nicht vorhanden
+	 *            the article nonexistant exception
 	 */
 	public Artikel sucheArtikel(int artikelnummer) throws ArticleNonexistantException {
 
@@ -226,13 +262,13 @@ public class Artikelverwaltung {
 	}
 
 	/**
-	 * Sucht anhand einer (Teil-)Bezeichnung nach einem Artikel
-	 * 
+	 * Suche artikel.
+	 *
 	 * @param bezeichnung
-	 *           Gesuchte (Teil-)bezeichnung
-	 * @return Liste der zur Bezeichnung passenden Artikel
+	 *           the bezeichnung
+	 * @return the vector
 	 * @throws ArticleNonexistantException
-	 *            Keine Artikel gefunden
+	 *            the article nonexistant exception
 	 */
 	public Vector<Artikel> sucheArtikel(String bezeichnung) throws ArticleNonexistantException {
 

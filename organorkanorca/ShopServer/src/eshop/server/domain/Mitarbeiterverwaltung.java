@@ -13,23 +13,29 @@ import eshop.common.exceptions.VectorIsEmptyException;
 import eshop.server.persistence.FilePersistenceManager;
 import eshop.server.persistence.PersistenceManager;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Mitarbeiterverwaltung.
+ */
 public class Mitarbeiterverwaltung {
 
+	/** The mitarbeiter. */
 	private Vector<Mitarbeiter> mitarbeiter = new Vector<Mitarbeiter>();
 	// Persistenz-Schnittstelle, die f�r die Details des Dateizugriffs
+	/** The pm. */
 	// verantwortlich ist
 	private PersistenceManager pm = new FilePersistenceManager();
 
 	/**
-	 * Logik zur Anmeldung
-	 * 
+	 * Anmelden.
+	 *
 	 * @param id
-	 *           Mitarbeiter-ID
+	 *           the id
 	 * @param passwort
-	 *           Mitarbeiter-Passwort
-	 * @return Angemeldeter Mitarbeiter
+	 *           the passwort
+	 * @return the mitarbeiter
 	 * @throws LoginFailedException
-	 *            Login fehlgeschlagen
+	 *            the login failed exception
 	 */
 	public Mitarbeiter anmelden(int id, String passwort) throws LoginFailedException {
 
@@ -41,16 +47,22 @@ public class Mitarbeiterverwaltung {
 		throw new LoginFailedException(id);
 	}
 
+	/**
+	 * Einfuegen.
+	 *
+	 * @param mi
+	 *           the mitarbeiter
+	 */
 	public void einfuegen(Mitarbeiter mi) {
 
 		mitarbeiter.add(mi);
 	}
 
 	/**
-	 * Fuegt einen neuen Mitarbeiter hinzu
-	 * 
+	 * Erstelle mitarbeiter.
+	 *
 	 * @param einMa
-	 *           Neuer Mitarbeiter
+	 *           the ein ma
 	 */
 	public void erstelleMitarbeiter(Mitarbeiter einMa) {
 
@@ -58,23 +70,25 @@ public class Mitarbeiterverwaltung {
 	}
 
 	/**
-	 * Erstellt einen neuen Mitarbeiter und fuegt in zur verwalteten Liste hinzu
-	 * 
+	 * Erstelle mitarbeiter.
+	 *
 	 * @param firstname
-	 *           Vorname
+	 *           the firstname
 	 * @param lastname
-	 *           Nachname
+	 *           the lastname
 	 * @param passwort
-	 *           Passwort
+	 *           the passwort
 	 * @param address_Street
-	 *           Straße + Hausnummer
+	 *           the address street
 	 * @param address_Zip
-	 *           Postleitzahl
+	 *           the address zip
 	 * @param address_Town
-	 *           Stadt
-	 * @return
+	 *           the address town
+	 * @return the mitarbeiter
 	 * @throws MaxIDsException
-	 * @throws InvalidPersonData
+	 *            the max I ds exception
+	 * @throws InvalidPersonDataException
+	 *            the invalid person data exception
 	 */
 	public Mitarbeiter erstelleMitarbeiter(String firstname, String lastname, String passwort, String address_Street,
 			String address_Zip, String address_Town) throws MaxIDsException, InvalidPersonDataException {
@@ -86,7 +100,9 @@ public class Mitarbeiterverwaltung {
 	}
 
 	/**
-	 * @return Alle Mitarbeiter
+	 * Gets the mitarbeiter.
+	 *
+	 * @return the mitarbeiter
 	 */
 	public Vector<Mitarbeiter> getMitarbeiter() {
 
@@ -94,10 +110,11 @@ public class Mitarbeiterverwaltung {
 	}
 
 	/**
-	 * Erzeugt die nächste zu verwendende Mitarbeiternummer
-	 * 
-	 * @return Erzeugte Mitarbeiternummer
+	 * Gets the next ID.
+	 *
+	 * @return the next ID
 	 * @throws MaxIDsException
+	 *            the max I ds exception
 	 */
 	public int getNextID() throws MaxIDsException {
 
@@ -114,6 +131,16 @@ public class Mitarbeiterverwaltung {
 		}
 	}
 
+	/**
+	 * Lies daten.
+	 *
+	 * @param datei
+	 *           the datei
+	 * @throws IOException
+	 *            Signals that an I/O exception has occurred.
+	 * @throws InvalidPersonDataException
+	 *            the invalid person data exception
+	 */
 	public void liesDaten(String datei) throws IOException, InvalidPersonDataException {
 
 		// PersistenzManager f�r Lesevorgänge öffnen
@@ -132,11 +159,10 @@ public class Mitarbeiterverwaltung {
 	}
 
 	/**
-	 * Entfernt einen Mitarbeiter
-	 * 
+	 * Loesche mitarbeiter.
+	 *
 	 * @param einMa
-	 *           Zu entfernender Mitarbeiter
-	 * @return
+	 *           the ein ma
 	 */
 	public void loescheMitarbeiter(Mitarbeiter einMa) {
 
@@ -144,11 +170,12 @@ public class Mitarbeiterverwaltung {
 	}
 
 	/**
-	 * Methode zum Schreiben der Kundendaten in eine Datei.
-	 * 
+	 * Schreibe daten.
+	 *
 	 * @param datei
-	 *           Datei, in die der...
+	 *           the datei
 	 * @throws IOException
+	 *            Signals that an I/O exception has occurred.
 	 */
 	public void schreibeDaten(String datei) throws IOException {
 
@@ -166,13 +193,13 @@ public class Mitarbeiterverwaltung {
 	}
 
 	/**
-	 * Sucht einen Mitarbeiter anhand seiner ID
-	 * 
+	 * Suche mitarbeiter.
+	 *
 	 * @param id
-	 *           Gesuchte ID
-	 * @return Gesuchter Mitarbeiter
-	 * @throws VectorIsEmptyException
-	 *            Mitarbeiterliste leer
+	 *           the id
+	 * @return the mitarbeiter
+	 * @throws PersonNonexistantException
+	 *            the person nonexistant exception
 	 */
 	public Mitarbeiter sucheMitarbeiter(int id) throws PersonNonexistantException {
 
@@ -185,15 +212,15 @@ public class Mitarbeiterverwaltung {
 	}
 
 	/**
-	 * Sucht einen Mitarbeiter anhand Vor- und Nachname
-	 * 
+	 * Suche mitarbeiter.
+	 *
 	 * @param firstname
-	 *           Vorname
+	 *           the firstname
 	 * @param lastname
-	 *           Nachname
-	 * @return Gesuchter Mitarbeiter
-	 * @throws VectorIsEmptyException
-	 *            Mitarbeiterliste leer
+	 *           the lastname
+	 * @return the mitarbeiter
+	 * @throws PersonNonexistantException
+	 *            the person nonexistant exception
 	 */
 	public Mitarbeiter sucheMitarbeiter(String firstname, String lastname) throws PersonNonexistantException {
 

@@ -11,26 +11,30 @@ import eshop.common.exceptions.ArticleStockNotSufficientException;
 import eshop.common.exceptions.BasketNonexistantException;
 import eshop.common.exceptions.InvalidAmountException;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author Fabian Niehaus Klasse zur Verwaltung von Warenkörben
+ * The Class Warenkorbverwaltung.
  */
 public class Warenkorbverwaltung {
 
+	/** The warenkoerbe. */
 	private Vector<Warenkorb> warenkoerbe = new Vector<>();
 
 	/**
-	 * Ändert die Anzahl eines Artikels in einem Warenkorb. Die Artikelauswahl
-	 * erfolgt nach Position.
-	 * 
-	 * @param aend
-	 *           Zu bearbeitender Warenkorb
-	 * @param position
-	 *           Position des zu verändernden Artikels
+	 * Aendere warenkorb.
+	 *
+	 * @param wk
+	 *           the wk
+	 * @param art
+	 *           the artikel
 	 * @param anz
-	 *           Neue Anzahl
+	 *           the anz
+	 * @throws ArticleStockNotSufficientException
+	 *            the article stock not sufficient exception
+	 * @throws BasketNonexistantException
+	 *            the basket nonexistant exception
 	 * @throws InvalidAmountException
-	 * @throws Nicht
-	 *            genug Artikel auf Lager
+	 *            the invalid amount exception
 	 */
 	public void aendereWarenkorb(Warenkorb wk, Artikel art, int anz)
 			throws ArticleStockNotSufficientException, BasketNonexistantException, InvalidAmountException {
@@ -52,9 +56,9 @@ public class Warenkorbverwaltung {
 	}
 
 	/**
-	 * Erzeugt einen neuen (leeren) Warenkorb
-	 * 
-	 * @return Erzeugter Warenkorb
+	 * Erstelle warenkorb.
+	 *
+	 * @return the warenkorb
 	 */
 	public Warenkorb erstelleWarenkorb() {
 
@@ -64,11 +68,11 @@ public class Warenkorbverwaltung {
 	}
 
 	/**
-	 * Gibt den Inhalt eines Warenkorbs aus
-	 * 
+	 * Gets the artikel.
+	 *
 	 * @param wk
-	 *           Gewuenschter Warenkorb
-	 * @return Alle Artikel mit Anzahl
+	 *           the wk
+	 * @return the artikel
 	 */
 	public Map<Artikel, Integer> getArtikel(Warenkorb wk) {
 
@@ -76,7 +80,9 @@ public class Warenkorbverwaltung {
 	}
 
 	/**
-	 * @return Alle Warenkörbe
+	 * Gets the warenkoerbe.
+	 *
+	 * @return the warenkoerbe
 	 */
 	public Vector<Warenkorb> getWarenkoerbe() {
 
@@ -84,11 +90,13 @@ public class Warenkorbverwaltung {
 	}
 
 	/**
-	 * Gibt einen Warenkorb aus, sofern dieser in der Verwaltung exisitert
-	 * 
+	 * Gets the warenkorb.
+	 *
 	 * @param wk
-	 *           Gesuchter Warenkorb
-	 * @return Gesuchter Warenkorb
+	 *           the wk
+	 * @return the warenkorb
+	 * @throws BasketNonexistantException
+	 *            the basket nonexistant exception
 	 */
 	public Warenkorb getWarenkorb(Warenkorb wk) throws BasketNonexistantException {
 
@@ -101,10 +109,10 @@ public class Warenkorbverwaltung {
 	}
 
 	/**
-	 * Leert einen Warenkorb
-	 * 
+	 * Leere warenkorb.
+	 *
 	 * @param wk
-	 *           Zu leerender Warenkorb
+	 *           the wk
 	 */
 	public void leereWarenkorb(Warenkorb wk) {
 
@@ -112,17 +120,20 @@ public class Warenkorbverwaltung {
 	}
 
 	/**
-	 * Fuegt einem Warenkorb einen Artikel hinzu
-	 * 
+	 * Lege in warenkorb.
+	 *
 	 * @param wk
-	 *           Zu bearbeitender Warenkorb
+	 *           the wk
 	 * @param art
-	 *           Hinzuzufuegender Artikel
+	 *           the artikel
 	 * @param anz
-	 *           Anzahl des Artikels
+	 *           the anz
 	 * @throws ArticleStockNotSufficientException
+	 *            the article stock not sufficient exception
 	 * @throws ArticleAlreadyInBasketException
+	 *            the article already in basket exception
 	 * @throws InvalidAmountException
+	 *            the invalid amount exception
 	 */
 	public void legeInWarenkorb(Warenkorb wk, Artikel art, int anz)
 			throws ArticleStockNotSufficientException, ArticleAlreadyInBasketException, InvalidAmountException {
@@ -139,16 +150,24 @@ public class Warenkorbverwaltung {
 		}
 	}
 
+	/**
+	 * Loesche aus warenkorn.
+	 *
+	 * @param wk
+	 *           the wk
+	 * @param art
+	 *           the artikel
+	 */
 	public void loescheAusWarenkorn(Warenkorb wk, Artikel art) {
 
 		wk.loescheArtikel(art);
 	}
 
 	/**
-	 * Löscht einen Warenkorb
-	 * 
+	 * Loesche warenkorb.
+	 *
 	 * @param wk
-	 *           Zu löschender Warenkorb
+	 *           the wk
 	 */
 	public void loescheWarenkorb(Warenkorb wk) {
 

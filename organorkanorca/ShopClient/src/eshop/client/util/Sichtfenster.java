@@ -1,12 +1,9 @@
 package eshop.client.util;
 
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -15,16 +12,8 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
 
 import org.jdesktop.swingx.JXTable;
-import org.jdesktop.swingx.decorator.ColorHighlighter;
-import org.jdesktop.swingx.decorator.ComponentAdapter;
-import org.jdesktop.swingx.decorator.Filter;
-import org.jdesktop.swingx.decorator.FilterPipeline;
-import org.jdesktop.swingx.decorator.HighlightPredicate;
-import org.jdesktop.swingx.decorator.PatternFilter;
-import org.jdesktop.swingx.decorator.PatternPredicate;
 import org.jdesktop.swingx.decorator.SortOrder;
 
 import eshop.common.data_objects.Artikel;
@@ -43,35 +32,52 @@ public abstract class Sichtfenster extends JPanel {
 
 	/** The Constant serialVersionUID. */
 	private static final long			serialVersionUID			= 8136926280757449267L;
+	
 	/** The action field. */
 	protected JPanel						actionField					= new JPanel(new MigLayout(""));
+	
 	/** The alle button. */
 	protected JButton						alleButton					= new JButton("Alle");
+	
 	/** The auflistung. */
 	protected JXTable						auflistung					= new JXTable();
+	
 	/** The auflistung container. */
 	protected JScrollPane				auflistungContainer		= new JScrollPane(auflistung);
+	
 	/** The overview buttons. */
 	protected JPanel						overviewButtons			= new JPanel();
+	
 	/** The server. */
 	protected ShopRemote					server;
-	/** The sichtfensterCallbacks. */
+	
+	/** The sichtfenster callbacks. */
 	protected SichtfensterCallbacks	sichtfensterCallbacks	= null;
+	
 	/** The suche button. */
 	protected JButton						sucheButton					= new JButton("Suche");
-	/** The suche field. */
+	
+	/** The suche field 1. */
 	protected JTextField					sucheField1					= new JTextField("", 30);
+	
 	/** The suche field 2. */
 	protected JTextField					sucheField2					= new JTextField("", 30);
+	
 	/** The suche field 3. */
 	protected JTextField					sucheField3					= new JTextField("", 30);
-	/** The suche field 3. */
+	
+	/** The suche field 4. */
 	protected JTextField					sucheField4					= new JTextField("", 30);
-	/** The suche field 3. */
+	
+	/** The suche field 5. */
 	protected JTextField					sucheField5					= new JTextField("", 30);
+	
 	/** The user. */
 	protected Person						user;
-	protected String[] sucheFieldNames = new String[5];
+	
+	/** The suche field names. */
+	protected String[]					sucheFieldNames			= new String[5];
+
 	/**
 	 * Instantiates a new sichtfenster.
 	 *
@@ -80,9 +86,12 @@ public abstract class Sichtfenster extends JPanel {
 	 * @param user
 	 *           the user
 	 * @param sichtfensterCallbacks
-	 *           the sichtfensterCallbacks
+	 *           the sichtfenster callbacks
+	 * @param sucheFieldNames
+	 *           the suche field names
 	 */
-	public Sichtfenster(ShopRemote server, Person user, SichtfensterCallbacks sichtfensterCallbacks, String[] sucheFieldNames) {
+	public Sichtfenster(ShopRemote server, Person user, SichtfensterCallbacks sichtfensterCallbacks,
+			String[] sucheFieldNames) {
 		this.sucheFieldNames = sucheFieldNames;
 		this.sichtfensterCallbacks = sichtfensterCallbacks;
 		this.user = user;
@@ -90,15 +99,32 @@ public abstract class Sichtfenster extends JPanel {
 		this.setLayout(new MigLayout());
 		this.add(overviewButtons, "dock west");
 		this.add(auflistungContainer, "wrap, w 100%, h 230!");
-		
 		initializeSearchbar(sucheFieldNames);
 		initializeAuflistung();
-		
 	}
-	
 
-	   
+	/**
+	 * Call table update.
+	 */
+	public abstract void callTableUpdate();
 
+	/**
+	 * Fit table layout.
+	 */
+	public void fitTableLayout() {
+
+		TableColumnAdjuster tca = new TableColumnAdjuster(auflistung);
+		tca.adjustColumns(SwingConstants.CENTER);
+		int columnWidth = auflistung.getWidth() / auflistung.getColumnCount();
+		for (int i = 0; i < auflistung.getColumnCount(); i++) {
+			auflistung.getColumn(i).setWidth(columnWidth);
+		}
+		auflistung.setSortOrder(0, SortOrder.ASCENDING);
+	}
+
+	/**
+	 * Initialize auflistung.
+	 */
 	private void initializeAuflistung() {
 
 		auflistung.setAutoCreateRowSorter(true);
@@ -111,6 +137,17 @@ public abstract class Sichtfenster extends JPanel {
 		initializeHighlighting();
 	}
 
+	/**
+	 * Initialize highlighting.
+	 */
+	public abstract void initializeHighlighting();
+
+	/**
+	 * Initialize searchbar.
+	 *
+	 * @param sucheFieldNames
+	 *           the suche field names
+	 */
 	private void initializeSearchbar(String[] sucheFieldNames) {
 
 		overviewButtons.setLayout(new MigLayout());
@@ -137,7 +174,7 @@ public abstract class Sichtfenster extends JPanel {
 			@Override
 			public void focusGained(FocusEvent e) {
 
-				if(sucheField1.getText().equals(sucheFieldNames[0])){
+				if (sucheField1.getText().equals(sucheFieldNames[0])) {
 					sucheField1.setText("");
 				}
 			}
@@ -155,8 +192,8 @@ public abstract class Sichtfenster extends JPanel {
 			@Override
 			public void focusGained(FocusEvent e) {
 
-				if(sucheField2.getText().equals(sucheFieldNames[1])){
-				sucheField2.setText("");
+				if (sucheField2.getText().equals(sucheFieldNames[1])) {
+					sucheField2.setText("");
 				}
 			}
 
@@ -174,7 +211,7 @@ public abstract class Sichtfenster extends JPanel {
 			@Override
 			public void focusGained(FocusEvent e) {
 
-				if(sucheField3.getText().equals(sucheFieldNames[2])){
+				if (sucheField3.getText().equals(sucheFieldNames[2])) {
 					sucheField3.setText("");
 				}
 			}
@@ -193,7 +230,7 @@ public abstract class Sichtfenster extends JPanel {
 			@Override
 			public void focusGained(FocusEvent e) {
 
-				if(sucheField4.getText().equals(sucheFieldNames[3])){
+				if (sucheField4.getText().equals(sucheFieldNames[3])) {
 					sucheField4.setText("");
 				}
 			}
@@ -212,7 +249,7 @@ public abstract class Sichtfenster extends JPanel {
 			@Override
 			public void focusGained(FocusEvent e) {
 
-				if(sucheField5.getText().equals(sucheFieldNames[4])){
+				if (sucheField5.getText().equals(sucheFieldNames[4])) {
 					sucheField5.setText("");
 				}
 			}
@@ -242,27 +279,6 @@ public abstract class Sichtfenster extends JPanel {
 			}
 		});
 	}
-	
-	public abstract void initializeHighlighting();
-
-	/**
-	 * Call table update.
-	 */
-	public abstract void callTableUpdate();
-
-	/**
-	 * Fit table layout.
-	 */
-	public void fitTableLayout() {
-
-		TableColumnAdjuster tca = new TableColumnAdjuster(auflistung);
-		tca.adjustColumns(SwingConstants.CENTER);
-		int columnWidth = auflistung.getWidth() / auflistung.getColumnCount();
-		for (int i = 0; i < auflistung.getColumnCount(); i++) {
-			auflistung.getColumn(i).setWidth(columnWidth);
-		}
-		auflistung.setSortOrder(0, SortOrder.ASCENDING);
-	}
 
 	/**
 	 * Tabelle filtern.
@@ -280,7 +296,6 @@ public abstract class Sichtfenster extends JPanel {
 		sucheField3.setText(sucheFieldNames[2]);
 		sucheField4.setText(sucheFieldNames[3]);
 		sucheField5.setText(sucheFieldNames[4]);
-		
 	}
 
 	/**
@@ -296,7 +311,23 @@ public abstract class Sichtfenster extends JPanel {
 		 */
 		void artikelAnzeigen(Artikel art);
 
+		/**
+		 * Artikel aus warenkorb anzeigen.
+		 *
+		 * @param art
+		 *           the artikel
+		 * @param anzahl
+		 *           the anzahl
+		 */
 		void artikelAusWarenkorbAnzeigen(Artikel art, int anzahl);
+
+		/**
+		 * Ereignis anzeigen.
+		 *
+		 * @param er
+		 *           the er
+		 */
+		void ereignisAnzeigen(Ereignis er);
 
 		/**
 		 * Kunde anzeigen.
@@ -313,7 +344,5 @@ public abstract class Sichtfenster extends JPanel {
 		 *           the mitarbeiter
 		 */
 		void mitarbeiterAnzeigen(Mitarbeiter mi);
-		
-		void ereignisAnzeigen(Ereignis er);
 	}
 }

@@ -43,26 +43,37 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 
 	/** The Constant serialVersionUID. */
 	private static final long				serialVersionUID		= -1852260814852420682L;
+	
 	/** The Artikel action key. */
 	private Object								artActionKey			= new Object();
+	
 	/** The Artikelverwaltung. */
 	private Artikelverwaltung				av;
+	
 	/** The dateipfad. */
 	private String								dateipfad				= "";
+	
 	/** The Ereignisverwaltung. */
 	private Ereignisverwaltung				ev;
+	
 	/** The Kunde action key. */
 	private Object								kuActionKey				= new Object();
+	
 	/** The Kundenverwaltung. */
 	private Kundenverwaltung				kv;
+	
 	/** The Mitarbeiter action key. */
 	private Object								miActionKey				= new Object();
+	
 	/** The Mitarbeiterverwaltung. */
 	private Mitarbeiterverwaltung			mv;
+	
 	/** The Rechnungsverwaltung. */
 	private Rechnungsverwaltung			rv;
+	
 	/** The shop event listeners. */
 	private Vector<ShopEventListener>	shopEventListeners	= new Vector<ShopEventListener>();
+	
 	/** The Warenkorbverwaltung. */
 	private Warenkorbverwaltung			wv;
 
@@ -478,23 +489,6 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 
 	/*
 	 * (non-Javadoc)
-	 * @see domain.ShopRemote#artikelSuchen(int, data_objects.Person)
-	 */
-	@Override
-	public Ereignis ereignisSuchen(int ereignisID, Person person)
-			throws ArticleNonexistantException, AccessRestrictedException, RemoteException {
-
-		synchronized (person) {
-			if (istMitarbeiter(person) || istKunde(person)) {
-				return ev.sucheEreignis(ereignisID);
-			} else {
-				throw new AccessRestrictedException(person, "\"Artikel suchen (Artikelnummer)\"");
-			}
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see domain.ShopRemote#artikelSuchen(java.lang.String,
 	 * data_objects.Person)
 	 */
@@ -507,6 +501,23 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 				return av.sucheArtikel(bezeichnung);
 			} else {
 				throw new AccessRestrictedException(person, "\"Artikel suchen (Bezeichnung)\"");
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see domain.ShopRemote#artikelSuchen(int, data_objects.Person)
+	 */
+	@Override
+	public Ereignis ereignisSuchen(int ereignisID, Person person)
+			throws ArticleNonexistantException, AccessRestrictedException, RemoteException {
+
+		synchronized (person) {
+			if (istMitarbeiter(person) || istKunde(person)) {
+				return ev.sucheEreignis(ereignisID);
+			} else {
+				throw new AccessRestrictedException(person, "\"Artikel suchen (Artikelnummer)\"");
 			}
 		}
 	}
@@ -701,13 +712,10 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 		mv = new Mitarbeiterverwaltung();
 		rv = new Rechnungsverwaltung();
 		ev = new Ereignisverwaltung();
-		
-		
 		av.liesDaten(dateipfad + "ARTIKEL.txt");
 		kv.liesDaten(dateipfad + "KUNDEN.txt", wv);
 		mv.liesDaten(dateipfad + "MITARBEITER.txt");
 		ev.liesDaten(dateipfad + "EREIGNISSE.txt");
-		
 		for (ShopEventListener listener : shopEventListeners) {
 			// notify every listener in a dedicated thread
 			// (a notification should not block another one).

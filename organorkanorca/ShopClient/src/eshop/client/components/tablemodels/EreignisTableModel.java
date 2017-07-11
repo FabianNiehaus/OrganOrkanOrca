@@ -6,13 +6,21 @@ import java.util.Vector;
 
 import eshop.common.data_objects.Ereignis;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class EreignisTableModel.
+ */
 public class EreignisTableModel extends ShopTableModel {
 
-	/**
-	  * 
-	  */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -8140938517029973790L;
 
+	/**
+	 * Instantiates a new ereignis table model.
+	 *
+	 * @param dataVector
+	 *           the data vector
+	 */
 	public EreignisTableModel(Vector<Ereignis> dataVector) {
 		columnNames = new String[] {"Datum", "Event-Nr.", "Aktion", "ArtikelNr.", "ArtikelBez.", "Menge", "ID", "Name"};
 		if (dataVector.elementAt(0) != null) {

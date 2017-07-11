@@ -14,29 +14,38 @@ import eshop.common.exceptions.PersonNonexistantException;
 import eshop.server.persistence.FilePersistenceManager;
 import eshop.server.persistence.PersistenceManager;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author Fabian Niehaus Klasse zur Verwaltung von Kunden
+ * The Class Kundenverwaltung.
  */
 public class Kundenverwaltung {
 
+	/** The kunden. */
 	private Vector<Kunde> kunden = new Vector<Kunde>();
 	// Persistenz-Schnittstelle, die f�r die Details des Dateizugriffs
+	/** The pm. */
 	// verantwortlich ist
 	private PersistenceManager pm = new FilePersistenceManager();
 
+	/**
+	 * Instantiates a new kundenverwaltung.
+	 *
+	 * @param wv
+	 *           the warenkorbverwaltung
+	 */
 	public Kundenverwaltung(Warenkorbverwaltung wv) {
 	}
 
 	/**
-	 * Logik zur Anmeldung
-	 * 
+	 * Anmelden.
+	 *
 	 * @param id
-	 *           Benutzer-ID
+	 *           the id
 	 * @param passwort
-	 *           Benutzer-Passwort
-	 * @return Angemeldeter Benutzer
+	 *           the passwort
+	 * @return the kunde
 	 * @throws LoginFailedException
-	 *            Anmeldung fehlgeschlagen
+	 *            the login failed exception
 	 */
 	public Kunde anmelden(int id, String passwort) throws LoginFailedException {
 
@@ -49,10 +58,10 @@ public class Kundenverwaltung {
 	}
 
 	/**
-	 * Fuegt einen Kunden hinzu
-	 * 
+	 * Einfuegen.
+	 *
 	 * @param ku
-	 *           Kunde
+	 *           the kunde
 	 */
 	public void einfuegen(Kunde ku) {
 
@@ -60,25 +69,27 @@ public class Kundenverwaltung {
 	}
 
 	/**
-	 * Erstellt einen neuen Kunden und fuegt in zur verwalteten Liste hinzu
-	 * 
+	 * Erstelle kunde.
+	 *
 	 * @param firstname
-	 *           Vorname
+	 *           the firstname
 	 * @param lastname
-	 *           Nachname
+	 *           the lastname
 	 * @param passwort
-	 *           Passwort
+	 *           the passwort
 	 * @param address_Street
-	 *           Straße + Hausnummer
+	 *           the address street
 	 * @param address_Zip
-	 *           Postleitzahl
+	 *           the address zip
 	 * @param address_Town
-	 *           Stadt
+	 *           the address town
 	 * @param wk
-	 *           Zugeordneter Warenkorb
-	 * @return
+	 *           the wk
+	 * @return the kunde
 	 * @throws MaxIDsException
-	 * @throws InvalidPersonData
+	 *            the max I ds exception
+	 * @throws InvalidPersonDataException
+	 *            the invalid person data exception
 	 */
 	public Kunde erstelleKunde(String firstname, String lastname, String passwort, String address_Street,
 			String address_Zip, String address_Town, Warenkorb wk) throws MaxIDsException, InvalidPersonDataException {
@@ -89,7 +100,9 @@ public class Kundenverwaltung {
 	}
 
 	/**
-	 * @return Liste der verwalteten Kunden
+	 * Gets the kunden.
+	 *
+	 * @return the kunden
 	 */
 	public Vector<Kunde> getKunden() {
 
@@ -97,10 +110,11 @@ public class Kundenverwaltung {
 	}
 
 	/**
-	 * Erzeugt die nächste zu verwendende Kundennummer
-	 * 
-	 * @return Erzeugte Kundennummer
+	 * Gets the next ID.
+	 *
+	 * @return the next ID
 	 * @throws MaxIDsException
+	 *            the max I ds exception
 	 */
 	public int getNextID() throws MaxIDsException {
 
@@ -118,11 +132,11 @@ public class Kundenverwaltung {
 	}
 
 	/**
-	 * Gibt den zu einem Kunden zugeordneten Warenkorb aus
-	 * 
+	 * Gib warenkorb von kunde.
+	 *
 	 * @param ku
-	 *           Gewuenschter Kunde
-	 * @return Warenkorb des Kunde
+	 *           the kunde
+	 * @return the warenkorb
 	 */
 	public Warenkorb gibWarenkorbVonKunde(Person ku) {
 
@@ -130,12 +144,16 @@ public class Kundenverwaltung {
 	}
 
 	/**
-	 * @author Mathis M�hlenkamp Methode zum Einlesen von Kunden aus einer Datei.
-	 * 
+	 * Lies daten.
+	 *
 	 * @param datei
-	 *           Datei, die einzulesenden
+	 *           the datei
+	 * @param wv
+	 *           the warenkorbverwaltung
 	 * @throws IOException
+	 *            Signals that an I/O exception has occurred.
 	 * @throws InvalidPersonDataException
+	 *            the invalid person data exception
 	 */
 	public void liesDaten(String datei, Warenkorbverwaltung wv) throws IOException, InvalidPersonDataException {
 
@@ -156,10 +174,10 @@ public class Kundenverwaltung {
 	}
 
 	/**
-	 * Löscht einen Kunden aus der verwalteten Liste
-	 * 
+	 * Loesche kunde.
+	 *
 	 * @param einKunde
-	 *           Zu löschender Kunde
+	 *           the ein kunde
 	 */
 	public void loescheKunde(Kunde einKunde) {
 
@@ -173,11 +191,12 @@ public class Kundenverwaltung {
 	 */
 
 	/**
-	 * Methode zum Schreiben der Kundendaten in eine Datei.
-	 * 
+	 * Schreibe daten.
+	 *
 	 * @param datei
-	 *           Datei, in die der...
+	 *           the datei
 	 * @throws IOException
+	 *            Signals that an I/O exception has occurred.
 	 */
 	public void schreibeDaten(String datei) throws IOException {
 
@@ -195,11 +214,13 @@ public class Kundenverwaltung {
 	}
 
 	/**
-	 * Sucht einen Kunden anhand seiner ID
-	 * 
+	 * Suche kunde.
+	 *
 	 * @param id
-	 *           Kundenid
-	 * @return Gesuchter Kunde
+	 *           the id
+	 * @return the kunde
+	 * @throws PersonNonexistantException
+	 *            the person nonexistant exception
 	 */
 	public Kunde sucheKunde(int id) throws PersonNonexistantException {
 
@@ -212,12 +233,15 @@ public class Kundenverwaltung {
 	}
 
 	/**
-	 * Prueft, ob ein bestimmter Kunde in der Kundenverwaltung liegt.
-	 * 
-	 * @param art
-	 *           Zu ueberpruefender Kunde
-	 * @return Gibt <b>true</b> zurueck, wenn zu pruefender Kunde in der HAsMap
-	 *         Kunde gespeichert ist. Sonst <b>false</b>. suche nach ID oder Name
+	 * Suche kunde.
+	 *
+	 * @param firstname
+	 *           the firstname
+	 * @param lastname
+	 *           the lastname
+	 * @return the kunde
+	 * @throws PersonNonexistantException
+	 *            the person nonexistant exception
 	 */
 	public Kunde sucheKunde(String firstname, String lastname) throws PersonNonexistantException {
 
@@ -229,6 +253,14 @@ public class Kundenverwaltung {
 		throw new PersonNonexistantException(firstname, lastname);
 	}
 
+	/**
+	 * Weise warenkorbzu.
+	 *
+	 * @param ku
+	 *           the kunde
+	 * @param wk
+	 *           the wk
+	 */
 	public void weiseWarenkorbzu(Kunde ku, Warenkorb wk) {
 
 		ku.setWarenkorb(wk);

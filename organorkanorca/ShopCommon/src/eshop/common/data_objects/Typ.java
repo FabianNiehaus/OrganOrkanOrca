@@ -2,9 +2,20 @@ package eshop.common.data_objects;
 
 import java.io.Serializable;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author Fabian Niehaus Enumerator-Objekt fuer die Ereignisspeicherung
+ * The Enum Typ.
  */
 public enum Typ implements Serializable {
-	AUSLAGERUNG, EINLAGERUNG, KAUF, NEU, LOESCHEN;
+	
+	/** The auslagerung. */
+	AUSLAGERUNG, 
+ /** The einlagerung. */
+ EINLAGERUNG, 
+ /** The kauf. */
+ KAUF, 
+ /** The neu. */
+ NEU, 
+ /** The loeschen. */
+ LOESCHEN;
 }

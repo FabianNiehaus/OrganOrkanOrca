@@ -9,7 +9,7 @@ To-Do
 ./ Logout bei Schließen
 ./ Eine Suchleiste pro Spalte
 ./ Verwaltungsbuttons nach unten
-- Formatierung Schrift, Kästen, etc.
+./ Formatierung Schrift, Kästen, etc.
 ./ Farbe für Bestand
 - DOKUMENTATION
 ./ Artikel-Informationen
@@ -29,8 +29,8 @@ Bugfixes:
 ./ Fenster ordentlich ersetzen
 ./ Artikel reset bei Fehler Bearbeitung
 ./ €-Zeichen aus Preisfeld
-- layout Artikelverwaltung
-- Anzeige Bild
+./ layout Artikelverwaltung
+./ Anzeige Bild
 
 
 Nice-To-Have:

@@ -6,9 +6,9 @@ package eshop.common.data_objects;
 import java.io.Serializable;
 import java.util.Date;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author Fabian
- * Dient zur Speicherung einer Rechnung
+ * The Class Rechnung.
  */
 /**
  * @author Manic
@@ -16,24 +16,32 @@ import java.util.Date;
  */
 public class Rechnung implements Serializable {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long	serialVersionUID	= 6681009839157213957L;
+	
+	/** The datum. */
 	private Date					datum;
+	
+	/** The gesamt. */
 	private double					gesamt;
+	
+	/** The Kunde. */
 	private Kunde					ku;
+	
+	/** The wk. */
 	private Warenkorb				wk;
 
 	/**
+	 * Instantiates a new rechnung.
+	 *
 	 * @param ku
-	 *           Zugehöriger Kunde
+	 *           the kunde
 	 * @param datum
-	 *           Rechnungsdatum
+	 *           the datum
 	 * @param wk
-	 *           Zugehöriger Warenkorb
+	 *           the wk
 	 * @param gesamt
-	 *           Gesamtsumme der Rechnung
+	 *           the gesamt
 	 */
 	public Rechnung(Kunde ku, Date datum, Warenkorb wk, double gesamt) {
 		super();
@@ -44,7 +52,9 @@ public class Rechnung implements Serializable {
 	}
 
 	/**
-	 * @return
+	 * Gets the datum.
+	 *
+	 * @return the datum
 	 */
 	public Date getDatum() {
 
@@ -52,7 +62,9 @@ public class Rechnung implements Serializable {
 	}
 
 	/**
-	 * @return
+	 * Gets the gesamt.
+	 *
+	 * @return the gesamt
 	 */
 	public double getGesamt() {
 
@@ -60,7 +72,9 @@ public class Rechnung implements Serializable {
 	}
 
 	/**
-	 * @return
+	 * Gets the kunde.
+	 *
+	 * @return the kunde
 	 */
 	public Kunde getKu() {
 
@@ -68,7 +82,9 @@ public class Rechnung implements Serializable {
 	}
 
 	/**
-	 * @return
+	 * Gets the wk.
+	 *
+	 * @return the wk
 	 */
 	public Warenkorb getWk() {
 

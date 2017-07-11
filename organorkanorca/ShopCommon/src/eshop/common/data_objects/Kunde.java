@@ -7,36 +7,37 @@ import java.io.Serializable;
 
 import eshop.common.exceptions.InvalidPersonDataException;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author Fabian Niehaus
- *
+ * The Class Kunde.
  */
 public class Kunde extends Person implements Serializable {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long	serialVersionUID	= -1133891813422452141L;
+	
+	/** The wk. */
 	private Warenkorb				wk;
 
 	/**
-	 * Extra-Konstruktor für Laden aus Persistenz
-	 * 
+	 * Instantiates a new kunde.
+	 *
 	 * @param firstname
-	 *           Vorname
+	 *           the firstname
 	 * @param lastname
-	 *           Nachmane
+	 *           the lastname
 	 * @param id
-	 *           Eindeutige ID
+	 *           the id
 	 * @param passwort
-	 *           Passwort
+	 *           the passwort
 	 * @param address_Street
-	 *           Adresse + Hausnummer
+	 *           the address street
 	 * @param address_Zip
-	 *           Postleitzahl
+	 *           the address zip
 	 * @param address_Town
-	 *           Stadt
+	 *           the address town
 	 * @throws InvalidPersonDataException
+	 *            the invalid person data exception
 	 */
 	public Kunde(String firstname, String lastname, int id, String passwort, String address_Street, String address_Zip,
 			String address_Town) throws InvalidPersonDataException {
@@ -44,25 +45,26 @@ public class Kunde extends Person implements Serializable {
 	}
 
 	/**
-	 * Standard-Konstruktor
-	 * 
+	 * Instantiates a new kunde.
+	 *
 	 * @param firstname
-	 *           Vorname
+	 *           the firstname
 	 * @param lastname
-	 *           Nachmane
+	 *           the lastname
 	 * @param id
-	 *           Eindeutige ID
+	 *           the id
 	 * @param passwort
-	 *           Passwort
+	 *           the passwort
 	 * @param address_Street
-	 *           Adresse + Hausnummer
+	 *           the address street
 	 * @param address_Zip
-	 *           Postleitzahl
+	 *           the address zip
 	 * @param address_Town
-	 *           Stadt
+	 *           the address town
 	 * @param wk
-	 *           Warenkorb
+	 *           the wk
 	 * @throws InvalidPersonDataException
+	 *            the invalid person data exception
 	 */
 	public Kunde(String firstname, String lastname, int id, String passwort, String address_Street, String address_Zip,
 			String address_Town, Warenkorb wk) throws InvalidPersonDataException {
@@ -71,7 +73,9 @@ public class Kunde extends Person implements Serializable {
 	}
 
 	/**
-	 * @return
+	 * Gets the warenkorb.
+	 *
+	 * @return the warenkorb
 	 */
 	public Warenkorb getWarenkorb() {
 
@@ -79,13 +83,19 @@ public class Kunde extends Person implements Serializable {
 	}
 
 	/**
+	 * Sets the warenkorb.
+	 *
 	 * @param warenkorb
+	 *           the new warenkorb
 	 */
 	public void setWarenkorb(Warenkorb warenkorb) {
 
 		this.wk = warenkorb;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 

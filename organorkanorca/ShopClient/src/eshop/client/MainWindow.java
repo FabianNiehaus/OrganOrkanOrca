@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.HeadlessException;
 import java.awt.event.WindowListener;
-import java.rmi.RemoteException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -37,33 +36,89 @@ import eshop.common.exceptions.ArticleNonexistantException;
 import eshop.common.exceptions.PersonNonexistantException;
 import eshop.common.net.ShopRemote;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MainWindow.
+ */
 public class MainWindow extends JFrame implements SichtfensterCallbacks, VerwaltungsfensterCallbacks {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long		serialVersionUID	= 251175113124520728L;
+	
+	/** The artikel button. */
 	JButton								artikelButton		= new JButton("Artikel");
+	
+	/** The artikelsichtfenster. */
 	ArtikelSichtfenster				artikelsichtfenster;
+	
+	/** The artikelverwaltungsfenster. */
 	ArtikelVerwaltungsfenster		artikelverwaltungsfenster;
+	
+	/** The kunden button. */
 	JButton								kundenButton		= new JButton("Kunden");
+	
+	/** The kundensichtfenster. */
 	KundenSichtfenster				kundensichtfenster;
+	
+	/** The kundenverwaltungsfenster. */
 	PersonenVerwaltungsfenster		kundenverwaltungsfenster;
+	
+	/** The login listener. */
 	LoginListener						loginListener;
+	
+	/** The logout button. */
 	JButton								logoutButton		= new JButton("Logout");
+	
+	/** The managementsichtfenster. */
 	ManagementSichtfenster			managementsichtfenster;
+	
+	/** The managementverwaltungsfenster. */
 	ManagementVerwaltungsfenster	managementverwaltungsfenster;
+	
+	/** The mitarbeiter button. */
 	JButton								mitarbeiterButton	= new JButton("Mitarbeiter");
+	
+	/** The mitarbeitersichtfenster. */
 	MitarbeiterSichtfenster			mitarbeitersichtfenster;
+	
+	/** The mitarbeiterverwaltungsfenster. */
 	PersonenVerwaltungsfenster		mitarbeiterverwaltungsfenster;
+	
+	/** The module buttons. */
 	JPanel								moduleButtons		= new JPanel();
+	
+	/** The server. */
 	ShopRemote							server;
+	
+	/** The shop button. */
 	JButton								shopButton			= new JButton("Shop");
+	
+	/** The tabbed pane. */
 	JTabbedPane							tabbedPane			= new JTabbedPane();
+	
+	/** The user. */
 	Person								user;
+	
+	/** The warenkorbsichtfenster. */
 	WarenkorbSichtfenster			warenkorbsichtfenster;
+	
+	/** The warenkorbverwaltungsfenster. */
 	WarenkorbVerwaltungsfenster	warenkorbverwaltungsfenster;
 
+	/**
+	 * Instantiates a new main window.
+	 *
+	 * @param titel
+	 *           the titel
+	 * @param user
+	 *           the user
+	 * @param server
+	 *           the server
+	 * @param loginListener
+	 *           the login listener
+	 * @param windowListener
+	 *           the window listener
+	 */
 	public MainWindow(String titel, Person user, ShopRemote server, LoginListener loginListener,
 			WindowListener windowListener) {
 		super(titel);
@@ -74,21 +129,59 @@ public class MainWindow extends JFrame implements SichtfensterCallbacks, Verwalt
 		initialize();
 	}
 
+	/* (non-Javadoc)
+	 * @see eshop.client.util.Sichtfenster.SichtfensterCallbacks#artikelAnzeigen(eshop.common.data_objects.Artikel)
+	 */
 	@Override
 	public void artikelAnzeigen(Artikel art) {
 
 		artikelverwaltungsfenster.artikelAnzeigen(art);
 	}
 
+	/* (non-Javadoc)
+	 * @see eshop.client.util.Sichtfenster.SichtfensterCallbacks#artikelAusWarenkorbAnzeigen(eshop.common.data_objects.Artikel, int)
+	 */
 	@Override
 	public void artikelAusWarenkorbAnzeigen(Artikel art, int anzahl) {
 
 		warenkorbverwaltungsfenster.artikelAnzeigen(art, anzahl);
 	}
 
+	/* (non-Javadoc)
+	 * @see eshop.client.util.Sichtfenster.SichtfensterCallbacks#ereignisAnzeigen(eshop.common.data_objects.Ereignis)
+	 */
+	@Override
+	public void ereignisAnzeigen(Ereignis er) {
+
+		managementverwaltungsfenster.ereignisAnzeigen(er);
+	}
+
+	/**
+	 * Handle all changed.
+	 */
+	public void handleAllChanged() {
+
+		if (artikelsichtfenster != null) artikelsichtfenster.callTableUpdate();
+		if (warenkorbsichtfenster != null) warenkorbsichtfenster.callTableUpdate();
+		if (kundensichtfenster != null) kundensichtfenster.callTableUpdate();
+		if (mitarbeitersichtfenster != null) mitarbeitersichtfenster.callTableUpdate();
+		if (managementsichtfenster != null) managementsichtfenster.callTableUpdate();
+		if (artikelverwaltungsfenster != null) artikelverwaltungsfenster.reset();
+		if (warenkorbverwaltungsfenster != null) warenkorbverwaltungsfenster.reset();
+		if (kundenverwaltungsfenster != null) kundenverwaltungsfenster.reset();
+		if (mitarbeiterverwaltungsfenster != null) mitarbeiterverwaltungsfenster.reset();
+		if (managementverwaltungsfenster != null) managementverwaltungsfenster.reset();
+	}
+
+	/**
+	 * Handle article changed.
+	 *
+	 * @param art
+	 *           the artikel
+	 */
 	public void handleArticleChanged(Artikel art) {
 
-		if(art != null){
+		if (art != null) {
 			if (user instanceof Kunde) {
 				try {
 					if (warenkorbsichtfenster.artikelImWarenkorbPruefen(art)) {
@@ -121,11 +214,23 @@ public class MainWindow extends JFrame implements SichtfensterCallbacks, Verwalt
 		artikelsichtfenster.callTableUpdate();
 	}
 
+	/**
+	 * Handle event changed.
+	 *
+	 * @param er
+	 *           the er
+	 */
 	public void handleEventChanged(Ereignis er) {
 
 		if (managementsichtfenster != null) managementsichtfenster.callTableUpdate();
 	}
 
+	/**
+	 * Handle staff changed.
+	 *
+	 * @param mi
+	 *           the mitarbeiter
+	 */
 	public void handleStaffChanged(Mitarbeiter mi) {
 
 		if (mitarbeiterverwaltungsfenster.getPerson().getId() == mi.getId()) {
@@ -141,6 +246,12 @@ public class MainWindow extends JFrame implements SichtfensterCallbacks, Verwalt
 		mitarbeitersichtfenster.callTableUpdate();
 	}
 
+	/**
+	 * Handle user changed.
+	 *
+	 * @param ku
+	 *           the kunde
+	 */
 	public void handleUserChanged(Kunde ku) {
 
 		if (kundenverwaltungsfenster.getPerson().getId() == ku.getId()) {
@@ -155,6 +266,9 @@ public class MainWindow extends JFrame implements SichtfensterCallbacks, Verwalt
 		kundensichtfenster.callTableUpdate();
 	}
 
+	/**
+	 * Initialize.
+	 */
 	public void initialize() {
 
 		this.getContentPane().setLayout(new BorderLayout());
@@ -196,51 +310,39 @@ public class MainWindow extends JFrame implements SichtfensterCallbacks, Verwalt
 		this.setVisible(true);
 	}
 
+	/* (non-Javadoc)
+	 * @see eshop.client.util.Verwaltungsfenster.VerwaltungsfensterCallbacks#istWarenkorbLeer()
+	 */
+	@Override
+	public boolean istWarenkorbLeer() {
+
+		return warenkorbsichtfenster.istWarenkorbLeer();
+	}
+
+	/* (non-Javadoc)
+	 * @see eshop.client.util.Sichtfenster.SichtfensterCallbacks#kundeAnzeigen(eshop.common.data_objects.Kunde)
+	 */
 	@Override
 	public void kundeAnzeigen(Kunde ku) {
 
 		kundenverwaltungsfenster.personAnzeigen(ku);
 	}
 
+	/* (non-Javadoc)
+	 * @see eshop.client.util.Sichtfenster.SichtfensterCallbacks#mitarbeiterAnzeigen(eshop.common.data_objects.Mitarbeiter)
+	 */
 	@Override
 	public void mitarbeiterAnzeigen(Mitarbeiter mi) {
 
 		mitarbeiterverwaltungsfenster.personAnzeigen(mi);
 	}
-	
 
-	@Override
-	public void ereignisAnzeigen(Ereignis er) {
-
-		managementverwaltungsfenster.ereignisAnzeigen(er);
-	}
-
+	/* (non-Javadoc)
+	 * @see eshop.client.util.Verwaltungsfenster.VerwaltungsfensterCallbacks#warenkorbAktualisieren()
+	 */
 	@Override
 	public void warenkorbAktualisieren() {
 
 		warenkorbsichtfenster.callTableUpdate();
-	}
-
-	@Override
-	public boolean istWarenkorbLeer() {
-
-		return warenkorbsichtfenster.istWarenkorbLeer();
-				
-	}
-	
-	public void handleAllChanged(){
-		
-		if(artikelsichtfenster != null) artikelsichtfenster.callTableUpdate();
-		if(warenkorbsichtfenster != null) warenkorbsichtfenster.callTableUpdate();
-		if(kundensichtfenster != null) kundensichtfenster.callTableUpdate();
-		if(mitarbeitersichtfenster != null) mitarbeitersichtfenster.callTableUpdate();
-		if(managementsichtfenster != null) managementsichtfenster.callTableUpdate();
-		
-		if(artikelverwaltungsfenster != null) artikelverwaltungsfenster.reset();
-		if(warenkorbverwaltungsfenster != null) warenkorbverwaltungsfenster.reset();
-		if(kundenverwaltungsfenster != null) kundenverwaltungsfenster.reset();
-		if(mitarbeiterverwaltungsfenster != null) mitarbeiterverwaltungsfenster.reset();
-		if(managementverwaltungsfenster != null) managementverwaltungsfenster.reset();
-		
 	}
 }
