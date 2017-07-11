@@ -1,6 +1,7 @@
 package eshop.client.components;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -614,18 +615,20 @@ public class ArtikelVerwaltungsfenster extends Verwaltungsfenster {
 				// user);
 				DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 				for (Entry<Integer, Integer> ent : art.getBestandsverlauf().entrySet()) {
-					int dayOfYear = ent.getKey();
-					Calendar calendar = Calendar.getInstance();
-					calendar.set(Calendar.DAY_OF_YEAR, dayOfYear);
-					String date = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)) + "."
-							+ String.valueOf(calendar.get(Calendar.MONTH) + 1) + ".";
-					dataset.addValue((int) ent.getValue(), "Bestand", date);
+					if(ent != null){
+						int dayOfYear = ent.getKey();
+						Calendar calendar = Calendar.getInstance();
+						calendar.set(Calendar.DAY_OF_YEAR, dayOfYear);
+						String date = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)) + "."
+								+ String.valueOf(calendar.get(Calendar.MONTH) + 1) + ".";
+						dataset.addValue((int) ent.getValue(), "Bestand", date);
+					}
 				}
-				JFreeChart chart = ChartFactory.createLineChart("Bestandsverlauf", "Tag", "Bestand", dataset);
+				JFreeChart chart = ChartFactory.createLineChart("Bestandsverlauf " + art.getBezeichnung(), "Tag", "Bestand", dataset);
 				ChartFrame chartFrame = new ChartFrame("Bestandsverlauf", chart);
 				chartFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				chartFrame.pack();
-				chartFrame.setResizable(false);
+				//chartFrame.setResizable(false);
 				chartFrame.setLocationRelativeTo(null);
 				chartFrame.setVisible(true);
 			} catch (ArrayIndexOutOfBoundsException e1) {

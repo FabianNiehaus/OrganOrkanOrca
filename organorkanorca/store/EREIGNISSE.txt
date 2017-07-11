@@ -1,0 +1,104 @@
+1
+9000
+M. Möhlenkamp
+AUSLAGERUNG
+5
+Test Massengut
+15
+2017.07.11 01:56:31
+2
+9000
+M. Möhlenkamp
+EINLAGERUNG
+5
+Test Massengut
+16
+2017.07.11 01:56:42
+3
+9000
+M. Möhlenkamp
+LOESCHEN
+5
+Test Massengut
+0
+2017.07.11 01:57:00
+4
+9000
+M. Möhlenkamp
+NEU
+5
+Test Massengut
+16
+2017.07.11 01:57:00
+5
+9000
+M. Möhlenkamp
+LOESCHEN
+5
+Test Massengut
+0
+2017.07.11 01:57:23
+6
+9000
+M. Möhlenkamp
+NEU
+5
+Reis
+1000
+2017.07.11 12:16:30
+7
+9000
+M. Möhlenkamp
+NEU
+6
+Mais
+1000
+2017.07.11 12:16:57
+8
+9000
+M. Möhlenkamp
+NEU
+7
+Brett
+10
+2017.07.11 12:17:13
+9
+9000
+M. Möhlenkamp
+NEU
+8
+Tedd
+1
+2017.07.11 12:17:29
+10
+9000
+M. Möhlenkamp
+NEU
+9
+Kled
+1
+2017.07.11 12:18:00
+11
+9000
+M. Möhlenkamp
+NEU
+10
+Glas
+100
+2017.07.11 12:18:17
+12
+9000
+M. Möhlenkamp
+NEU
+11
+Gras
+100
+2017.07.11 12:18:40
+13
+9000
+M. Möhlenkamp
+NEU
+12
+Spaß
+0
+2017.07.11 12:18:54

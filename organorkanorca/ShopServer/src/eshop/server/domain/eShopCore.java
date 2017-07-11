@@ -51,7 +51,7 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 	private Artikelverwaltung				av;
 	
 	/** The dateipfad. */
-	private String								dateipfad				= "";
+	private String								dateipfad				= "store/";
 	
 	/** The Ereignisverwaltung. */
 	private Ereignisverwaltung				ev;
@@ -713,10 +713,10 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 		mv = new Mitarbeiterverwaltung();
 		rv = new Rechnungsverwaltung();
 		ev = new Ereignisverwaltung();
-		av.liesDaten(dateipfad + "store/ARTIKEL.txt");
-		kv.liesDaten(dateipfad + "store/KUNDEN.txt", wv);
-		mv.liesDaten(dateipfad + "store/MITARBEITER.txt");
-		ev.liesDaten(dateipfad + "store/EREIGNISSE.txt");
+		av.liesDaten(dateipfad + "ARTIKEL.txt");
+		kv.liesDaten(dateipfad + "KUNDEN.txt", wv);
+		mv.liesDaten(dateipfad + "MITARBEITER.txt");
+		ev.liesDaten(dateipfad + "EREIGNISSE.txt");
 		for (ShopEventListener listener : shopEventListeners) {
 			// notify every listener in a dedicated thread
 			// (a notification should not block another one).

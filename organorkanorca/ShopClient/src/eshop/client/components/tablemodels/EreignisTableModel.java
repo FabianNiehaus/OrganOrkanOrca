@@ -28,7 +28,6 @@ public class EreignisTableModel extends ShopTableModel {
 			int i = 0;
 			DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 			for (Ereignis er : dataVector) {
-				System.out.println(i);
 				data[i][0] = dateFormat.format(er.getWann());
 				data[i][1] = er.getId();
 				data[i][2] = er.getTyp();
