@@ -62,6 +62,10 @@ public class GUI extends UnicastRemoteObject implements ShopEventListener, Windo
 			
 			host = JOptionPane.showInputDialog("Bitte Server angeben",InetAddress.getLocalHost().getHostAddress());
 			
+			if(host == null){
+				System.exit(0);
+			}
+			
 			String serviceName = "eShopServer";
 			Registry registry = LocateRegistry.getRegistry(host);
 			server = (ShopRemote) registry.lookup(serviceName);

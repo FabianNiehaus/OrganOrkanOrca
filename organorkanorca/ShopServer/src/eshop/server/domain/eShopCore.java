@@ -429,12 +429,13 @@ public class eShopCore extends UnicastRemoteObject implements ShopRemote {
 
 		synchronized (artActionKey) {
 			Artikel art = av.sucheArtikel(artikelnummer);
+			int tmpBestand = art.getBestand();
 			if (istMitarbeiter(person)) {
 				for (Warenkorb wk : wv.getWarenkoerbe()) {
 					wk.loescheArtikel(art);
 				}
 				av.loeschen(art);
-				ev.ereignisErstellen(person, Typ.LOESCHEN, art, 0);
+				ev.ereignisErstellen(person, Typ.LOESCHEN, art, tmpBestand);
 				try {
 					Thread.sleep(200);
 				} catch (InterruptedException e) {

@@ -19,18 +19,10 @@ import eshop.server.persistence.PersistenceManager;
  * The Class Ereignisverwaltung.
  */
 public class Ereignisverwaltung {
-
-	/** The Artikelverwaltung. */
-	private Artikelverwaltung		av;
 	
 	/** The ereignisse. */
 	private Vector<Ereignis>		ereignisse;
-	
-	/** The Kundenverwaltung. */
-	private Kundenverwaltung		kv;
-	
-	/** The Mitarbeiterverwaltung. */
-	private Mitarbeiterverwaltung	mv;
+
 	// Persistenz-Schnittstelle, die fuer die Details des Dateizugriffs
 	/** The pm. */
 	// verantwortlich ist
